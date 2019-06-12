@@ -1,0 +1,3 @@
+/**
+ * JPA Domain Objects
+ */
