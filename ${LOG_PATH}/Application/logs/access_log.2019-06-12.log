@@ -1,5 +1,0 @@
-0:0:0:0:0:0:0:1 - - [12/Jun/2019:14:40:06 +0800] "GET /webjars/springfox-swagger-ui/css/typography.css HTTP/1.1" 404 179
-0:0:0:0:0:0:0:1 - - [12/Jun/2019:14:40:07 +0800] "GET /swagger-resources/configuration/ui HTTP/1.1" 200 196
-0:0:0:0:0:0:0:1 - - [12/Jun/2019:14:40:07 +0800] "GET /swagger-resources HTTP/1.1" 200 80
-0:0:0:0:0:0:0:1 - - [12/Jun/2019:14:40:07 +0800] "GET /v2/api-docs HTTP/1.1" 200 9767
-0:0:0:0:0:0:0:1 - - [12/Jun/2019:14:40:07 +0800] "GET /swagger-resources/configuration/security HTTP/1.1" 200 81
