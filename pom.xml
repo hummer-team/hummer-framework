@@ -8,6 +8,7 @@
     <modules>
         <module>hummer-api</module>
         <module>hummer-support</module>
+        <module>hummer-thread-wrapper</module>
     </modules>
     <packaging>pom</packaging>
 
