@@ -9,6 +9,7 @@
         <module>hummer-api</module>
         <module>hummer-support</module>
         <module>hummer-thread-plugin</module>
+        <module>hummer-spring-plugin</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -54,7 +55,8 @@
         <rest-locations>com.hummer.hummer-framework.web</rest-locations>
         <slf4j-api.version>1.7.25</slf4j-api.version>
         <junit.version>4.12</junit.version>
-        <hummer-thread-plugin.version>1.0.0-SNAPSHOT</hummer-thread-plugin.version>
+        <hummer.version>1.0.0-SNAPSHOT</hummer.version>
+        <spring-boot.version>2.1.0.RELEASE</spring-boot.version>
     </properties>
 
     <dependencyManagement>
@@ -63,8 +65,22 @@
             <dependency>
                 <groupId>com.hummer</groupId>
                 <artifactId>hummer-thread-plugin</artifactId>
-                <version>${hummer-thread-plugin.version}</version>
+                <version>${hummer.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-spring-plugin</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
+
+            <!--framework plugin-->
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>6.4</version>
+                <scope>compile</scope>
+            </dependency>
+
             <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
@@ -73,17 +89,18 @@
                 <scope>test</scope>
             </dependency>
 
-            <!--<dependency>-->
-                <!--<groupId>junit</groupId>-->
-                <!--<artifactId>junit-dep</artifactId>-->
-                <!--<version>RELEASE</version>-->
-            <!--</dependency>-->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>20.0</version>
+            </dependency>
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
+            <!--log framework facade-->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-log4j12</artifactId>
@@ -95,7 +112,16 @@
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j-api.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.8.1</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>3.2.2</version>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-parent</artifactId>
@@ -119,6 +145,16 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-config-server</artifactId>
                 <version>2.0.0.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springFramework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>4.3.9.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springFramework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>4.3.9.RELEASE</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -218,6 +254,11 @@
                 <groupId>org.modelmapper</groupId>
                 <artifactId>modelmapper</artifactId>
                 <version>${modelmapper-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot</artifactId>
+                <version>${spring-boot.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

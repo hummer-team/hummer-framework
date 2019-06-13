@@ -19,7 +19,7 @@ public class ExternalServiceWithSpringRetryAndCircuitBreaker {
      */
     @CircuitBreaker(maxAttempts = 2, openTimeout = 5000l, resetTimeout = 10000l, exclude = TimeoutException.class)
     public void sendEmail() {
-        // add your external service call here so it can be protected by Spring rety and CircuitBreaker logic
+        // add your external services call here so it can be protected by Spring rety and CircuitBreaker logic
 
     }
 
@@ -31,7 +31,7 @@ public class ExternalServiceWithSpringRetryAndCircuitBreaker {
      */
     @Recover
     private void fallbackForCall() {
-        log.error("Fallback for external service call invoked, the external service is NOT reachable");
+        log.error("Fallback for external services call invoked, the external services is NOT reachable");
     }
 
 

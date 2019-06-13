@@ -1,5 +1,6 @@
 package com.hummer.api.web;
 
+//import com.hummer.spring.plugin.context.SpringApplicationContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.hummer.api.service.ApplicationService;
 import com.hummer.api.domain.ApplicationItem;
+
 /**
  * Created by MRomeh on 08/08/2017.
  */
@@ -36,6 +38,7 @@ public class ApplicationController {
     @ApiOperation(value = "view the list of ALL current active created stored appllication items", response = ApplicationEntry.class)
     public List<ApplicationEntry> getAllAlerts() {
         log.debug("Trying to retrieve all alerts");
+       // log.info("---------------------{}---------------------",SpringApplicationContext.getBean("demo"));
         return applicationService.getApplicationItems().stream()
                 .map(applicationItem -> modelMapper.map(applicationItem, ApplicationEntry.class)).collect(Collectors.toList());
 

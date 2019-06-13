@@ -36,7 +36,7 @@ public class SwaggerConfiguration {
                 "Application REST API",
                 "Application manager REST API documentation.",
                 "API 1.0",
-                "Terms of service based into company terms of use",
+                "Terms of services based into company terms of use",
                 new Contact("yourCompany", null, "test@test.com"),
                 "License of API for YourCompany use only", null, Collections.emptyList());
         return apiInfo;
