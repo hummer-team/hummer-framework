@@ -1,5 +1,6 @@
 package com.hummer.spring.plugin.context;
 
+import com.hummer.spring.plugin.context.config.PropertiesContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -20,6 +21,7 @@ public class CoreContext implements EnvironmentAware {
 
     @Override
     public void setEnvironment(Environment event) {
+        PropertiesContainer.loadData(event);
         LOGGER.info("evn is {}",event.getActiveProfiles());
     }
 

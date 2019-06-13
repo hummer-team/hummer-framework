@@ -10,6 +10,7 @@
         <module>hummer-support</module>
         <module>hummer-thread-plugin</module>
         <module>hummer-spring-plugin</module>
+        <module>hummer-config</module>
     </modules>
     <packaging>pom</packaging>
 

@@ -8,6 +8,8 @@ import org.springframework.core.io.ClassPathResource;
 import java.util.ServiceLoader;
 
 /**
+ * wrapper application, biz application need use this method {@link #start}.
+ *
  * @Author: lee
  * @version:1.0.0
  * @Date: 2019/6/13 18:34
