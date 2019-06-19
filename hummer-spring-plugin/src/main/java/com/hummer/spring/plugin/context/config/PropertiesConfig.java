@@ -12,6 +12,6 @@ public class PropertiesConfig implements ApplicationListener<ApplicationEnvironm
     @Override
     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
         ConfigurableEnvironment ce = event.getEnvironment();
-        PropertiesContainer.loadData(ce);
+        PropertiesContainer.loadPropertyData(ce);
     }
 }

@@ -1,4 +1,4 @@
-package com.hummer.thread.plugin;
+package com.hummer.pipeline.plugin;
 
 
 import org.testng.annotations.Test;

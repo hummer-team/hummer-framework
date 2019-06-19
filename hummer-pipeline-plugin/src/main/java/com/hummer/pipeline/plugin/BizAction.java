@@ -1,4 +1,4 @@
-package com.hummer.thread.plugin;
+package com.hummer.pipeline.plugin;
 
 import java.util.function.Consumer;
 import java.util.function.Function;

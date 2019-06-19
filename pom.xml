@@ -8,9 +8,10 @@
     <modules>
         <module>hummer-api</module>
         <module>hummer-support</module>
-        <module>hummer-thread-plugin</module>
+        <module>hummer-pipeline-plugin</module>
         <module>hummer-spring-plugin</module>
         <module>hummer-config</module>
+        <module>hummer-rest</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -71,6 +72,16 @@
             <dependency>
                 <groupId>com.hummer</groupId>
                 <artifactId>hummer-spring-plugin</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-rest</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-support</artifactId>
                 <version>${hummer.version}</version>
             </dependency>
 

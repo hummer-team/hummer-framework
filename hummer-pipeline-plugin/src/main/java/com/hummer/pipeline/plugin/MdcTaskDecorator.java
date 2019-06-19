@@ -1,4 +1,4 @@
-package com.hummer.thread.plugin;
+package com.hummer.pipeline.plugin;
 
 import org.slf4j.MDC;
 import org.springframework.core.task.TaskDecorator;

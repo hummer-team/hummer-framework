@@ -9,7 +9,8 @@ import org.springframework.stereotype.Component;
 /**
  * listener spring boot link {#ApplicationPreparedEvent} event,this event express spring boot context load done,but bean
  * no begin loading.
- * @see https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/ content `Application Events and Listeners`
+ *
+ * @link https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/ content `Application Events and Listeners`
  * @Author: lee
  * @version:1.0.0
  * @Date: 2019/6/13 16:27

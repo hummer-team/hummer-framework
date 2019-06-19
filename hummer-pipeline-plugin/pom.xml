@@ -57,7 +57,10 @@
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.hummer</groupId>
+            <artifactId>hummer-spring-plugin</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <resources>

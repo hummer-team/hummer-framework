@@ -21,7 +21,7 @@ public class CoreContext implements EnvironmentAware {
 
     @Override
     public void setEnvironment(Environment event) {
-        PropertiesContainer.loadData(event);
+        PropertiesContainer.loadPropertyData(event);
         LOGGER.info("evn is {}",event.getActiveProfiles());
     }
 

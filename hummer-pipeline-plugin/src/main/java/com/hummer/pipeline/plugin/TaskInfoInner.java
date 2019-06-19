@@ -1,4 +1,4 @@
-package com.hummer.thread.plugin;
+package com.hummer.pipeline.plugin;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
