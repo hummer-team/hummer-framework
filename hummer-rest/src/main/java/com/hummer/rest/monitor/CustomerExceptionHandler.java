@@ -11,11 +11,11 @@ public interface CustomerExceptionHandler {
     /**
      * impl handle exception
      *
-     * @param throwable
+     * @param context
      * @return void
      * @author liguo
      * @date 2019/6/20 17:55
      * @version 1.0.0
      **/
-    void hande(Throwable throwable);
+    void hande(GlobaleExceptionContext context);
 }
