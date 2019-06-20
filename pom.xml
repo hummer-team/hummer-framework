@@ -8,10 +8,9 @@
     <modules>
         <module>hummer-api</module>
         <module>hummer-support</module>
-        <module>hummer-pipeline-plugin</module>
-        <module>hummer-spring-plugin</module>
         <module>hummer-config</module>
         <module>hummer-rest</module>
+        <module>hummer-plugin</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -59,6 +58,8 @@
         <junit.version>4.12</junit.version>
         <hummer.version>1.0.0-SNAPSHOT</hummer.version>
         <spring-boot.version>2.1.0.RELEASE</spring-boot.version>
+        <httpasync.version>4.1.2</httpasync.version>
+        <fastjson.version>1.2.58</fastjson.version>
     </properties>
 
     <dependencyManagement>
@@ -66,7 +67,7 @@
         <dependencies>
             <dependency>
                 <groupId>com.hummer</groupId>
-                <artifactId>hummer-thread-plugin</artifactId>
+                <artifactId>hummer-pipeline-plugin</artifactId>
                 <version>${hummer.version}</version>
             </dependency>
             <dependency>
@@ -92,7 +93,19 @@
                 <version>6.4</version>
                 <scope>compile</scope>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpasyncclient</artifactId>
+                <version>${httpasync.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
             <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
@@ -167,6 +180,17 @@
                 <groupId>org.springFramework</groupId>
                 <artifactId>spring-context</artifactId>
                 <version>4.3.9.RELEASE</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>4.3.9.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>2.9.9</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
