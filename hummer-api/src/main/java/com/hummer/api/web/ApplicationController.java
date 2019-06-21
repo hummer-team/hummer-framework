@@ -41,6 +41,7 @@ public class ApplicationController {
     @ResponseBody
     @ApiOperation(value = "view the list of ALL current active created stored appllication items", response = ApplicationEntry.class)
     public List<ApplicationEntry> getAllAlerts() {
+
         log.debug("Trying to retrieve all alerts");
         log.info("---------------------{}---------------------", SpringApplicationContext.getBean("demo"));
         log.info("*********************{}*********************",value);
@@ -56,8 +57,9 @@ public class ApplicationController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create an application entry into the application manager")
     public void createAlert(@Valid @RequestBody ApplicationEntry request) {
-        log.debug("Trying to create an alert: {}", request.toString());
-        applicationService.createApplicationItem(modelMapper.map(request, ApplicationItem.class));
+        throw new NullPointerException("ssssssssss");
+        //log.debug("Trying to create an alert: {}", request.toString());
+        //applicationService.createApplicationItem(modelMapper.map(request, ApplicationItem.class));
     }
 
     @RequestMapping(method={RequestMethod.GET},value={"/version"})

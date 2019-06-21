@@ -17,5 +17,5 @@ public interface CustomerExceptionHandler {
      * @date 2019/6/20 17:55
      * @version 1.0.0
      **/
-    void hande(GlobaleExceptionContext context);
+    void hande(GlobalExceptionContext context);
 }
