@@ -103,6 +103,25 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
     }
 
     /**
+     * get properties as string
+     * @param key key
+     * @return
+     */
+    public static String valueOfString(String key){
+        return get(key,String.class);
+    }
+
+    /**
+     * get properties as string
+     * @param key key
+     * @param defaultVal if key not exists then return default value
+     * @return
+     */
+    public static String valueOfString(String key,String defaultVal){
+        return get(key,String.class,defaultVal);
+    }
+
+    /**
      * get this key property value.
      *
      * @param key       key

@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -21,14 +20,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
 
-import static com.hummer.support.SysConsts.SYSTEM_REMOTE_IP_SPLIT_CHAR;
+import static com.hummer.support.SysConsts.RestConsts.SYSTEM_REMOTE_IP_SPLIT_CHAR;
 
 /**
  * @Author: lee
  * @version:1.0.0
  * @Date: 2019/6/24 17:49
  **/
-@Component
 public class RequestFilter implements Filter {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestFilter.class);
     private static final String PARAM_NAME_EXCLUSIONS = "exclusions";
@@ -97,6 +95,7 @@ public class RequestFilter implements Filter {
         buildRequestId(httpRequest);
         long start = System.currentTimeMillis();
         try {
+            // TODO: 2019/6/24 insert response logic 
             chain.doFilter(request, response);
         } catch (Throwable throwable) {
             LOGGER.error("request {} handle failed,cost {} millis"
@@ -104,7 +103,7 @@ public class RequestFilter implements Filter {
                     , System.currentTimeMillis() - start);
         } finally {
             MDC.clear();
-            LOGGER.debug("request {} handle done,cost {} millis"
+            LOGGER.debug("request {} handle done,total cost {} millis"
                     , HttpServletRequestUtil.getCurrentUrl(httpRequest)
                     , System.currentTimeMillis() - start);
         }
@@ -139,8 +138,8 @@ public class RequestFilter implements Filter {
             }
         }
         MDC.put(SysConsts.REQUEST_ID, requestId);
-        MDC.put(SysConsts.SERVER_IP, IpUtil.getLocalIp());
-        MDC.put(SysConsts.CLIENT_IP, getRemoteAddr(httpRequest));
+        MDC.put(SysConsts.RestConsts.SERVER_IP, IpUtil.getLocalIp());
+        MDC.put(SysConsts.RestConsts.CLIENT_IP, getRemoteAddr(httpRequest));
 
         return requestId;
     }

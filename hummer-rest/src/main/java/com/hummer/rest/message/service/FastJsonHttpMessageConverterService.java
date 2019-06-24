@@ -11,6 +11,7 @@ import com.hummer.rest.message.CompressHandler;
 import com.hummer.rest.message.handle.RequestBodyHandle;
 import com.hummer.rest.message.handle.ResponseBodyHandle;
 import com.hummer.support.exceptions.ErrorRequestException;
+import com.hummer.support.exceptions.SysException;
 import com.hummer.support.utils.ZipUtil;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
@@ -126,19 +127,19 @@ public class FastJsonHttpMessageConverterService extends FastJsonHttpMessageConv
                         , JSON.DEFAULT_GENERATE_FEATURE
                         , jsonConfig.getSerializerFeatures());
             }
-            LOGGER.debug("business logic return result serial cost {} millis"
-                    , System.currentTimeMillis() - serialStart);
 
             //if client accept gzip then handle compress
             byte[] content = gzipIfNecessary(result, httpHeaders);
-            LOGGER.debug("business logic return result size {} bytes"
-                    , content.length);
+            long serialCostTime = System.currentTimeMillis() - serialStart;
+
             httpHeaders.setContentLength(content.length);
             outputStream.write(content);
             OutputStream out = outputMessage.getBody();
             outputStream.writeTo(out);
-            LOGGER.debug("serial response body done cost {} millis"
-                    , System.currentTimeMillis() - start);
+            LOGGER.debug("business logic done total cost {} millis, return result serial cost {} millis,serial result {} bytes"
+                    , System.currentTimeMillis() - start
+                    , serialCostTime
+                    , content.length);
         }
     }
 
@@ -164,6 +165,9 @@ public class FastJsonHttpMessageConverterService extends FastJsonHttpMessageConv
 
         //handle `application/x-www-form-urlencoded` body
         MediaType contentType = header.getContentType();
+        if (contentType == null) {
+            throw new SysException("request content type is null");
+        }
         Charset charset = (contentType.getCharset() != null ? contentType.getCharset() : DEFAULT_CHARSET);
         contentStr = CharStreams.toString(new InputStreamReader(inputStream, charset));
         if (contentType.isCompatibleWith(MediaType.APPLICATION_FORM_URLENCODED)) {
