@@ -33,7 +33,8 @@
     <logger name="org.springframework" level="INFO" dditivity="false"/>
     <logger name="org.h2.*" level="INFO" dditivity="false"/>
     <logger name="org.hibernate.*" level="INFO" dditivity="false"/>
-    <root level="INFO">
+    <logger name="com.hummer.*" level="DEBUG" dditivity="false"/>
+    <root level="DEBUG">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="stash-file"/>
     </root>
