@@ -125,7 +125,7 @@ public class RequestFilter implements Filter {
      */
     @Override
     public void destroy() {
-
+        LOGGER.info("hummer framework destroyed.");
     }
 
 

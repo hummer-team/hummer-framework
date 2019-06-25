@@ -103,22 +103,53 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
     }
 
     /**
-     * get properties as string
-     * @param key key
-     * @return
-     */
-    public static String valueOfString(String key){
-        return get(key,String.class);
+     * get properties as  target class type.
+     *
+     * @param key       key
+     * @param classType target class type
+     * @return T
+     * @author liguo
+     * @date 2019/6/25 17:27
+     * @version 1.0.0
+     **/
+    public static <T> T valueOf(String key, Class<T> classType) {
+        return get(key, classType);
     }
 
     /**
      * get properties as string
+     *
      * @param key key
+     * @return
+     */
+    public static String valueOfString(String key) {
+        return get(key, String.class);
+    }
+
+    /**
+     * get properties as string
+     *
+     * @param key        key
      * @param defaultVal if key not exists then return default value
      * @return
      */
-    public static String valueOfString(String key,String defaultVal){
-        return get(key,String.class,defaultVal);
+    public static String valueOfString(String key, String defaultVal) {
+        return get(key, String.class, defaultVal);
+    }
+
+    /**
+     * get properties as  target class type.
+     *
+     * @param key       key
+     * @param classType target class type
+     * @param defVal    if key not exists then return default value
+     * @return T target class type
+     * @author liguo
+     * @date 2019/6/25 17:25
+     * @version 1.0.0
+     **/
+    public static <T> T valueOf(String key, Class<T> classType, T defVal) {
+        return get(key, classType, defVal);
     }
 
     /**

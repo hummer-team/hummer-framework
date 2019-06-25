@@ -11,6 +11,7 @@
         <module>hummer-config</module>
         <module>hummer-rest</module>
         <module>hummer-plugin</module>
+        <module>hummer-dao</module>
     </modules>
     <packaging>pom</packaging>
 
