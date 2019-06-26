@@ -1,7 +1,7 @@
 package com.hummer.dao.condition;
 
 
-import com.hummer.spring.plugin.context.config.PropertiesContainer;
+import com.hummer.spring.plugin.context.PropertiesContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Condition;

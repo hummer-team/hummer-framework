@@ -1,6 +1,5 @@
 package com.hummer.spring.plugin.context;
 
-import com.hummer.spring.plugin.context.config.PropertiesContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -26,7 +25,6 @@ public class CoreContext implements EnvironmentAware {
     }
 
     @Bean
-    // @Conditional(SpringContextCondition.class)
     public SpringApplicationContext springApplicationContext(ApplicationContext applicationContext) {
         SpringApplicationContext context = new SpringApplicationContext();
         context.setApplicationContext(applicationContext);

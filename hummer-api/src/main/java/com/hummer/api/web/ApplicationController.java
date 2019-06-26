@@ -2,7 +2,7 @@ package com.hummer.api.web;
 
 //import com.hummer.spring.plugin.context.SpringApplicationContext;
 import com.hummer.spring.plugin.context.SpringApplicationContext;
-import com.hummer.spring.plugin.context.config.PropertiesContainer;
+import com.hummer.spring.plugin.context.PropertiesContainer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
@@ -17,7 +17,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.hummer.api.service.ApplicationService;
-import com.hummer.api.domain.ApplicationItem;
 
 /**
  * Created by MRomeh on 08/08/2017.

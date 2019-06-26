@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.google.common.base.Strings;
 
-import com.hummer.spring.plugin.context.config.PropertiesContainer;
+import com.hummer.spring.plugin.context.PropertiesContainer;
 import com.hummer.support.SysConsts;
 import com.hummer.support.utils.DateUtil;
 import org.apache.commons.collections.CollectionUtils;

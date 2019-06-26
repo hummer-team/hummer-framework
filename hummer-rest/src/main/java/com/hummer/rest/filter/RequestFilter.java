@@ -1,6 +1,6 @@
 package com.hummer.rest.filter;
 
-import com.hummer.spring.plugin.context.config.PropertiesContainer;
+import com.hummer.spring.plugin.context.PropertiesContainer;
 import com.hummer.support.SysConsts;
 import com.hummer.support.utils.HttpServletRequestUtil;
 import com.hummer.support.utils.IpUtil;

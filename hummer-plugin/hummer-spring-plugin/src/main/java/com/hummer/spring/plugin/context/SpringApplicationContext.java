@@ -1,6 +1,9 @@
 package com.hummer.spring.plugin.context;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.InitializingBean;
@@ -18,6 +21,7 @@ import java.util.Map;
  * @Date: 2019/6/13 15:55
  **/
 public class SpringApplicationContext implements ApplicationContextAware {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpringApplicationContext.class);
     private static ApplicationContext applicationContext;
 
     /**
@@ -59,6 +63,16 @@ public class SpringApplicationContext implements ApplicationContextAware {
         return applicationContext;
     }
 
+    /**
+     * dynamic register bean
+     *
+     * @param beanName               beanName
+     * @param abstractBeanDefinition abstractBeanDefinition
+     * @return void
+     * @author liguo
+     * @date 2019/6/25 18:29
+     * @version 1.0.0
+     **/
     public static void register(String beanName, AbstractBeanDefinition abstractBeanDefinition) {
         Preconditions.checkNotNull(applicationContext, "Spring ApplicationContext is null!");
 
@@ -67,16 +81,20 @@ public class SpringApplicationContext implements ApplicationContextAware {
         DefaultListableBeanFactory defaultListableBeanFactory =
                 (DefaultListableBeanFactory) configurableApplicationContext.getBeanFactory();
         defaultListableBeanFactory.registerBeanDefinition(beanName, abstractBeanDefinition);
+        LOGGER.info("dynamic register bean {} done", beanName);
     }
 
-    public static void removeBean(String beanId) {
-        if (beanId == null || beanId.isEmpty()) {
+    public static void removeBean(String beanName) {
+        if (Strings.isNullOrEmpty(beanName)) {
             return;
         }
+
         Preconditions.checkNotNull(applicationContext, "Spring ApplicationContext is null!");
         ConfigurableApplicationContext applicationContexts = (ConfigurableApplicationContext) applicationContext;
         DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) applicationContexts.getBeanFactory();
-        beanFactory.removeBeanDefinition(beanId);
+        beanFactory.removeBeanDefinition(beanName);
+
+        LOGGER.info("remove register bean {} done", beanName);
     }
 
     public static void removeBeans(String... beanIds) {

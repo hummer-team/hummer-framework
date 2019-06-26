@@ -21,7 +21,7 @@ public class SysConsts {
     public static final String DEFAULT_CHARSET_NAME = "UTF-8";
 
     public static class RestConsts {
-        private RestConsts(){
+        private RestConsts() {
 
         }
 
@@ -35,4 +35,27 @@ public class SysConsts {
         public static final String REST_REQUESTILTER_IINCLUDE_URL = "rest.requestfilter.include.url";
     }
 
+
+    public static class DaoConsts {
+        private DaoConsts() {
+
+        }
+
+        public static final String SQL_SESSION_TEMPLATE_NAME = "jdbcTemplate";
+        public static final String MYBATIS_BASE_PACKAGE ="mybatis.base.package";
+        public static final String DB_NAME_KEY ="db.names";
+        public static final String DB_PREFIX ="jdbc.";
+        public static final String JDBC_TESTWHILEIDLE = "jdbc.testWhileIdle";
+        public static final String JDBC_TESTONBORROW = "jdbc.testOnBorrow";
+        public static final String JDBC_TESTONRETURN = "jdbc.testOnReturn";
+        public static final String JDBC_VALIDATIONQUERYTIMEOUT = "jdbc.validationQueryTimeout";
+        public static final String JDBC_REMOVEABANDONED = "jdbc.removeAbandoned";
+        public static final String JDBC_REMOVEABANDONEDTIMEOUT = "jdbc.removeAbandonedTimeout";
+        public static final String JDBC_LOGABANDONED = "jdbc.logAbandoned";
+        public static final String DRUID_SHOW_TIMEOUT = "druid.sql.timeout";
+        public static final String DRUID_SHOW_SQL = "druid.show.sql";
+        public static final String DRUID_MERGE_SQL = "druid.merge.sql";
+        public static final String JDBC_CHECK_SQL="jdbc.check.sql";
+        public static final String DRUID_SELECT_UNION_CHECK = "druid.select.union.check";
+    }
 }

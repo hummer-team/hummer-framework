@@ -1,6 +1,8 @@
-package com.hummer.spring.plugin.context.config;
+package com.hummer.spring.plugin.context;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -82,6 +84,29 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
      **/
     public static boolean hasKey(String key) {
         return PROPERTY_MAP.containsKey(key);
+    }
+
+    /**
+     * scan property all key return match key prefix
+     *
+     * @param keyPrefix key prefix
+     * @return #{java.util.Map<java.lang.String,java.lang.Object>}
+     * @throws IllegalArgumentException key prefix is null.
+     * @author liguo
+     * @date 2019/6/26 16:12
+     * @version 1.0.0
+     **/
+    public static Map<String, Object> scanKeys(String keyPrefix) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(keyPrefix), "key prefix can not null.");
+
+        Map<String, Object> map = Maps.newHashMapWithExpectedSize(PROPERTY_MAP.size());
+
+        PROPERTY_MAP.entrySet()
+                .stream()
+                .filter(k -> k.getKey().startsWith(keyPrefix))
+                .forEach(entry -> map.put(entry.getKey(), entry.getValue()));
+
+        return map;
     }
 
     /**
