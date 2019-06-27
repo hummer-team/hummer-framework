@@ -73,7 +73,7 @@ public class SpringApplicationContext implements ApplicationContextAware {
      * @date 2019/6/25 18:29
      * @version 1.0.0
      **/
-    public static void register(String beanName, AbstractBeanDefinition abstractBeanDefinition) {
+    public static void registerDynamicBen(String beanName, AbstractBeanDefinition abstractBeanDefinition) {
         Preconditions.checkNotNull(applicationContext, "Spring ApplicationContext is null!");
 
         ConfigurableApplicationContext configurableApplicationContext =
