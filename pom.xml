@@ -74,6 +74,8 @@
         <guava.version>20.0</guava.version>
         <swagger-annotations.version>1.5.13</swagger-annotations.version>
         <mybatis.version>3.4.6</mybatis.version>
+        <spring-tx.version>5.1.2.RELEASE</spring-tx.version>
+        <spring-jdbc.version>5.1.2.RELEASE</spring-jdbc.version>
     </properties>
 
     <dependencyManagement>
@@ -104,13 +106,18 @@
                 <artifactId>hummer-support</artifactId>
                 <version>${hummer.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.hummer</groupId>
-                <artifactId>hummer-dao</artifactId>
-                <version>${hummer.version}</version>
-            </dependency>
 
             <!--framework plugin-->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${spring-jdbc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${spring-tx.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.mybatis</groupId>
                 <artifactId>mybatis</artifactId>
@@ -288,12 +295,7 @@
                 <version>1.4.192</version>
                 <scope>runtime</scope>
             </dependency>
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok-version}</version>
-                <optional>true</optional>
-            </dependency>
+
             <dependency>
                 <groupId>org.mybatis</groupId>
                 <artifactId>mybatis-spring</artifactId>
