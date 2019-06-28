@@ -76,6 +76,7 @@
         <mybatis.version>3.4.6</mybatis.version>
         <spring-tx.version>5.1.2.RELEASE</spring-tx.version>
         <spring-jdbc.version>5.1.2.RELEASE</spring-jdbc.version>
+        <mysql-connector-Java.version>8.0.16</mysql-connector-Java.version>
     </properties>
 
     <dependencyManagement>
@@ -108,6 +109,12 @@
             </dependency>
 
             <!--framework plugin-->
+
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-Java</artifactId>
+                <version>${mysql-connector-Java.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-jdbc</artifactId>
@@ -248,6 +255,17 @@
                 <groupId>org.springFramework</groupId>
                 <artifactId>spring-core</artifactId>
                 <version>5.1.2.RELEASE</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>1.7.25</version>
             </dependency>
             <dependency>
                 <groupId>org.springFramework</groupId>

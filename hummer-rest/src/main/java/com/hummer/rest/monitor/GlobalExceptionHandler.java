@@ -1,5 +1,6 @@
 package com.hummer.rest.monitor;
 
+import com.google.common.base.Strings;
 import com.hummer.rest.model.ResourceResponse;
 import com.hummer.support.SysConsts;
 import com.hummer.support.exceptions.AppException;
@@ -31,6 +32,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolationException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -77,17 +79,36 @@ public class GlobalExceptionHandler {
         //parse request body if exists.
         String bodyString = readBody(request);
         String id = MDC.get(SysConsts.REQUEST_ID);
-        if (!(e instanceof AppException)) {
-            StringBuilder sb = new StringBuilder();
+
+        ResourceResponse<Object> rep = new ResourceResponse<>();
+        Integer status;
+        StringBuilder sb = new StringBuilder();
+        if (e instanceof ConstraintViolationException) {
+            String errorMessage = ((ConstraintViolationException) e).getConstraintViolations()
+                    .iterator()
+                    .next()
+                    .getMessage();
+            status = 40000;
+            rep.setCode(status);
+            rep.setMessage(errorMessage);
+        } else if (!(e instanceof AppException)) {
             sb.append("current request failed :")
                     .append(StringUtils.LF)
                     .append("url:")
-                    .append(String.format("%s?%s", request.getRequestURL(), request.getQueryString()))
+                    .append(requestUrl(request))
                     .append(StringUtils.LF)
                     .append("request body:").append(bodyString)
                     .append(StringUtils.LF)
                     .append(String.format("request id:%s > stack: %s", id, ExceptionUtils.getStackTrace(e)));
             LOGGER.error(sb.toString());
+            status = EXCEPTIONS.get(e.getClass());
+            rep.setCode(status == null ? 500 * 100 : status * 100);
+            rep.setMessage(e.getMessage());
+        } else {
+            //output
+            rep.setCode(((AppException) e).getCode());
+            rep.setMessage(e.getMessage());
+            rep.setData(((AppException) e).getReturnObj());
         }
 
         //if exists customer exception handle
@@ -95,25 +116,23 @@ public class GlobalExceptionHandler {
             handler.hande(GlobalExceptionContext
                     .builder()
                     .throwable(e)
-                    .url(String.format("%s?%s", request.getRequestURL(), request.getQueryString()))
+                    .url(requestUrl(request))
                     .param(bodyString)
                     .build());
         }
 
-        //output
-        Integer status = EXCEPTIONS.get(e.getClass());
-        ResourceResponse<Object> rep = new ResourceResponse<>();
-        rep.setCode(status == null ? 500 * 100 : status * 100);
-        rep.setMessage(e.getMessage());
-        rep.setTrackId(id);
-        if (e instanceof AppException) {
-            rep.setData(((AppException) e).getReturnObj());
-        }
         //set response http status
+        rep.setTrackId(id);
         response.setHeader("Track_Id", id);
         response.setHeader("Service_Id", "127.0.0.1");
-        response.setStatus(status == null ? 500 : status);
         return rep;
+    }
+
+    private String requestUrl(HttpServletRequest request) {
+        if (!Strings.isNullOrEmpty(request.getQueryString())) {
+            return String.format("%s?%s", request.getRequestURL(), request.getQueryString());
+        }
+        return request.getRequestURL().toString();
     }
 
     private String readBody(final HttpServletRequest request) {
