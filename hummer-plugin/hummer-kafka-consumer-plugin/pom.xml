@@ -3,19 +3,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>hummer-framework</artifactId>
+        <artifactId>hummer-plugin</artifactId>
         <groupId>com.hummer</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <packaging>pom</packaging>
-    <artifactId>hummer-plugin</artifactId>
+
+    <artifactId>hummer-kafka-customer-plugin</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
-    <modules>
-        <module>hummer-pipeline-plugin</module>
-        <module>hummer-spring-plugin</module>
-        <module>hummer-kafka-consumer-plugin</module>
-        <module>hummer-kafka-producer-plugin</module>
-    </modules>
+
 </project>

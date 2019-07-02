@@ -1,9 +1,9 @@
 package com.hummer.rest.filter;
 
 import com.hummer.spring.plugin.context.PropertiesContainer;
-import com.hummer.support.SysConsts;
-import com.hummer.support.utils.HttpServletRequestUtil;
-import com.hummer.support.utils.IpUtil;
+import com.hummer.common.SysConsts;
+import com.hummer.common.utils.HttpServletRequestUtil;
+import com.hummer.common.utils.IpUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
 
-import static com.hummer.support.SysConsts.RestConsts.SYSTEM_REMOTE_IP_SPLIT_CHAR;
+import static com.hummer.common.SysConsts.RestConsts.SYSTEM_REMOTE_IP_SPLIT_CHAR;
 
 /**
  * @Author: lee

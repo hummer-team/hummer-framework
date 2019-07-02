@@ -1,7 +1,7 @@
 package com.hummer.dao.interceptor;
 
 import com.hummer.spring.plugin.context.PropertiesContainer;
-import com.hummer.support.SysConsts;
+import com.hummer.common.SysConsts;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.Interceptor;

@@ -2,8 +2,8 @@ package com.hummer.rest.monitor;
 
 import com.google.common.base.Strings;
 import com.hummer.rest.model.ResourceResponse;
-import com.hummer.support.SysConsts;
-import com.hummer.support.exceptions.AppException;
+import com.hummer.common.SysConsts;
+import com.hummer.common.exceptions.AppException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;

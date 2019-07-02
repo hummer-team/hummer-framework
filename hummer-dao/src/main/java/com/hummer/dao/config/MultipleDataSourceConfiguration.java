@@ -1,10 +1,8 @@
 package com.hummer.dao.config;
 
-import com.alibaba.druid.filter.Filter;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -12,8 +10,7 @@ import com.hummer.dao.annotation.DaoAnnotation;
 import com.hummer.dao.condition.DaoLoadCondition;
 import com.hummer.dao.datasource.DruidDataSourceBuilder;
 import com.hummer.spring.plugin.context.PropertiesContainer;
-import com.hummer.support.SysConsts;
-import org.apache.commons.lang3.StringUtils;
+import com.hummer.common.SysConsts;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +19,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 

@@ -1,6 +1,6 @@
 package com.hummer.rest.utils;
 
-import com.hummer.support.exceptions.AppException;
+import com.hummer.common.exceptions.AppException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.Errors;
