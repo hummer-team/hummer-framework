@@ -105,7 +105,7 @@
             </dependency>
             <dependency>
                 <groupId>com.hummer</groupId>
-                <artifactId>hummer-support</artifactId>
+                <artifactId>hummer-common</artifactId>
                 <version>${hummer.version}</version>
             </dependency>
 
