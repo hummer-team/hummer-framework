@@ -18,10 +18,19 @@ import java.util.Properties;
  * @author bingy
  * @since 1.0.0
  */
-public class LogInterceptor implements Interceptor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LogInterceptor.class);
+public class MybatisSlowSqlLogInterceptor implements Interceptor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MybatisSlowSqlLogInterceptor.class);
     private Boolean isShowSql;
     private Integer sqlTimout;
+
+    /**
+     * new log interceptor instance
+     *
+     * @return @seen {@link MybatisSlowSqlLogInterceptor}
+     */
+    public static MybatisSlowSqlLogInterceptor instance() {
+        return new MybatisSlowSqlLogInterceptor();
+    }
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {

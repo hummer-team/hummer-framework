@@ -25,7 +25,7 @@ public class SpringContextListener implements ApplicationListener<ApplicationPre
         if (SpringApplicationContext.getApplicationContext() == null) {
             SpringApplicationContext context = new SpringApplicationContext();
             context.setApplicationContext(event.getApplicationContext());
-            LOGGER.info("SpringContext load success!");
+            LOGGER.info("SpringContext load success,now begin create bean");
         }
     }
 }

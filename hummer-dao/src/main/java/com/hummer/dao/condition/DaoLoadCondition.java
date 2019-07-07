@@ -11,7 +11,7 @@ import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.MethodMetadata;
 
 /**
- * this class Impl dao loading switch,if configuration true load dao else ignore dao loading.
+ * this class Impl dao loading switch,if configuration true then load dao else ignore dao loading.
  *
  * @Author: lee
  * @version:1.0.0
@@ -21,7 +21,7 @@ public class DaoLoadCondition implements Condition {
     private static final Logger LOGGER = LoggerFactory.getLogger(DaoLoadCondition.class);
 
     /**
-     * Determine if the condition matches.
+     * Determine if the condition matches,if `dao.load.enable` value equals false then ignore data source
      *
      * @param context  the condition context
      * @param metadata metadata of the {@link AnnotationMetadata class}
@@ -31,7 +31,7 @@ public class DaoLoadCondition implements Condition {
      */
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-        boolean isLoad = PropertiesContainer.valueOf("dao.load", Boolean.class, Boolean.TRUE);
+        boolean isLoad = PropertiesContainer.valueOf("dao.load.enable", Boolean.class, Boolean.TRUE);
         LOGGER.info("loading dao switch {}", isLoad);
         return isLoad;
     }

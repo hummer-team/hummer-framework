@@ -64,7 +64,7 @@ public class SpringApplicationContext implements ApplicationContextAware {
     }
 
     /**
-     * dynamic register bean
+     * dynamic register bean to container
      *
      * @param beanName               beanName
      * @param abstractBeanDefinition abstractBeanDefinition

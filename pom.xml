@@ -78,6 +78,7 @@
         <spring-jdbc.version>5.1.2.RELEASE</spring-jdbc.version>
         <mysql-connector-Java.version>8.0.16</mysql-connector-Java.version>
         <cglib.version>3.2.5</cglib.version>
+        <pagehelper.version>5.1.0</pagehelper.version>
     </properties>
 
     <dependencyManagement>
@@ -110,6 +111,11 @@
             </dependency>
 
             <!--framework plugin-->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper</artifactId>
+                <version>${pagehelper.version}</version>
+            </dependency>
             <dependency>
                 <groupId>cglib</groupId>
                 <artifactId>cglib</artifactId>

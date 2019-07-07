@@ -138,7 +138,7 @@ public class IpUtil {
             try {
                 if (SystemUtils.IS_OS_WINDOWS) {
                     String ipFlag = "0.0.0.0";
-                    process = Runtime.getRuntime().exec("route print");
+                    process = Runtime.getRuntime().exec("context print");
                     inputStream = process.getInputStream();
                     inputStreamReader = new InputStreamReader(inputStream);
 

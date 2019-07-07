@@ -184,7 +184,7 @@ public final class HttpAsyncClient {
                 , PropertiesContainer.get(String.format("%s-http-max-total", groupName)
                         , Integer.class
                         , HTTP_MAX_TOTAL)
-                , PropertiesContainer.get(String.format("%s-http-max-per-route", groupName)
+                , PropertiesContainer.get(String.format("%s-http-max-per-context", groupName)
                         , Integer.class
                         , HTTP_PER_MAX_TOTAL)
                 , groupName);

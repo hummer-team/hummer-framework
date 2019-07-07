@@ -1,4 +1,4 @@
-package com.hummer.dao.datasource;
+package com.hummer.dao.druiddatasource;
 
 import com.alibaba.druid.filter.Filter;
 import com.alibaba.druid.filter.stat.StatFilter;
@@ -34,11 +34,10 @@ public class DruidDataSourceBuilder {
     private static final Logger LOGGER = LoggerFactory.getLogger(DruidDataSource.class);
 
     /**
-     * builder druid data source instance .
+     * builder druid data source instance .see also <a href='https://github.com/alibaba/druid'>https://github.com/alibaba/druid</a>
      *
-     * @param ds Druid data source configuration
-     * @return com.alibaba.druid.pool.DruidDataSource
-     * @link https://github.com/alibaba/druid
+     * @param ds druid data source configuration map
+     * @return {@link com.alibaba.druid.pool.DruidDataSource}
      * @author liguo
      * @date 2019/6/26 17:36
      * @version 1.0.0

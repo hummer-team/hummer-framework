@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hummer.api.dao.BizLogTableConfigDao">
+
+    <resultMap id="BaseResultMap"
+               type="com.hummer.api.po.BizLogTableConfigPo">
+        <id column="id" property="id"/>
+        <result column="table_name" property="tableName"/>
+        <result column="split_type" property="splitType"/>
+        <result column="split_type_unit" property="splitTypeUnit"/>
+        <result column="biz_owner_group" property="bizOwnerGroup"/>
+        <result column="biz_owner_group_name" property="bizOwnerGroupName"/>
+        <result column="is_valid" property="isValid"/>
+        <result column="create_time" property="createTime"/>
+        <result column="column_names" property="columnNames"/>
+        <result column="insert_batch" property="insertBatch"/>
+    </resultMap>
+
+    <select id="getAllByTableName"
+            resultMap="BaseResultMap">
+        select id,
+               table_name,
+               split_type,
+               biz_owner_group,
+               biz_owner_group_name,
+               is_valid,
+               create_time,
+               column_names,
+               insert_batch
+        from biz_log_table_config
+    </select>
+
+</mapper>
