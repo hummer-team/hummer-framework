@@ -36,22 +36,23 @@ import static org.mybatis.spring.SqlSessionUtils.isSqlSessionTransactional;
  * @since 1.0.0
  */
 public class CustomSqlSessionTemplate extends SqlSessionTemplate {
-    private final static Logger LOGGER = LoggerFactory.getLogger(CustomSqlSessionTemplate.class);
-    //private final SqlSessionFactory sqlSessionFactory;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomSqlSessionTemplate.class);
     private final ExecutorType executorType;
     private final SqlSession sqlSessionProxy;
     private final PersistenceExceptionTranslator exceptionTranslator;
-
-
-    private Map<Object, SqlSessionFactory> targetSqlSessionFactoryMap;
+    /**
+     * cache multiple data source session
+     */
+    private Map<String, SqlSessionFactory> targetSqlSessionFactoryMap;
     private SqlSessionFactory defaultTargetSqlSessionFactory;
 
-    public void setTargetSqlSessionFactoryMap(Map<Object, SqlSessionFactory> targetSqlSessionFactoryMap) {
+    /**
+     * set target sql session factory
+     *
+     * @param targetSqlSessionFactoryMap target session
+     */
+    public void setTargetSqlSessionFactoryMap(Map<String, SqlSessionFactory> targetSqlSessionFactoryMap) {
         this.targetSqlSessionFactoryMap = targetSqlSessionFactoryMap;
-    }
-
-    public void setDefaultTargetSqlSessionFactory(SqlSessionFactory defaultTargetSqlSessionFactory) {
-        this.defaultTargetSqlSessionFactory = defaultTargetSqlSessionFactory;
     }
 
     public CustomSqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
@@ -68,7 +69,6 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
 
         super(sqlSessionFactory, executorType, exceptionTranslator);
 
-        //this.sqlSessionFactory = sqlSessionFactory;
         this.executorType = executorType;
         this.exceptionTranslator = exceptionTranslator;
 
@@ -80,7 +80,7 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
 
     /**
      * implement switch data source,if target sql session null then get default target session
-     * if is null then throw
+     * if is null then throw {@link SysException}
      *
      * @return {@link SqlSessionFactory}
      * @throws {@link SysException}

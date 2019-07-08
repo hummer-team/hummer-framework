@@ -16,8 +16,8 @@ public class MultipleDataSourceMap {
 
     }
 
-    private static final Set<String> dataSourceSets = Sets.newHashSetWithExpectedSize(6);
-    private static final ThreadLocal<DataSourceMetadata> HOLDER = new ThreadLocal<>();
+    private static final Set<String> DATA_SOURCE_SETS = Sets.newHashSetWithExpectedSize(6);
+    private static final InheritableThreadLocal<DataSourceMetadata> HOLDER = new InheritableThreadLocal<>();
 
     public static void setDataSource(final String name, final String dbType) {
         DataSourceMetadata metadata = getMeta(name, dbType);
@@ -67,7 +67,7 @@ public class MultipleDataSourceMap {
      * @since 1.0.0
      **/
     public static void cacheDataSource(final String dataSourceName) {
-        dataSourceSets.add(dataSourceName);
+        DATA_SOURCE_SETS.add(dataSourceName);
     }
 
     /**
@@ -80,7 +80,7 @@ public class MultipleDataSourceMap {
      * @since 1.0.0
      **/
     public static boolean exists(final String dataSourceName) {
-        return dataSourceSets.contains(dataSourceName);
+        return DATA_SOURCE_SETS.contains(dataSourceName);
     }
 
     /**

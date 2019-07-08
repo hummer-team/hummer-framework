@@ -3,6 +3,7 @@ package com.hummer.dao.config;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
@@ -87,30 +88,30 @@ public class MultipleDataSourceConfiguration {
         if (MapUtils.isEmpty(dataSourceGroup)) {
             return;
         }
+        String defaultDataSourceKey = PropertiesContainer.valueOfString("default.data.source");
         //foreach load target data source
-        boolean defaultDataSource = true;
         for (Map.Entry<String, Map<String, Object>> entry : dataSourceGroup.entrySet()) {
             long start = System.currentTimeMillis();
             String keyPrefix = entry.getKey();
             //builder druid pool instance
-            try  {
+            try {
                 DruidDataSource dataSource = DruidDataSourceBuilder.buildDataSource(entry.getValue());
                 //initDataSource
                 dataSource.init();
                 //register jdbc transaction bean
-                MybatisDynamicBean.registerTransaction(newKey(keyPrefix,"tx")
+                MybatisDynamicBean.registerTransaction(newKey(keyPrefix, "tx")
                         , dataSource);
                 //register jdbc sql session factory
-                MybatisDynamicBean.registerSqlSessionFactory(newKey(keyPrefix,"sqlSessionFactory")
+                MybatisDynamicBean.registerSqlSessionFactory(newKey(keyPrefix, "sqlSessionFactory")
                         , dataSource);
                 sqlSessionFactoryMap.put(keyPrefix,
                         (SqlSessionFactory) SpringApplicationContext.getBean(newKey(keyPrefix
-                                ,"sqlSessionFactory")));
+                                , "sqlSessionFactory")));
                 targetDataSources.put(keyPrefix, dataSource);
-                if (defaultDataSource) {
+                //check is default data source key.
+                if (keyPrefix.equalsIgnoreCase(defaultDataSourceKey)) {
                     defaultTargetDataSource = dataSource;
                 }
-                defaultDataSource = false;
                 //cache data source
                 MultipleDataSourceMap.cacheDataSource(keyPrefix);
                 LOGGER.info("data source `{}` initDataSource done,cost {} ms"
@@ -121,6 +122,10 @@ public class MultipleDataSourceConfiguration {
                         ",throwable", entry, throwable);
                 throw new SysException(50000, "data source initDataSource failed");
             }
+        }
+        //ensure exists default data source.
+        if (defaultTargetDataSource == null) {
+            defaultTargetDataSource = (DataSource) Iterables.get(targetDataSources.values(), 0);
         }
         //register default sql session template,will re factory
         MybatisDynamicBean.registerSqlSessionTemplate(sqlSessionFactoryMap);
@@ -145,7 +150,7 @@ public class MultipleDataSourceConfiguration {
      * =[jdbc.A,jdbc.B,jdbc.C]
      *
      * @param allMap all data source configuration
-     * @return <code> java.util.Collection<java.util.Map<java.lang.String,java.lang.Object>></code>
+     * @return {@link java.util.Collection<java.util.Map<java.lang.String,java.lang.Object>>}
      * @author liguo
      * @date 2019/6/26 18:34
      * @version 1.0.0
@@ -179,7 +184,7 @@ public class MultipleDataSourceConfiguration {
         return key.getKey().replaceAll(String.format("%s.", k), "");
     }
 
-    private String newKey(String prefixKey,String suffix){
-        return String.format("%s%s",prefixKey,suffix);
+    private String newKey(String prefixKey, String suffix) {
+        return String.format("%s%s", prefixKey, suffix);
     }
 }
