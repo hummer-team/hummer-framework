@@ -1,6 +1,7 @@
 package com.hummer.dao.mybatis;
 
 import com.github.pagehelper.PageInterceptor;
+import com.hummer.common.SysConsts;
 import com.hummer.dao.interceptor.DbTypeInterceptor;
 import com.hummer.dao.interceptor.MybatisSlowSqlLogInterceptor;
 import com.hummer.spring.plugin.context.PropertiesContainer;
@@ -15,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.testng.collections.Lists;
 
@@ -140,16 +142,18 @@ public class MybatisDynamicBean {
     /**
      * register sql session template
      *
-     * @param sqlSessionTemplateMap
+     * @param sqlSessionTemplateMap sql session
      */
     public static void registerSqlSessionTemplate(Map<String, SqlSessionFactory> sqlSessionTemplateMap) {
         //new custom sql session template ben
         BeanDefinitionBuilder beanDefinitionBuilder =
                 BeanDefinitionBuilder.genericBeanDefinition(CustomSqlSessionTemplate.class);
-        //constructor args
+        //call `CustomSqlSessionTemplate` constructor args,first session instance as default session instance.
         beanDefinitionBuilder.addConstructorArgValue(sqlSessionTemplateMap.entrySet().iterator().next().getValue());
-        beanDefinitionBuilder.addPropertyValue("targetSqlSessionFactorys", sqlSessionTemplateMap);
-        SpringApplicationContext.registerDynamicBen("sqlSessionTemplate"
+        beanDefinitionBuilder.addPropertyValue("targetSqlSessionFactoryMap", sqlSessionTemplateMap);
+        beanDefinitionBuilder.setLazyInit(true);
+
+        SpringApplicationContext.registerDynamicBen(SysConsts.DaoConsts.SQL_SESSION_TEMPLATE_NAME
                 , beanDefinitionBuilder.getRawBeanDefinition());
         LOGGER.info("bean custom sql session template register done,sql session template map {}"
                 , sqlSessionTemplateMap);

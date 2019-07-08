@@ -1,3 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.hummer.spring.plugin.context.CoreContext,\
+com.hummer.spring.plugin.context.starter.BootStarterBean,\
 com.hummer.spring.plugin.context.ConfigDemoTest

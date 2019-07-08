@@ -12,7 +12,10 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.MyBatisExceptionTranslator;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.support.PersistenceExceptionTranslator;
+import org.springframework.util.Assert;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -33,11 +36,12 @@ import static org.mybatis.spring.SqlSessionUtils.isSqlSessionTransactional;
  * @since 1.0.0
  */
 public class CustomSqlSessionTemplate extends SqlSessionTemplate {
-
-    private final SqlSessionFactory sqlSessionFactory;
+    private final static Logger LOGGER = LoggerFactory.getLogger(CustomSqlSessionTemplate.class);
+    //private final SqlSessionFactory sqlSessionFactory;
     private final ExecutorType executorType;
     private final SqlSession sqlSessionProxy;
     private final PersistenceExceptionTranslator exceptionTranslator;
+
 
     private Map<Object, SqlSessionFactory> targetSqlSessionFactoryMap;
     private SqlSessionFactory defaultTargetSqlSessionFactory;
@@ -64,7 +68,7 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
 
         super(sqlSessionFactory, executorType, exceptionTranslator);
 
-        this.sqlSessionFactory = sqlSessionFactory;
+        //this.sqlSessionFactory = sqlSessionFactory;
         this.executorType = executorType;
         this.exceptionTranslator = exceptionTranslator;
 
@@ -85,15 +89,14 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
     public SqlSessionFactory getSqlSessionFactory() {
 
         SqlSessionFactory targetSqlSessionFactory = targetSqlSessionFactoryMap
-                .get(MultipleDataSourceMap.getDataSource(true).getDbName());
+                .get(MultipleDataSourceMap.getDataSource(false).getDbName());
         if (targetSqlSessionFactory != null) {
             return targetSqlSessionFactory;
         } else if (defaultTargetSqlSessionFactory != null) {
+            LOGGER.warn("target sql session factory instance missing,return default sql session instance.");
             return defaultTargetSqlSessionFactory;
         }
-
-        throw new SysException(50000, "target sql session and default sql session unregistered,must register target" +
-                "sql session or default sql session");
+        throw new SysException(50000, "target session and default session is null.");
     }
 
     @Override

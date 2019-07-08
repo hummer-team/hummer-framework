@@ -1,12 +1,11 @@
-package com.hummer.spring.plugin.context;
+package com.hummer.spring.plugin.context.starter;
 
+import com.hummer.spring.plugin.context.SpringApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 
 
 /**
@@ -15,14 +14,8 @@ import org.springframework.core.env.Environment;
  * @Date: 2019/6/13 17:13
  **/
 @Configuration
-public class CoreContext implements EnvironmentAware {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CoreContext.class);
-
-    @Override
-    public void setEnvironment(Environment event) {
-        PropertiesContainer.loadPropertyData(event);
-        LOGGER.info("evn is {}",event.getActiveProfiles());
-    }
+public class BootStarterBean extends BaseEnvironment {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BootStarterBean.class);
 
     @Bean
     public SpringApplicationContext springApplicationContext(ApplicationContext applicationContext) {
@@ -31,5 +24,4 @@ public class CoreContext implements EnvironmentAware {
         LOGGER.info("init spring application context done.");
         return context;
     }
-
 }

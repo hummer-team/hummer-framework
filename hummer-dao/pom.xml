@@ -19,11 +19,11 @@
     <dependencies>
         <dependency>
             <groupId>com.hummer</groupId>
-            <artifactId>hummer-common</artifactId>
+            <artifactId>hummer-spring-plugin</artifactId>
         </dependency>
         <dependency>
             <groupId>com.hummer</groupId>
-            <artifactId>hummer-spring-plugin</artifactId>
+            <artifactId>hummer-common</artifactId>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -56,6 +56,10 @@
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
     </dependencies>
 

@@ -1,3 +1,0 @@
-/**
- * Spring Framework Configuration Files
- */

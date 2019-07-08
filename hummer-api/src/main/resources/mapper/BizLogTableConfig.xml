@@ -11,7 +11,7 @@
         <result column="split_type_unit" property="splitTypeUnit"/>
         <result column="biz_owner_group" property="bizOwnerGroup"/>
         <result column="biz_owner_group_name" property="bizOwnerGroupName"/>
-        <result column="is_valid" property="isValid"/>
+        <result column="is_valid" property="valid"/>
         <result column="create_time" property="createTime"/>
         <result column="column_names" property="columnNames"/>
         <result column="insert_batch" property="insertBatch"/>

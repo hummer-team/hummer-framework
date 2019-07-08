@@ -17,8 +17,6 @@ import javax.validation.Validator;
  **/
 @Configuration
 public class HibernateValidatorConfigurationBean implements WebMvcConfigurer {
-
-
     @Bean
     @Primary
     public MethodValidationPostProcessor methodValidationPostProcessor2() {

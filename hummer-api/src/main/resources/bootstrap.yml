@@ -8,8 +8,8 @@ spring:
 spring:
   cloud:
     config:
-      failFast: true
+      failFast: false
       server:
-        bootstrap: true
+        bootstrap: false
         git:
           uri: https://github.com/Romeh/config.git

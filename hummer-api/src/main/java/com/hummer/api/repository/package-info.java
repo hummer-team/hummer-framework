@@ -1,3 +1,0 @@
-/**
- * Spring Data JPA Repositories
- */

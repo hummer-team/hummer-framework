@@ -1,7 +1,5 @@
 package com.hummer.dao.interceptor;
 
-import com.alibaba.druid.util.JdbcUtils;
-import com.hummer.dao.mybatis.context.MultipleDataSourceMap;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
@@ -11,7 +9,6 @@ import org.apache.ibatis.plugin.Signature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.text.html.ObjectView;
 import java.sql.Connection;
 import java.util.Properties;
 

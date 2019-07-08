@@ -17,7 +17,7 @@ public class BizLogTableConfigPo {
     private int splitTypeUnit;
     private String bizOwnerGroup;
     private String bizOwnerGroupName;
-    private boolean isValid;
+    private boolean valid;
     private Date createTime;
     private String columnNames;
     private int insertBatch;

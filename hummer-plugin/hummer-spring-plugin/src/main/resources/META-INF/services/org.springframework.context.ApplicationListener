@@ -1,2 +1,2 @@
-com.hummer.spring.plugin.context.listener.SpringContextListener
+com.hummer.spring.plugin.context.listener.SpringStarterListener
 com.hummer.spring.plugin.context.listener.ApplicationFailedListener

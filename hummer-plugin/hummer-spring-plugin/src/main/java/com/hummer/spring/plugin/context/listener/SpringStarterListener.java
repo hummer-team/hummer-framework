@@ -1,5 +1,6 @@
 package com.hummer.spring.plugin.context.listener;
 
+import com.hummer.spring.plugin.context.PropertiesContainer;
 import com.hummer.spring.plugin.context.SpringApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,15 +18,19 @@ import org.springframework.stereotype.Component;
  * @Date: 2019/6/13 16:27
  **/
 @Component
-public class SpringContextListener implements ApplicationListener<ApplicationPreparedEvent> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SpringContextListener.class);
+public class SpringStarterListener implements ApplicationListener<ApplicationPreparedEvent> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpringStarterListener.class);
 
     @Override
     public void onApplicationEvent(ApplicationPreparedEvent event) {
         if (SpringApplicationContext.getApplicationContext() == null) {
             SpringApplicationContext context = new SpringApplicationContext();
             context.setApplicationContext(event.getApplicationContext());
-            LOGGER.info("SpringContext load success,now begin create bean");
+
+            //load property configuration
+            PropertiesContainer.loadPropertyData(event.getApplicationContext().getEnvironment());
+
+            LOGGER.info("SpringContext load success,property configuration load success,now begin create bean");
         }
     }
 }

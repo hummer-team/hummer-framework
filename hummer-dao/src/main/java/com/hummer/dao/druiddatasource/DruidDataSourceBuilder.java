@@ -44,7 +44,8 @@ public class DruidDataSourceBuilder {
      **/
     public static DruidDataSource buildDataSource(Map<String, Object> ds) {
         long start = System.currentTimeMillis();
-        try (DruidDataSource druidDataSource = new DruidDataSource()) {
+        try  {
+            DruidDataSource druidDataSource = new DruidDataSource();
             String driverClassName = (String) ds.get("driverClassName");
             druidDataSource.setDriverClassName(driverClassName);
             druidDataSource.setUrl((String) ds.get("url"));

@@ -35,8 +35,8 @@ public class IpUtil {
         if (Strings.isNullOrEmpty(LOCAL_IP)) {
             synchronized (IpUtil.class) {
                 if (Strings.isNullOrEmpty(LOCAL_IP)) {
-                     LOCAL_IP = getLocalIp2();
-                     return LOCAL_IP;
+                    LOCAL_IP = getLocalIp2();
+                    return LOCAL_IP;
                 }
             }
         }
@@ -165,7 +165,9 @@ public class IpUtil {
                 }
             }
         }
-
+        if (Strings.isNullOrEmpty(ipGateway)) {
+            return false;
+        }
         return ip.startsWith(ipGateway);
     }
 

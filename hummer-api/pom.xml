@@ -116,15 +116,7 @@
         </dependency>
         <dependency>
             <groupId>com.hummer</groupId>
-            <artifactId>hummer-spring-plugin</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.hummer</groupId>
-            <artifactId>hummer-rest</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.hummer</groupId>
-            <artifactId>hummer-dao</artifactId>
+            <artifactId>hummer-boot-starter</artifactId>
         </dependency>
     </dependencies>
     <build>

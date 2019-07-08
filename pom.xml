@@ -12,6 +12,7 @@
         <module>hummer-rest</module>
         <module>hummer-plugin</module>
         <module>hummer-dao</module>
+        <module>hummer-boot-starter</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -79,11 +80,22 @@
         <mysql-connector-Java.version>8.0.16</mysql-connector-Java.version>
         <cglib.version>3.2.5</cglib.version>
         <pagehelper.version>5.1.0</pagehelper.version>
+
     </properties>
 
     <dependencyManagement>
 
         <dependencies>
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-boot-starter</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-config</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.hummer</groupId>
                 <artifactId>hummer-dao</artifactId>

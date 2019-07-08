@@ -80,6 +80,8 @@ public class SpringApplicationContext implements ApplicationContextAware {
                 (ConfigurableApplicationContext) applicationContext;
         DefaultListableBeanFactory defaultListableBeanFactory =
                 (DefaultListableBeanFactory) configurableApplicationContext.getBeanFactory();
+        //allow Override
+        defaultListableBeanFactory.setAllowBeanDefinitionOverriding(true);
         defaultListableBeanFactory.registerBeanDefinition(beanName, abstractBeanDefinition);
         LOGGER.info("dynamic register bean {} done", beanName);
     }
@@ -110,5 +112,4 @@ public class SpringApplicationContext implements ApplicationContextAware {
             }
         }
     }
-
 }
