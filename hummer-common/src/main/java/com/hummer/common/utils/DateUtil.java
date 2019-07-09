@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
+ * date util,if customer imp date feature recommend use {@link org.joda.time.DateTime}
+ *
  * @Author: lee
  * @version:1.0.0
  * @Date: 2019/6/20 14:45
@@ -52,7 +54,33 @@ public class DateUtil {
      * @date 2019/6/20 16:31
      * @version 1.0.0
      **/
-    public static Date addTo(final Date date, final int day) {
+    public static Date addDay(final Date date, final int day) {
         return new DateTime(date).plusDays(day).toDate();
+    }
+
+    /**
+     * add minute to data
+     *
+     * @param date   date
+     * @param minute minute
+     * @return java.util.Date
+     * @author liguo
+     * @date 2019/7/9 10:42
+     * @since 1.0.0
+     **/
+    public static Date addMinute(final Date date, final int minute) {
+        return new DateTime(date).plusMinutes(minute).toDate();
+    }
+
+    /**
+     * return now time
+     *
+     * @return java.util.Date
+     * @author liguo
+     * @date 2019/7/9 10:44
+     * @since 1.0.0
+     **/
+    public static Date now() {
+        return DateTime.now(DateTimeZone.UTC).toDate();
     }
 }

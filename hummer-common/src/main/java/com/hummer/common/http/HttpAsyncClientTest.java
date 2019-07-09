@@ -15,7 +15,7 @@ public class HttpAsyncClientTest {
                 .builder()
                 .setSocketTimeOutMillisecond(300)
                 .setMethod(RequestMethod.GET)
-                .setUrl("http://localhost:8000/v1/japanese/switch")
+                .setUrl("http://www")
                 .build();
 
         String result = HttpAsyncClient.instance().sendGet(config);

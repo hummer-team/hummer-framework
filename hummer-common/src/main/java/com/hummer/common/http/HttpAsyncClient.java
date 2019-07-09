@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.google.common.base.Strings;
 
+import com.hummer.common.exceptions.SysException;
 import com.hummer.spring.plugin.context.PropertiesContainer;
 import com.hummer.common.SysConsts;
 import com.hummer.common.utils.DateUtil;
@@ -32,12 +33,15 @@ import org.slf4j.MDC;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
+import java.util.stream.IntStream;
 
 import static com.hummer.common.http.HttpConstant.DEFAULT_GROUP_HTTP_ASYNC;
 import static com.hummer.common.http.HttpConstant.HTTP_CONN_SOCKET_TIMEOUT;
@@ -546,6 +550,14 @@ public final class HttpAsyncClient {
         if (response == null) {
             throw new NullPointerException("response is null.");
         }
+        //verified response status code
+        final int[] successCode = {200, 204, 201};
+        if (IntStream.of(successCode).noneMatch(c -> c == response.getStatusLine().getStatusCode())) {
+            LOGGER.error("request {} failed,response {}", customConfig, response.getStatusLine());
+            throw new SysException(5000
+                    , response.getStatusLine().getReasonPhrase()
+                    , response.getStatusLine().getStatusCode());
+        }
         try {
 
             HttpEntity entity = HttpInternalUtil.getHttpEntity(response);
@@ -734,7 +746,7 @@ public final class HttpAsyncClient {
      * @Date 2018/11/5 17:44
      **/
     private <TINPUT> long initRequest(final HttpRequestBase requestBase
-            ,final RequestCustomConfig<TINPUT> customConfig) {
+            , final RequestCustomConfig<TINPUT> customConfig) {
         RequestConfig requestConfig = RequestConfig
                 .custom()
                 .setSocketTimeout(customConfig.getSocketTimeOutMillisecond())
