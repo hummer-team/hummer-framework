@@ -1,9 +1,8 @@
 package com.hummer.dao.mybatis.context;
 
-import com.google.common.collect.Sets;
 import com.hummer.common.exceptions.SysException;
 
-import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * cache multiple data source
@@ -16,7 +15,7 @@ public class MultipleDataSourceMap {
 
     }
 
-    private static final Set<String> DATA_SOURCE_SETS = Sets.newHashSetWithExpectedSize(6);
+    private static final CopyOnWriteArraySet<String> DATA_SOURCE_SETS = new CopyOnWriteArraySet<String>();
     private static final InheritableThreadLocal<DataSourceMetadata> HOLDER = new InheritableThreadLocal<>();
 
     public static void setDataSource(final String name, final String dbType) {
