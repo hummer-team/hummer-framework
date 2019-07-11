@@ -19,6 +19,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
@@ -95,7 +97,7 @@ public class Rsa {
             return encrypted(data, key);
         } catch (Throwable throwable) {
             throw new SysException(SysConsts.SYS_ERROR_CODE
-                    , String.format("encrypted failed,input parameter %s",publicKey), throwable);
+                    , String.format("encrypted failed,input parameter %s", data), throwable);
         }
     }
 
@@ -133,13 +135,10 @@ public class Rsa {
      **/
     public static String encrypted(final String data, final PublicKey publicKey) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            Key publicK2 = keyFactory.generatePublic(x509KeySpec);
-            Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
-            cipher.init(Cipher.ENCRYPT_MODE, publicK2);
+            Cipher cipher = Cipher.getInstance("RSA");
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             byte[] dataBytes = data.getBytes("utf-8");
-            byte[] encryptedBytes = segment(outputStream, cipher, dataBytes, MAX_ENCRYPT_BLOCK);
+            byte[] encryptedBytes = segment(outputStream, cipher, dataBytes, MAX_ENCRYPT_BLOCK,true);
             return Base64.encodeBase64String(encryptedBytes);
         } catch (Throwable throwable) {
             throw new SysException(SysConsts.SYS_ERROR_CODE, "rsa encrypted failed", throwable);
@@ -157,11 +156,21 @@ public class Rsa {
      * @since 1.0.0
      **/
     public static String decrypt(final String base64Data, final PrivateKey privateKey) {
+
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+
+
+//        X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(Base64.decodeBase64(publicKey));
+//        RSAPublicKey publicKey = (RSAPublicKey) keyFactory.generatePublic(x509KeySpec);
+
+            PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(Base64.decodeBase64(privateKey.getEncoded()));
+            RSAPrivateKey privateKey2 = (RSAPrivateKey) keyFactory.generatePrivate(pkcs8KeySpec);
+
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
             byte[] decryptData = Base64.decodeBase64(base64Data);
-            byte[] decryptedData = segment(outputStream, cipher, decryptData, MAX_DECRYPT_BLOCK);
+            byte[] decryptedData = segment(outputStream, cipher, decryptData, 117,false);
             return new String(decryptedData, "utf-8");
         } catch (Throwable throwable) {
             throw new SysException(SysConsts.SYS_ERROR_CODE, "rsa decrypt failed", throwable);
@@ -265,23 +274,32 @@ public class Rsa {
     private static byte[] segment(ByteArrayOutputStream outputStream
             , Cipher cipher
             , byte[] decryptData
-            , int maxDecryptBlock) throws IllegalBlockSizeException, BadPaddingException {
+            , int keyLen
+            , boolean isEncryption) throws IllegalBlockSizeException, BadPaddingException {
         int inputLen = decryptData.length;
         int offset = 0, i = 0;
         byte[] cache;
+        int maxBlock = keyLen / 8;
+        if (isEncryption) {
+            maxBlock = keyLen / 8 - 11;
+        }
         //segment handle
-        while (inputLen - offset > 0) {
-            if (inputLen - offset > maxDecryptBlock) {
-                cache = cipher.doFinal(decryptData, offset, maxDecryptBlock);
+        System.out.println("--------------------------" + maxBlock + "***********" + keyLen);
+        while (inputLen > offset) {
+            if (inputLen - offset > maxBlock) {
+                System.out.println("-----------------ff-------i=" + i + "    " + (inputLen - offset));
+                cache = cipher.doFinal(decryptData, offset, maxBlock);
             } else {
+                System.out.println("--------------------------i=" + i + "    " + (inputLen - offset));
                 cache = cipher.doFinal(decryptData, offset, inputLen - offset);
             }
             outputStream.write(cache, 0, cache.length);
             i++;
-            offset = i * maxDecryptBlock;
+            offset = i * maxBlock;
         }
         return outputStream.toByteArray();
     }
+
 
     /**
      * new key pair
