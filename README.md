@@ -13,12 +13,12 @@ glue spring boot,mybatis,kafka,rabbitmq,redis,mongodb...framework,Make business 
 - Swagger 2 API documentation
 - REST API model validation 
 
-model describe：
+## model describe：
 
 - message plugin  
     - kafka customer，product，stream 
     - rabbitmq customer，product
-- hummer-do
+- hummer-dao
     - support multiple dataSource,dynamic switch data source
 - hummer-spring-plugin
     - customer property container
