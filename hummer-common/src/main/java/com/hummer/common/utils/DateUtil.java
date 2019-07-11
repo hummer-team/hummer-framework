@@ -83,4 +83,21 @@ public class DateUtil {
     public static Date now() {
         return DateTime.now(DateTimeZone.UTC).toDate();
     }
+
+    /**
+     * targetDate subtract now
+     *
+     * @param targetDate date
+     * @return int
+     * @author liguo
+     * @date 2019/7/11 13:38
+     * @since 1.0.0
+     **/
+    public static long subtractNowDate(final Date targetDate) {
+
+        long end = new DateTime(targetDate).toDateTime(DateTimeZone.UTC).getMillis();
+        long start = DateTime.now(DateTimeZone.UTC).getMillis();
+
+        return (end - start);
+    }
 }

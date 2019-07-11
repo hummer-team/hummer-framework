@@ -11,6 +11,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import java.io.ByteArrayOutputStream;
+import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -94,7 +95,7 @@ public class Rsa {
             return encrypted(data, key);
         } catch (Throwable throwable) {
             throw new SysException(SysConsts.SYS_ERROR_CODE
-                    , "encrypted by default public key failed", throwable);
+                    , String.format("encrypted failed,input parameter %s",publicKey), throwable);
         }
     }
 
@@ -132,8 +133,11 @@ public class Rsa {
      **/
     public static String encrypted(final String data, final PublicKey publicKey) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            Cipher cipher = Cipher.getInstance("RSA");
-            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+            X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            Key publicK2 = keyFactory.generatePublic(x509KeySpec);
+            Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
+            cipher.init(Cipher.ENCRYPT_MODE, publicK2);
             byte[] dataBytes = data.getBytes("utf-8");
             byte[] encryptedBytes = segment(outputStream, cipher, dataBytes, MAX_ENCRYPT_BLOCK);
             return Base64.encodeBase64String(encryptedBytes);

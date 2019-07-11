@@ -67,11 +67,12 @@ public class SecurityTest {
     @Test
     public void encrypted() {
         KeyPair keyPair = Rsa.newKeyPair();
-        String encrypted1 = Rsa.encrypted("123344", keyPair.getPublic());
+        String encrypted1 = Rsa.encrypted("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
+                , keyPair.getPublic());
         System.out.println(encrypted1);
         String decrypt2 = Rsa.decrypt(encrypted1, keyPair.getPrivate());
         System.out.println(decrypt2);
-        Assert.assertEquals("123344", decrypt2);
+        Assert.assertEquals("{\"_uuid_\":\"3d5b0b25cece4343866d8a9850508dca\",\"_expired_\":1}", decrypt2);
 
         System.out.println("---------------");
         String encrypted = Rsa.encryptedByDefaultPublicKey("123344");

@@ -15,6 +15,8 @@ glue spring boot,mybatis,kafka,rabbitmq,redis,mongodb...framework,Make business 
 
 ## model describe：
 
+- hummer-api
+    - this is demo module,include all feature test
 - message plugin  
     - kafka customer，product，stream 
     - rabbitmq customer，product
@@ -25,4 +27,5 @@ glue spring boot,mybatis,kafka,rabbitmq,redis,mongodb...framework,Make business 
 - hummer-pipeline-plugin
     - customer multiple thread pipeline
 - hummer-rest
-    - glue fast json serial deserialization http request response message    
+    - glue fast json serial deserialization http request response message
+    - customer simple binding module,convert http query string parameter to business entity      
