@@ -1,4 +1,4 @@
-# The Hummer-framework Project
+# The Hummer Project
 
 ## About
 
