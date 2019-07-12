@@ -16,6 +16,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.GzipDecompressingEntity;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.concurrent.FutureCallback;
@@ -762,23 +763,31 @@ public final class HttpAsyncClient {
         }
 
         setRequestHead(requestBase);
-
-        if (customConfig.getRequestBody() != null) {
-
-            long jsonCostStartTime = System.currentTimeMillis();
-            String jsonString;
-            if (customConfig.getRequestBody() instanceof String) {
-                jsonString = customConfig.getRequestBody().toString();
-            } else {
-                jsonString = JSON.toJSONString(customConfig.getRequestBody());
-            }
-            long toJsonCostTime = System.currentTimeMillis() - jsonCostStartTime;
-
-            StringEntity stringEntity = new StringEntity(jsonString, "utf-8");
+        //handle form body
+        if (customConfig.isPostFormBody()) {
+            UrlEncodedFormEntity formEntity =
+                    new UrlEncodedFormEntity(customConfig.getFormData(), Charset.forName("utf-8"));
             if (requestBase instanceof HttpEntityEnclosingRequestBase) {
-                ((HttpEntityEnclosingRequestBase) requestBase).setEntity(stringEntity);
+                ((HttpEntityEnclosingRequestBase) requestBase).setEntity(formEntity);
             }
-            return toJsonCostTime;
+        } else {
+            if (customConfig.getRequestBody() != null) {
+                //handle send json
+                long jsonCostStartTime = System.currentTimeMillis();
+                String jsonString;
+                if (customConfig.getRequestBody() instanceof String) {
+                    jsonString = customConfig.getRequestBody().toString();
+                } else {
+                    jsonString = JSON.toJSONString(customConfig.getRequestBody());
+                }
+                long toJsonCostTime = System.currentTimeMillis() - jsonCostStartTime;
+
+                StringEntity stringEntity = new StringEntity(jsonString, "utf-8");
+                if (requestBase instanceof HttpEntityEnclosingRequestBase) {
+                    ((HttpEntityEnclosingRequestBase) requestBase).setEntity(stringEntity);
+                }
+                return toJsonCostTime;
+            }
         }
 
         return System.currentTimeMillis() - startTime;

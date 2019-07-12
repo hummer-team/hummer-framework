@@ -2,9 +2,11 @@ package com.hummer.common.http;
 
 import com.google.common.base.Strings;
 import org.apache.http.Header;
+import org.apache.http.NameValuePair;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * http request custom config settings
@@ -24,6 +26,8 @@ public class RequestCustomConfig<T> {
     private T requestBody;
     private boolean callSuccessOutPutBody = false;
     private String respEncoding;
+    private boolean postFormBody = false;
+    private List<NameValuePair> formData;
 
     private RequestCustomConfig() {
 
@@ -31,6 +35,15 @@ public class RequestCustomConfig<T> {
 
     public static <T> RequestCustomConfig<T> builder() {
         return new RequestCustomConfig<>();
+    }
+
+    public List<NameValuePair> getFormData() {
+        return formData;
+    }
+
+    public RequestCustomConfig setFormData(List<NameValuePair> formData) {
+        this.formData = formData;
+        return this;
     }
 
     public RequestCustomConfig setCallSuccessOutPutBody(boolean callSuccessOutPutBody) {
@@ -45,6 +58,15 @@ public class RequestCustomConfig<T> {
 
     public RequestCustomConfig setRetryCount(int retryCount) {
         this.retryCount = retryCount;
+        return this;
+    }
+
+    public boolean isPostFormBody() {
+        return postFormBody;
+    }
+
+    public RequestCustomConfig setPostFormBody(boolean postFormBody) {
+        this.postFormBody = postFormBody;
         return this;
     }
 
