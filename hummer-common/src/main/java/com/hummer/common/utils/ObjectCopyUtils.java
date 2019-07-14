@@ -1,7 +1,6 @@
 package com.hummer.common.utils;
 
-import com.google.common.collect.Collections2;
-import com.hummer.common.SysConsts;
+import com.hummer.common.SysConstant;
 import com.hummer.common.exceptions.SysException;
 import net.sf.cglib.beans.BeanCopier;
 import org.apache.commons.collections.CollectionUtils;
@@ -93,7 +92,7 @@ public class ObjectCopyUtils {
         try {
             return clazz.newInstance();
         } catch (Throwable throwable) {
-            throw new SysException(SysConsts.SYS_ERROR_CODE
+            throw new SysException(SysConstant.SYS_ERROR_CODE
                     , String.format("instance %s failed", clazz.getSimpleName()), throwable);
         }
     }

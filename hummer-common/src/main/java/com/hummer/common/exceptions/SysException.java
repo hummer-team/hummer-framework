@@ -4,7 +4,7 @@ package com.hummer.common.exceptions;
 
 import java.util.Arrays;
 
-import static com.hummer.common.SysConsts.SYS_ERROR_CODE;
+import static com.hummer.common.SysConstant.SYS_ERROR_CODE;
 
 public class SysException extends RuntimeException {
 

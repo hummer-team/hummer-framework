@@ -1,4 +1,4 @@
-package com.hummer.dao.config;
+package com.hummer.dao.configuration;
 
 import com.alibaba.druid.filter.stat.StatFilter;
 import com.hummer.spring.plugin.context.PropertiesContainer;

@@ -2,7 +2,7 @@ package com.hummer.rest.monitor;
 
 import com.google.common.base.Strings;
 import com.hummer.rest.model.ResourceResponse;
-import com.hummer.common.SysConsts;
+import com.hummer.common.SysConstant;
 import com.hummer.common.exceptions.AppException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -78,7 +78,7 @@ public class GlobalExceptionHandler {
             , HttpServletResponse response, Throwable e) {
         //parse request body if exists.
         String bodyString = readBody(request);
-        String id = MDC.get(SysConsts.REQUEST_ID);
+        String id = MDC.get(SysConstant.REQUEST_ID);
 
         ResourceResponse<Object> rep = new ResourceResponse<>();
         Integer status;

@@ -1,7 +1,7 @@
 package com.hummer.rest.filter;
 
 import com.hummer.spring.plugin.context.PropertiesContainer;
-import com.hummer.common.SysConsts;
+import com.hummer.common.SysConstant;
 import com.hummer.common.utils.HttpServletRequestUtil;
 import com.hummer.common.utils.IpUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
 
-import static com.hummer.common.SysConsts.RestConsts.SYSTEM_REMOTE_IP_SPLIT_CHAR;
+import static com.hummer.common.SysConstant.RestConstant.SYSTEM_REMOTE_IP_SPLIT_CHAR;
 
 /**
  * @Author: lee
@@ -130,16 +130,16 @@ public class RequestFilter implements Filter {
 
 
     private String buildRequestId(HttpServletRequest httpRequest) {
-        String requestId = MDC.get(SysConsts.REQUEST_ID);
+        String requestId = MDC.get(SysConstant.REQUEST_ID);
         if (StringUtils.isEmpty(requestId)) {
-            requestId = httpRequest.getHeader(SysConsts.REQUEST_ID);
+            requestId = httpRequest.getHeader(SysConstant.REQUEST_ID);
             if (StringUtils.isEmpty(requestId)) {
                 requestId = UUID.randomUUID().toString().replaceAll("-", "");
             }
         }
-        MDC.put(SysConsts.REQUEST_ID, requestId);
-        MDC.put(SysConsts.RestConsts.SERVER_IP, IpUtil.getLocalIp());
-        MDC.put(SysConsts.RestConsts.CLIENT_IP, getRemoteAddr(httpRequest));
+        MDC.put(SysConstant.REQUEST_ID, requestId);
+        MDC.put(SysConstant.RestConstant.SERVER_IP, IpUtil.getLocalIp());
+        MDC.put(SysConstant.RestConstant.CLIENT_IP, getRemoteAddr(httpRequest));
 
         return requestId;
     }

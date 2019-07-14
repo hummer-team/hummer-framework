@@ -1,7 +1,7 @@
 package com.hummer.common.utils;
 
 
-import com.hummer.common.SysConsts;
+import com.hummer.common.SysConstant;
 import com.hummer.common.exceptions.SysException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,9 +40,9 @@ public class ZipUtil {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         try (GZIPOutputStream gzip = new GZIPOutputStream(out)) {
-            gzip.write(primStr.getBytes(SysConsts.DEFAULT_CHARSET));
+            gzip.write(primStr.getBytes(SysConstant.DEFAULT_CHARSET));
         } catch (IOException e) {
-            throw new SysException(SysConsts.SYS_ERROR_CODE, e.getMessage(), e);
+            throw new SysException(SysConstant.SYS_ERROR_CODE, e.getMessage(), e);
         }
         return Base64.getEncoder().encodeToString(out.toByteArray());
     }
@@ -68,10 +68,10 @@ public class ZipUtil {
                 out.write(buffer, 0, offset);
             }
         } catch (IOException e) {
-            throw new SysException(SysConsts.SYS_ERROR_CODE, e.getMessage(), e);
+            throw new SysException(SysConstant.SYS_ERROR_CODE, e.getMessage(), e);
         }
 
-        return new String(out.toByteArray(), SysConsts.DEFAULT_CHARSET);
+        return new String(out.toByteArray(), SysConstant.DEFAULT_CHARSET);
     }
 
     /**
@@ -86,9 +86,9 @@ public class ZipUtil {
 
         try (ZipOutputStream zout = new ZipOutputStream(out)) {
             zout.putNextEntry(new ZipEntry("0"));
-            zout.write(str.getBytes(SysConsts.DEFAULT_CHARSET));
+            zout.write(str.getBytes(SysConstant.DEFAULT_CHARSET));
         } catch (IOException e) {
-            throw new SysException(SysConsts.SYS_ERROR_CODE, e.getMessage(), e);
+            throw new SysException(SysConstant.SYS_ERROR_CODE, e.getMessage(), e);
         }
         return Base64.getEncoder().encodeToString(out.toByteArray());
     }
@@ -135,9 +135,9 @@ public class ZipUtil {
                 out.write(buffer, 0, offset);
             }
         } catch (IOException e) {
-            throw new SysException(SysConsts.SYS_ERROR_CODE, e.getMessage(), e);
+            throw new SysException(SysConstant.SYS_ERROR_CODE, e.getMessage(), e);
         }
-        return new String(out.toByteArray(), SysConsts.DEFAULT_CHARSET);
+        return new String(out.toByteArray(), SysConstant.DEFAULT_CHARSET);
     }
 
 }

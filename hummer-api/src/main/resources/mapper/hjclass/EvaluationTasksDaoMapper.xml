@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hummer.api.dao.hjclass.EvaluationTasksDao" >
+  <resultMap id="BaseResultMap" type="com.hummer.api.po.hjclass.EvaluationTasksPo" >
+    <id column="TaskId" property="taskId" jdbcType="INTEGER" />
+    <result column="CompanyId" property="companyId" jdbcType="INTEGER" />
+    <result column="OrganizationId" property="organizationId" jdbcType="INTEGER" />
+    <result column="MenteeId" property="menteeId" jdbcType="INTEGER" />
+    <result column="IntentionProject" property="intentionProject" jdbcType="INTEGER" />
+    <result column="ScheduleId" property="scheduleId" jdbcType="INTEGER" />
+    <result column="BeginTime" property="beginTime" jdbcType="TIMESTAMP" />
+    <result column="EndTime" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="RoomId" property="roomId" jdbcType="INTEGER" />
+    <result column="EventId" property="eventId" jdbcType="INTEGER" />
+    <result column="TeacherId" property="teacherId" jdbcType="INTEGER" />
+    <result column="TaskStatus" property="taskStatus" jdbcType="INTEGER" />
+    <result column="CreateUser" property="createUser" jdbcType="INTEGER" />
+    <result column="CreateTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="EditUser" property="editUser" jdbcType="INTEGER" />
+    <result column="EditTime" property="editTime" jdbcType="TIMESTAMP" />
+    <result column="IsActive" property="isActive" jdbcType="BIT" />
+    <result column="IsDeleted" property="isDeleted" jdbcType="BIT" />
+    <result column="EvaluationMsg" property="evaluationMsg" jdbcType="NVARCHAR" />
+  </resultMap>
+  <select id="queryById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select TaskId, CompanyId, OrganizationId, MenteeId, IntentionProject, ScheduleId, 
+    BeginTime, EndTime, RoomId, EventId, TeacherId, TaskStatus, CreateUser, CreateTime, 
+    EditUser, EditTime, IsActive, IsDeleted, EvaluationMsg
+    from EvaluationTasks
+    where TaskId = #{taskId,jdbcType=INTEGER} and IsDeleted=0
+  </select>
+</mapper>

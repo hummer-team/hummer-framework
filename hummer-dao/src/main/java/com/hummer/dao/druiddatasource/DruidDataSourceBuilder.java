@@ -9,7 +9,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.hummer.spring.plugin.context.PropertiesContainer;
 import com.hummer.common.ErrorCodeConsts;
-import com.hummer.common.SysConsts;
+import com.hummer.common.SysConstant;
 import com.hummer.common.exceptions.SysException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,11 +98,11 @@ public class DruidDataSourceBuilder {
                 druidDataSource.setMaxEvictableIdleTimeMillis(Long.valueOf(maxEvictableIdleTimeMillis));
             }
 
-            druidDataSource.setTestWhileIdle(PropertiesContainer.valueOf(SysConsts.DaoConsts.JDBC_TESTWHILEIDLE
+            druidDataSource.setTestWhileIdle(PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_TESTWHILEIDLE
                     , Boolean.class, Boolean.TRUE));
-            druidDataSource.setTestOnBorrow(PropertiesContainer.valueOf(SysConsts.DaoConsts.JDBC_TESTONBORROW
+            druidDataSource.setTestOnBorrow(PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_TESTONBORROW
                     , Boolean.class, Boolean.TRUE));
-            druidDataSource.setTestOnReturn(PropertiesContainer.valueOf(SysConsts.DaoConsts.JDBC_TESTONRETURN
+            druidDataSource.setTestOnReturn(PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_TESTONRETURN
                     , Boolean.class, Boolean.FALSE));
 
             if (!MYSQL_DRIVER.equals(driverClassName)) {
@@ -117,22 +117,22 @@ public class DruidDataSourceBuilder {
 
             druidDataSource.setValidationQuery("select 1");
             druidDataSource.setValidationQueryTimeout(PropertiesContainer.valueOf(
-                    SysConsts.DaoConsts.JDBC_VALIDATIONQUERYTIMEOUT
+                    SysConstant.DaoConstant.JDBC_VALIDATIONQUERYTIMEOUT
                     , Integer.class, 5));
             //timeout remove connections
-            druidDataSource.setRemoveAbandoned(PropertiesContainer.valueOf(SysConsts.DaoConsts.JDBC_REMOVEABANDONED
+            druidDataSource.setRemoveAbandoned(PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_REMOVEABANDONED
                     , Boolean.class, Boolean.TRUE));
             //time out 30s
             druidDataSource.setRemoveAbandonedTimeout(PropertiesContainer.valueOf(
-                    SysConsts.DaoConsts.JDBC_REMOVEABANDONEDTIMEOUT
+                    SysConstant.DaoConstant.JDBC_REMOVEABANDONEDTIMEOUT
                     , Integer.class, 30));
             //close connection output error logs
-            druidDataSource.setLogAbandoned(PropertiesContainer.valueOf(SysConsts.DaoConsts.JDBC_LOGABANDONED
+            druidDataSource.setLogAbandoned(PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_LOGABANDONED
                     , Boolean.class, Boolean.TRUE));
 
             List<Filter> filters = Lists.newArrayList(statFilter());
 
-            if (PropertiesContainer.valueOf(SysConsts.DaoConsts.JDBC_CHECK_SQL
+            if (PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_CHECK_SQL
                     , Boolean.class, Boolean.TRUE)) {
                 filters.add(wallFilter());
             }
@@ -153,7 +153,7 @@ public class DruidDataSourceBuilder {
         wallConfig.setMultiStatementAllow(true);
         wallConfig.setSelectWhereAlwayTrueCheck(false);
         wallConfig.setSelectHavingAlwayTrueCheck(false);
-        wallConfig.setSelectUnionCheck(PropertiesContainer.valueOf(SysConsts.DaoConsts.DRUID_SELECT_UNION_CHECK
+        wallConfig.setSelectUnionCheck(PropertiesContainer.valueOf(SysConstant.DaoConstant.DRUID_SELECT_UNION_CHECK
                 , Boolean.class, Boolean.TRUE));
         wallFilter.setConfig(wallConfig);
         return wallFilter;
@@ -161,11 +161,11 @@ public class DruidDataSourceBuilder {
 
     private static StatFilter statFilter() {
         StatFilter statFilter = new StatFilter();
-        statFilter.setSlowSqlMillis(PropertiesContainer.valueOf(SysConsts.DaoConsts.DRUID_SHOW_TIMEOUT
+        statFilter.setSlowSqlMillis(PropertiesContainer.valueOf(SysConstant.DaoConstant.DRUID_SHOW_TIMEOUT
                 , Long.class, 3000L));
-        statFilter.setLogSlowSql(PropertiesContainer.valueOf(SysConsts.DaoConsts.DRUID_SHOW_SQL
+        statFilter.setLogSlowSql(PropertiesContainer.valueOf(SysConstant.DaoConstant.DRUID_SHOW_SQL
                 , Boolean.class, Boolean.TRUE));
-        statFilter.setMergeSql(PropertiesContainer.valueOf(SysConsts.DaoConsts.DRUID_MERGE_SQL
+        statFilter.setMergeSql(PropertiesContainer.valueOf(SysConstant.DaoConstant.DRUID_MERGE_SQL
                 , Boolean.class, Boolean.FALSE));
         return statFilter;
     }

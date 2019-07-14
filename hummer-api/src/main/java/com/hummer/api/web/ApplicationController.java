@@ -1,6 +1,5 @@
 package com.hummer.api.web;
 
-//import com.hummer.spring.plugin.context.SpringApplicationContext;
 import com.hummer.spring.plugin.context.PropertiesContainer;
 import com.hummer.spring.plugin.context.SpringApplicationContext;
 import io.swagger.annotations.Api;

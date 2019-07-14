@@ -1,4 +1,4 @@
-package com.hummer.dao.config;
+package com.hummer.dao.configuration;
 
 import com.hummer.dao.condition.DaoLoadCondition;
 import org.springframework.context.annotation.Conditional;
@@ -11,6 +11,6 @@ import org.springframework.context.annotation.Import;
  */
 @Import(value = {MultipleDataSourceConfiguration.class, DruidFilterConfiguration.class})
 @Conditional(DaoLoadCondition.class)
-public class ExportDaoBean {
+public class ExportDaoConfiguration {
 
 }

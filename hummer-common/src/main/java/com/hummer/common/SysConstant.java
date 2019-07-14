@@ -8,8 +8,8 @@ import java.nio.charset.StandardCharsets;
  * @version:1.0.0
  * @Date: 2019/6/20 14:39
  **/
-public class SysConsts {
-    private SysConsts() {
+public class SysConstant {
+    private SysConstant() {
 
     }
 
@@ -20,8 +20,8 @@ public class SysConsts {
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     public static final String DEFAULT_CHARSET_NAME = "UTF-8";
 
-    public static class RestConsts {
-        private RestConsts() {
+    public static class RestConstant {
+        private RestConstant() {
 
         }
 
@@ -36,8 +36,8 @@ public class SysConsts {
     }
 
 
-    public static class DaoConsts {
-        private DaoConsts() {
+    public static class DaoConstant {
+        private DaoConstant() {
 
         }
 
@@ -47,6 +47,18 @@ public class SysConsts {
         public static final String MYBATIS_BASE_PACKAGE ="mybatis.base.package";
         public static final String DB_NAME_KEY ="db.names";
         public static final String DB_PREFIX ="jdbc.";
+        /**
+         * mybatis.hj_class_learning_biz_log.resource.mapper
+         */
+        public static final String MYBATIS_RESOURCE_MAPPER_PATH ="mybatis.%s.resource.mapper";
+        /**
+         * mybatis.HJ_Class.po.package
+         */
+        public static final String MYBATIS_PO_MODEL_PACKAGE ="mybatis.%s.po.package";
+        /**
+         * dao interface package
+         */
+        public static final String MYBATIS_DAO_INTERFACE_PACKAGE ="mybatis.%s.interface.package";
         public static final String JDBC_TESTWHILEIDLE = "jdbc.testWhileIdle";
         public static final String JDBC_TESTONBORROW = "jdbc.testOnBorrow";
         public static final String JDBC_TESTONRETURN = "jdbc.testOnReturn";

@@ -1,7 +1,7 @@
 package com.hummer.dao.mybatis;
 
 import com.github.pagehelper.PageInterceptor;
-import com.hummer.common.SysConsts;
+import com.hummer.common.SysConstant;
 import com.hummer.dao.interceptor.DbTypeInterceptor;
 import com.hummer.dao.interceptor.MybatisSlowSqlLogInterceptor;
 import com.hummer.spring.plugin.context.PropertiesContainer;
@@ -12,11 +12,12 @@ import org.apache.ibatis.io.VFS;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.mapper.MapperFactoryBean;
+import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.testng.collections.Lists;
 
@@ -44,13 +45,17 @@ public class MybatisDynamicBean {
      * register sql session factory.
      * {@see http://www.mybatis.org/mybatis-3/zh/configuration.html}
      *
+     * @param dataSourceKey  properties data source key name
      * @param sqlSessionName mybatis sql session name
      * @param dataSource     data source
      * @throws {@link IOException} if load resource failed then throw this exception
      * @link
      * @since 1.0.0
      */
-    public static void registerSqlSessionFactory(String sqlSessionName, DataSource dataSource) throws IOException {
+    public static void registerSqlSessionFactory(final String dataSourceKey
+            , final String sqlSessionName
+            , final DataSource dataSource
+            , MapperScannerConfigurer scannerConfigurer) throws IOException {
         //get ben sql session
         BeanDefinitionBuilder sqlSessionBean =
                 BeanDefinitionBuilder.rootBeanDefinition(SqlSessionFactoryBean.class);
@@ -69,7 +74,8 @@ public class MybatisDynamicBean {
         //todo
         //settings type handle package
         sqlSessionBean.addPropertyValue("typeHandlersPackage",
-                PropertiesContainer.valueOfString("mybatis.typeHandlersPackage"));
+                PropertiesContainer.valueOfString(
+                        String.format(SysConstant.DaoConstant.MYBATIS_PO_MODEL_PACKAGE, dataSourceKey)));
         //settings resource path parse service
         VFS.addImplClass(CustomVFS.class);
 
@@ -117,10 +123,15 @@ public class MybatisDynamicBean {
         //add all interceptor
         sqlSessionBean.addPropertyValue("plugins", interceptors);
 
+        //mapper resource
         PathMatchingResourcePatternResolver resource = new PathMatchingResourcePatternResolver();
         sqlSessionBean.addPropertyValue("mapperLocations"
-                , resource.getResources("classpath*:mapper/**/*.xml"));
+                , resource.getResources(PropertiesContainer
+                        .valueOfString(String.format(SysConstant.DaoConstant.MYBATIS_RESOURCE_MAPPER_PATH
+                                , dataSourceKey))));
+        //register sql session bean
         SpringApplicationContext.registerDynamicBen(sqlSessionName, sqlSessionBean.getRawBeanDefinition());
+        scannerConfigurer.setSqlSessionFactoryBeanName(sqlSessionName);
         LOGGER.info("bean `{}` register done.", sqlSessionName);
     }
 
@@ -153,7 +164,7 @@ public class MybatisDynamicBean {
         beanDefinitionBuilder.addPropertyValue("targetSqlSessionFactoryMap", sqlSessionTemplateMap);
         beanDefinitionBuilder.setLazyInit(true);
 
-        SpringApplicationContext.registerDynamicBen(SysConsts.DaoConsts.SQL_SESSION_TEMPLATE_NAME
+        SpringApplicationContext.registerDynamicBen(SysConstant.DaoConstant.SQL_SESSION_TEMPLATE_NAME
                 , beanDefinitionBuilder.getRawBeanDefinition());
         LOGGER.info("bean custom sql session template register done,sql session template map {}"
                 , sqlSessionTemplateMap);

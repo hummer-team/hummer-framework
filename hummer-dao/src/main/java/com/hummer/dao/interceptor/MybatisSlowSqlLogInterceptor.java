@@ -1,7 +1,7 @@
 package com.hummer.dao.interceptor;
 
 import com.hummer.spring.plugin.context.PropertiesContainer;
-import com.hummer.common.SysConsts;
+import com.hummer.common.SysConstant;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -63,7 +63,7 @@ public class MybatisSlowSqlLogInterceptor implements Interceptor {
 
     @Override
     public void setProperties(Properties properties) {
-        isShowSql = PropertiesContainer.valueOf(SysConsts.DaoConsts.SHOW_SQL, Boolean.class, Boolean.TRUE);
-        sqlTimout = PropertiesContainer.valueOf(SysConsts.DaoConsts.SHOW_TIMEOUT, Integer.class, 3000);
+        isShowSql = PropertiesContainer.valueOf(SysConstant.DaoConstant.SHOW_SQL, Boolean.class, Boolean.TRUE);
+        sqlTimout = PropertiesContainer.valueOf(SysConstant.DaoConstant.SHOW_TIMEOUT, Integer.class, 3000);
     }
 }

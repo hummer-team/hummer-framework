@@ -6,7 +6,7 @@ import com.google.common.base.Strings;
 
 import com.hummer.common.exceptions.SysException;
 import com.hummer.spring.plugin.context.PropertiesContainer;
-import com.hummer.common.SysConsts;
+import com.hummer.common.SysConstant;
 import com.hummer.common.utils.DateUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.http.Header;
@@ -34,9 +34,7 @@ import org.slf4j.MDC;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -169,7 +167,7 @@ public final class HttpAsyncClient {
     }
 
     /**
-     * new http async instance，use config strategy.
+     * new http async instance，use configuration strategy.
      *
      * @return com.hjapi.classs.learning.monitor.httpasync.HttpAsyncClient
      * @author lee
@@ -383,7 +381,7 @@ public final class HttpAsyncClient {
     /**
      * send http get request to service,  ignore RequestCustomConfig.RequestMethod,return service original message
      *
-     * @param customConfig request config settings
+     * @param customConfig request configuration settings
      * @return java.lang.String
      * @author liguo
      * @date 2019/6/20 15:14
@@ -573,7 +571,7 @@ public final class HttpAsyncClient {
                     : EntityUtils.toString(entity, Charset.forName(customConfig.getRespEncoding()));
 
         } catch (Exception e) {
-            LOGGER.error("parse service resp exception, req config:{},ex ", customConfig, e);
+            LOGGER.error("parse service resp exception, req configuration:{},ex ", customConfig, e);
             return null;
         }
     }
@@ -592,7 +590,7 @@ public final class HttpAsyncClient {
             return JSON.parseObject(val
                     , typeReference);
         } catch (Exception e) {
-            LOGGER.error("parse service resp exception, req config:{},ex ", customConfig, e);
+            LOGGER.error("parse service resp exception, req configuration:{},ex ", customConfig, e);
             return null;
         }
     }
@@ -851,9 +849,9 @@ public final class HttpAsyncClient {
 
 
     private static void setRequestHead(HttpMessage httpMessage) {
-        httpMessage.addHeader(SysConsts.REQUEST_ID, MDC.get(SysConsts.REQUEST_ID));
+        httpMessage.addHeader(SysConstant.REQUEST_ID, MDC.get(SysConstant.REQUEST_ID));
         httpMessage.addHeader(USER_AGENT, HJ_IBJ);
-        httpMessage.addHeader(SysConsts.HEADER_REQ_TIME, String.valueOf(DateUtil.getTimestampInMillis()));
+        httpMessage.addHeader(SysConstant.HEADER_REQ_TIME, String.valueOf(DateUtil.getTimestampInMillis()));
     }
 
     private <INPUT> void logRequestFail(RequestCustomConfig<INPUT> customConfig

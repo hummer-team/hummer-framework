@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.hummer.dao.config.ExportDaoBean
+com.hummer.dao.configuration.ExportDaoConfiguration

@@ -22,7 +22,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hummer.common.SysConsts.RestConsts.MVC_SERIALIZERFEATURE;
+import static com.hummer.common.SysConstant.RestConstant.MVC_SERIALIZERFEATURE;
 
 
 /**

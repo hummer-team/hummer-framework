@@ -115,9 +115,9 @@ public class FastJsonHttpMessageConverterService extends FastJsonHttpMessageConv
             } else {
                 FastJsonConfig jsonConfig = getFastJsonConfig();
                 SerializeConfig serializeConfig = jsonConfig.getSerializeConfig();
-                //check serial config
+                //check serial configuration
                 if (serializeConfig == null) {
-                    LOGGER.debug("no settings serial config,use default serial config");
+                    LOGGER.debug("no settings serial configuration,use default serial configuration");
                     serializeConfig = new SerializeConfig();
                 }
                 result = JSON.toJSONString(obj
