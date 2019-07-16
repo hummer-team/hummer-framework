@@ -31,8 +31,8 @@ public class DaoLoadCondition implements Condition {
      */
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-        boolean isLoad = PropertiesContainer.valueOf("dao.load.enable", Boolean.class, Boolean.TRUE);
-        LOGGER.info("=========loading dao switch {},if `dao.load.enable` " +
+        boolean isLoad = PropertiesContainer.valueOf("hummer.dao.load.enable", Boolean.class, Boolean.TRUE);
+        LOGGER.info("=========loading dao switch {},if `hummer.dao.load.enable` " +
                 "value is false will ignore dao feature===========", isLoad);
         return isLoad;
     }

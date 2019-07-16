@@ -24,6 +24,6 @@ public class EventBusCondition implements Condition {
      */
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-        return PropertiesContainer.valueOf("memory.event.bus.enable", Boolean.class, Boolean.FALSE);
+        return PropertiesContainer.valueOf("hummer.memory.event.bus.enable", Boolean.class, Boolean.FALSE);
     }
 }
