@@ -35,6 +35,7 @@ import static org.mybatis.spring.SqlSessionUtils.isSqlSessionTransactional;
  * @author bingy
  * @since 1.0.0
  */
+@Deprecated
 public class CustomSqlSessionTemplate extends SqlSessionTemplate {
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomSqlSessionTemplate.class);
     private final ExecutorType executorType;
@@ -89,7 +90,7 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
     public SqlSessionFactory getSqlSessionFactory() {
 
         SqlSessionFactory targetSqlSessionFactory = targetSqlSessionFactoryMap
-                .get(MultipleDataSourceMap.getDataSource(false).getDbName());
+                .get(MultipleDataSourceMap.getDataSource().getDbName());
         if (targetSqlSessionFactory != null) {
             return targetSqlSessionFactory;
         } else if (defaultTargetSqlSessionFactory != null) {

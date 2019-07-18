@@ -6,6 +6,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.wall.WallConfig;
 import com.alibaba.druid.wall.WallFilter;
 import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.hummer.spring.plugin.context.PropertiesContainer;
 import com.hummer.common.ErrorCodeConsts;
@@ -97,7 +98,6 @@ public class DruidDataSourceBuilder {
             if (maxEvictableIdleTimeMillis != null) {
                 druidDataSource.setMaxEvictableIdleTimeMillis(Long.valueOf(maxEvictableIdleTimeMillis));
             }
-
             druidDataSource.setTestWhileIdle(PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_TESTWHILEIDLE
                     , Boolean.class, Boolean.TRUE));
             druidDataSource.setTestOnBorrow(PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_TESTONBORROW

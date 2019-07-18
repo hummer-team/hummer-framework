@@ -32,14 +32,6 @@ public class DataSourceMetadata {
         return dbType;
     }
 
-    public void setDbName(String dbName) {
-        this.dbName = dbName;
-    }
-
-    public void setDbType(String dbType) {
-        this.dbType = dbType;
-    }
-
 
     @Override
     public boolean equals(Object o) {

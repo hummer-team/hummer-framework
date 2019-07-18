@@ -4,6 +4,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Interners;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -27,6 +28,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
 
 import javax.sql.DataSource;
 import java.util.Collection;
@@ -47,40 +49,41 @@ import static com.hummer.common.SysConstant.DaoConstant.MYBATIS_PO_MODEL_PACKAGE
  **/
 public class MultipleDataSourceConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(MultipleDataSourceConfiguration.class);
-    @Getter
-    private Map<Object, Object> targetDataSources = new LinkedHashMap<>();
-    @Getter
+
+    private final Map<Object, Object> allDataSources = Maps.newConcurrentMap();
     private DataSource defaultTargetDataSource;
 
-    @Bean
     @Lazy
-    @ConditionalOnMissingBean
+    @Bean
     @Conditional(DaoLoadCondition.class)
-    public DataSource dynamicDataSourceBean() {
-        DynamicDataSource ds = new DynamicDataSource();
-        ds.setTargetDataSources(targetDataSources);
-        ds.setDefaultTargetDataSource(defaultTargetDataSource);
-        return ds;
+    public DataSource registerDynamicDataSource() {
+        return new DynamicDataSource(allDataSources, defaultTargetDataSource);
     }
 
-//    @Bean
-//    @Conditional(DaoLoadCondition.class)
-//    public void initDataSourceBean() {
-//        initDataSource();
-//    }
-
+    /**
+     * this {@link MapperScannerConfigurer} scan package {@link DaoConstant#MYBATIS_BASE_PACKAGE} include all interface,
+     * after register dynamic proxy
+     *
+     * @return {@link org.mybatis.spring.mapper.MapperScannerConfigurer}
+     * @author liguo
+     * @date 2019/7/18 11:19
+     * @since 1.0.0
+     **/
     @Bean
     @Conditional(DaoLoadCondition.class)
     public MapperScannerConfigurer mapperScannerConfigurer() {
         String basePackage = PropertiesContainer.valueOfString(SysConstant.DaoConstant.MYBATIS_BASE_PACKAGE);
         Preconditions.checkNotNull(basePackage, "mybatis base package no settings,can not load dao");
-        //@see MapperFactoryBean
-        MapperScannerConfigurer configurer = new MapperScannerConfigurer();
 
         initDataSource();
 
+        //@see MapperFactoryBean
+        MapperScannerConfigurer configurer = new MapperScannerConfigurer();
+        //set session template bean name
         configurer.setSqlSessionTemplateBeanName(SysConstant.DaoConstant.SQL_SESSION_TEMPLATE_NAME);
+        //ony scan DaoAnnotation
         configurer.setAnnotationClass(DaoAnnotation.class);
+        //register all doa package include interface
         configurer.setBasePackage(PropertiesContainer.valueOfString(SysConstant.DaoConstant.MYBATIS_BASE_PACKAGE));
         LOGGER.info("dao mapper scanner register done,mybatis base package name {}", basePackage);
         return configurer;
@@ -88,30 +91,22 @@ public class MultipleDataSourceConfiguration {
 
 
     private void initDataSource() {
-        //store session factory
-        Map<String, SqlSessionFactory> sqlSessionFactoryMap = new LinkedHashMap<>();
         //scan all jdbc. prefix data source
         Map<String, Object> dbMap = PropertiesContainer.scanKeys(SysConstant.DaoConstant.DB_PREFIX);
         //group by data source
         Map<String, Map<String, Object>> dataSourceGroup = groupDataSource(dbMap);
         LOGGER.info("need initDataSource data source size {}", dataSourceGroup.size());
         if (MapUtils.isEmpty(dataSourceGroup)) {
-            return;
+            throw new SysException(50000, "no data source");
         }
+
+        //store session factory
+        Map<String, SqlSessionFactory> sqlSessionFactoryMap = new LinkedHashMap<>();
         String defaultDataSourceKey = PropertiesContainer.valueOfString("default.data.source");
         //foreach load target data source
         for (Map.Entry<String, Map<String, Object>> entry : dataSourceGroup.entrySet()) {
             long start = System.currentTimeMillis();
             String keyPrefix = entry.getKey();
-
-            MapperScannerConfigurer scannerConfigurer = new MapperScannerConfigurer();
-            scannerConfigurer.setBasePackage(String.format(PropertiesContainer.valueOfString(MYBATIS_PO_MODEL_PACKAGE
-                    , keyPrefix)));
-            scannerConfigurer.setAnnotationClass(DaoAnnotation.class);
-            //scannerConfigurer.setSqlSessionTemplateBeanName(SysConstant.DaoConstant.SQL_SESSION_TEMPLATE_NAME);
-
-            //configurer.setBasePackage(PropertiesContainer.valueOfString(
-            //        String.format(MYBATIS_DAO_INTERFACE_PACKAGE, keyPrefix)));
             //builder druid pool instance
             try {
                 DruidDataSource dataSource = DruidDataSourceBuilder.buildDataSource(entry.getValue());
@@ -124,17 +119,24 @@ public class MultipleDataSourceConfiguration {
                 MybatisDynamicBean.registerSqlSessionFactory(keyPrefix
                         , newKey(keyPrefix, "sqlSessionFactory")
                         , dataSource
-                        , scannerConfigurer);
-                sqlSessionFactoryMap.put(keyPrefix,
+                );
+                //get already register session factory instance
+                SqlSessionFactory sessionFactory =
                         (SqlSessionFactory) SpringApplicationContext.getBean(newKey(keyPrefix
-                                , "sqlSessionFactory")));
-                targetDataSources.put(keyPrefix, dataSource);
+                                , "sqlSessionFactory"));
+                sqlSessionFactoryMap.put(keyPrefix,
+                        sessionFactory);
+                //
+                allDataSources.put(keyPrefix, dataSource);
                 //check is default data source key.
                 if (keyPrefix.equalsIgnoreCase(defaultDataSourceKey)) {
                     defaultTargetDataSource = dataSource;
                 }
-                //cache data source
-                MultipleDataSourceMap.cacheDataSource(keyPrefix);
+
+                //
+                //MybatisDynamicBean.registerSqlSessionTemplate(newKey(keyPrefix, "sessionTemplate"), sessionFactory);
+                //MybatisDynamicBean.registerJdbcTemplate(newKey(keyPrefix, "jdbcTemplate"), dataSource);
+
                 LOGGER.info("data source `{}` initDataSource done,cost {} ms"
                         , keyPrefix
                         , System.currentTimeMillis() - start);
@@ -144,12 +146,18 @@ public class MultipleDataSourceConfiguration {
                 throw new SysException(50000, "data source initDataSource failed");
             }
         }
+
+        MybatisDynamicBean.registerSqlSessionTemplate(SysConstant.DaoConstant.SQL_SESSION_TEMPLATE_NAME
+                , sqlSessionFactoryMap.entrySet().iterator().next().getValue());
         //ensure exists default data source.
         if (defaultTargetDataSource == null) {
-            defaultTargetDataSource = (DataSource) Iterables.get(targetDataSources.values(), 0);
+            defaultTargetDataSource = (DataSource) Iterables.get(allDataSources.values(), 0);
         }
         //register default sql session template,will re factory
-        MybatisDynamicBean.registerSqlSessionTemplate(sqlSessionFactoryMap);
+        //cache data source
+        MultipleDataSourceMap.cacheDataSourceAll(sqlSessionFactoryMap.keySet());
+        MultipleDataSourceMap.setDataSource(Iterables.get(sqlSessionFactoryMap.keySet(), 0));
+        //dynamicDataSource = new DynamicDataSource(allDataSources, defaultTargetDataSource);
     }
 
     /**

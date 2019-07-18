@@ -43,7 +43,7 @@ public class SysConstant {
 
         public static final String SHOW_SQL = "show.sql";
         public static final String SHOW_TIMEOUT = "sql.timeout";
-        public static final String SQL_SESSION_TEMPLATE_NAME = "jdbcTemplate2";
+        public static final String SQL_SESSION_TEMPLATE_NAME = "jdbcTemplate";
         public static final String MYBATIS_BASE_PACKAGE ="mybatis.base.package";
         public static final String DB_NAME_KEY ="db.names";
         public static final String DB_PREFIX ="jdbc.";

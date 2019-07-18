@@ -13,3 +13,4 @@ application.pid
 ${LOG_PATH}
 LOG_PATH_IS_UNDEFINED
 a.txt
+*log*

@@ -34,13 +34,19 @@
                     <groupId>com.zaxxer</groupId>
                     <artifactId>HikariCP</artifactId>
                 </exclusion>
+                <!--if removed jar then project start failed-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.hibernate</groupId>-->
+                    <!--<artifactId>hibernate-core</artifactId>-->
+                <!--</exclusion>-->
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
-        </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>com.h2database</groupId>-->
+            <!--<artifactId>h2</artifactId>-->
+            <!--<scope>runtime</scope>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -115,8 +121,8 @@
 
         </dependency>
         <!--<dependency>-->
-            <!--<groupId>com.hummer</groupId>-->
-            <!--<artifactId>hummer-boot-starter</artifactId>-->
+        <!--<groupId>com.hummer</groupId>-->
+        <!--<artifactId>hummer-boot-starter</artifactId>-->
         <!--</dependency>-->
         <dependency>
             <groupId>com.hummer</groupId>
@@ -183,11 +189,11 @@
                     <mainClass>${start-class}</mainClass>
                 </configuration>
                 <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<goals>-->
-                            <!--<goal>build-info</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
+                <!--<execution>-->
+                <!--<goals>-->
+                <!--<goal>build-info</goal>-->
+                <!--</goals>-->
+                <!--</execution>-->
                 <!--</executions>-->
             </plugin>
             <!--执行集成测试-->
@@ -263,42 +269,42 @@
             <!--create rest api json document-->
             <!--<plugin>-->
 
-                <!--<groupId>com.github.kongchen</groupId>-->
-                <!--<artifactId>swagger-maven-plugin</artifactId>-->
-                <!--<version>3.0.0</version>-->
-                <!--<configuration>-->
-                    <!--<apiSources>-->
-                        <!--<apiSource>-->
-                            <!--<springmvc>true</springmvc>-->
-                            <!--<locations>${rest-locations}</locations>-->
-                            <!--<host>service.url:8080</host>-->
-                            <!--<basePath>/</basePath>-->
-                            <!--<info>-->
-                                <!--<title>Application manager swagger</title>-->
-                                <!--<version>0.0.1</version>-->
-                                <!--<contact>-->
-                                    <!--<email>mahmoud.romeh@test.com</email>-->
-                                    <!--<name>Mahmoud Romih</name>-->
-                                <!--</contact>-->
-                                <!--<license>-->
-                                    <!--<url>http://www.apache.org/licenses/LICENSE-2.0.html</url>-->
-                                    <!--<name>Apache 2.0</name>-->
-                                <!--</license>-->
-                            <!--</info>-->
-                            <!--<swaggerDirectory>${project.build.directory}/generated/swagger-ui</swaggerDirectory>-->
-                        <!--</apiSource>-->
-                    <!--</apiSources>-->
-                <!--</configuration>-->
+            <!--<groupId>com.github.kongchen</groupId>-->
+            <!--<artifactId>swagger-maven-plugin</artifactId>-->
+            <!--<version>3.0.0</version>-->
+            <!--<configuration>-->
+            <!--<apiSources>-->
+            <!--<apiSource>-->
+            <!--<springmvc>true</springmvc>-->
+            <!--<locations>${rest-locations}</locations>-->
+            <!--<host>service.url:8080</host>-->
+            <!--<basePath>/</basePath>-->
+            <!--<info>-->
+            <!--<title>Application manager swagger</title>-->
+            <!--<version>0.0.1</version>-->
+            <!--<contact>-->
+            <!--<email>mahmoud.romeh@test.com</email>-->
+            <!--<name>Mahmoud Romih</name>-->
+            <!--</contact>-->
+            <!--<license>-->
+            <!--<url>http://www.apache.org/licenses/LICENSE-2.0.html</url>-->
+            <!--<name>Apache 2.0</name>-->
+            <!--</license>-->
+            <!--</info>-->
+            <!--<swaggerDirectory>${project.build.directory}/generated/swagger-ui</swaggerDirectory>-->
+            <!--</apiSource>-->
+            <!--</apiSources>-->
+            <!--</configuration>-->
 
 
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>compile</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>generate</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<phase>compile</phase>-->
+            <!--<goals>-->
+            <!--<goal>generate</goal>-->
+            <!--</goals>-->
+            <!--</execution>-->
+            <!--</executions>-->
             <!--</plugin>-->
 
         </plugins>

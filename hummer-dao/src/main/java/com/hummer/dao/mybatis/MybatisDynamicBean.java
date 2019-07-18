@@ -12,12 +12,13 @@ import org.apache.ibatis.io.VFS;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.mapper.MapperFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.testng.collections.Lists;
 
@@ -54,14 +55,13 @@ public class MybatisDynamicBean {
      */
     public static void registerSqlSessionFactory(final String dataSourceKey
             , final String sqlSessionName
-            , final DataSource dataSource
-            , MapperScannerConfigurer scannerConfigurer) throws IOException {
+            , final DataSource dataSource) throws IOException {
         //get ben sql session
         BeanDefinitionBuilder sqlSessionBean =
                 BeanDefinitionBuilder.rootBeanDefinition(SqlSessionFactoryBean.class);
         //settings target  data source
         sqlSessionBean.addPropertyValue("dataSource", dataSource);
-        //settings initial method
+        //settings initial method,method getObject will return default session factory instance
         sqlSessionBean.setInitMethodName("getObject");
         //settings alias po package path
         //notice： Not recommended use feature
@@ -131,7 +131,7 @@ public class MybatisDynamicBean {
                                 , dataSourceKey))));
         //register sql session bean
         SpringApplicationContext.registerDynamicBen(sqlSessionName, sqlSessionBean.getRawBeanDefinition());
-        scannerConfigurer.setSqlSessionFactoryBeanName(sqlSessionName);
+        //scannerConfigurer.setSqlSessionFactoryBeanName(sqlSessionName);
         LOGGER.info("bean `{}` register done.", sqlSessionName);
     }
 
@@ -155,6 +155,7 @@ public class MybatisDynamicBean {
      *
      * @param sqlSessionTemplateMap sql session
      */
+    @Deprecated
     public static void registerSqlSessionTemplate(Map<String, SqlSessionFactory> sqlSessionTemplateMap) {
         //new custom sql session template ben
         BeanDefinitionBuilder beanDefinitionBuilder =
@@ -168,6 +169,24 @@ public class MybatisDynamicBean {
                 , beanDefinitionBuilder.getRawBeanDefinition());
         LOGGER.info("bean custom sql session template register done,sql session template map {}"
                 , sqlSessionTemplateMap);
+    }
+
+    public static void registerSqlSessionTemplate(final String templateName, final SqlSessionFactory dataSource){
+        //new custom sql session template ben
+        BeanDefinitionBuilder beanDefinitionBuilder =
+                BeanDefinitionBuilder.rootBeanDefinition(SqlSessionTemplate.class);
+        beanDefinitionBuilder.addConstructorArgValue(dataSource);
+        SpringApplicationContext.registerDynamicBen(SysConstant.DaoConstant.SQL_SESSION_TEMPLATE_NAME
+                , beanDefinitionBuilder.getRawBeanDefinition());
+    }
+
+    public static void registerJdbcTemplate(final String templateName, final DataSource dataSource){
+        //new custom sql session template ben
+        BeanDefinitionBuilder beanDefinitionBuilder =
+                BeanDefinitionBuilder.rootBeanDefinition(JdbcTemplate.class);
+        beanDefinitionBuilder.addConstructorArgValue(dataSource);
+        SpringApplicationContext.registerDynamicBen(templateName
+                , beanDefinitionBuilder.getRawBeanDefinition());
     }
 
     private static Properties builderSqlProperties() {
