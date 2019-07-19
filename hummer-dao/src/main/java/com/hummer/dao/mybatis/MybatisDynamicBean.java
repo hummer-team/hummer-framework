@@ -174,10 +174,12 @@ public class MybatisDynamicBean {
     public static void registerSqlSessionTemplate(final String templateName, final SqlSessionFactory dataSource){
         //new custom sql session template ben
         BeanDefinitionBuilder beanDefinitionBuilder =
-                BeanDefinitionBuilder.rootBeanDefinition(SqlSessionTemplate.class);
+                BeanDefinitionBuilder.genericBeanDefinition(SqlSessionTemplate.class);
         beanDefinitionBuilder.addConstructorArgValue(dataSource);
-        SpringApplicationContext.registerDynamicBen(SysConstant.DaoConstant.SQL_SESSION_TEMPLATE_NAME
+        beanDefinitionBuilder.setLazyInit(true);
+        SpringApplicationContext.registerDynamicBen(templateName
                 , beanDefinitionBuilder.getRawBeanDefinition());
+        LOGGER.info("bean custom sql session template register done,sql session template name {}",templateName);
     }
 
     public static void registerJdbcTemplate(final String templateName, final DataSource dataSource){

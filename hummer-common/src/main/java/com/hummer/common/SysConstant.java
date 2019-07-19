@@ -46,7 +46,7 @@ public class SysConstant {
         public static final String SQL_SESSION_TEMPLATE_NAME = "jdbcTemplate";
         public static final String MYBATIS_BASE_PACKAGE ="mybatis.base.package";
         public static final String DB_NAME_KEY ="db.names";
-        public static final String DB_PREFIX ="jdbc.";
+        public static final String DB_PREFIX ="spring.jdbc.";
         /**
          * mybatis.hj_class_learning_biz_log.resource.mapper
          */

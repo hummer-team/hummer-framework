@@ -10,7 +10,9 @@ import org.springframework.context.annotation.Import;
  *
  * @author bingy
  */
-@Import(value = {MultipleDataSourceConfiguration.class, DruidFilterConfiguration.class, TargetDataSourceAspect.class})
+@Import(value = {MultipleDataSourceConfiguration.class
+        , DruidFilterConfiguration.class
+        , TargetDataSourceAspect.class})
 @Conditional(DaoLoadCondition.class)
 public class ExportDaoConfiguration {
 

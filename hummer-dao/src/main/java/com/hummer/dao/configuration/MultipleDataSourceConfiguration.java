@@ -84,7 +84,7 @@ public class MultipleDataSourceConfiguration {
         //ony scan DaoAnnotation
         configurer.setAnnotationClass(DaoAnnotation.class);
         //register all doa package include interface
-        configurer.setBasePackage(PropertiesContainer.valueOfString(SysConstant.DaoConstant.MYBATIS_BASE_PACKAGE));
+        configurer.setBasePackage(basePackage);
         LOGGER.info("dao mapper scanner register done,mybatis base package name {}", basePackage);
         return configurer;
     }
@@ -129,13 +129,12 @@ public class MultipleDataSourceConfiguration {
                 //
                 allDataSources.put(keyPrefix, dataSource);
                 //check is default data source key.
-                if (keyPrefix.equalsIgnoreCase(defaultDataSourceKey)) {
+                if (keyPrefix.equalsIgnoreCase(defaultDataSourceKey)
+                        && defaultTargetDataSource == null) {
                     defaultTargetDataSource = dataSource;
                 }
-
                 //
                 //MybatisDynamicBean.registerSqlSessionTemplate(newKey(keyPrefix, "sessionTemplate"), sessionFactory);
-                //MybatisDynamicBean.registerJdbcTemplate(newKey(keyPrefix, "jdbcTemplate"), dataSource);
 
                 LOGGER.info("data source `{}` initDataSource done,cost {} ms"
                         , keyPrefix
@@ -147,12 +146,17 @@ public class MultipleDataSourceConfiguration {
             }
         }
 
+
         MybatisDynamicBean.registerSqlSessionTemplate(SysConstant.DaoConstant.SQL_SESSION_TEMPLATE_NAME
                 , sqlSessionFactoryMap.entrySet().iterator().next().getValue());
         //ensure exists default data source.
         if (defaultTargetDataSource == null) {
             defaultTargetDataSource = (DataSource) Iterables.get(allDataSources.values(), 0);
+            LOGGER.warn("no specific default dataSource,use first data {} as default data source"
+                    , defaultTargetDataSource);
         }
+        //MybatisDynamicBean.registerJdbcTemplate(SysConstant.DaoConstant.SQL_SESSION_TEMPLATE_NAME
+        // , defaultTargetDataSource);
         //register default sql session template,will re factory
         //cache data source
         MultipleDataSourceMap.cacheDataSourceAll(sqlSessionFactoryMap.keySet());
@@ -187,9 +191,10 @@ public class MultipleDataSourceConfiguration {
     private Map<String, Map<String, Object>> groupDataSource(Map<String, Object> allMap) {
         Collection<String> dataSourceNamePrefix = Collections2.transform(allMap.keySet(), k -> {
             Iterable<String> keyArray = Splitter.on(".").omitEmptyStrings().split(k);
-            return String.format("%s.%s"
+            return String.format("%s.%s.%s"
                     , Iterables.get(keyArray, 0)
-                    , Iterables.get(keyArray, 1));
+                    , Iterables.get(keyArray, 1)
+                    , Iterables.get(keyArray, 2));
         });
 
         Set<String> distinctKey = Sets.newHashSet(dataSourceNamePrefix);
@@ -202,7 +207,7 @@ public class MultipleDataSourceConfiguration {
                     .collect(Collectors
                             .toMap(key -> newKey(k, key)
                                     , Map.Entry::getValue));
-            newMaps.put(k.replaceAll("jdbc.", "")
+            newMaps.put(k.replaceAll("spring.jdbc.", "")
                     , tempMap);
         });
 

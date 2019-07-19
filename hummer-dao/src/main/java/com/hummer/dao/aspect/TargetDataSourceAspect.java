@@ -21,7 +21,7 @@ public class TargetDataSourceAspect {
     @Before(" @annotation(ds)")
     public void changeDataSource(JoinPoint point, TargetDataSource ds) {
         if (!DataSourceSwitch.exists(ds.value())) {
-            log.error("data source [{}] no exists，use default data source > {}", ds.value(), point.getSignature());
+            log.error("data source {} no exists，use default data source > {}", ds.value(), point.getSignature());
         } else {
             log.debug("use dataSource : {} >>>> {}", ds.value(), point.getSignature());
             DataSourceSwitch.set(ds.value());
