@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javax.sql.DataSource;
 import java.util.Collection;
@@ -53,11 +54,10 @@ public class MultipleDataSourceConfiguration {
     private final Map<Object, Object> allDataSources = Maps.newConcurrentMap();
     private DataSource defaultTargetDataSource;
 
-    @Lazy
     @Bean
     @Conditional(DaoLoadCondition.class)
-    public DataSource registerDynamicDataSource() {
-        return new DynamicDataSource(allDataSources, defaultTargetDataSource);
+    public NamedParameterJdbcTemplate namedParameterJdbcTemplate(){
+        return new NamedParameterJdbcTemplate(defaultTargetDataSource) ;
     }
 
     /**
@@ -81,7 +81,7 @@ public class MultipleDataSourceConfiguration {
         MapperScannerConfigurer configurer = new MapperScannerConfigurer();
         //set session template bean name
         configurer.setSqlSessionTemplateBeanName(SysConstant.DaoConstant.SQL_SESSION_TEMPLATE_NAME);
-        //ony scan DaoAnnotation
+        //only scan DaoAnnotation
         configurer.setAnnotationClass(DaoAnnotation.class);
         //register all doa package include interface
         configurer.setBasePackage(basePackage);
@@ -110,10 +110,8 @@ public class MultipleDataSourceConfiguration {
             //builder druid pool instance
             try {
                 DruidDataSource dataSource = DruidDataSourceBuilder.buildDataSource(entry.getValue());
-                //initDataSource
-                dataSource.init();
                 //register jdbc transaction bean
-                MybatisDynamicBean.registerTransaction(newKey(keyPrefix, "tx")
+                MybatisDynamicBean.registerTransaction(newKey(keyPrefix, "_TM")
                         , dataSource);
                 //register jdbc sql session factory
                 MybatisDynamicBean.registerSqlSessionFactory(keyPrefix
@@ -135,7 +133,6 @@ public class MultipleDataSourceConfiguration {
                 }
                 //
                 //MybatisDynamicBean.registerSqlSessionTemplate(newKey(keyPrefix, "sessionTemplate"), sessionFactory);
-
                 LOGGER.info("data source `{}` initDataSource done,cost {} ms"
                         , keyPrefix
                         , System.currentTimeMillis() - start);
@@ -146,9 +143,9 @@ public class MultipleDataSourceConfiguration {
             }
         }
 
-
-        MybatisDynamicBean.registerSqlSessionTemplate(SysConstant.DaoConstant.SQL_SESSION_TEMPLATE_NAME
-                , sqlSessionFactoryMap.entrySet().iterator().next().getValue());
+        MybatisDynamicBean.registerSqlSessionTemplate(sqlSessionFactoryMap);
+        //MybatisDynamicBean.registerSqlSessionTemplate(SysConstant.DaoConstant.SQL_SESSION_TEMPLATE_NAME
+        //        , sqlSessionFactoryMap.entrySet().iterator().next().getValue());
         //ensure exists default data source.
         if (defaultTargetDataSource == null) {
             defaultTargetDataSource = (DataSource) Iterables.get(allDataSources.values(), 0);

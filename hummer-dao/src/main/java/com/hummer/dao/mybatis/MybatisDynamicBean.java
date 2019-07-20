@@ -8,6 +8,7 @@ import com.hummer.spring.plugin.context.PropertiesContainer;
 import com.hummer.spring.plugin.context.SpringApplicationContext;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.datasource.DataSourceFactory;
 import org.apache.ibatis.io.VFS;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -131,9 +132,9 @@ public class MybatisDynamicBean {
                                 , dataSourceKey))));
         //register sql session bean
         SpringApplicationContext.registerDynamicBen(sqlSessionName, sqlSessionBean.getRawBeanDefinition());
-        //scannerConfigurer.setSqlSessionFactoryBeanName(sqlSessionName);
         LOGGER.info("bean `{}` register done.", sqlSessionName);
     }
+
 
     /**
      * register data source transaction
@@ -155,8 +156,7 @@ public class MybatisDynamicBean {
      *
      * @param sqlSessionTemplateMap sql session
      */
-    @Deprecated
-    public static void registerSqlSessionTemplate(Map<String, SqlSessionFactory> sqlSessionTemplateMap) {
+    public static void registerSqlSessionTemplate(final Map<String, SqlSessionFactory> sqlSessionTemplateMap) {
         //new custom sql session template ben
         BeanDefinitionBuilder beanDefinitionBuilder =
                 BeanDefinitionBuilder.genericBeanDefinition(CustomSqlSessionTemplate.class);
@@ -171,7 +171,7 @@ public class MybatisDynamicBean {
                 , sqlSessionTemplateMap);
     }
 
-    public static void registerSqlSessionTemplate(final String templateName, final SqlSessionFactory dataSource){
+    public static void registerSqlSessionTemplate(final String templateName, final SqlSessionFactory dataSource) {
         //new custom sql session template ben
         BeanDefinitionBuilder beanDefinitionBuilder =
                 BeanDefinitionBuilder.genericBeanDefinition(SqlSessionTemplate.class);
@@ -179,10 +179,10 @@ public class MybatisDynamicBean {
         beanDefinitionBuilder.setLazyInit(true);
         SpringApplicationContext.registerDynamicBen(templateName
                 , beanDefinitionBuilder.getRawBeanDefinition());
-        LOGGER.info("bean custom sql session template register done,sql session template name {}",templateName);
+        LOGGER.info("bean custom sql session template register done,sql session template name {}", templateName);
     }
 
-    public static void registerJdbcTemplate(final String templateName, final DataSource dataSource){
+    public static void registerJdbcTemplate(final String templateName, final DataSource dataSource) {
         //new custom sql session template ben
         BeanDefinitionBuilder beanDefinitionBuilder =
                 BeanDefinitionBuilder.rootBeanDefinition(JdbcTemplate.class);

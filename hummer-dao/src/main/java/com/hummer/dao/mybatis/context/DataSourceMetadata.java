@@ -50,4 +50,9 @@ public class DataSourceMetadata {
     public int hashCode() {
         return Objects.hash(dbName, dbType);
     }
+
+    @Override
+    public String toString() {
+        return String.format("[dynamic db name is %s,dbType is %s]", dbName, dbType);
+    }
 }

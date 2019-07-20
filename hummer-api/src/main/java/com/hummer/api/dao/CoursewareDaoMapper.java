@@ -1,7 +1,7 @@
 package com.hummer.api.dao;
 
 
-import com.hummer.api.po.BizLogTableConfigPo;
+import com.hummer.api.po.CoursewarePo;
 import com.hummer.dao.annotation.DaoAnnotation;
 import com.hummer.dao.annotation.TargetDataSource;
 
@@ -14,7 +14,7 @@ import java.util.Collection;
  **/
 @DaoAnnotation
 
-public interface BizLogTableConfigDao {
+public interface CoursewareDaoMapper {
     /**
      * query all table configuration
      *
@@ -23,6 +23,6 @@ public interface BizLogTableConfigDao {
      * @date 2018/12/18 15:59
      * @version 1.0.0
      **/
-    @TargetDataSource("hj_class_learning_biz_log")
-    Collection<BizLogTableConfigPo> getAllByTableName();
+    @TargetDataSource("hj_classs_courseware")
+    Collection<CoursewarePo> getOne();
 }

@@ -12,18 +12,32 @@ import org.springframework.stereotype.Component;
 
 /**
  * switch data source
+ *
+ * @author bingy
  */
 @Aspect
 @Component
 @Slf4j
 public class TargetDataSourceAspect {
 
-    @Before(" @annotation(ds)")
+
+    public void befor(){
+
+    }
+
+    /**
+     * interface or method
+     * @param point
+     * @param ds
+     */
+    @Before("@annotation(ds)")
     public void changeDataSource(JoinPoint point, TargetDataSource ds) {
         if (!DataSourceSwitch.exists(ds.value())) {
-            log.error("data source {} no exists，use default data source > {}", ds.value(), point.getSignature());
+            log.error("data source {} no exists，use default data source > {}"
+                    , ds.value(), point.getSignature());
         } else {
             log.debug("use dataSource : {} >>>> {}", ds.value(), point.getSignature());
+           // point.getTarget().getClass().getAnnotation()
             DataSourceSwitch.set(ds.value());
         }
     }

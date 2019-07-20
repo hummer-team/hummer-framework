@@ -34,6 +34,7 @@
     <logger name="org.h2.*" level="INFO" dditivity="false"/>
     <logger name="org.hibernate.*" level="INFO" dditivity="false"/>
     <logger name="com.hummer.*" level="DEBUG" dditivity="false"/>
+    <logger name="com.alibaba.druid.*" level="DEBUG" dditivity="false"/>
     <root level="DEBUG">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="stash-file"/>

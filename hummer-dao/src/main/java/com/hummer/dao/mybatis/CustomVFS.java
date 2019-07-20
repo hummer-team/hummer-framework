@@ -11,6 +11,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author bingy
+ */
 public class CustomVFS extends VFS {
 
     private final ResourcePatternResolver resourceResolver =

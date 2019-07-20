@@ -20,7 +20,7 @@ public class MultipleDataSourceMap {
     }
 
     private static final CopyOnWriteArraySet<String> DATA_SOURCE_SETS = new CopyOnWriteArraySet<>();
-    private static final InheritableThreadLocal<DataSourceMetadata> HOLDER = new InheritableThreadLocal<>();
+    private static final ThreadLocal<DataSourceMetadata> HOLDER = new ThreadLocal<>();
 
     public static void setDataSource(final String name) {
         Validate.isTrue(!Strings.isNullOrEmpty(name), "metadata is null");
@@ -53,7 +53,6 @@ public class MultipleDataSourceMap {
         DataSourceMetadata meta = HOLDER.get();
         if (meta == null) {
             meta = new DataSourceMetadata(dbName);
-            HOLDER.set(meta);
         }
         return meta;
     }

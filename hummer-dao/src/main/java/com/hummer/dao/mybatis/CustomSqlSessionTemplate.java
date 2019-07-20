@@ -1,6 +1,7 @@
 package com.hummer.dao.mybatis;
 
 import com.hummer.common.exceptions.SysException;
+import com.hummer.dao.mybatis.context.DataSourceMetadata;
 import com.hummer.dao.mybatis.context.MultipleDataSourceMap;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.executor.BatchResult;
@@ -15,7 +16,6 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.support.PersistenceExceptionTranslator;
-import org.springframework.util.Assert;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -35,7 +35,6 @@ import static org.mybatis.spring.SqlSessionUtils.isSqlSessionTransactional;
  * @author bingy
  * @since 1.0.0
  */
-@Deprecated
 public class CustomSqlSessionTemplate extends SqlSessionTemplate {
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomSqlSessionTemplate.class);
     private final ExecutorType executorType;
@@ -89,8 +88,10 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
     @Override
     public SqlSessionFactory getSqlSessionFactory() {
 
+        DataSourceMetadata metadata = MultipleDataSourceMap.getDataSource();
+        LOGGER.debug("use target data source {}",metadata);
         SqlSessionFactory targetSqlSessionFactory = targetSqlSessionFactoryMap
-                .get(MultipleDataSourceMap.getDataSource().getDbName());
+                .get(metadata.getDbName());
         if (targetSqlSessionFactory != null) {
             return targetSqlSessionFactory;
         } else if (defaultTargetSqlSessionFactory != null) {
