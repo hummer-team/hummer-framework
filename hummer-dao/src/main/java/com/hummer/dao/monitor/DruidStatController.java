@@ -2,6 +2,7 @@ package com.hummer.dao.monitor;
 
 import com.alibaba.druid.stat.DruidStatManagerFacade;
 import com.google.common.base.Strings;
+import com.hummer.spring.plugin.context.PropertiesContainer;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,8 +19,9 @@ public class DruidStatController {
         if(Strings.isNullOrEmpty(user)|| Strings.isNullOrEmpty(password)){
             return null;
         }
-
-        if(!user.equals("admin") || !password.equals("admin124")){
+        String userName= PropertiesContainer.valueOfString("druid.stat.user","admin");
+        String pwd =PropertiesContainer.valueOfString("druid.stat.user.password","123456");
+        if(!user.equals(userName) || !password.equals(pwd)){
             return null;
         }
 
