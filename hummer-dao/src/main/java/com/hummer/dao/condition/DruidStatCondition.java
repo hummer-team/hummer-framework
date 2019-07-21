@@ -26,7 +26,7 @@ public class DruidStatCondition implements Condition {
      */
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-        boolean isLoad = PropertiesContainer.valueOf("druid.stat.enable", Boolean.class, Boolean.TRUE);
+        boolean isLoad = PropertiesContainer.valueOf("druid.stat.enable", Boolean.class, Boolean.FALSE);
         LOGGER.info("=========druid stat enable {},if `druid.stat.enable` " +
                 "value is false will disabled druid stat feature===========", isLoad);
         return isLoad;
