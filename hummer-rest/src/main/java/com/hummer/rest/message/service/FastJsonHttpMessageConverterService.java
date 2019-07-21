@@ -82,9 +82,15 @@ public class FastJsonHttpMessageConverterService extends FastJsonHttpMessageConv
      * @version 1.0.0
      **/
     @Override
+    public Object read(Type type,Class<? extends Object> clazz,
+                                  HttpInputMessage inputMessage) throws IOException {
+        return inRead(clazz, inputMessage);
+    }
+
+    @Override
     protected Object readInternal(Class<? extends Object> clazz,
                                   HttpInputMessage inputMessage) throws IOException {
-        return read(clazz, inputMessage);
+        return inRead(clazz,inputMessage);
     }
 
     /**
@@ -120,6 +126,7 @@ public class FastJsonHttpMessageConverterService extends FastJsonHttpMessageConv
                     LOGGER.debug("no settings serial configuration,use default serial configuration");
                     serializeConfig = new SerializeConfig();
                 }
+
                 result = JSON.toJSONString(obj
                         , serializeConfig
                         , jsonConfig.getSerializeFilters()
@@ -136,14 +143,15 @@ public class FastJsonHttpMessageConverterService extends FastJsonHttpMessageConv
             outputStream.write(content);
             OutputStream out = outputMessage.getBody();
             outputStream.writeTo(out);
-            LOGGER.debug("business logic done total cost {} millis, return result serial cost {} millis,serial result {} bytes"
+            LOGGER.debug("business logic execute done , serial total cost {} millis" +
+                            ", return result serial cost {} millis,serial result {} bytes"
                     , System.currentTimeMillis() - start
                     , serialCostTime
                     , content.length);
         }
     }
 
-    private Object read(Type type, HttpInputMessage inputMessage) throws IOException {
+    private Object inRead(Type type, HttpInputMessage inputMessage) throws IOException {
         //head
         HttpHeaders header = inputMessage.getHeaders();
         //body stream

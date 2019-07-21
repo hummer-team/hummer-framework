@@ -94,6 +94,7 @@
         <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
         <sqljdbc4.version>4.0</sqljdbc4.version>
         <aspectjweaver.version>1.9.2</aspectjweaver.version>
+        <druid-spring-boot-starter.version>1.1.18</druid-spring-boot-starter.version>
     </properties>
 
     <dependencyManagement>
@@ -136,6 +137,13 @@
             </dependency>
 
             <!--framework plugin-->
+            <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid-spring-boot-starter.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.microsoft.sqlserver</groupId>
                 <artifactId>sqljdbc4</artifactId>

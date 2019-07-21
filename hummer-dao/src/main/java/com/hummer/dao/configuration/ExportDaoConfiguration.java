@@ -3,6 +3,8 @@ package com.hummer.dao.configuration;
 import com.hummer.dao.aspect.TargetDataSourceAspect;
 import com.hummer.dao.aspect.TargetDataSourceTMAspect;
 import com.hummer.dao.condition.DaoLoadCondition;
+import com.hummer.dao.monitor.DruidStatController;
+import com.hummer.dao.monitor.stat.DruidConfiguration;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
 
@@ -14,7 +16,9 @@ import org.springframework.context.annotation.Import;
 @Import(value = {MultipleDataSourceConfiguration.class
         , DruidFilterConfiguration.class
         , TargetDataSourceAspect.class
-        , TargetDataSourceTMAspect.class})
+        , TargetDataSourceTMAspect.class
+        , DruidStatController.class
+        , DruidConfiguration.class})
 @Conditional(DaoLoadCondition.class)
 public class ExportDaoConfiguration {
 

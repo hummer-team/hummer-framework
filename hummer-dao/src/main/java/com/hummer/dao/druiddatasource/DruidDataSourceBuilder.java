@@ -8,10 +8,10 @@ import com.alibaba.druid.wall.WallFilter;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.hummer.spring.plugin.context.PropertiesContainer;
 import com.hummer.common.ErrorCodeConsts;
 import com.hummer.common.SysConstant;
 import com.hummer.common.exceptions.SysException;
+import com.hummer.spring.plugin.context.PropertiesContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -114,7 +114,10 @@ public class DruidDataSourceBuilder {
                             Integer.valueOf(maxPoolPreparedStatementPerConnectionSize));
                 }
             }
-
+            String queryTimeOutVal=(String)ds.get("queryTimeout");
+            if(!Strings.isNullOrEmpty(queryTimeOutVal)) {
+                druidDataSource.setQueryTimeout(Integer.valueOf(queryTimeOutVal));
+            }
             druidDataSource.setValidationQuery("select 1");
             druidDataSource.setValidationQueryTimeout(PropertiesContainer.valueOf(
                     SysConstant.DaoConstant.JDBC_VALIDATIONQUERYTIMEOUT

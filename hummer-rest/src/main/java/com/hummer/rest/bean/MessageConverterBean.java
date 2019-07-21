@@ -81,6 +81,10 @@ public class MessageConverterBean {
             }
             fastJsonConfig.setSerializerFeatures(listFeature.toArray(new SerializerFeature[0]));
         }
+        //date time format
+        if(!listFeature.contains(SerializerFeature.UseISO8601DateFormat)){
+           fastJsonConfig.setSerializerFeatures(SerializerFeature.UseISO8601DateFormat);
+        }
         //flush config
         service.setFastJsonConfig(fastJsonConfig);
 
