@@ -84,7 +84,7 @@ public class FastJsonHttpMessageConverterService extends FastJsonHttpMessageConv
     @Override
     public Object read(Type type,Class<? extends Object> clazz,
                                   HttpInputMessage inputMessage) throws IOException {
-        return inRead(clazz, inputMessage);
+        return inRead(type, inputMessage);
     }
 
     @Override
