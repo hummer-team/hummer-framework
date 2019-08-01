@@ -3,13 +3,17 @@ package com.hummer.api.web;
 import com.hummer.api.dao.BizLogTableConfigDao;
 import com.hummer.api.dao.CoursewareDaoMapper;
 import com.hummer.api.dao.hjclass.EvaluationTasksDao;
+import com.hummer.api.po.CoursewarePo;
+import com.hummer.api.po.hjclass.EvaluationTasksPo;
 import com.hummer.dao.annotation.TargetDataSourceTM;
+import com.hummer.rest.model.ResourceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,8 +33,8 @@ public class DataSourceController {
     @ResponseBody
     @TargetDataSourceTM(dbName = "hj_classs_courseware"
         ,transactionManager = "hj_classs_courseware_TM",timeout = 5)
-    public Object getOne() {
-        return coursewareDaoMapper.getOne();
+    public ResourceResponse<Collection<CoursewarePo>> getOne() {
+        return ResourceResponse.ok(coursewareDaoMapper.getOne());
     }
 
     @GetMapping(value = "/config")
@@ -50,7 +54,7 @@ public class DataSourceController {
 
     @GetMapping(value = "/task")
     @ResponseBody
-    public Object queryTask(){
-        return tasksDao.queryById(4566);
+    public ResourceResponse<EvaluationTasksPo> queryTask(){
+        return ResourceResponse.ok(tasksDao.queryById(4566));
     }
 }
