@@ -6,7 +6,7 @@
     <artifactId>hummer-framework</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <modules>
-        <module>hummer-api</module>
+        <module>hummer-simple-api</module>
         <module>hummer-common</module>
         <module>hummer-config</module>
         <module>hummer-rest</module>
