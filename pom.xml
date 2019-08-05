@@ -95,6 +95,7 @@
         <sqljdbc4.version>4.0</sqljdbc4.version>
         <aspectjweaver.version>1.9.2</aspectjweaver.version>
         <druid-spring-boot-starter.version>1.1.18</druid-spring-boot-starter.version>
+        <kafkak.version>2.1.0</kafkak.version>
     </properties>
 
     <dependencyManagement>
@@ -137,11 +138,24 @@
             </dependency>
 
             <!--framework plugin-->
-            <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
+            <!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka -->
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>druid-spring-boot-starter</artifactId>
-                <version>${druid-spring-boot-starter.version}</version>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka_2.12</artifactId>
+                <version>${kafkak.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-clients</artifactId>
+                <version>${kafkak.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-streams -->
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-streams</artifactId>
+                <version>${kafkak.version}</version>
             </dependency>
 
             <dependency>

@@ -103,9 +103,22 @@ public class RequestFilter implements Filter {
                     , System.currentTimeMillis() - start);
         } finally {
             MDC.clear();
-            LOGGER.debug("request {} handle done,total cost {} millis"
+            outputLog((HttpServletResponse) response, httpRequest, System.currentTimeMillis() - start);
+        }
+    }
+
+    private void outputLog(final HttpServletResponse response
+            , final HttpServletRequest httpRequest
+            , final long costTime) {
+        final int successCode = 200;
+        final int defaultSlowCostTimeMills = 10;
+        if (response.getStatus() != successCode
+                || costTime >= PropertiesContainer.valueOf("request.cost.time.slow.value"
+                , Integer.class, defaultSlowCostTimeMills)) {
+            LOGGER.warn("request {} handle done,response status {},total cost {} millis"
                     , HttpServletRequestUtil.getCurrentUrl(httpRequest)
-                    , System.currentTimeMillis() - start);
+                    , response.getStatus()
+                    , costTime);
         }
     }
 
