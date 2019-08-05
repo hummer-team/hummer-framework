@@ -45,17 +45,11 @@ public abstract class BasePublish {
     }
 
     protected KafkaMessageMetadata kafkaMessageMetadata(String appId) {
-        KafkaMessageMetadata metadata = new KafkaMessageMetadata(null, null, appId
-                , 0
-                , null
-                , null);
-
-        return metadata;
+        return new KafkaMessageMetadata(appId);
     }
 
     protected RabbitMqMessageMetadata rabbitMqMessageMetadata(String appId) {
-        RabbitMqMessageMetadata metadata=new RabbitMqMessageMetadata(null
-                ,0,null,null);
+        return new RabbitMqMessageMetadata(appId);
     }
 
     protected abstract <T extends Serializable> void innerSendBatch(Collection<T> body, String appId);

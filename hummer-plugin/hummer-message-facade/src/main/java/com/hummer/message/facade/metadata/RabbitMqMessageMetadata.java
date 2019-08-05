@@ -10,10 +10,7 @@ import lombok.Getter;
  **/
 @Getter
 public class RabbitMqMessageMetadata extends MessagePublishMetadata {
-    public RabbitMqMessageMetadata(String appId
-            , int perSecondSemaphore
-            , String address
-            , PublishMessageExceptionCallback callback) {
-        super(appId, perSecondSemaphore, address, callback);
+    public RabbitMqMessageMetadata(String appId) {
+        super(appId);
     }
 }

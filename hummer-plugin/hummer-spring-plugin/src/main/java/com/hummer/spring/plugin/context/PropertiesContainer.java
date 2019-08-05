@@ -3,6 +3,7 @@ package com.hummer.spring.plugin.context;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import com.hummer.spring.plugin.context.exceptions.KeyNotExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -82,7 +83,7 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
      * @date 2019/6/19 16:54
      * @version 1.0.0
      **/
-    public static boolean hasKey(String key) {
+    public static boolean hasKey(final String key) {
         return PROPERTY_MAP.containsKey(key);
     }
 
@@ -96,7 +97,7 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
      * @date 2019/6/26 16:12
      * @version 1.0.0
      **/
-    public static Map<String, Object> scanKeys(String keyPrefix) {
+    public static Map<String, Object> scanKeys(final String keyPrefix) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(keyPrefix), "key prefix can not null.");
 
         Map<String, Object> map = Maps.newHashMapWithExpectedSize(PROPERTY_MAP.size());
@@ -119,7 +120,7 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
      * @date 2019/6/19 16:55
      * @version 1.0.0
      **/
-    public static <T> T get(String key, Class<T> classType) {
+    public static <T> T get(final String key, final Class<T> classType) {
         Object val = PROPERTY_MAP.get(key);
         if (val == null) {
             return null;
@@ -137,7 +138,7 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
      * @date 2019/6/25 17:27
      * @version 1.0.0
      **/
-    public static <T> T valueOf(String key, Class<T> classType) {
+    public static <T> T valueOf(final String key, final Class<T> classType) {
         return get(key, classType);
     }
 
@@ -147,8 +148,33 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
      * @param key key
      * @return
      */
-    public static String valueOfString(String key) {
+    public static String valueOfString(final String key) {
         return get(key, String.class);
+    }
+
+    /**
+     * get properties as string and assert value not null.
+     *
+     * @param key
+     * @return
+     * @throws KeyNotExistsException
+     */
+    public static String valueOfStringWithAssertNotNull(final String key) {
+        String result = get(key, String.class);
+        if (Strings.isNullOrEmpty(result)) {
+            throw new KeyNotExistsException(40000, String.format("key `%s` not settings properties values", key));
+        }
+        return result;
+    }
+
+    /**
+     * get value convert to int,if exists then return 0.
+     *
+     * @param key
+     * @return
+     */
+    public static int valueOfInteger(final String key) {
+        return valueOf(key, Integer.class, 0);
     }
 
     /**
@@ -158,7 +184,7 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
      * @param defaultVal if key not exists then return default value
      * @return
      */
-    public static String valueOfString(String key, String defaultVal) {
+    public static String valueOfString(final String key, final String defaultVal) {
         return get(key, String.class, defaultVal);
     }
 
@@ -173,7 +199,7 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
      * @date 2019/6/25 17:25
      * @version 1.0.0
      **/
-    public static <T> T valueOf(String key, Class<T> classType, T defVal) {
+    public static <T> T valueOf(final String key, final Class<T> classType, final T defVal) {
         return get(key, classType, defVal);
     }
 
@@ -188,7 +214,7 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
      * @date 2019/6/19 16:56
      * @version 1.0.0
      **/
-    public static <T> T get(String key, Class<T> classType, T defVal) {
+    public static <T> T get(final String key, final Class<T> classType, final T defVal) {
         Object val = PROPERTY_MAP.get(key);
         if (val == null) {
             return defVal;
