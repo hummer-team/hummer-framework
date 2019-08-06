@@ -1,6 +1,6 @@
 package com.hummer.message.facade.metadata;
 
-import com.hummer.message.facade.publish.PublishMessageExceptionCallback;
+
 import lombok.Getter;
 
 /**
@@ -11,6 +11,6 @@ import lombok.Getter;
 @Getter
 public class RabbitMqMessageMetadata extends MessagePublishMetadata {
     public RabbitMqMessageMetadata(String appId) {
-        super(appId);
+
     }
 }

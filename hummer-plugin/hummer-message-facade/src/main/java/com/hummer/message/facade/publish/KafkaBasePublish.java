@@ -11,7 +11,7 @@ import java.util.Collection;
  * @since:1.0.0
  * @Date: 2019/8/5 15:37
  **/
-public class KafkaBasePublish extends BasePublish {
+public class KafkaBasePublish extends BasePublishTemplate {
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaBasePublish.class);
 
     /**

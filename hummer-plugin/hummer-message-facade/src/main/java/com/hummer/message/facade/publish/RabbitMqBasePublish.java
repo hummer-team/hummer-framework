@@ -8,7 +8,7 @@ import java.util.Collection;
  * @since:1.0.0
  * @Date: 2019/8/5 15:37
  **/
-public class RabbitMqBasePublish extends BasePublish {
+public class RabbitMqBasePublish extends BasePublishTemplate {
     /**
      * send batch message
      *

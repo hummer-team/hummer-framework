@@ -82,15 +82,15 @@ public class FastJsonHttpMessageConverterService extends FastJsonHttpMessageConv
      * @version 1.0.0
      **/
     @Override
-    public Object read(Type type,Class<? extends Object> clazz,
-                                  HttpInputMessage inputMessage) throws IOException {
+    public Object read(Type type, Class<? extends Object> clazz,
+                       HttpInputMessage inputMessage) throws IOException {
         return inRead(type, inputMessage);
     }
 
     @Override
     protected Object readInternal(Class<? extends Object> clazz,
                                   HttpInputMessage inputMessage) throws IOException {
-        return inRead(clazz,inputMessage);
+        return inRead(clazz, inputMessage);
     }
 
     /**
@@ -193,7 +193,7 @@ public class FastJsonHttpMessageConverterService extends FastJsonHttpMessageConv
         try {
             return JSON.parseObject(contentStr, type, fastJsonConfig.getParserConfig());
         } catch (Exception e) {
-            LOGGER.error("request body parse json failed,content string {}", contentStr);
+            LOGGER.error("request body parse json failed,content string {},exception ", contentStr, e);
             throw new ErrorRequestException(e.getMessage(), contentStr);
         }
     }

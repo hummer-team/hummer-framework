@@ -8,6 +8,7 @@ import com.hummer.spring.plugin.context.PropertiesContainer;
 import lombok.Getter;
 
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 /**
@@ -17,18 +18,50 @@ import java.util.function.Supplier;
  **/
 @Getter
 public class MessagePublishMetadata {
+    private static final ConcurrentHashMap<String, Object> CACHE = new ConcurrentHashMap<>(2);
+
     private String appId;
     private int perSecondSemaphore;
     private String address;
     private PublishMessageExceptionCallback callback;
     private boolean enable;
+    private PublishFailStrategyEnum strategyEnum;
+    private int retryCount;
 
-    public MessagePublishMetadata(String appId) {
+    public MessagePublishMetadata() {
+
+    }
+
+    @SuppressWarnings("unchecked")
+    protected static <T extends MessagePublishMetadata> T get(final String appId
+            , final Supplier<T> supplier) {
+        T metadata = (T)CACHE.putIfAbsent(appId, supplier.get());
+        if (metadata == null) {
+            return (T)CACHE.get(appId);
+        }
+
+        return metadata;
+    }
+
+    protected void builder(final String appId) {
         this.appId = appId;
         this.enable = SupplierUtil.with(
                 () -> PropertiesContainer.valueOf(formatKey(appId, "enable"), Boolean.class)
                 , Objects::nonNull
                 , () -> PropertiesContainer.valueOf(formatKeyByDefault("enable"), Boolean.class, Boolean.TRUE));
+
+        //if current app id message disabled then break builder flow
+        if (!this.enable) {
+            return;
+        }
+
+        this.strategyEnum = SupplierUtil.with(
+                () -> PublishFailStrategyEnum.parseByName(PropertiesContainer.valueOfString(formatKey(appId
+                        , "strategy")
+                        , null))
+                , Objects::nonNull
+                , () -> PublishFailStrategyEnum.parseByName(PropertiesContainer.valueOfString(
+                        formatKeyByDefault("strategy"), null)));
 
         this.address = SupplierUtil.with(
                 () -> PropertiesContainer.valueOfString(formatKey(appId, "address"))
@@ -40,6 +73,11 @@ public class MessagePublishMetadata {
                 , r -> r > 0
                 , () -> PropertiesContainer.valueOfInteger(formatKeyByDefault("perSecondSemaphore")));
 
+        this.retryCount = SupplierUtil.with(
+                () -> PropertiesContainer.valueOfInteger(formatKey(appId, "retryCount"))
+                , r -> r > 0
+                , () -> PropertiesContainer.valueOfInteger(formatKeyByDefault("retryCount")));
+
         this.callback = SupplierUtil.with(
                 () -> PropertiesContainer.valueOf(formatKey(appId, "callback")
                         , PublishMessageExceptionCallback.class
@@ -49,11 +87,11 @@ public class MessagePublishMetadata {
                         , PublishMessageExceptionCallback.class, null));
     }
 
-    protected String formatKey(final String appId, final String key) {
+    protected static String formatKey(final String appId, final String key) {
         return String.format("hummer.message.%s.%s", appId, key);
     }
 
-    protected String formatKeyByDefault(final String key) {
+    protected static String formatKeyByDefault(final String key) {
         return String.format("hummer.message.default.%s", key);
     }
 }

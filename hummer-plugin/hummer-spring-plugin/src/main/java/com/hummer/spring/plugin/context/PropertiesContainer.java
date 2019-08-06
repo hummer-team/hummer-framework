@@ -168,6 +168,22 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
     }
 
     /**
+     * get properties as string and assert value not null.
+     *
+     * @param key key
+     * @return
+     * @throws KeyNotExistsException
+     */
+    public static <T> T valueOfWithAssertNotNull(final String key, Class<T> classType) {
+        T result = valueOf(key, classType)
+        if (result == null) {
+            throw new KeyNotExistsException(40000, String.format("key `%s` not settings properties values", key));
+        }
+        return result;
+    }
+
+
+    /**
      * get value convert to int,if exists then return 0.
      *
      * @param key

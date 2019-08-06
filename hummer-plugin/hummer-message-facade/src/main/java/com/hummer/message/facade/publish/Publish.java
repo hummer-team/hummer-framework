@@ -6,6 +6,6 @@ package com.hummer.message.facade.publish;
  * @Date: 2019/8/5 16:07
  **/
 public class Publish {
-    public static final BasePublish KAFKA_PUBLISH = new RabbitMqBasePublish();
-    public static final BasePublish RABBIT_MQ_PUBLISH = new KafkaBasePublish();
+    public static final BasePublishTemplate KAFKA_PUBLISH = new RabbitMqBasePublish();
+    public static final BasePublishTemplate RABBIT_MQ_PUBLISH = new KafkaBasePublish();
 }
