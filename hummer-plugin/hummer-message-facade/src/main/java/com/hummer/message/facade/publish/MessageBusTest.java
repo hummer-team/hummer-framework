@@ -1,5 +1,7 @@
 package com.hummer.message.facade.publish;
 
+import com.hummer.message.facade.metadata.Message;
+import com.hummer.message.facade.metadata.MessagePublishMetadataKey;
 import org.testng.annotations.Test;
 
 /**
@@ -10,6 +12,10 @@ import org.testng.annotations.Test;
 public class MessageBusTest {
     @Test
     public void sendMessage() {
-        MessageBus.publish(45, "test");
+        MessageBus.publish(Message
+                .builder()
+                .messageDriver(MessagePublishMetadataKey.KAFKA_MESSAGE_DRIVER_NAME)
+                .appId("test")
+                .build());
     }
 }
