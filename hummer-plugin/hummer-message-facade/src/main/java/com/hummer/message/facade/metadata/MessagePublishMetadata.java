@@ -27,6 +27,7 @@ public class MessagePublishMetadata {
     private boolean enable;
     private PublishFailStrategyEnum strategyEnum;
     private int retryCount;
+    private int sendMessageTimeOutMills;
 
     public MessagePublishMetadata() {
 
@@ -72,6 +73,11 @@ public class MessagePublishMetadata {
                 () -> PropertiesContainer.valueOfInteger(formatKey(appId, "perSecondSemaphore"))
                 , r -> r > 0
                 , () -> PropertiesContainer.valueOfInteger(formatKeyByDefault("perSecondSemaphore")));
+
+        this.sendMessageTimeOutMills = SupplierUtil.with(
+                () -> PropertiesContainer.valueOfInteger(formatKey(appId, "sendMessageTimeOutMills"))
+                , r -> r > 0
+                , () -> PropertiesContainer.valueOfInteger(formatKeyByDefault("sendMessageTimeOutMills")));
 
         this.retryCount = SupplierUtil.with(
                 () -> PropertiesContainer.valueOfInteger(formatKey(appId, "retryCount"))

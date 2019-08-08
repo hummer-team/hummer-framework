@@ -91,7 +91,7 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
      * scan property all key return match key prefix
      *
      * @param keyPrefix key prefix
-     * @return #{java.util.Map<java.lang.String,java.lang.Object>}
+     * @return {@link java.util.Map<java.lang.String,java.lang.Object>}
      * @throws IllegalArgumentException key prefix is null.
      * @author liguo
      * @date 2019/6/26 16:12
@@ -175,7 +175,7 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
      * @throws KeyNotExistsException
      */
     public static <T> T valueOfWithAssertNotNull(final String key, Class<T> classType) {
-        T result = valueOf(key, classType)
+        T result = valueOf(key, classType);
         if (result == null) {
             throw new KeyNotExistsException(40000, String.format("key `%s` not settings properties values", key));
         }

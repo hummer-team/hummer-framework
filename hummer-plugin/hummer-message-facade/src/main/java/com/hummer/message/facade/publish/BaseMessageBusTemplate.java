@@ -14,7 +14,7 @@ import java.util.Properties;
  * @since:1.0.0
  * @Date: 2019/8/2 15:48
  **/
-public abstract class BasePublishTemplate {
+public abstract class BaseMessageBusTemplate {
     /**
      * send batch message
      *
@@ -32,7 +32,7 @@ public abstract class BasePublishTemplate {
             return;
         }
         Preconditions.checkArgument(!Strings.isNullOrEmpty(appId), "app id can't null");
-        innerSendBatch(body, appId);
+        doSendBatch(body, appId);
     }
 
     /**
@@ -47,7 +47,7 @@ public abstract class BasePublishTemplate {
      **/
     public <T extends Serializable> void publish(T body, String appId, Properties properties) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(appId), "app id can't null");
-        innerSend(body, appId);
+        doSend(body, appId);
     }
 
     protected KafkaMessageMetadata kafkaMessageMetadata(final String appId) {
@@ -58,7 +58,7 @@ public abstract class BasePublishTemplate {
         return new RabbitMqMessageMetadata(appId);
     }
 
-    protected abstract <T extends Serializable> void innerSendBatch(Collection<T> body, String appId);
+    protected abstract <T extends Serializable> void doSendBatch(Collection<T> body, String appId);
 
-    protected abstract <T extends Serializable> void innerSend(T body, String appId);
+    protected abstract <T extends Serializable> void doSend(T body, String appId);
 }

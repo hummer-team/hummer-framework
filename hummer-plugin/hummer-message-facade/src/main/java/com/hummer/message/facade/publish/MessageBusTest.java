@@ -7,9 +7,9 @@ import org.testng.annotations.Test;
  * @since:1.0.0
  * @Date: 2019/8/5 15:45
  **/
-public class BasePublishTest {
+public class MessageBusTest {
     @Test
     public void sendMessage() {
-        Publish.KAFKA_PUBLISH.publish(45, "test");
+        MessageBus.publish(45, "test");
     }
 }

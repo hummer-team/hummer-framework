@@ -137,6 +137,11 @@
                 <version>${hummer.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-kafka-producer-plugin</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
             <!--framework plugin-->
             <!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka -->
             <dependency>
