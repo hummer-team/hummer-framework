@@ -78,7 +78,7 @@ public class KafkaBaseMessageBus extends BaseMessageBusTemplate {
                     }
                 }
             }));
-            record = new ProducerRecord<String, Object>(messageBus.getKafka().getTopicId()
+            record = new ProducerRecord<>(messageBus.getKafka().getTopicId()
                     , null
                     , String.valueOf(messageBus.getKafka().getMessageKey())
                     , messageBus.getBody()

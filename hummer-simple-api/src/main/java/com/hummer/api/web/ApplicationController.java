@@ -97,6 +97,7 @@ public class ApplicationController {
             .builder()
             .appId("test")
             .body(req)
+            .callback((o, e) -> log.info("send message done"))
             .kafka(MessageBus.Kafka.builder().topicId("log-type-group-out2").messageKey(req.getId()).build())
             .build()
             .publish();

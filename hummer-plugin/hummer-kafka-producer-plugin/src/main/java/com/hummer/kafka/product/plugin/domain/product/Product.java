@@ -1,6 +1,5 @@
 package com.hummer.kafka.product.plugin.domain.product;
 
-import com.hummer.kafka.product.plugin.support.SendMessageMetadata;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
 /**
