@@ -1,6 +1,7 @@
 package com.hummer.message.facade.publish.bus;
 
 import com.hummer.message.facade.publish.BaseMessageBusTemplate;
+import com.hummer.message.facade.publish.MessageBus;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
@@ -13,20 +14,6 @@ import java.util.Collection;
  **/
 @Service(value = "RabbitMqBaseMessageBus")
 public class RabbitMqBaseMessageBus extends BaseMessageBusTemplate {
-    /**
-     * send batch message
-     *
-     * @param body  message body
-     * @param appId business unique id
-     * @return void
-     * @author liguo
-     * @date 2019/8/5 14:26
-     * @since 1.0.0
-     **/
-    @Override
-    public <T extends Serializable> void doSendBatch(Collection<T> body, String appId) {
-
-    }
 
     /**
      * send one message
@@ -39,7 +26,21 @@ public class RabbitMqBaseMessageBus extends BaseMessageBusTemplate {
      * @since 1.0.0
      **/
     @Override
-    public <T extends Serializable> void doSend(T body, String appId) {
+    public void doSend(final MessageBus messageBus) {
+
+    }
+
+    /**
+     * send message to message bus server by async
+     *
+     * @param messageBus message bus entity
+     * @return void
+     * @author liguo
+     * @date 2019/8/9 16:26
+     * @since 1.0.0
+     **/
+    @Override
+    protected void doSendAsync(MessageBus messageBus) {
 
     }
 }

@@ -11,6 +11,8 @@ import org.springframework.core.type.MethodMetadata;
 
 
 /**
+ * kafka condition
+ *
  * @Author: lee
  * @since:1.0.0
  * @Date: 2019/8/8 18:40
@@ -29,7 +31,8 @@ public class KafkaCondition implements Condition {
      */
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-        Boolean enable = PropertiesContainer.valueOf("hummer.message.bus.kafka.enable", Boolean.class, Boolean.TRUE);
+        Boolean enable = PropertiesContainer.valueOf("hummer.message.bus.kafka.enable"
+                , Boolean.class, Boolean.TRUE);
         LOGGER.info("message bus kafka enable {}", enable);
         return enable;
     }

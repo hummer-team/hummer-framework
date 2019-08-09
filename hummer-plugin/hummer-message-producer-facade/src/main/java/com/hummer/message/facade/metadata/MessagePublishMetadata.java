@@ -58,16 +58,11 @@ public class MessagePublishMetadata {
 
         this.strategyEnum = SupplierUtil.with(
                 () -> PublishFailStrategyEnum.parseByName(PropertiesContainer.valueOfString(formatKey(appId
-                        , "strategy")
+                        , "send.strategy")
                         , null))
                 , Objects::nonNull
                 , () -> PublishFailStrategyEnum.parseByName(PropertiesContainer.valueOfString(
-                        formatKeyByDefault("strategy"), null)));
-
-        this.address = SupplierUtil.with(
-                () -> PropertiesContainer.valueOfString(formatKey(appId, "address"))
-                , r -> !Strings.isNullOrEmpty(r)
-                , () -> PropertiesContainer.valueOfStringWithAssertNotNull(formatKeyByDefault("address")));
+                        formatKeyByDefault("send.strategy"), null)));
 
         this.perSecondSemaphore = SupplierUtil.with(
                 () -> PropertiesContainer.valueOfInteger(formatKey(appId, "perSecondSemaphore"))

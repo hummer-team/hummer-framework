@@ -1,5 +1,6 @@
 package com.hummer.kafka.product.plugin.support;
 
+import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -28,9 +29,12 @@ public class CloseableKafkaProducer<K, V> implements DisposableBean, Initializin
     private volatile boolean running;
 
     private KafkaProducer<K, V> producer;
+    private SendMessageMetadata messageMetadata;
 
-    public CloseableKafkaProducer(final KafkaProducer<K, V> producer) {
+    public CloseableKafkaProducer(final KafkaProducer<K, V> producer
+            , final SendMessageMetadata messageMetadata) {
         this.producer = producer;
+        this.messageMetadata = messageMetadata;
     }
 
     /**
@@ -43,12 +47,12 @@ public class CloseableKafkaProducer<K, V> implements DisposableBean, Initializin
      * @date 2019/8/8 17:19
      * @since 1.0.0
      **/
-    public void send(final ProducerRecord<K, V> messageRecord, final SendMessageMetadata messageMetadata) {
+    public void send(final ProducerRecord<K, V> messageRecord,final long sendTimeOutMills, final Callback callback) {
         Future<RecordMetadata> future = null;
         try {
             future = producer
                     .send(messageRecord);
-            future.get(messageMetadata.getSendMessageTimeOutMills(), TimeUnit.MILLISECONDS);
+            future.get(sendTimeOutMills, TimeUnit.MILLISECONDS);
         } catch (Exception e) {
             if (e instanceof InterruptedException || e.getCause() instanceof InterruptedException) {
                 Thread.currentThread().interrupt();
@@ -56,7 +60,7 @@ public class CloseableKafkaProducer<K, V> implements DisposableBean, Initializin
                     future.cancel(true);
                 }
             }
-            messageMetadata.getCallback().onCompletion(null, e);
+            callback.onCompletion(null, e);
             LOGGER.error("send message to kafka server exception ", e);
         }
     }
@@ -71,8 +75,8 @@ public class CloseableKafkaProducer<K, V> implements DisposableBean, Initializin
      * @date 2019/8/8 17:26
      * @since 1.0.0
      **/
-    public void sendAsync(final ProducerRecord<K, V> messageRecord, final SendMessageMetadata messageMetadata) {
-        producer.send(messageRecord, messageMetadata.getCallback());
+    public void sendAsync(final ProducerRecord<K, V> messageRecord, final Callback callback) {
+        producer.send(messageRecord, callback);
     }
 
     /**
@@ -85,19 +89,19 @@ public class CloseableKafkaProducer<K, V> implements DisposableBean, Initializin
      * @date 2019/8/8 17:41
      * @since 1.0.0
      **/
-    public void sendByTransaction(final ProducerRecord<K, V> messageRecord, final SendMessageMetadata messageMetadata) {
+    public void sendByTransaction(final ProducerRecord<K, V> messageRecord, final Callback callback) {
         producer.initTransactions();
         try {
             producer.beginTransaction();
-            producer.send(messageRecord, messageMetadata.getCallback());
+            producer.send(messageRecord, callback);
             producer.commitTransaction();
         } catch (ProducerFencedException | OutOfOrderSequenceException | AuthorizationException e) {
             producer.close();
-            messageMetadata.getCallback().onCompletion(null, e);
+            callback.onCompletion(null, e);
         } catch (KafkaException e) {
             LOGGER.error("send message to kafka server for transaction error", e);
             producer.abortTransaction();
-            messageMetadata.getCallback().onCompletion(null, e);
+            callback.onCompletion(null, e);
         }
     }
 
@@ -171,7 +175,7 @@ public class CloseableKafkaProducer<K, V> implements DisposableBean, Initializin
     public void stop() {
         running = false;
         producer.flush();
-        producer.close();
+        producer.close(messageMetadata.getCloseProducerTimeOutMillis(),TimeUnit.MILLISECONDS);
         LOGGER.info("closeableKafkaProducer already stop");
     }
 

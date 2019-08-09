@@ -17,6 +17,6 @@
         <module>hummer-spring-plugin</module>
         <module>hummer-kafka-consumer-plugin</module>
         <module>hummer-kafka-producer-plugin</module>
-        <module>hummer-message-facade</module>
+        <module>hummer-message-producer-facade</module>
     </modules>
 </project>

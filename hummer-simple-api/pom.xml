@@ -146,6 +146,10 @@
             <groupId>com.hummer</groupId>
             <artifactId>hummer-config</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.hummer</groupId>
+            <artifactId>hummer-message-producer-facade</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <resources>

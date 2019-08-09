@@ -32,5 +32,13 @@
             <groupId>com.hummer</groupId>
             <artifactId>hummer-spring-plugin</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.thrift</groupId>
+            <artifactId>libthrift</artifactId>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>io.confluent</groupId>-->
+            <!--<artifactId>kafka-avro-serializer</artifactId>-->
+        <!--</dependency>-->
     </dependencies>
 </project>

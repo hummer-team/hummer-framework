@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+
+    <property name="LOG_HOME" value="/logs/hummer/Application"/>
+    <property name="FILE_LOG_PATTERN" value="%d{[yyyy-MM-dd HH:mm:ss]} [%thread] %highlight(%-5level) %cyan(%logger{36}) [%X{requestId}] [%X{serverIp}]  - %msg%n"/>
+    <property name="FILE_INCDIENT_PATTERN" value="%d{[yyyy-MM-dd HH:mm:ss]} [%thread] %highlight(%-5level) %cyan(%logger{36}) [%X{requestId}] [%X{serverIp}] - %msg%n"/>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="stash-file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/Application.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>Application.log.%i</fileNamePattern>
+        </rollingPolicy>
+        <triggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>10MB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <!-- This is the kafkaAppender -->
+    <!--<appender name="kafkaAppender" class="com.github.danielwegener.logback.kafka.KafkaAppender">-->
+        <!--<encoder>-->
+            <!--<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+        <!--</encoder>-->
+        <!--<topic>logs</topic>-->
+        <!--<keyingStrategy class="com.github.danielwegener.logback.kafka.keying.NoKeyKeyingStrategy" />-->
+        <!--<deliveryStrategy class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy" />-->
+
+        <!--&lt;!&ndash; Optional parameter to use a fixed partition &ndash;&gt;-->
+        <!--&lt;!&ndash; <partition>0</partition> &ndash;&gt;-->
+
+        <!--&lt;!&ndash; Optional parameter to include log timestamps into the kafka message &ndash;&gt;-->
+        <!--&lt;!&ndash; <appendTimestamp>true</appendTimestamp> &ndash;&gt;-->
+
+        <!--&lt;!&ndash; each <producerConfig> translates to regular kafka-client config (format: key=value) &ndash;&gt;-->
+        <!--&lt;!&ndash; producer configs are documented here: https://kafka.apache.org/documentation.html#newproducerconfigs &ndash;&gt;-->
+        <!--&lt;!&ndash; bootstrap.servers is the only mandatory producerConfig &ndash;&gt;-->
+        <!--<producerConfig>bootstrap.servers=localhost:9092</producerConfig>-->
+
+        <!--&lt;!&ndash; this is the fallback appender if kafka is not available. &ndash;&gt;-->
+        <!--<appender-ref ref="STDOUT" />-->
+    <!--</appender>-->
+
+
+    <logger name="stash" level="DEBUG" additivity="false">
+        <appender-ref ref="stash-file"/>
+    </logger>
+    <logger name="org.springframework" level="INFO" dditivity="false"/>
+    <logger name="org.apache.kafka.*" level="trace" dditivity="false">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="stash-file"/>
+        <!--<appender-ref ref="kafkaAppender" />-->
+    </root>
+
+</configuration>

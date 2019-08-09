@@ -3,7 +3,6 @@ package com.hummer.kafka.product.plugin.support;
 
 import lombok.Builder;
 import lombok.Data;
-import org.apache.kafka.clients.producer.Callback;
 
 /**
  * @Author: lee
@@ -14,5 +13,5 @@ import org.apache.kafka.clients.producer.Callback;
 @Data
 public class SendMessageMetadata {
     private long sendMessageTimeOutMills;
-    private Callback callback;
+    private long closeProducerTimeOutMillis;
 }

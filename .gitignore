@@ -14,3 +14,5 @@ ${LOG_PATH}
 LOG_PATH_IS_UNDEFINED
 a.txt
 *log*
+!/hummer-plugin/hummer-pipeline-plugin/src/main/resources/logback.xml
+!/hummer-simple-api/src/main/resources/logback.xml
