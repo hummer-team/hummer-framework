@@ -1,8 +1,8 @@
 package com.hummer.kafka.product.plugin.bean;
 
 
-import com.hummer.kafka.product.plugin.domain.factory.CloseableKafkaProducerFactory;
-import com.hummer.kafka.product.plugin.support.CloseableKafkaProducer;
+import com.hummer.kafka.product.plugin.support.pool.ProducerPool;
+import com.hummer.kafka.product.plugin.support.producer.CloseableKafkaProducer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Conditional;
@@ -23,6 +23,6 @@ public class ProductImportBean {
     @Bean
     @Lazy
     public CloseableKafkaProducer<String, Object> producer() {
-        return CloseableKafkaProducerFactory.producer();
+        return ProducerPool.SingleProducer.get();
     }
 }

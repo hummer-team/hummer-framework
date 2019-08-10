@@ -14,6 +14,7 @@ public class MessageBusTest {
                 .builder()
                 .kafka(MessageBus.Kafka.builder().messageKey("2323").topicId("test").build())
                 .appId("test")
-                .build().publish();
+                .build()
+                .publish();
     }
 }

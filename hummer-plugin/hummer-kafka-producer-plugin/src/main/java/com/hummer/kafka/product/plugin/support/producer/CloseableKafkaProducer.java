@@ -1,10 +1,12 @@
-package com.hummer.kafka.product.plugin.support;
+package com.hummer.kafka.product.plugin.support.producer;
 
 import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.KafkaException;
+import org.apache.kafka.common.Metric;
+import org.apache.kafka.common.MetricName;
 import org.apache.kafka.common.errors.AuthorizationException;
 import org.apache.kafka.common.errors.OutOfOrderSequenceException;
 import org.apache.kafka.common.errors.ProducerFencedException;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.Lifecycle;
 
+import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -47,11 +50,11 @@ public class CloseableKafkaProducer<K, V> implements DisposableBean, Initializin
      * @date 2019/8/8 17:19
      * @since 1.0.0
      **/
-    public void send(final ProducerRecord<K, V> messageRecord,final long sendTimeOutMills, final Callback callback) {
+    public void send(final ProducerRecord<K, V> messageRecord, final long sendTimeOutMills, final Callback callback) {
         Future<RecordMetadata> future = null;
         try {
             future = producer
-                    .send(messageRecord);
+                    .send(messageRecord, callback);
             future.get(sendTimeOutMills, TimeUnit.MILLISECONDS);
         } catch (Exception e) {
             if (e instanceof InterruptedException || e.getCause() instanceof InterruptedException) {
@@ -77,6 +80,15 @@ public class CloseableKafkaProducer<K, V> implements DisposableBean, Initializin
      **/
     public void sendAsync(final ProducerRecord<K, V> messageRecord, final Callback callback) {
         producer.send(messageRecord, callback);
+    }
+
+    /**
+     * metrics
+     *
+     * @return
+     */
+    public Map<MetricName, ? extends Metric> metrics() {
+        return producer.metrics();
     }
 
     /**
@@ -175,7 +187,7 @@ public class CloseableKafkaProducer<K, V> implements DisposableBean, Initializin
     public void stop() {
         running = false;
         producer.flush();
-        producer.close(messageMetadata.getCloseProducerTimeOutMillis(),TimeUnit.MILLISECONDS);
+        producer.close(messageMetadata.getCloseProducerTimeOutMillis(), TimeUnit.MILLISECONDS);
         LOGGER.info("closeableKafkaProducer already stop");
     }
 

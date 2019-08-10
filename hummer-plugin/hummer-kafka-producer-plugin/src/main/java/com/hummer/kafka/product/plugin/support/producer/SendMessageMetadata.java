@@ -1,4 +1,4 @@
-package com.hummer.kafka.product.plugin.support;
+package com.hummer.kafka.product.plugin.support.producer;
 
 
 import lombok.Builder;

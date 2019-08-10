@@ -2,7 +2,7 @@ package com.hummer.message.facade.publish.bus;
 
 import com.hummer.common.exceptions.SysException;
 import com.hummer.kafka.product.plugin.domain.product.Product;
-import com.hummer.kafka.product.plugin.support.SendMessageMetadata;
+import com.hummer.kafka.product.plugin.support.producer.SendMessageMetadata;
 import com.hummer.message.facade.metadata.KafkaMessageMetadata;
 import com.hummer.message.facade.publish.BaseMessageBusTemplate;
 import com.hummer.message.facade.publish.MessageBus;
@@ -43,7 +43,7 @@ public class KafkaBaseMessageBus extends BaseMessageBusTemplate {
     protected void doSend(final MessageBus messageBus) {
         if (messageBus.getKafka() == null) {
             LOGGER.error("kafka message bus,kafka configuration is null don't send message");
-            return;
+            throw new SysException(50000, "please set message bus kafka properties ");
         }
         if (Strings.isNullOrEmpty(messageBus.getKafka().getTopicId())) {
             throw new SysException(50000, "message driver is kafka but no settings topic id,please settings");

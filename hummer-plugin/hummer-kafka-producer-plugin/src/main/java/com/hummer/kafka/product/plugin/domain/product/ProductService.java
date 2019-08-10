@@ -1,7 +1,7 @@
 package com.hummer.kafka.product.plugin.domain.product;
 
 import com.hummer.common.exceptions.SysException;
-import com.hummer.kafka.product.plugin.support.CloseableKafkaProducer;
+import com.hummer.kafka.product.plugin.support.producer.CloseableKafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

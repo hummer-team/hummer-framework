@@ -194,6 +194,16 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
     }
 
     /**
+     * get value convert to int,if exists then return defaultVal.
+     *
+     * @param key
+     * @return
+     */
+    public static int valueOfInteger(final String key,final int defaultVal) {
+        return valueOf(key, Integer.class, defaultVal);
+    }
+
+    /**
      * get properties as string
      *
      * @param key        key
