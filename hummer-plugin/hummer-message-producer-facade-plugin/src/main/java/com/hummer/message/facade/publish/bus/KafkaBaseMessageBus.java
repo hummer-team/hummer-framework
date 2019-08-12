@@ -2,8 +2,7 @@ package com.hummer.message.facade.publish.bus;
 
 import com.hummer.common.exceptions.SysException;
 import com.hummer.kafka.product.plugin.domain.product.Product;
-import com.hummer.kafka.product.plugin.support.producer.SendMessageMetadata;
-import com.hummer.message.facade.metadata.KafkaMessageMetadata;
+import com.hummer.message.facade.metadata.MessagePublishMetadataKey;
 import com.hummer.message.facade.publish.BaseMessageBusTemplate;
 import com.hummer.message.facade.publish.MessageBus;
 import joptsimple.internal.Strings;
@@ -23,7 +22,7 @@ import java.util.ArrayList;
  * @since:1.0.0
  * @Date: 2019/8/5 15:37
  **/
-@Service(value = "KafkaBaseMessageBus")
+@Service(value = MessagePublishMetadataKey.KAFKA_MESSAGE_DRIVER_NAME)
 public class KafkaBaseMessageBus extends BaseMessageBusTemplate {
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaBaseMessageBus.class);
     @Autowired
@@ -32,8 +31,7 @@ public class KafkaBaseMessageBus extends BaseMessageBusTemplate {
     /**
      * send one message
      *
-     * @param body  message body
-     * @param appId business unique id
+     * @param messageBus  message entity
      * @return void
      * @author liguo
      * @date 2019/8/5 14:26
@@ -45,17 +43,16 @@ public class KafkaBaseMessageBus extends BaseMessageBusTemplate {
             LOGGER.error("kafka message bus,kafka configuration is null don't send message");
             throw new SysException(50000, "please set message bus kafka properties ");
         }
+
         if (Strings.isNullOrEmpty(messageBus.getKafka().getTopicId())) {
             throw new SysException(50000, "message driver is kafka but no settings topic id,please settings");
         }
-        KafkaMessageMetadata kafkaMessageMetadata = KafkaMessageMetadata.getKafkaMessageMetadata(messageBus.getAppId());
-        SendMessageMetadata metadata = SendMessageMetadata
-                .builder()
-                .sendMessageTimeOutMills(kafkaMessageMetadata.getSendMessageTimeOutMills())
-                .build();
+
         ProducerRecord<String, Object> record = builderProducerRecord(messageBus);
-        long sendMessageTimeOut = messageBus.getSendMessageTimeOutMills() == null ||
-                messageBus.getSendMessageTimeOutMills() <= 0 ? 3000 : messageBus.getSendMessageTimeOutMills();
+        long sendMessageTimeOut = messageBus.getSyncSendMessageTimeOutMills() == null ||
+                messageBus.getSyncSendMessageTimeOutMills() <= 0
+                ? 3000
+                : messageBus.getSyncSendMessageTimeOutMills();
         product.doSendBySync(record, sendMessageTimeOut);
     }
 
@@ -74,17 +71,20 @@ public class KafkaBaseMessageBus extends BaseMessageBusTemplate {
                     try {
                         return h.getValue().getBytes("utf-8");
                     } catch (UnsupportedEncodingException e) {
-                        throw new SysException(50000, String.format("head %s serializer to  bytes failed", h.getName()));
+                        throw new SysException(50000, String.format("head %s serializer to  bytes failed"
+                                , h.getName()));
                     }
                 }
             }));
             record = new ProducerRecord<>(messageBus.getKafka().getTopicId()
                     , null
-                    , String.valueOf(messageBus.getKafka().getMessageKey())
+                    , String.valueOf(messageBus.getMessageKey())
                     , messageBus.getBody()
                     , headers);
         } else {
-            record = new ProducerRecord<>(messageBus.getKafka().getTopicId(), messageBus.getBody());
+            record = new ProducerRecord<>(messageBus.getKafka().getTopicId()
+                    , String.valueOf(messageBus.getMessageKey())
+                    , messageBus.getBody());
         }
         return record;
     }
@@ -99,7 +99,7 @@ public class KafkaBaseMessageBus extends BaseMessageBusTemplate {
      * @since 1.0.0
      **/
     @Override
-    protected void doSendAsync(MessageBus messageBus) {
+    protected void doSendAsync(final MessageBus messageBus) {
 
     }
 }

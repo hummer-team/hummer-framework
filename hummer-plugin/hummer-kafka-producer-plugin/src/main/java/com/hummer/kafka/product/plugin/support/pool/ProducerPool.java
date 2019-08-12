@@ -2,6 +2,7 @@ package com.hummer.kafka.product.plugin.support.pool;
 
 import com.hummer.common.exceptions.SysException;
 import com.hummer.common.utils.FunctionUtil;
+import com.hummer.core.SpringApplicationContext;
 import com.hummer.kafka.product.plugin.domain.serializer.MessageBodyJsonSerializer;
 import com.hummer.kafka.product.plugin.domain.serializer.MessageBodyThirftSerializer;
 import com.hummer.kafka.product.plugin.support.producer.CloseableKafkaProducer;
@@ -9,12 +10,14 @@ import com.hummer.kafka.product.plugin.support.producer.SendMessageMetadata;
 import com.hummer.core.PropertiesContainer;
 import joptsimple.internal.Strings;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Partitioner;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.ByteBufferSerializer;
 import org.apache.kafka.common.serialization.BytesSerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
 
 import java.util.Map;
 import java.util.Properties;
@@ -34,6 +37,30 @@ public class ProducerPool {
     }
 
     /**
+     * get producer instance from pool
+     *
+     * @return {@link com.hummer.kafka.product.plugin.support.producer.CloseableKafkaProducer<java.lang.String,java.lang.Object>}
+     * @author liguo
+     * @date 2019/8/12 14:14
+     * @since 1.0.0
+     **/
+    public static CloseableKafkaProducer<String, Object> get(final String topicId) {
+        Integer type = PropertiesContainer.valueOf(formatKey(String.format("%s.producer.instance.scope.type", topicId)
+                , null)
+                , Integer.class
+                , null);
+        if (type == null || type.equals(0)) {
+            return SingleProducer.get();
+        }
+
+        if (type.equals(1)) {
+            return ThreadLocalProducer.get();
+        }
+
+        return KeySharedProducer.get(topicId);
+    }
+
+    /**
      * single producer instance
      */
     public static class SingleProducer {
@@ -41,10 +68,10 @@ public class ProducerPool {
 
         }
 
-        private static AtomicReference<CloseableKafkaProducer<String,Object>> producer =
+        private static AtomicReference<CloseableKafkaProducer<String, Object>> producer =
                 new AtomicReference<>();
 
-        public static CloseableKafkaProducer<String,Object> get() {
+        public static CloseableKafkaProducer<String, Object> get() {
             producer.compareAndSet(null, producer());
             return producer.get();
         }
@@ -58,10 +85,10 @@ public class ProducerPool {
 
         }
 
-        private static ThreadLocal<CloseableKafkaProducer<String,Object>> threadLocal
+        private static ThreadLocal<CloseableKafkaProducer<String, Object>> threadLocal
                 = ThreadLocal.withInitial(ProducerPool::producer);
 
-        public static CloseableKafkaProducer<String,Object> get() {
+        public static CloseableKafkaProducer<String, Object> get() {
             return threadLocal.get();
         }
 
@@ -78,10 +105,10 @@ public class ProducerPool {
 
         }
 
-        private static final Map<String, CloseableKafkaProducer<String,Object>>
+        private static final Map<String, CloseableKafkaProducer<String, Object>>
                 map = new ConcurrentHashMap<>(16);
 
-        public static CloseableKafkaProducer<String,Object> get(final String key) {
+        public static CloseableKafkaProducer<String, Object> get(final String key) {
             if (Strings.isNullOrEmpty(key)) {
                 throw new SysException(50000, "key is null,can not get producer instance");
             }
@@ -108,6 +135,12 @@ public class ProducerPool {
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, bodySerializer());
 
+
+        Partitioner partitioner = SpringApplicationContext.getBeanWithNull(String.format("%s_PartitionsSerializer", key)
+                , Partitioner.class);
+        if (partitioner != null) {
+            properties.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, Partitioner.class);
+        }
 
         properties.put(ProducerConfig.ACKS_CONFIG, PropertiesContainer
                 .valueOfString(formatKey(ProducerConfig.ACKS_CONFIG, key), "1"));
@@ -141,6 +174,11 @@ public class ProducerPool {
                         .valueOfInteger(formatKey(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, key))
                 , v -> v > 0
                 , v -> properties.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, v));
+
+        FunctionUtil.actionByCondition(PropertiesContainer
+                        .valueOfString(formatKey(ProducerConfig.CLIENT_ID_CONFIG, key))
+                , v -> !Strings.isNullOrEmpty(v)
+                , v -> properties.put(ProducerConfig.CLIENT_ID_CONFIG, v));
 
         KafkaProducer<K, V> kafkaProducer = new KafkaProducer<>(properties);
         SendMessageMetadata sendMessageMetadata = SendMessageMetadata

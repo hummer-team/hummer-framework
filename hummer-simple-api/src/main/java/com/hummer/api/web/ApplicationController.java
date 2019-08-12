@@ -95,10 +95,11 @@ public class ApplicationController {
     public ResourceResponse sendMessage(@RequestBody KafkaMessageReq req) {
         MessageBus
             .builder()
-            .appId("test")
+            .namespaceId("test")
             .body(req)
             .callback((o, e) -> log.info("send message done"))
-            .kafka(MessageBus.Kafka.builder().topicId("log-type-group-out2").messageKey(req.getId()).build())
+            .kafka(MessageBus.Kafka.builder().topicId("log-type-group-out2").build())
+            .messageKey(req.getId())
             .build()
             .publish();
 

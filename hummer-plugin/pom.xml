@@ -16,6 +16,9 @@
         <module>hummer-pipeline-plugin</module>
         <module>hummer-kafka-consumer-plugin</module>
         <module>hummer-kafka-producer-plugin</module>
-        <module>hummer-message-producer-facade</module>
+        <module>hummer-message-producer-facade-plugin</module>
+        <module>hummer-message-consumer-facade-plugin</module>
+        <module>hummer-kafka-stream-plugin</module>
+        <module>hummer-kafka-persistence-plugin</module>
     </modules>
 </project>

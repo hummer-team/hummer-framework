@@ -1,8 +1,7 @@
 package com.hummer.message.facade.metadata;
 
 
-import com.hummer.common.utils.SupplierUtil;
-import com.hummer.message.facade.publish.PublishMessageExceptionCallback;
+import com.hummer.common.utils.FunctionUtil;
 import com.hummer.core.PropertiesContainer;
 import lombok.Getter;
 
@@ -19,12 +18,9 @@ import java.util.function.Supplier;
 public class MessagePublishMetadata {
     private static final ConcurrentHashMap<String, Object> CACHE = new ConcurrentHashMap<>(2);
 
-    private String appId;
+    private String namespaceId;
     private int perSecondSemaphore;
-    private String address;
-    private PublishMessageExceptionCallback callback;
     private boolean enable;
-    private PublishFailStrategyEnum strategyEnum;
     private int retryCount;
     private int sendMessageTimeOutMills;
 
@@ -43,10 +39,10 @@ public class MessagePublishMetadata {
         return metadata;
     }
 
-    protected void builder(final String appId) {
-        this.appId = appId;
-        this.enable = SupplierUtil.with(
-                () -> PropertiesContainer.valueOf(formatKey(appId, "enable"), Boolean.class)
+    protected void builder(final String namespaceId) {
+        this.namespaceId = namespaceId;
+        this.enable = FunctionUtil.with(
+                () -> PropertiesContainer.valueOf(formatKey(namespaceId, "enable"), Boolean.class)
                 , Objects::nonNull
                 , () -> PropertiesContainer.valueOf(formatKeyByDefault("enable"), Boolean.class, Boolean.TRUE));
 
@@ -55,36 +51,20 @@ public class MessagePublishMetadata {
             return;
         }
 
-        this.strategyEnum = SupplierUtil.with(
-                () -> PublishFailStrategyEnum.parseByName(PropertiesContainer.valueOfString(formatKey(appId
-                        , "send.strategy")
-                        , null))
-                , Objects::nonNull
-                , () -> PublishFailStrategyEnum.parseByName(PropertiesContainer.valueOfString(
-                        formatKeyByDefault("send.strategy"), null)));
-
-        this.perSecondSemaphore = SupplierUtil.with(
-                () -> PropertiesContainer.valueOfInteger(formatKey(appId, "perSecondSemaphore"))
+        this.perSecondSemaphore = FunctionUtil.with(
+                () -> PropertiesContainer.valueOfInteger(formatKey(namespaceId, "perSecondSemaphore"))
                 , r -> r > 0
                 , () -> PropertiesContainer.valueOfInteger(formatKeyByDefault("perSecondSemaphore")));
 
-        this.sendMessageTimeOutMills = SupplierUtil.with(
-                () -> PropertiesContainer.valueOfInteger(formatKey(appId, "sendMessageTimeOutMills"))
+        this.sendMessageTimeOutMills = FunctionUtil.with(
+                () -> PropertiesContainer.valueOfInteger(formatKey(namespaceId, "sendMessageTimeOutMills"))
                 , r -> r > 0
                 , () -> PropertiesContainer.valueOfInteger(formatKeyByDefault("sendMessageTimeOutMills")));
 
-        this.retryCount = SupplierUtil.with(
-                () -> PropertiesContainer.valueOfInteger(formatKey(appId, "retryCount"))
+        this.retryCount = FunctionUtil.with(
+                () -> PropertiesContainer.valueOfInteger(formatKey(namespaceId, "retryCount"))
                 , r -> r > 0
                 , () -> PropertiesContainer.valueOfInteger(formatKeyByDefault("retryCount")));
-
-        this.callback = SupplierUtil.with(
-                () -> PropertiesContainer.valueOf(formatKey(appId, "callback")
-                        , PublishMessageExceptionCallback.class
-                        , null)
-                , Objects::nonNull
-                , () -> PropertiesContainer.valueOf(formatKeyByDefault("callback")
-                        , PublishMessageExceptionCallback.class, null));
     }
 
     protected static String formatKey(final String appId, final String key) {

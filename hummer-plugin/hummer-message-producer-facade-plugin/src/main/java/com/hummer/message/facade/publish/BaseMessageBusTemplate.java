@@ -3,11 +3,8 @@ package com.hummer.message.facade.publish;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.hummer.message.facade.metadata.KafkaMessageMetadata;
-import com.hummer.message.facade.metadata.RabbitMqMessageMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Properties;
 
 /**
  * @Author: lee
@@ -20,17 +17,16 @@ public abstract class BaseMessageBusTemplate {
     /**
      * send one message
      *
-     * @param body  message body
-     * @param appId business unique id
+     * @param messageBus message body
      * @return void
      * @author liguo
      * @date 2019/8/5 14:26
      * @since 1.0.0
      **/
     public void send(final MessageBus messageBus) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(messageBus.getAppId()), "app id can't null");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(messageBus.getNamespaceId()), "app id can't null");
 
-        KafkaMessageMetadata metadata = KafkaMessageMetadata.getKafkaMessageMetadata(messageBus.getAppId());
+        KafkaMessageMetadata metadata = KafkaMessageMetadata.getKafkaMessageMetadata(messageBus.getNamespaceId());
         //if disabled send message
         if (!metadata.isEnable()) {
             return;

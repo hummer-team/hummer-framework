@@ -15,6 +15,8 @@ import java.util.Map;
 
 import static com.hummer.common.constant.MessageConfigurationKey.HUMMER_MESSAGE_DRIVER_TYPE_KAFKA_KEY;
 import static com.hummer.common.constant.MessageConfigurationKey.HUMMER_MESSAGE_DRIVER_TYPE_KEY;
+import static com.hummer.message.facade.metadata.MessagePublishMetadataKey.KAFKA_MESSAGE_DRIVER_NAME;
+import static com.hummer.message.facade.metadata.MessagePublishMetadataKey.RABBITMQ_MESSAGE_DRIVER_NAME;
 
 /**
  * message bus static proxy
@@ -33,7 +35,7 @@ public class MessageBus {
     /**
      * business unique id
      */
-    private String appId;
+    private String namespaceId;
     /**
      * Kafka message configuration
      */
@@ -43,13 +45,17 @@ public class MessageBus {
      */
     private RabbitMq rabbitMq;
     /**
+     * message key
+     */
+    private Object messageKey;
+    /**
      * send message done callback , if parameter throwable is null then represent send message success else send message failed
      */
     private PublishMessageExceptionCallback callback;
     /**
      * send message timeout millisecond
      */
-    private Long sendMessageTimeOutMills;
+    private Long syncSendMessageTimeOutMills;
     /**
      * if true then async send message else sync send message
      */
@@ -62,10 +68,7 @@ public class MessageBus {
          * topic id
          */
         private String topicId;
-        /**
-         * message id
-         */
-        private Object messageKey;
+
         /**
          * message partition,please be careful use this properties
          */
@@ -92,10 +95,10 @@ public class MessageBus {
     private static Map<String, BaseMessageBusTemplate> messageMap = new HashMap<>(2);
 
     static {
-        messageMap.put(MessagePublishMetadataKey.KAFKA_MESSAGE_DRIVER_NAME,
-                SpringApplicationContext.getBean("KafkaBaseMessageBus", BaseMessageBusTemplate.class));
-        messageMap.put(MessagePublishMetadataKey.RABBITMQ_MESSAGE_DRIVER_NAME,
-                SpringApplicationContext.getBean("RabbitMqBaseMessageBus", BaseMessageBusTemplate.class));
+        messageMap.put(KAFKA_MESSAGE_DRIVER_NAME,
+                SpringApplicationContext.getBean(KAFKA_MESSAGE_DRIVER_NAME, BaseMessageBusTemplate.class));
+        messageMap.put(RABBITMQ_MESSAGE_DRIVER_NAME,
+                SpringApplicationContext.getBean(RABBITMQ_MESSAGE_DRIVER_NAME, BaseMessageBusTemplate.class));
     }
 
     /**

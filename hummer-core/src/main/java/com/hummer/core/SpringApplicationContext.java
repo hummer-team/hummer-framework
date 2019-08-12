@@ -56,6 +56,25 @@ public class SpringApplicationContext implements ApplicationContextAware {
     }
 
     /**
+     * get bean if failed then null
+     *
+     * @param beanName bean name
+     * @param clazz    class
+     * @return T
+     * @author liguo
+     * @date 2019/8/12 15:38
+     * @since 1.0.0
+     **/
+    public static <T> T getBeanWithNull(String beanName, Class<T> clazz) {
+        try {
+            return applicationContext.getBean(beanName, clazz);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+
+    /**
      * get class type
      *
      * @param clazz target class type
