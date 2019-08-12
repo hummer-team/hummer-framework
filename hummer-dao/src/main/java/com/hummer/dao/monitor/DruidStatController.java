@@ -2,7 +2,7 @@ package com.hummer.dao.monitor;
 
 import com.alibaba.druid.stat.DruidStatManagerFacade;
 import com.google.common.base.Strings;
-import com.hummer.spring.plugin.context.PropertiesContainer;
+import com.hummer.core.PropertiesContainer;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;

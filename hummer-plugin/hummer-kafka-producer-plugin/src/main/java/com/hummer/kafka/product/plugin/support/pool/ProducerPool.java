@@ -6,7 +6,7 @@ import com.hummer.kafka.product.plugin.domain.serializer.MessageBodyJsonSerializ
 import com.hummer.kafka.product.plugin.domain.serializer.MessageBodyThirftSerializer;
 import com.hummer.kafka.product.plugin.support.producer.CloseableKafkaProducer;
 import com.hummer.kafka.product.plugin.support.producer.SendMessageMetadata;
-import com.hummer.spring.plugin.context.PropertiesContainer;
+import com.hummer.core.PropertiesContainer;
 import joptsimple.internal.Strings;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;

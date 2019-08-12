@@ -1,6 +1,6 @@
-package com.hummer.spring.plugin.context.config;
+package com.hummer.core.config;
 
-import com.hummer.spring.plugin.context.PropertiesContainer;
+import com.hummer.core.PropertiesContainer;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Configuration;

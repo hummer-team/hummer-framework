@@ -1,4 +1,4 @@
-package com.hummer.spring.plugin.context.exceptions;
+package com.hummer.core.exceptions;
 
 /**
  * @author bingy

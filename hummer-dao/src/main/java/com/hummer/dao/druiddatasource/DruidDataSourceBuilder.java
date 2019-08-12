@@ -11,7 +11,7 @@ import com.google.common.collect.Lists;
 import com.hummer.common.ErrorCodeConsts;
 import com.hummer.common.SysConstant;
 import com.hummer.common.exceptions.SysException;
-import com.hummer.spring.plugin.context.PropertiesContainer;
+import com.hummer.core.PropertiesContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

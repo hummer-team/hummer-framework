@@ -1,4 +1,4 @@
-package com.hummer.spring.plugin.context;
+package com.hummer.core;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;

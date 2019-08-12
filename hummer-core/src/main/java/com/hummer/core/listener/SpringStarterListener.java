@@ -1,7 +1,7 @@
-package com.hummer.spring.plugin.context.listener;
+package com.hummer.core.listener;
 
-import com.hummer.spring.plugin.context.PropertiesContainer;
-import com.hummer.spring.plugin.context.SpringApplicationContext;
+import com.hummer.core.SpringApplicationContext;
+import com.hummer.core.PropertiesContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;

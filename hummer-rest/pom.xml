@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>com.hummer</groupId>
-            <artifactId>hummer-spring-plugin</artifactId>
+            <artifactId>hummer-core</artifactId>
         </dependency>
         <dependency>
             <groupId>com.hummer</groupId>

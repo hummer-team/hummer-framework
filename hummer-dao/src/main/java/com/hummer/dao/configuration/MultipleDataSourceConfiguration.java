@@ -4,7 +4,6 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.Interners;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -14,21 +13,16 @@ import com.hummer.dao.condition.DaoLoadCondition;
 import com.hummer.dao.druiddatasource.DruidDataSourceBuilder;
 import com.hummer.dao.mybatis.MybatisDynamicBean;
 import com.hummer.dao.mybatis.context.MultipleDataSourceMap;
-import com.hummer.dao.mybatis.route.DynamicDataSource;
-import com.hummer.spring.plugin.context.PropertiesContainer;
+import com.hummer.core.PropertiesContainer;
 import com.hummer.common.SysConstant;
-import com.hummer.spring.plugin.context.SpringApplicationContext;
-import lombok.Getter;
+import com.hummer.core.SpringApplicationContext;
 import org.apache.commons.collections.MapUtils;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javax.sql.DataSource;
@@ -37,9 +31,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static com.hummer.common.SysConstant.DaoConstant.MYBATIS_DAO_INTERFACE_PACKAGE;
-import static com.hummer.common.SysConstant.DaoConstant.MYBATIS_PO_MODEL_PACKAGE;
 
 /**
  * multiple DataSource init.

@@ -1,4 +1,4 @@
-package com.hummer.spring.plugin.context.init;
+package com.hummer.core.init;
 
 import org.springframework.boot.ResourceBanner;
 import org.springframework.boot.builder.SpringApplicationBuilder;

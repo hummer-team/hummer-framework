@@ -1,6 +1,6 @@
-package com.hummer.spring.plugin.context.starter;
+package com.hummer.core.starter;
 
-import com.hummer.spring.plugin.context.SpringApplicationContext;
+import com.hummer.core.SpringApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;

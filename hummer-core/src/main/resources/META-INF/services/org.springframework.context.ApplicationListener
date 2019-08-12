@@ -1,0 +1,2 @@
+com.hummer.core.listener.SpringStarterListener
+com.hummer.core.listener.ApplicationFailedListener

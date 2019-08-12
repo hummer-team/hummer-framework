@@ -1,10 +1,9 @@
 package com.hummer.message.facade.metadata;
 
 
-import com.google.common.base.Strings;
 import com.hummer.common.utils.SupplierUtil;
 import com.hummer.message.facade.publish.PublishMessageExceptionCallback;
-import com.hummer.spring.plugin.context.PropertiesContainer;
+import com.hummer.core.PropertiesContainer;
 import lombok.Getter;
 
 import java.util.Objects;

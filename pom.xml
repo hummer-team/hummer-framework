@@ -13,6 +13,7 @@
         <module>hummer-plugin</module>
         <module>hummer-dao</module>
         <module>hummer-boot-starter</module>
+        <module>hummer-core</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -125,7 +126,7 @@
             </dependency>
             <dependency>
                 <groupId>com.hummer</groupId>
-                <artifactId>hummer-spring-plugin</artifactId>
+                <artifactId>hummer-core</artifactId>
                 <version>${hummer.version}</version>
             </dependency>
             <dependency>

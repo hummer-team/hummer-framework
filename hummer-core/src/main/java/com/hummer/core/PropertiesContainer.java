@@ -1,9 +1,9 @@
-package com.hummer.spring.plugin.context;
+package com.hummer.core;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-import com.hummer.spring.plugin.context.exceptions.KeyNotExistsException;
+import com.hummer.core.exceptions.KeyNotExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;

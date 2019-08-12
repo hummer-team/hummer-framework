@@ -1,6 +1,6 @@
 package com.hummer.rest.filter;
 
-import com.hummer.spring.plugin.context.PropertiesContainer;
+import com.hummer.core.PropertiesContainer;
 import com.hummer.common.SysConstant;
 import com.hummer.common.utils.HttpServletRequestUtil;
 import com.hummer.common.utils.IpUtil;
@@ -103,7 +103,7 @@ public class RequestFilter implements Filter {
                     , System.currentTimeMillis() - start);
         } finally {
             MDC.clear();
-            outputLog((HttpServletResponse) response, httpRequest, System.currentTimeMillis() - start);
+            outputLog(httpResponse, httpRequest, System.currentTimeMillis() - start);
         }
     }
 

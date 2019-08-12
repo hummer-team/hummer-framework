@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
+import javax.annotation.PreDestroy;
+
 
 /**
  * @Author: lee
@@ -24,5 +26,11 @@ public class ProductImportBean {
     @Lazy
     public CloseableKafkaProducer<String, Object> producer() {
         return ProducerPool.SingleProducer.get();
+    }
+
+    @PreDestroy
+    private void destroy() {
+        ProducerPool.ThreadLocalProducer.remove();
+        ProducerPool.KeySharedProducer.remove();
     }
 }

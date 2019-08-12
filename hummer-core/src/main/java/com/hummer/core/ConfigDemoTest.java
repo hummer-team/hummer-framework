@@ -1,4 +1,4 @@
-package com.hummer.spring.plugin.context;
+package com.hummer.core;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -22,7 +22,7 @@ glue spring boot,mybatis,kafka,rabbitmq,redis,mongodb...framework,Make business 
     - rabbitmq customer，product
 - hummer-dao
     - support multiple dataSource,dynamic switch data source
-- hummer-spring-plugin
+- hummer-core
     - customer property container
 - hummer-pipeline-plugin
     - customer multiple thread pipeline

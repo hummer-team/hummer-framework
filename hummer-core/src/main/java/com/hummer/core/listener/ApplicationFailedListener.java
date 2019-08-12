@@ -1,4 +1,4 @@
-package com.hummer.spring.plugin.context.listener;
+package com.hummer.core.listener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

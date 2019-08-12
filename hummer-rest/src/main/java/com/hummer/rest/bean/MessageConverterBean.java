@@ -8,7 +8,7 @@ import com.hummer.rest.message.handle.MessageSerialConfig;
 import com.hummer.rest.message.handle.RequestBodyHandle;
 import com.hummer.rest.message.handle.ResponseBodyHandle;
 import com.hummer.rest.message.service.FastJsonHttpMessageConverterService;
-import com.hummer.spring.plugin.context.PropertiesContainer;
+import com.hummer.core.PropertiesContainer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

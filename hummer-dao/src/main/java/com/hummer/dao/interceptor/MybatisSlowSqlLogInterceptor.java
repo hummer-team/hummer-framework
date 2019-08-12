@@ -1,6 +1,6 @@
 package com.hummer.dao.interceptor;
 
-import com.hummer.spring.plugin.context.PropertiesContainer;
+import com.hummer.core.PropertiesContainer;
 import com.hummer.common.SysConstant;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;

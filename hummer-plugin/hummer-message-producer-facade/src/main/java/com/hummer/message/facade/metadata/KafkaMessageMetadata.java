@@ -1,7 +1,7 @@
 package com.hummer.message.facade.metadata;
 
 import com.hummer.common.utils.SupplierUtil;
-import com.hummer.spring.plugin.context.PropertiesContainer;
+import com.hummer.core.PropertiesContainer;
 import lombok.Getter;
 import org.apache.kafka.clients.producer.Partitioner;
 import org.apache.kafka.common.serialization.Serializer;

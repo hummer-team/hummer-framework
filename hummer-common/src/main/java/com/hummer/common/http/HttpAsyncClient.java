@@ -5,7 +5,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.google.common.base.Strings;
 
 import com.hummer.common.exceptions.SysException;
-import com.hummer.spring.plugin.context.PropertiesContainer;
+import com.hummer.core.PropertiesContainer;
 import com.hummer.common.SysConstant;
 import com.hummer.common.utils.DateUtil;
 import org.apache.commons.collections.CollectionUtils;

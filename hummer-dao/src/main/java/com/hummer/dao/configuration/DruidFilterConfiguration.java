@@ -1,7 +1,7 @@
 package com.hummer.dao.configuration;
 
 import com.alibaba.druid.filter.stat.StatFilter;
-import com.hummer.spring.plugin.context.PropertiesContainer;
+import com.hummer.core.PropertiesContainer;
 import org.springframework.context.annotation.Bean;
 
 public class DruidFilterConfiguration {
