@@ -150,6 +150,10 @@
             <groupId>com.hummer</groupId>
             <artifactId>hummer-message-producer-facade-plugin</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.hummer</groupId>
+            <artifactId>hummer-kafka-customer-plugin</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <resources>

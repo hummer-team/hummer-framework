@@ -1,8 +1,13 @@
 package com.hummer.kafka.consumer.plugin.consumer;
 
-import com.hummer.kafka.consumer.plugin.handle.HandleBusiness;
+import com.hummer.kafka.consumer.plugin.callback.HandleBusiness;
 import lombok.Builder;
 import lombok.Getter;
+import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
+import org.apache.kafka.clients.consumer.OffsetCommitCallback;
+
+import java.util.Collection;
+import java.util.concurrent.ExecutorService;
 
 /**
  * @Author: lee
@@ -12,8 +17,11 @@ import lombok.Getter;
 @Builder
 @Getter
 public class ConsumerMetadata {
-    private String topicId;
+    private Collection<String> topicIds;
     private String groupName;
     private long pollTimeOutMillis;
     private HandleBusiness handleBusiness;
+    private ConsumerRebalanceListener rebalanceListener;
+    private OffsetCommitCallback commitCallback;
+    private ExecutorService executorService;
 }

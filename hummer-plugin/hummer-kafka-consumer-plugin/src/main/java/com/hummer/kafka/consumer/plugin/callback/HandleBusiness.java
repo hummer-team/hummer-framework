@@ -1,4 +1,4 @@
-package com.hummer.kafka.consumer.plugin.handle;
+package com.hummer.kafka.consumer.plugin.callback;
 
 import com.google.common.collect.ImmutableList;
 

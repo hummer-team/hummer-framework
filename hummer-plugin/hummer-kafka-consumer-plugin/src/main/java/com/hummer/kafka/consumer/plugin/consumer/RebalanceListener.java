@@ -4,6 +4,7 @@ import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.errors.InterruptException;
 import org.apache.kafka.common.errors.WakeupException;
+import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.Collection;
@@ -13,6 +14,7 @@ import java.util.Collection;
  * @since:1.0.0
  * @Date: 2019/8/12 18:41
  **/
+@Service
 public class RebalanceListener implements ConsumerRebalanceListener {
     /**
      * A callback method the user can implement to provide handling of offset commits to a customized store on the start

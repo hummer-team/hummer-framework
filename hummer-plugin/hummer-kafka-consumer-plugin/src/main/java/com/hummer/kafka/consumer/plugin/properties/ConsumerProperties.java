@@ -1,4 +1,4 @@
-package com.hummer.kafka.consumer.plugin;
+package com.hummer.kafka.consumer.plugin.properties;
 
 import com.google.common.base.Preconditions;
 import com.hummer.common.utils.FunctionUtil;

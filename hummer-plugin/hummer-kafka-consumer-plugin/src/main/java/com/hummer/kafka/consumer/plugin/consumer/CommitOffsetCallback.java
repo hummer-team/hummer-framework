@@ -10,6 +10,7 @@ import org.apache.kafka.common.errors.InterruptException;
 import org.apache.kafka.common.errors.WakeupException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import java.util.Map;
  * @since:1.0.0
  * @Date: 2019/8/12 18:32
  **/
+@Service
 public class CommitOffsetCallback implements OffsetCommitCallback {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommitOffsetCallback.class);
 
