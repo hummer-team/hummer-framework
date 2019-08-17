@@ -26,13 +26,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @since:1.0.0
  * @Date: 2019/8/12 16:31
  **/
-public class KafkaConsumerTask implements Runnable {
-    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerTask.class);
+public class KafkaConsumerTaskHolder implements Runnable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerTaskHolder.class);
     private final AtomicBoolean closed = new AtomicBoolean(false);
     private final KafkaConsumer<String, Object> consumer;
     private final ConsumerMetadata metadata;
 
-    public KafkaConsumerTask(final ConsumerMetadata metadata) {
+    public KafkaConsumerTaskHolder(final ConsumerMetadata metadata) {
         Preconditions.checkArgument(Strings.isNullOrEmpty(metadata.getGroupName())
                 , "please settings consumer group name");
         this.metadata = metadata;

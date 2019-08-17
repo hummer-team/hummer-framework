@@ -9,13 +9,21 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>hummer-kafka-persistence-plugin</artifactId>
+    <artifactId>hummer-local-persistence-plugin</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
             <groupId>com.hummer</groupId>
             <artifactId>hummer-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.hummer</groupId>
+            <artifactId>hummer-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.rocksdb</groupId>
+            <artifactId>rocksdbjni</artifactId>
         </dependency>
     </dependencies>
 

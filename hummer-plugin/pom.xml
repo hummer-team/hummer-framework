@@ -19,6 +19,6 @@
         <module>hummer-message-producer-facade-plugin</module>
         <module>hummer-message-consumer-facade-plugin</module>
         <module>hummer-kafka-stream-plugin</module>
-        <module>hummer-kafka-persistence-plugin</module>
+        <module>hummer-local-persistence-plugin</module>
     </modules>
 </project>

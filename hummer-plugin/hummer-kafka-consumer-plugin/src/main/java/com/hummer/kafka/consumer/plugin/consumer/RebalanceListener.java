@@ -1,10 +1,10 @@
 package com.hummer.kafka.consumer.plugin.consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.errors.InterruptException;
 import org.apache.kafka.common.errors.WakeupException;
-import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.Collection;
@@ -14,8 +14,13 @@ import java.util.Collection;
  * @since:1.0.0
  * @Date: 2019/8/12 18:41
  **/
-@Service
-public class RebalanceListener implements ConsumerRebalanceListener {
+public class RebalanceListener<K, V> implements ConsumerRebalanceListener {
+    private final KafkaConsumer<K, V> consumer;
+
+    public RebalanceListener(final KafkaConsumer<K, V> consumer) {
+        this.consumer = consumer;
+    }
+
     /**
      * A callback method the user can implement to provide handling of offset commits to a customized store on the start
      * of a rebalance operation. This method will be called before a rebalance operation starts and after the consumer
@@ -38,7 +43,8 @@ public class RebalanceListener implements ConsumerRebalanceListener {
      */
     @Override
     public void onPartitionsRevoked(Collection<TopicPartition> partitions) {
-
+        //commit
+        partitions.forEach(consumer::committed);
     }
 
     /**
@@ -63,6 +69,9 @@ public class RebalanceListener implements ConsumerRebalanceListener {
      */
     @Override
     public void onPartitionsAssigned(Collection<TopicPartition> partitions) {
-
+        //read out of store partitions
+        for (TopicPartition partition : partitions) {
+            consumer.seek(partition, 0);
+        }
     }
 }

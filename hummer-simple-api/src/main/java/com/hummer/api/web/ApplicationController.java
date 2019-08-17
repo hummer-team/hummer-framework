@@ -1,8 +1,10 @@
 package com.hummer.api.web;
 
+import com.alibaba.fastjson.JSON;
 import com.hummer.api.dto.KafkaMessageReq;
 import com.hummer.api.dto.QueryStringDto;
 import com.hummer.common.utils.ObjectCopyUtils;
+import com.hummer.local.persistence.plugin.RocksDBLocalPersistence;
 import com.hummer.message.facade.publish.MessageBus;
 import com.hummer.rest.annotations.BindRestParameterSimpleModel;
 import com.hummer.rest.model.ResourceResponse;
@@ -12,6 +14,7 @@ import com.hummer.core.SpringApplicationContext;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +31,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Created by MRomeh on 08/08/2017.
@@ -39,10 +43,19 @@ import java.util.Collection;
 public class ApplicationController {
 
     private static final Logger log = LoggerFactory.getLogger(ApplicationController.class);
-
+    @Autowired
+    private RocksDBLocalPersistence persistence;
 
     @Value("${test.A}")
     private int value;
+
+    @PostMapping(value = "/local/store")
+    public ResourceResponse<Map<String, Object>> storeAndGet(@RequestBody Map<String, Object> map) {
+        persistence.put("test_column_01", "test", JSON.toJSONBytes(map));
+        Map<String, Object> val = JSON.parseObject(persistence.get("test_column_01"
+            , "test"), Map.class);
+        return ResourceResponse.ok(val);
+    }
 
     @GetMapping(value = "/all", produces = "application/json")
     @ResponseBody

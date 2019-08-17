@@ -99,6 +99,7 @@
         <kafkak.version>2.1.0</kafkak.version>
         <libthrift.version>0.12.0</libthrift.version>
         <kafka-avro-serializer.version>5.2.1</kafka-avro-serializer.version>
+        <rocksdbjni.version>6.2.2</rocksdbjni.version>
     </properties>
 
     <dependencyManagement>
@@ -154,12 +155,23 @@
                 <artifactId>hummer-kafka-customer-plugin</artifactId>
                 <version>${hummer.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-local-persistence-plugin</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
             <!--framework plugin-->
             <!-- https://mvnrepository.com/artifact/io.confluent/kafka-avro-serializer -->
+            <!--<dependency>-->
+                <!--<groupId>io.confluent</groupId>-->
+                <!--<artifactId>kafka-avro-serializer</artifactId>-->
+                <!--<version>${kafka-avro-serializer.version}</version>-->
+            <!--</dependency>-->
+            <!-- https://mvnrepository.com/artifact/org.rocksdb/rocksdbjni -->
             <dependency>
-                <groupId>io.confluent</groupId>
-                <artifactId>kafka-avro-serializer</artifactId>
-                <version>${kafka-avro-serializer.version}</version>
+                <groupId>org.rocksdb</groupId>
+                <artifactId>rocksdbjni</artifactId>
+                <version>${rocksdbjni.version}</version>
             </dependency>
 
             <!-- https://mvnrepository.com/artifact/org.apache.thrift/libthrift -->

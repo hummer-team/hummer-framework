@@ -3,6 +3,8 @@ package com.hummer.kafka.consumer.plugin.deserializer;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import org.apache.kafka.common.serialization.Deserializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -14,6 +16,8 @@ import java.util.Map;
  * @Date: 2019/8/12 17:07
  **/
 public class MessageJsonDeserializer<T> implements Deserializer<T> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageJsonDeserializer.class);
+
     /**
      * Configure this class.
      *
@@ -34,6 +38,7 @@ public class MessageJsonDeserializer<T> implements Deserializer<T> {
      */
     @Override
     public T deserialize(String topic, byte[] data) {
+        LOGGER.debug("topic {} message body deserializer size {} bytes", topic, data.length);
         return JSON.parseObject(data, new TypeReference<T>() {
         }.getType());
     }

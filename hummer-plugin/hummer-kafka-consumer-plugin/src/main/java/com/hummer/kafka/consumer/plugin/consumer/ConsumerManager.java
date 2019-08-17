@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class ConsumerManager {
     @Autowired
     private OffsetCommitCallback commitCallback;
-    @Autowired
+    @Autowired(required = false)
     private ConsumerRebalanceListener rebalanceListener;
     @Autowired(required = false)
     private HandleBusiness handleBusiness;
@@ -31,7 +31,7 @@ public class ConsumerManager {
      **/
     public void start() {
         //
-        KafkaConsumerTask consumerTask = new KafkaConsumerTask(null);
+        KafkaConsumerTaskHolder consumerTask = new KafkaConsumerTaskHolder(null);
         //register thread shutdown
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
