@@ -20,5 +20,6 @@
         <module>hummer-message-consumer-facade-plugin</module>
         <module>hummer-kafka-stream-plugin</module>
         <module>hummer-local-persistence-plugin</module>
+        <module>hummer-scheduling-plugin</module>
     </modules>
 </project>
