@@ -51,9 +51,19 @@ public class ApplicationController {
 
     @PostMapping(value = "/local/store")
     public ResourceResponse<Map<String, Object>> storeAndGet(@RequestBody Map<String, Object> map) {
-        persistence.put("test_column_01", "test", JSON.toJSONBytes(map));
-        Map<String, Object> val = JSON.parseObject(persistence.get("test_column_01"
-            , "test"), Map.class);
+        persistence.put(map.get("_columnFamily").toString(), map.get("_key").toString(), JSON.toJSONBytes(map));
+        Map<String, Object> val = JSON.parseObject(persistence.get(map.get("_columnFamily").toString()
+            , map.get("_key").toString()), Map.class);
+        return ResourceResponse.ok(val);
+    }
+
+
+    @GetMapping(value = "/local/store/list")
+    public ResourceResponse<Map<String, Object>> getList(@RequestParam("columnFamily")String columnFamily
+        ,@RequestParam("key")String key) {
+
+        Map<String, Object> val = JSON.parseObject(persistence.get(columnFamily
+            ,key), Map.class);
         return ResourceResponse.ok(val);
     }
 

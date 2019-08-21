@@ -2,8 +2,10 @@ package com.hummer.local.persistence.plugin;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.hummer.common.exceptions.SysException;
 import com.hummer.core.PropertiesContainer;
+import org.apache.commons.collections.CollectionUtils;
 import org.rocksdb.ColumnFamilyDescriptor;
 import org.rocksdb.ColumnFamilyHandle;
 import org.rocksdb.ColumnFamilyOptions;
@@ -20,9 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.BiFunction;
 
 /**
  * use rocks db store object
@@ -46,7 +46,7 @@ public class RocksDbPersistence implements RocksDBLocalPersistence {
         try (final Options options = new Options()) {
             options.setCreateIfMissing(true);
             try (final RocksDB db = RocksDB.open(options, getDbPath())) {
-                db.delete(getByKey(key));
+                db.delete(convertKeyToBytes(key));
             }
         } catch (RocksDBException e) {
             LOGGER.error("rocksDb delete data failed,key is {}", key, e);
@@ -54,40 +54,40 @@ public class RocksDbPersistence implements RocksDBLocalPersistence {
     }
 
     @Override
-    public byte[] get(final String keyNameSpace, final String key) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(keyNameSpace), "column family can not null");
+    public byte[] get(final String columnFamilyName, final String key) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(columnFamilyName), "column family can not null");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(key), "key not null");
 
-        return operationColumnFamily(keyNameSpace, db -> {
+        return operationColumnFamily(columnFamilyName, (db, cf) -> {
             try {
-                return db.get(getByKey(key));
+                return db.get(convertKeyToBytes(key));
             } catch (RocksDBException e) {
                 throw new SysException(50000
                         , String.format("rocks db put error,column family is %s key is %s"
-                        , keyNameSpace
+                        , columnFamilyName
                         , key)
                         , e);
             }
-        });
+        },"GET");
     }
 
     @Override
-    public void put(final String keyNameSpace, final String key, final byte[] value) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(keyNameSpace), "column family can not null");
+    public void put(final String columnFamilyName, final String key, final byte[] value) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(columnFamilyName), "column family can not null");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(key), "key not null");
 
-        operationColumnFamily(keyNameSpace, db -> {
+        operationColumnFamily(columnFamilyName, (db, cf) -> {
             try {
-                db.put(getByKey(key), value);
+                db.put(convertKeyToBytes(key), value);
                 return null;
             } catch (RocksDBException e) {
                 throw new SysException(50000
                         , String.format("rocks db put error,column family is %s key is %s"
-                        , keyNameSpace
+                        , columnFamilyName
                         , key)
-                        ,e);
+                        , e);
             }
-        });
+        },"PUT");
     }
 
     @Override
@@ -96,7 +96,7 @@ public class RocksDbPersistence implements RocksDBLocalPersistence {
         try (final Options options = new Options()) {
             options.setCreateIfMissing(true);
             try (final RocksDB db = RocksDB.open(options, getDbPath())) {
-                db.put(getBytes(key), value);
+                db.put(convertKeyToBytes(key), value);
             }
         } catch (RocksDBException e) {
             LOGGER.error("rocks db store failed,key value {} ", key, e);
@@ -109,7 +109,7 @@ public class RocksDbPersistence implements RocksDBLocalPersistence {
         try (final Options options = new Options()) {
             options.setCreateIfMissing(true);
             try (final RocksDB db = RocksDB.open(getDbPath())) {
-                return db.get(getBytes(key));
+                return db.get(convertKeyToBytes(key));
             }
         } catch (RocksDBException e) {
             LOGGER.error("rocks db get failed,key value {} ", key, e);
@@ -124,7 +124,7 @@ public class RocksDbPersistence implements RocksDBLocalPersistence {
     }
 
 
-    private byte[] getBytes(final String key) {
+    private byte[] convertKeyToBytes(final String key) {
         try {
             return key.getBytes("utf-8");
         } catch (UnsupportedEncodingException e) {
@@ -133,39 +133,59 @@ public class RocksDbPersistence implements RocksDBLocalPersistence {
         }
     }
 
-    private <T> T operationColumnFamily(final String keyNameSpace, final Function<RocksDB, T> dbConsumer) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(keyNameSpace), "column family can not null");
-        Preconditions.checkArgument(dbConsumer != null, "consumer not null");
-
+    private <T> T operationColumnFamily(final String keyColumnFamilyName
+            , final BiFunction<RocksDB, ColumnFamilyHandle, T> dbConsumer
+            , final String operationType) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(keyColumnFamilyName)
+                , "column family can not null");
+        Preconditions.checkArgument(dbConsumer != null
+                , "consumer not null");
+        final long start = System.currentTimeMillis();
+        //wiki:https://github.com/facebook/rocksdb/wiki/RocksJava-Basics#opening-a-database-with-column-families
         try (final ColumnFamilyOptions cfOpts = new ColumnFamilyOptions().optimizeUniversalStyleCompaction()) {
             // list of column family descriptors, first entry must always be default column family
-            final List<ColumnFamilyDescriptor> cfDescriptors = Arrays.asList(
+            final List<ColumnFamilyDescriptor> cfDescriptors = Lists.newArrayList(
                     new ColumnFamilyDescriptor(RocksDB.DEFAULT_COLUMN_FAMILY, cfOpts),
-                    new ColumnFamilyDescriptor(getByKey(keyNameSpace), cfOpts)
+                    new ColumnFamilyDescriptor(convertKeyToBytes(keyColumnFamilyName), cfOpts)
             );
-
+            Options options = new Options();
+            options.setCreateIfMissing(true);
+            List<byte[]> cfBytes = RocksDB.listColumnFamilies(options, getDbPath());
+            //add already exist column family
+            if (CollectionUtils.isNotEmpty(cfBytes)) {
+                for (byte[] by : cfBytes) {
+                    cfDescriptors.add(new ColumnFamilyDescriptor(by, new ColumnFamilyOptions()));
+                }
+            }
             final List<ColumnFamilyHandle> columnFamilyHandleList =
                     new ArrayList<>();
 
-            try (final DBOptions options = new DBOptions()
+            try (final DBOptions dbOptions = new DBOptions()
                     .setCreateIfMissing(true)
                     .setCreateMissingColumnFamilies(true);
-                 final RocksDB db = RocksDB.open(options
+
+                 final RocksDB db = RocksDB.open(dbOptions
                          , getDbPath()
                          , cfDescriptors
                          , columnFamilyHandleList)) {
+
                 try {
-                    return dbConsumer.apply(db);
+                    T result = dbConsumer.apply(db, null);
+                    LOGGER.info("rocks db operation column Family {} {} cost {} ms"
+                            , keyColumnFamilyName
+                            , operationType
+                            , System.currentTimeMillis() - start);
+                    return result;
                 } finally {
-                    for (final ColumnFamilyHandle columnFamilyHandle :
+                    for (final ColumnFamilyHandle cfHandle :
                             columnFamilyHandleList) {
-                        columnFamilyHandle.close();
+                        cfHandle.close();
                     }
                 }
             }
         } catch (RocksDBException | SysException e) {
             LOGGER.error("rocks db operation with column family failed, column family key is {}"
-                    , keyNameSpace
+                    , keyColumnFamilyName
                     , e);
         }
 

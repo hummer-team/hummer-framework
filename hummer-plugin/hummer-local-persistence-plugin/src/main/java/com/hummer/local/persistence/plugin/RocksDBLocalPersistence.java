@@ -30,18 +30,18 @@ public interface RocksDBLocalPersistence {
     /**
      * with column family key
      *
-     * @param keyNameSpace column family name
+     * @param columnFamilyName column family name
      * @param key          key
      * @param value        value
      */
-    void put(final String keyNameSpace, final String key, final byte[] value);
+    void put(final String columnFamilyName, final String key, final byte[] value);
 
     /**
      * get key name space in data
      *
-     * @param keyNameSpace column family name
+     * @param columnFamilyName column family name
      * @param key          key
      * @return
      */
-    byte[] get(final String keyNameSpace, final String key);
+    byte[] get(final String columnFamilyName, final String key);
 }
