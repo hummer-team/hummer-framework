@@ -10,6 +10,7 @@ import org.apache.kafka.common.errors.InterruptException;
 import org.apache.kafka.common.errors.WakeupException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -24,6 +25,8 @@ import java.util.Map;
 @Service
 public class CommitOffsetCallback implements OffsetCommitCallback {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommitOffsetCallback.class);
+    @Autowired
+    private OffsetStore offsetStore;
 
     /**
      * A callback method the user can implement to provide asynchronous handling of commit request completion.
@@ -46,9 +49,18 @@ public class CommitOffsetCallback implements OffsetCommitCallback {
     @Override
     public void onComplete(Map<TopicPartition, OffsetAndMetadata> offsets, Exception exception) {
         if (exception != null) {
-            LOGGER.error("kafka consumer offset commit failed ", exception);
+            LOGGER.error("kafka consumer offset commit failed!,this offsets metadata is {},exception is {},"
+                    , offsets, exception);
         }
 
         //Persistence commit failed offset
+        long start = System.currentTimeMillis();
+        for (Map.Entry<TopicPartition, OffsetAndMetadata> metadataEntry : offsets.entrySet()) {
+            offsetStore.store(metadataEntry.getKey().topic()
+                    , metadataEntry.getValue().offset()
+                    , metadataEntry.getKey().hashCode());
+        }
+        LOGGER.debug("local persistent kafka topic done , cost {} mills"
+                , System.currentTimeMillis() - start);
     }
 }

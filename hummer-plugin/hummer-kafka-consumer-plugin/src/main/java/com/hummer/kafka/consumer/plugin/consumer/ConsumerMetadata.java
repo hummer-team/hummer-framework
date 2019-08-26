@@ -24,4 +24,7 @@ public class ConsumerMetadata {
     private ConsumerRebalanceListener rebalanceListener;
     private OffsetCommitCallback commitCallback;
     private ExecutorService executorService;
+    private boolean asyncCommitOffset;
+    private OffsetSeekEnum offsetSeekEnum;
+    private int commitBatchSize;
 }

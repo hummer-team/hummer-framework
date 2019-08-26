@@ -9,6 +9,8 @@ import joptsimple.internal.Strings;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.OffsetAndMetadata;
+import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.errors.WakeupException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +19,10 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * kafka consumer runner
@@ -55,24 +60,37 @@ public class KafkaConsumerTaskHolder implements Runnable {
     @Override
     public void run() {
         try {
+            //for
+            AtomicInteger counter = new AtomicInteger();
             while (!closed.get()) {
+                //get message for kafka
                 ConsumerRecords<String, Object>
                         records = consumer.poll(Duration.of(metadata.getPollTimeOutMillis()
                         , ChronoUnit.MILLIS));
+
                 Iterator<ConsumerRecord<String, Object>> recordIterator = records.iterator();
                 List<MessageBodyMetadata> list = Lists.newArrayListWithCapacity(16);
+                List<RecordMetadata> recordList = Lists.newArrayListWithCapacity(16);
                 while (recordIterator.hasNext()) {
                     ConsumerRecord<String, Object> recordItem = recordIterator.next();
                     if (recordItem != null) {
+                        //append list
                         list.add(MessageBodyMetadata
                                 .builder()
                                 .body(recordItem.value())
                                 .key(recordItem.key())
                                 .build());
+                        if (metadata.getCommitBatchSize() > 0) {
+                            recordList.add(RecordMetadata.builder()
+                                    .offset(recordItem.offset())
+                                    .partition(recordItem.partition()).build());
+                        }
                     }
                 }
+
                 LOGGER.debug("consumer will handle {} count message", list.size());
                 long start = System.currentTimeMillis();
+                //callback business handle,case one async case two sync
                 try {
                     if (metadata.getExecutorService() != null) {
                         metadata.getExecutorService()
@@ -83,8 +101,33 @@ public class KafkaConsumerTaskHolder implements Runnable {
                 } catch (Throwable throwable) {
                     LOGGER.error("business handle failed ", throwable);
                 }
+
+                if (metadata.getCommitBatchSize() > 0) {
+                    Map<TopicPartition, OffsetAndMetadata> offsetsMap =
+                            new ConcurrentHashMap<>(metadata.getCommitBatchSize());
+                    for (RecordMetadata metadata : recordList) {
+                        offsetsMap.put(new TopicPartition(metadata.getTopicId(), metadata.getPartition())
+                                , new OffsetAndMetadata(metadata.getOffset() + 1
+                                        , "no metadata"));
+                    }
+                    if (counter.get() % metadata.getCommitBatchSize() == 0) {
+                        if (metadata.isAsyncCommitOffset()) {
+                            consumer.commitAsync(offsetsMap, metadata.getCommitCallback());
+                        } else {
+                            consumer.commitSync(offsetsMap);
+                        }
+                    }
+
+                    counter.incrementAndGet();
+                }
+
                 LOGGER.debug("business handle done cost {} millis", System.currentTimeMillis() - start);
-                consumer.commitAsync(metadata.getCommitCallback());
+                //commit this offset value
+                if (metadata.isAsyncCommitOffset()) {
+                    consumer.commitAsync(metadata.getCommitCallback());
+                } else {
+                    consumer.commitSync();
+                }
             }
         } catch (WakeupException e) {
             //ignore

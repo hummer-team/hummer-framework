@@ -5,6 +5,8 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.errors.InterruptException;
 import org.apache.kafka.common.errors.WakeupException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.Collection;
@@ -15,10 +17,17 @@ import java.util.Collection;
  * @Date: 2019/8/12 18:41
  **/
 public class RebalanceListener<K, V> implements ConsumerRebalanceListener {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RebalanceListener.class);
     private final KafkaConsumer<K, V> consumer;
+    private final OffsetStore offsetStore;
+    private final ConsumerMetadata consumerMetadata;
 
-    public RebalanceListener(final KafkaConsumer<K, V> consumer) {
+    public RebalanceListener(final KafkaConsumer<K, V> consumer
+            , final OffsetStore offsetStore
+            , final ConsumerMetadata consumerMetadata) {
         this.consumer = consumer;
+        this.offsetStore = offsetStore;
+        this.consumerMetadata = consumerMetadata;
     }
 
     /**
@@ -44,7 +53,11 @@ public class RebalanceListener<K, V> implements ConsumerRebalanceListener {
     @Override
     public void onPartitionsRevoked(Collection<TopicPartition> partitions) {
         //commit
-        partitions.forEach(consumer::committed);
+        if (consumerMetadata.getOffsetSeekEnum() != OffsetSeekEnum.SPECIFIC_POINT) {
+            partitions.forEach(consumer::committed);
+
+            LOGGER.info("Lost partitions in rebalance. Committing current offsets:{}", partitions);
+        }
     }
 
     /**
@@ -69,9 +82,20 @@ public class RebalanceListener<K, V> implements ConsumerRebalanceListener {
      */
     @Override
     public void onPartitionsAssigned(Collection<TopicPartition> partitions) {
-        //read out of store partitions
-        for (TopicPartition partition : partitions) {
-            consumer.seek(partition, 0);
+        switch (consumerMetadata.getOffsetSeekEnum()) {
+            case BEGIN:
+                consumer.seekToBeginning(partitions);
+                break;
+            case END:
+                consumer.seekToEnd(partitions);
+                break;
+            default:
+                //read out of store partitions
+                for (TopicPartition partition : partitions) {
+                    consumer.seek(partition
+                            , offsetStore.getOffset(partition.topic(), partition.hashCode()));
+                }
+                break;
         }
     }
 }
