@@ -6,6 +6,8 @@ import com.google.common.collect.Lists;
 import com.hummer.kafka.consumer.plugin.properties.ConsumerProperties;
 import com.hummer.kafka.consumer.plugin.callback.MessageBodyMetadata;
 import joptsimple.internal.Strings;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -25,25 +27,32 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * kafka consumer runner
+ * kafka consumer runner,use one thread poll message , mutilate thread consumer message.
  *
  * @Author: lee
  * @since:1.0.0
  * @Date: 2019/8/12 16:31
  **/
-public class KafkaConsumerTaskHolder implements Runnable {
+public final class KafkaConsumerTaskHolder implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerTaskHolder.class);
     private final AtomicBoolean closed = new AtomicBoolean(false);
     private final KafkaConsumer<String, Object> consumer;
     private final ConsumerMetadata metadata;
+    private final ConsumerRebalanceListener rebalanceListener;
 
     public KafkaConsumerTaskHolder(final ConsumerMetadata metadata) {
         Preconditions.checkArgument(Strings.isNullOrEmpty(metadata.getGroupName())
                 , "please settings consumer group name");
+        Preconditions.checkArgument(CollectionUtils.isNotEmpty(metadata.getTopicIds())
+                , "topic id can not empty,please settings");
+        Preconditions.checkArgument(metadata.getHandleBusiness() != null
+                , "please implement interface HandleBusiness");
+
         this.metadata = metadata;
         this.consumer = new KafkaConsumer<>(ConsumerProperties.builderProperties(metadata.getGroupName()));
+        this.rebalanceListener = new DefaultRebalanceListener<>(consumer, metadata.getOffsetStore(), metadata);
         this.consumer.subscribe(metadata.getTopicIds()
-                , metadata.getRebalanceListener());
+                , rebalanceListener);
     }
 
     /**
@@ -102,6 +111,7 @@ public class KafkaConsumerTaskHolder implements Runnable {
                     LOGGER.error("business handle failed ", throwable);
                 }
 
+                //commit offset
                 if (metadata.getCommitBatchSize() > 0) {
                     Map<TopicPartition, OffsetAndMetadata> offsetsMap =
                             new ConcurrentHashMap<>(metadata.getCommitBatchSize());

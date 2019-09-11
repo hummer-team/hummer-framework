@@ -41,7 +41,7 @@ public class ConsumerProperties {
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroupName);
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, PropertiesContainer
                 .valueOfStringWithAssertNotNull(String.format("hummer.message.%s"
-                        , ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG)));
+                        , ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG)));
 
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, bodyDeserializer());
@@ -101,7 +101,7 @@ public class ConsumerProperties {
     }
 
     private static String formatKey(final String key, final String prefix) {
-        final String messageBusKeyPrefix = "hummer.message.consumer";
+        final String messageBusKeyPrefix = "hummer.message.kafka.consumer";
         return
                 Strings.isNullOrEmpty(prefix)
                         ? String.format("%s%s", messageBusKeyPrefix, key)

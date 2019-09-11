@@ -31,9 +31,9 @@ public class MessagePublishMetadata {
     @SuppressWarnings("unchecked")
     protected static <T extends MessagePublishMetadata> T get(final String appId
             , final Supplier<T> supplier) {
-        T metadata = (T)CACHE.putIfAbsent(appId, supplier.get());
+        T metadata = (T) CACHE.putIfAbsent(appId, supplier.get());
         if (metadata == null) {
-            return (T)CACHE.get(appId);
+            return (T) CACHE.get(appId);
         }
 
         return metadata;
@@ -41,6 +41,10 @@ public class MessagePublishMetadata {
 
     protected void builder(final String namespaceId) {
         this.namespaceId = namespaceId;
+
+        final String messageType = PropertiesContainer.valueOfString("hummer.message.driver.type"
+                , "kafka");
+
         this.enable = FunctionUtil.with(
                 () -> PropertiesContainer.valueOf(formatKey(namespaceId, "enable"), Boolean.class)
                 , Objects::nonNull

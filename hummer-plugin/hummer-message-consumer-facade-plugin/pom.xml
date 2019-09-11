@@ -12,5 +12,10 @@
     <artifactId>hummer-message-consumer-facade-plugin</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>com.hummer</groupId>
+            <artifactId>hummer-kafka-customer-plugin</artifactId>
+        </dependency>
+    </dependencies>
 </project>

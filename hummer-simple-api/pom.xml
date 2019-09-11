@@ -158,6 +158,10 @@
             <groupId>com.hummer</groupId>
             <artifactId>hummer-local-persistence-plugin</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.hummer</groupId>
+            <artifactId>hummer-message-consumer-facade-plugin</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

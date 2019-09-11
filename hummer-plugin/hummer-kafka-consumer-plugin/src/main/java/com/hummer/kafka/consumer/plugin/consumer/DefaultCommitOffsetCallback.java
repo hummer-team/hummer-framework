@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+import static com.hummer.kafka.consumer.plugin.KafkaConsumerConstant.COMMIT_OFFSET_CALLBACK_DEFAULT;
+
 /**
  * handle offset commit callback
  *
@@ -22,9 +24,9 @@ import java.util.Map;
  * @since:1.0.0
  * @Date: 2019/8/12 18:32
  **/
-@Service
-public class CommitOffsetCallback implements OffsetCommitCallback {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommitOffsetCallback.class);
+@Service(value = COMMIT_OFFSET_CALLBACK_DEFAULT)
+public class DefaultCommitOffsetCallback implements OffsetCommitCallback {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultCommitOffsetCallback.class);
     @Autowired
     private OffsetStore offsetStore;
 

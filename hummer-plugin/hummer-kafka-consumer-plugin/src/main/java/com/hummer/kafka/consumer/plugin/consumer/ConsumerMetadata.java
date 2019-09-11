@@ -3,6 +3,7 @@ package com.hummer.kafka.consumer.plugin.consumer;
 import com.hummer.kafka.consumer.plugin.callback.HandleBusiness;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.OffsetCommitCallback;
 
@@ -16,6 +17,7 @@ import java.util.concurrent.ExecutorService;
  **/
 @Builder
 @Getter
+@Setter
 public class ConsumerMetadata {
     private Collection<String> topicIds;
     private String groupName;
@@ -27,4 +29,5 @@ public class ConsumerMetadata {
     private boolean asyncCommitOffset;
     private OffsetSeekEnum offsetSeekEnum;
     private int commitBatchSize;
+    private OffsetStore offsetStore;
 }

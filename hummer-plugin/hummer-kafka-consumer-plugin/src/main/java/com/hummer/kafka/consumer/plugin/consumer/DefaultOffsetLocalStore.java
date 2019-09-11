@@ -7,13 +7,15 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 
+import static com.hummer.kafka.consumer.plugin.KafkaConsumerConstant.OFFSET_STORE_DEFAULT;
+
 /**
  * @Author: lee
  * @since:1.0.0
  * @Date: 2019/8/26 16:58
  **/
-@Service
-public class OffsetLocalStore implements OffsetStore {
+@Service(value = OFFSET_STORE_DEFAULT)
+public class DefaultOffsetLocalStore implements OffsetStore {
     @Autowired
     private RocksDBLocalPersistence persistence;
 

@@ -16,13 +16,13 @@ import java.util.Collection;
  * @since:1.0.0
  * @Date: 2019/8/12 18:41
  **/
-public class RebalanceListener<K, V> implements ConsumerRebalanceListener {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RebalanceListener.class);
+public class DefaultRebalanceListener<K, V> implements ConsumerRebalanceListener {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultRebalanceListener.class);
     private final KafkaConsumer<K, V> consumer;
     private final OffsetStore offsetStore;
     private final ConsumerMetadata consumerMetadata;
 
-    public RebalanceListener(final KafkaConsumer<K, V> consumer
+    public DefaultRebalanceListener(final KafkaConsumer<K, V> consumer
             , final OffsetStore offsetStore
             , final ConsumerMetadata consumerMetadata) {
         this.consumer = consumer;
