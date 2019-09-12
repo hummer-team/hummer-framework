@@ -111,7 +111,7 @@ public class MybatisDynamicBean {
         pageInterceptor.setProperties(pageProperties);
         //
         //loading business customer interceptor plugin
-        Map<String, Interceptor> customerInterceptorMap = SpringApplicationContext.getBeans(Interceptor.class);
+        Map<String, Interceptor> customerInterceptorMap = SpringApplicationContext.getBeansAsMap(Interceptor.class);
         List<Interceptor> interceptors = Lists.newArrayList(16);
         if (MapUtils.isNotEmpty(customerInterceptorMap)) {
             interceptors.addAll(customerInterceptorMap.values());

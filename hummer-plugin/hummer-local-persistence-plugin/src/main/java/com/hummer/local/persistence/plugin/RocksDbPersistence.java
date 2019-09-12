@@ -67,7 +67,7 @@ public class RocksDbPersistence implements RocksDBLocalPersistence {
                         , key)
                         , e);
             }
-        },"GET");
+        }, "GET");
     }
 
     @Override
@@ -86,7 +86,7 @@ public class RocksDbPersistence implements RocksDBLocalPersistence {
                         , key)
                         , e);
             }
-        },"PUT");
+        }, "PUT");
     }
 
     @Override
@@ -147,9 +147,11 @@ public class RocksDbPersistence implements RocksDBLocalPersistence {
                     new ColumnFamilyDescriptor(RocksDB.DEFAULT_COLUMN_FAMILY, cfOpts),
                     new ColumnFamilyDescriptor(convertKeyToBytes(keyColumnFamilyName), cfOpts)
             );
-            Options options = new Options();
-            options.setCreateIfMissing(true);
-            List<byte[]> cfBytes = RocksDB.listColumnFamilies(options, getDbPath());
+            Options columnFamilyOptions = new Options();
+            columnFamilyOptions.setCreateIfMissing(true);
+            columnFamilyOptions.setIncreaseParallelism(4);
+            columnFamilyOptions.setMaxBackgroundJobs(4);
+            List<byte[]> cfBytes = RocksDB.listColumnFamilies(columnFamilyOptions, getDbPath());
             //add already exist column family
             if (CollectionUtils.isNotEmpty(cfBytes)) {
                 for (byte[] by : cfBytes) {
@@ -161,7 +163,9 @@ public class RocksDbPersistence implements RocksDBLocalPersistence {
 
             try (final DBOptions dbOptions = new DBOptions()
                     .setCreateIfMissing(true)
-                    .setCreateMissingColumnFamilies(true);
+                    .setCreateMissingColumnFamilies(true)
+                    .setIncreaseParallelism(4)
+                    .setMaxFileOpeningThreads(4);
 
                  final RocksDB db = RocksDB.open(dbOptions
                          , getDbPath()

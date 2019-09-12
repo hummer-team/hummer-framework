@@ -1,8 +1,11 @@
 package com.hummer.kafka.consumer.plugin.consumer;
 
+import com.hummer.common.utils.FunctionUtil;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.core.SpringApplicationContext;
 import org.apache.kafka.clients.consumer.OffsetCommitCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import static com.hummer.kafka.consumer.plugin.KafkaConsumerConstant.COMMIT_OFFSET_CALLBACK_DEFAULT;
@@ -16,6 +19,7 @@ import static com.hummer.kafka.consumer.plugin.KafkaConsumerConstant.OFFSET_STOR
 @Component
 public class ConsumerManager {
     private KafkaConsumerTaskHolder consumerTask;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConsumerManager.class);
 
     /**
      * start this consumer service
@@ -28,25 +32,8 @@ public class ConsumerManager {
      **/
     public void start(ConsumerMetadata metadata) {
         //
-        if (metadata.getCommitCallback() == null) {
-            metadata.setCommitCallback(SpringApplicationContext.getBean(COMMIT_OFFSET_CALLBACK_DEFAULT
-                    , OffsetCommitCallback.class));
-        }
-        if (metadata.getOffsetStore() == null) {
-            metadata.setOffsetStore(SpringApplicationContext.getBean(OFFSET_STORE_DEFAULT
-                    , OffsetStore.class));
-        }
-        if (metadata.getPollTimeOutMillis() <= 0L) {
-            metadata.setPollTimeOutMillis(PropertiesContainer.valueOf(
-                    "hummer.kafka.consumer.pool.timeout.millis.default"
-                    , Long.class
-                    , 3000L));
-        }
-        if (metadata.getCommitBatchSize() <= 0) {
-            metadata.setCommitBatchSize(PropertiesContainer.valueOfInteger(
-                    "hummer.kafka.consumer.commit.batch.default"
-                    , 1000));
-        }
+        checkAndSet(metadata);
+        LOGGER.info("starting kafka consumer this metadata info {}", metadata);
         consumerTask = new KafkaConsumerTaskHolder(metadata);
         //register thread shutdown
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -58,6 +45,7 @@ public class ConsumerManager {
         //start consumer task
         consumerTask.run();
     }
+
 
     /**
      * stop consumer task
@@ -71,6 +59,41 @@ public class ConsumerManager {
     public void stop() {
         if (consumerTask != null) {
             consumerTask.shutdown();
+            LOGGER.info("starting kafka consumer stop success ");
         }
+    }
+
+    private void checkAndSet(ConsumerMetadata metadata) {
+        FunctionUtil.actionByCondition(
+                metadata.getCommitCallback()
+                , v -> v == null
+                , v -> metadata.setCommitCallback(SpringApplicationContext.getBean(COMMIT_OFFSET_CALLBACK_DEFAULT
+                        , OffsetCommitCallback.class)
+                ));
+        FunctionUtil.actionByCondition(
+                metadata.getOffsetStore()
+                , v -> v == null
+                , v -> metadata.setOffsetStore(SpringApplicationContext.getBean(OFFSET_STORE_DEFAULT
+                        , OffsetStore.class)
+                ));
+        FunctionUtil.actionByCondition(metadata.getPollTimeOutMillis()
+                , v -> v <= 0
+                , v -> metadata.setPollTimeOutMillis(PropertiesContainer.valueOf(
+                        "hummer.message.kafka.consumer.pool.timeout.millis.default"
+                        , Long.class
+                        , 3000L)));
+        FunctionUtil.actionByCondition(metadata.getCommitBatchSize()
+                , v -> v <= 0
+                , v -> metadata.setCommitBatchSize(PropertiesContainer.valueOfInteger(
+                        "hummer.message.kafka.consumer.commit.batch.default"
+                        , 1000)));
+
+        FunctionUtil.actionByCondition(metadata.getOffsetSeekEnum()
+                , v -> v == null
+                , v -> metadata.setOffsetSeekEnum(OffsetSeekEnum.END));
+
+        FunctionUtil.actionByCondition(metadata.getAsyncCommitOffset()
+                , v -> v == null
+                , v -> metadata.setAsyncCommitOffset(Boolean.TRUE));
     }
 }

@@ -45,15 +45,19 @@ public class ProducerPool {
      * @since 1.0.0
      **/
     public static CloseableKafkaProducer<String, Object> get(final String topicId) {
-        Integer type = PropertiesContainer.valueOf(formatKey(String.format("%s.producer.instance.scope.type", topicId)
+        String type = PropertiesContainer.valueOfString(formatKey(String.format("%s.instance.scope.type", topicId)
                 , null)
-                , Integer.class
-                , null);
-        if (type == null || type.equals(0)) {
+                , "single");
+
+        LOGGER.info("kafka producer instance scope type is {}", type);
+
+        final String singleType = "single";
+        if (type == null || singleType.equalsIgnoreCase(type)) {
             return SingleProducer.get();
         }
 
-        if (type.equals(1)) {
+        final String preThreadType = "preThread";
+        if (type.equals(preThreadType)) {
             return ThreadLocalProducer.get();
         }
 
@@ -195,18 +199,18 @@ public class ProducerPool {
 
 
     private static String formatKey(final String key, final String prefix) {
-        final String messageBusKeyPrefix = "hummer.message.";
+        final String messageBusKeyPrefix = "hummer.message.kafka.producer";
         return
                 Strings.isNullOrEmpty(prefix)
-                        ? String.format("%s%s", messageBusKeyPrefix, key)
-                        : String.format("%s%s.%s", messageBusKeyPrefix, prefix, key);
+                        ? String.format("%s.%s", messageBusKeyPrefix, key)
+                        : String.format("%s.%s.%s", messageBusKeyPrefix, prefix, key);
     }
 
     private static Class<?> bodySerializer() {
         final String fastJson = "fastJson";
 
         String bodySerializerType = PropertiesContainer.valueOfString(
-                formatKey(String.format("%s.type", ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG), null)
+                formatKey(String.format("%s", ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG), null)
                 , fastJson);
         if (fastJson.equalsIgnoreCase(bodySerializerType)) {
             return MessageBodyJsonSerializer.class;

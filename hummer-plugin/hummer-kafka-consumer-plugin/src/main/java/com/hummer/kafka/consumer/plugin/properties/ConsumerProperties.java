@@ -40,7 +40,7 @@ public class ConsumerProperties {
         Properties properties = new Properties();
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroupName);
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, PropertiesContainer
-                .valueOfStringWithAssertNotNull(String.format("hummer.message.%s"
+                .valueOfStringWithAssertNotNull(String.format("hummer.message.kafka.consumer.%s"
                         , ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG)));
 
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -76,7 +76,7 @@ public class ConsumerProperties {
         final String fastJson = "fastJson";
 
         String bodySerializerType = PropertiesContainer.valueOfString(
-                formatKey(String.format("%s.type", ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG), null)
+                formatKey(String.format("%s", ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG), null)
                 , fastJson);
         if (fastJson.equalsIgnoreCase(bodySerializerType)) {
             return MessageJsonDeserializer.class;
@@ -104,7 +104,7 @@ public class ConsumerProperties {
         final String messageBusKeyPrefix = "hummer.message.kafka.consumer";
         return
                 Strings.isNullOrEmpty(prefix)
-                        ? String.format("%s%s", messageBusKeyPrefix, key)
-                        : String.format("%s%s.%s", messageBusKeyPrefix, prefix, key);
+                        ? String.format("%s.%s", messageBusKeyPrefix, key)
+                        : String.format("%s.%s.%s", messageBusKeyPrefix, prefix, key);
     }
 }

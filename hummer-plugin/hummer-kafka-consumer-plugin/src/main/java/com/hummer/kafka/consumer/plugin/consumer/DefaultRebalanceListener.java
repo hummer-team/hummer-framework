@@ -16,7 +16,7 @@ import java.util.Collection;
  * @since:1.0.0
  * @Date: 2019/8/12 18:41
  **/
-public class DefaultRebalanceListener<K, V> implements ConsumerRebalanceListener {
+public final class DefaultRebalanceListener<K, V> implements ConsumerRebalanceListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultRebalanceListener.class);
     private final KafkaConsumer<K, V> consumer;
     private final OffsetStore offsetStore;
@@ -51,13 +51,15 @@ public class DefaultRebalanceListener<K, V> implements ConsumerRebalanceListener
      * @throws InterruptException If raised from a nested call to {@link KafkaConsumer}
      */
     @Override
-    public void onPartitionsRevoked(Collection<TopicPartition> partitions) {
+    public void onPartitionsRevoked(final Collection<TopicPartition> partitions) {
         //commit
         if (consumerMetadata.getOffsetSeekEnum() != OffsetSeekEnum.SPECIFIC_POINT) {
             partitions.forEach(consumer::committed);
-
-            LOGGER.info("Lost partitions in rebalance. Committing current offsets:{}", partitions);
         }
+
+        LOGGER.info("Lost partitions in rebalance,offsetSeek type {}. Committing current offsets:{}"
+                , consumerMetadata.getOffsetSeekEnum()
+                , partitions);
     }
 
     /**
@@ -81,7 +83,7 @@ public class DefaultRebalanceListener<K, V> implements ConsumerRebalanceListener
      * @throws InterruptException If raised from a nested call to {@link KafkaConsumer}
      */
     @Override
-    public void onPartitionsAssigned(Collection<TopicPartition> partitions) {
+    public void onPartitionsAssigned(final Collection<TopicPartition> partitions) {
         switch (consumerMetadata.getOffsetSeekEnum()) {
             case BEGIN:
                 consumer.seekToBeginning(partitions);
@@ -97,5 +99,6 @@ public class DefaultRebalanceListener<K, V> implements ConsumerRebalanceListener
                 }
                 break;
         }
+        LOGGER.info("kafka on partition assigned {}", consumerMetadata.getOffsetSeekEnum());
     }
 }

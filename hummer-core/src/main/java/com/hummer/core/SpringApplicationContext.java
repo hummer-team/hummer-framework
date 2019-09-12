@@ -75,7 +75,7 @@ public class SpringApplicationContext implements ApplicationContextAware {
 
 
     /**
-     * get class type
+     * get class type,convert to map
      *
      * @param clazz target class type
      * @return {@link java.util.Map<java.lang.String,T>}
@@ -83,7 +83,7 @@ public class SpringApplicationContext implements ApplicationContextAware {
      * @date 2019/7/11 10:55
      * @since 1.0.0
      **/
-    public static <T> Map<String, T> getBeans(Class<T> clazz) {
+    public static <T> Map<String, T> getBeansAsMap(Class<T> clazz) {
         return applicationContext.getBeansOfType(clazz);
     }
 

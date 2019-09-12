@@ -41,11 +41,11 @@ public final class KafkaConsumerTaskHolder implements Runnable {
     private final ConsumerRebalanceListener rebalanceListener;
 
     public KafkaConsumerTaskHolder(final ConsumerMetadata metadata) {
-        Preconditions.checkArgument(Strings.isNullOrEmpty(metadata.getGroupName())
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(metadata.getGroupName())
                 , "please settings consumer group name");
         Preconditions.checkArgument(CollectionUtils.isNotEmpty(metadata.getTopicIds())
                 , "topic id can not empty,please settings");
-        Preconditions.checkArgument(metadata.getHandleBusiness() != null
+        Preconditions.checkArgument(metadata.getConsumerHandle() != null
                 , "please implement interface HandleBusiness");
 
         this.metadata = metadata;
@@ -69,75 +69,26 @@ public final class KafkaConsumerTaskHolder implements Runnable {
     @Override
     public void run() {
         try {
-            //for
             AtomicInteger counter = new AtomicInteger();
+            ConcurrentHashMap<TopicPartition, OffsetAndMetadata> offsetsMap =
+                    new ConcurrentHashMap<>(metadata.getCommitBatchSize());
             while (!closed.get()) {
                 //get message for kafka
                 ConsumerRecords<String, Object>
                         records = consumer.poll(Duration.of(metadata.getPollTimeOutMillis()
                         , ChronoUnit.MILLIS));
-
-                Iterator<ConsumerRecord<String, Object>> recordIterator = records.iterator();
-                List<MessageBodyMetadata> list = Lists.newArrayListWithCapacity(16);
+                //temp list
+                List<MessageBodyMetadata> consumerMessageList = Lists.newArrayListWithCapacity(16);
                 List<RecordMetadata> recordList = Lists.newArrayListWithCapacity(16);
-                while (recordIterator.hasNext()) {
-                    ConsumerRecord<String, Object> recordItem = recordIterator.next();
-                    if (recordItem != null) {
-                        //append list
-                        list.add(MessageBodyMetadata
-                                .builder()
-                                .body(recordItem.value())
-                                .key(recordItem.key())
-                                .build());
-                        if (metadata.getCommitBatchSize() > 0) {
-                            recordList.add(RecordMetadata.builder()
-                                    .offset(recordItem.offset())
-                                    .partition(recordItem.partition()).build());
-                        }
-                    }
-                }
-
-                LOGGER.debug("consumer will handle {} count message", list.size());
                 long start = System.currentTimeMillis();
-                //callback business handle,case one async case two sync
-                try {
-                    if (metadata.getExecutorService() != null) {
-                        metadata.getExecutorService()
-                                .submit(() -> metadata.getHandleBusiness().handle(ImmutableList.copyOf(list)));
-                    } else {
-                        metadata.getHandleBusiness().handle(ImmutableList.copyOf(list));
-                    }
-                } catch (Throwable throwable) {
-                    LOGGER.error("business handle failed ", throwable);
-                }
-
+                //foreach item
+                fillMessage(records, consumerMessageList, recordList);
+                //consumer message
+                consumerMessage(consumerMessageList);
                 //commit offset
-                if (metadata.getCommitBatchSize() > 0) {
-                    Map<TopicPartition, OffsetAndMetadata> offsetsMap =
-                            new ConcurrentHashMap<>(metadata.getCommitBatchSize());
-                    for (RecordMetadata metadata : recordList) {
-                        offsetsMap.put(new TopicPartition(metadata.getTopicId(), metadata.getPartition())
-                                , new OffsetAndMetadata(metadata.getOffset() + 1
-                                        , "no metadata"));
-                    }
-                    if (counter.get() % metadata.getCommitBatchSize() == 0) {
-                        if (metadata.isAsyncCommitOffset()) {
-                            consumer.commitAsync(offsetsMap, metadata.getCommitCallback());
-                        } else {
-                            consumer.commitSync(offsetsMap);
-                        }
-                    }
-
-                    counter.incrementAndGet();
-                }
-
-                LOGGER.debug("business handle done cost {} millis", System.currentTimeMillis() - start);
-                //commit this offset value
-                if (metadata.isAsyncCommitOffset()) {
-                    consumer.commitAsync(metadata.getCommitCallback());
-                } else {
-                    consumer.commitSync();
-                }
+                commitOffset(counter, recordList, offsetsMap);
+                LOGGER.debug("business handle done cost {} millis"
+                        , System.currentTimeMillis() - start);
             }
         } catch (WakeupException e) {
             //ignore
@@ -147,6 +98,89 @@ public final class KafkaConsumerTaskHolder implements Runnable {
             } finally {
                 consumer.close();
             }
+        }
+    }
+
+    private void fillMessage(final ConsumerRecords<String, Object> records
+            , final List<MessageBodyMetadata> consumerMessageList
+            , final List<RecordMetadata> recordList) {
+        Iterator<ConsumerRecord<String, Object>> recordIterator = records.iterator();
+        while (recordIterator.hasNext()) {
+            ConsumerRecord<String, Object> recordItem = recordIterator.next();
+            if (recordItem != null) {
+                //message append list
+                consumerMessageList.add(MessageBodyMetadata
+                        .builder()
+                        .body(recordItem.value())
+                        .key(recordItem.key())
+                        .offset(recordItem.offset())
+                        .build());
+                //offset append list if enable batch commit
+                if (metadata.getCommitBatchSize() > 0) {
+                    recordList.add(RecordMetadata.builder()
+                            .offset(recordItem.offset())
+                            .topicId(recordItem.topic())
+                            .partition(recordItem.partition()).build());
+                }
+            }
+        }
+    }
+
+    private void commitOffset(AtomicInteger counter
+            , List<RecordMetadata> recordList
+            , ConcurrentHashMap<TopicPartition, OffsetAndMetadata> offsetsMap) {
+        if (CollectionUtils.isEmpty(recordList)) {
+            return;
+        }
+        //commit offset
+        if (metadata.getCommitBatchSize() > 0) {
+            for (RecordMetadata metadata : recordList) {
+                offsetsMap.put(new TopicPartition(metadata.getTopicId(), metadata.getPartition())
+                        , new OffsetAndMetadata(metadata.getOffset() + 1
+                                , "no metadata"));
+            }
+
+            if (counter.get() % metadata.getCommitBatchSize() == 0) {
+                if (metadata.getAsyncCommitOffset()) {
+                    consumer.commitAsync(offsetsMap, metadata.getCommitCallback());
+                } else {
+                    consumer.commitSync(offsetsMap);
+                }
+                LOGGER.info("commit offset batch size {}-{},index count{}", offsetsMap.size()
+                        , recordList.size()
+                        , counter.get());
+                offsetsMap.clear();
+            }
+            counter.incrementAndGet();
+        } else {
+
+            //commit this offset value
+            if (metadata.getAsyncCommitOffset()) {
+                consumer.commitAsync(metadata.getCommitCallback());
+            } else {
+                consumer.commitSync();
+            }
+        }
+    }
+
+    private void consumerMessage(final List<MessageBodyMetadata> consumerMessageList) {
+        if (CollectionUtils.isEmpty(consumerMessageList)) {
+            return;
+        }
+
+        LOGGER.debug("consumer will handle {} count message", consumerMessageList.size());
+
+        //callback business handle,case one async case two sync
+        try {
+            if (metadata.getExecutorService() != null) {
+                metadata.getExecutorService()
+                        .submit(() -> metadata.getConsumerHandle()
+                                .handle(ImmutableList.copyOf(consumerMessageList)));
+            } else {
+                metadata.getConsumerHandle().handle(ImmutableList.copyOf(consumerMessageList));
+            }
+        } catch (Throwable throwable) {
+            LOGGER.error("business handle failed ", throwable);
         }
     }
 

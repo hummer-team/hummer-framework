@@ -1,5 +1,6 @@
 package com.hummer.kafka.product.plugin.domain.product;
 
+import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
 /**
@@ -18,7 +19,9 @@ public interface Product {
      * @date 2019/8/8 18:07
      * @since 1.0.0
      **/
-    void doSendBySync(final ProducerRecord<String, Object> messageRecord, final long sendTimeOutMills);
+    void doSendBySync(final ProducerRecord<String, Object> messageRecord
+            , final long sendTimeOutMills
+            , final Callback callback);
 
     /**
      * send message to kafka server by async
@@ -29,5 +32,6 @@ public interface Product {
      * @date 2019/8/9 14:46
      * @since 1.0.0
      **/
-    void doSendByAsync(final ProducerRecord<String, Object> messageRecord);
+    void doSendByAsync(final ProducerRecord<String, Object> messageRecord
+        ,final Callback callback);
 }

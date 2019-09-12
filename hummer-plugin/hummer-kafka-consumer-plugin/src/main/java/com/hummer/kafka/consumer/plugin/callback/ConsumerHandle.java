@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableList;
  * @since:1.0.0
  * @Date: 2019/8/12 17:48
  **/
-public interface HandleBusiness {
+public interface ConsumerHandle {
     /**
      * handle
      *

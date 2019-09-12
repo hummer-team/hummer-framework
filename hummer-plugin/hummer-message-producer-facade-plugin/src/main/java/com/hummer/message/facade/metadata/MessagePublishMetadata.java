@@ -17,8 +17,9 @@ import java.util.function.Supplier;
 @Getter
 public class MessagePublishMetadata {
     private static final ConcurrentHashMap<String, Object> CACHE = new ConcurrentHashMap<>(2);
+    private static final String MESSAGE_PREFIX_KEY = "hummer.message";
 
-    private String namespaceId;
+    private String businessId;
     private int perSecondSemaphore;
     private boolean enable;
     private int retryCount;
@@ -39,16 +40,19 @@ public class MessagePublishMetadata {
         return metadata;
     }
 
-    protected void builder(final String namespaceId) {
-        this.namespaceId = namespaceId;
+    protected void builder(final String businessId) {
+        this.businessId = businessId;
 
-        final String messageType = PropertiesContainer.valueOfString("hummer.message.driver.type"
+        final String driverType = PropertiesContainer.valueOfString("hummer.message.driver.type"
                 , "kafka");
 
         this.enable = FunctionUtil.with(
-                () -> PropertiesContainer.valueOf(formatKey(namespaceId, "enable"), Boolean.class)
+                () -> PropertiesContainer.valueOf(formatKey(this.businessId, "enable", driverType)
+                        , Boolean.class)
                 , Objects::nonNull
-                , () -> PropertiesContainer.valueOf(formatKeyByDefault("enable"), Boolean.class, Boolean.TRUE));
+                , () -> PropertiesContainer.valueOf(formatKeyByDefault("enable", driverType)
+                        , Boolean.class
+                        , Boolean.TRUE));
 
         //if current app id message disabled then break builder flow
         if (!this.enable) {
@@ -56,26 +60,35 @@ public class MessagePublishMetadata {
         }
 
         this.perSecondSemaphore = FunctionUtil.with(
-                () -> PropertiesContainer.valueOfInteger(formatKey(namespaceId, "perSecondSemaphore"))
+                () -> PropertiesContainer.valueOfInteger(formatKey(this.businessId
+                        , "perSecondSemaphore"
+                        ,driverType))
                 , r -> r > 0
-                , () -> PropertiesContainer.valueOfInteger(formatKeyByDefault("perSecondSemaphore")));
+                , () -> PropertiesContainer.valueOfInteger(formatKeyByDefault("perSecondSemaphore",driverType)));
 
         this.sendMessageTimeOutMills = FunctionUtil.with(
-                () -> PropertiesContainer.valueOfInteger(formatKey(namespaceId, "sendMessageTimeOutMills"))
+                () -> PropertiesContainer.valueOfInteger(formatKey(this.businessId
+                        , "sendMessageTimeOutMills",driverType))
                 , r -> r > 0
-                , () -> PropertiesContainer.valueOfInteger(formatKeyByDefault("sendMessageTimeOutMills")));
+                , () -> PropertiesContainer.valueOfInteger(formatKeyByDefault("sendMessageTimeOutMills"
+                        ,driverType)));
 
         this.retryCount = FunctionUtil.with(
-                () -> PropertiesContainer.valueOfInteger(formatKey(namespaceId, "retryCount"))
+                () -> PropertiesContainer.valueOfInteger(formatKey(this.businessId, "retryCount"
+                        ,driverType))
                 , r -> r > 0
-                , () -> PropertiesContainer.valueOfInteger(formatKeyByDefault("retryCount")));
+                , () -> PropertiesContainer.valueOfInteger(formatKeyByDefault("retryCount"
+                        ,driverType)));
     }
 
-    protected static String formatKey(final String appId, final String key) {
-        return String.format("hummer.message.%s.%s", appId, key);
+    protected static String formatKey(final String businessId
+            , final String key
+            , final String messageDriverType) {
+        return String.format("%s.%s.%s.%s", MESSAGE_PREFIX_KEY, messageDriverType, businessId, key);
     }
 
-    protected static String formatKeyByDefault(final String key) {
-        return String.format("hummer.message.default.%s", key);
+    protected static String formatKeyByDefault(final String key
+            , final String messageDriverType) {
+        return String.format("%s.%s.default.%s", MESSAGE_PREFIX_KEY, messageDriverType, key);
     }
 }

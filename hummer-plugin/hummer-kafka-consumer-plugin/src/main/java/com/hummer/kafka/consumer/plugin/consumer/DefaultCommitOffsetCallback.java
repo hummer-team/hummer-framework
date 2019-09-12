@@ -54,7 +54,6 @@ public class DefaultCommitOffsetCallback implements OffsetCommitCallback {
             LOGGER.error("kafka consumer offset commit failed!,this offsets metadata is {},exception is {},"
                     , offsets, exception);
         }
-
         //Persistence commit failed offset
         long start = System.currentTimeMillis();
         for (Map.Entry<TopicPartition, OffsetAndMetadata> metadataEntry : offsets.entrySet()) {
@@ -62,6 +61,7 @@ public class DefaultCommitOffsetCallback implements OffsetCommitCallback {
                     , metadataEntry.getValue().offset()
                     , metadataEntry.getKey().hashCode());
         }
+
         LOGGER.debug("local persistent kafka topic done , cost {} mills"
                 , System.currentTimeMillis() - start);
     }

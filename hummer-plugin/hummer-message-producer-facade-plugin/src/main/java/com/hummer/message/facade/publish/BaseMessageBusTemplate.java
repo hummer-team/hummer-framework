@@ -24,13 +24,16 @@ public abstract class BaseMessageBusTemplate {
      * @since 1.0.0
      **/
     public void send(final MessageBus messageBus) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(messageBus.getNamespaceId()), "app id can't null");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(messageBus.getNamespaceId())
+                , "app id can't null");
 
         KafkaMessageMetadata metadata = KafkaMessageMetadata.getKafkaMessageMetadata(messageBus.getNamespaceId());
         //if disabled send message
         if (!metadata.isEnable()) {
             return;
         }
+        //
+        verified(messageBus);
 
         try {
             if (messageBus.isAsync()) {
@@ -51,6 +54,16 @@ public abstract class BaseMessageBusTemplate {
             }
         }
     }
+
+    /**
+    * verified message , if verified failed then throw exception
+    * @author liguo
+    * @date 2019/9/12 13:51
+    * @since 1.0.0
+    * @param messageBus
+    * @return void
+    **/
+    protected abstract void verified(final MessageBus messageBus);
 
     /**
      * send message to message bus server by sync

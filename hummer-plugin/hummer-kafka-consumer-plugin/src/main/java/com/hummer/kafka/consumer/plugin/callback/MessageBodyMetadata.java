@@ -14,4 +14,5 @@ public final class MessageBodyMetadata {
     private String key;
     private Object body;
     private String topicId;
+    private long offset;
 }

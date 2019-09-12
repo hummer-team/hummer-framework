@@ -1,6 +1,6 @@
 package com.hummer.kafka.consumer.plugin.consumer;
 
-import com.hummer.kafka.consumer.plugin.callback.HandleBusiness;
+import com.hummer.kafka.consumer.plugin.callback.ConsumerHandle;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,12 +22,29 @@ public class ConsumerMetadata {
     private Collection<String> topicIds;
     private String groupName;
     private long pollTimeOutMillis;
-    private HandleBusiness handleBusiness;
+    private ConsumerHandle consumerHandle;
     private ConsumerRebalanceListener rebalanceListener;
     private OffsetCommitCallback commitCallback;
     private ExecutorService executorService;
-    private boolean asyncCommitOffset;
+    private Boolean asyncCommitOffset;
     private OffsetSeekEnum offsetSeekEnum;
     private int commitBatchSize;
     private OffsetStore offsetStore;
+
+    @Override
+    public String toString() {
+        return "[" +
+                "\ntopicIds=" + topicIds +
+                "\n, groupName='" + groupName + '\'' +
+                "\n, pollTimeOutMillis=" + pollTimeOutMillis +
+                "\n, consumerHandle=" + consumerHandle +
+                "\n, rebalanceListener=" + rebalanceListener +
+                "\n, commitCallback=" + commitCallback +
+                "\n, executorService=" + executorService +
+                "\n, asyncCommitOffset=" + asyncCommitOffset +
+                "\n, offsetSeekEnum=" + offsetSeekEnum +
+                "\n, commitBatchSize=" + commitBatchSize +
+                "\n, offsetStore=" + offsetStore +
+                " ]";
+    }
 }

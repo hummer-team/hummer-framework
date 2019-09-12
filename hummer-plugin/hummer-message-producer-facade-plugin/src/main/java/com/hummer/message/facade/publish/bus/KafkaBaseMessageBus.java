@@ -1,6 +1,7 @@
 package com.hummer.message.facade.publish.bus;
 
 import com.hummer.common.exceptions.SysException;
+import com.hummer.core.PropertiesContainer;
 import com.hummer.kafka.product.plugin.domain.product.Product;
 import com.hummer.message.facade.metadata.MessagePublishMetadataKey;
 import com.hummer.message.facade.publish.BaseMessageBusTemplate;
@@ -29,9 +30,30 @@ public class KafkaBaseMessageBus extends BaseMessageBusTemplate {
     private Product product;
 
     /**
+     * verified message , if verified failed then throw exception
+     *
+     * @param messageBus
+     * @return void
+     * @author liguo
+     * @date 2019/9/12 13:51
+     * @since 1.0.0
+     **/
+    @Override
+    protected void verified(MessageBus messageBus) {
+        if (messageBus.getKafka() == null) {
+            LOGGER.error("kafka message bus but kafka configuration is null, don't send message");
+            throw new SysException(50000, "please set message bus kafka properties ");
+        }
+
+        if (Strings.isNullOrEmpty(messageBus.getKafka().getTopicId())) {
+            throw new SysException(50000, "message driver is kafka but no settings topic id,please settings");
+        }
+    }
+
+    /**
      * send one message
      *
-     * @param messageBus  message entity
+     * @param messageBus message entity
      * @return void
      * @author liguo
      * @date 2019/8/5 14:26
@@ -39,21 +61,51 @@ public class KafkaBaseMessageBus extends BaseMessageBusTemplate {
      **/
     @Override
     protected void doSend(final MessageBus messageBus) {
-        if (messageBus.getKafka() == null) {
-            LOGGER.error("kafka message bus,kafka configuration is null don't send message");
-            throw new SysException(50000, "please set message bus kafka properties ");
-        }
-
-        if (Strings.isNullOrEmpty(messageBus.getKafka().getTopicId())) {
-            throw new SysException(50000, "message driver is kafka but no settings topic id,please settings");
-        }
-
         ProducerRecord<String, Object> record = builderProducerRecord(messageBus);
         long sendMessageTimeOut = messageBus.getSyncSendMessageTimeOutMills() == null ||
                 messageBus.getSyncSendMessageTimeOutMills() <= 0
-                ? 3000
+                ? PropertiesContainer.valueOfInteger("hummer.message.kafka.producer.sync.send.timeout"
+                , 5000)
                 : messageBus.getSyncSendMessageTimeOutMills();
-        product.doSendBySync(record, sendMessageTimeOut);
+        final long start = System.currentTimeMillis();
+        product.doSendBySync(record, sendMessageTimeOut, ((metadata, exception) -> {
+            callback(messageBus, exception, start);
+        }));
+    }
+
+    /**
+     * send message to message bus server by async
+     *
+     * @param messageBus message bus entity
+     * @return void
+     * @author liguo
+     * @date 2019/8/9 16:26
+     * @since 1.0.0
+     **/
+    @Override
+    protected void doSendAsync(final MessageBus messageBus) {
+        ProducerRecord<String, Object> record = builderProducerRecord(messageBus);
+        final long start = System.currentTimeMillis();
+        product.doSendByAsync(record, ((metadata, exception) -> callback(messageBus, exception, start)));
+    }
+
+    private void callback(final MessageBus messageBus
+            , final Exception exception
+            , final long startTime) {
+        if (messageBus.getCallback() != null) {
+            if (exception != null) {
+                LOGGER.error("send message to kafka broker failed,cost {} millis,{}"
+                        , System.currentTimeMillis() - startTime
+                        , exception);
+                messageBus.getCallback().callBack(messageBus.getBody(), exception);
+            } else {
+                LOGGER.info("send message to kafka broker success cost {} millis"
+                        , System.currentTimeMillis() - startTime);
+                messageBus.getCallback().callBack(messageBus.getBody(), null);
+            }
+        } else {
+            throw new SysException(50000, "send message failed", exception);
+        }
     }
 
     private ProducerRecord<String, Object> builderProducerRecord(final MessageBus messageBus) {
@@ -87,19 +139,5 @@ public class KafkaBaseMessageBus extends BaseMessageBusTemplate {
                     , messageBus.getBody());
         }
         return record;
-    }
-
-    /**
-     * send message to message bus server by async
-     *
-     * @param messageBus message bus entity
-     * @return void
-     * @author liguo
-     * @date 2019/8/9 16:26
-     * @since 1.0.0
-     **/
-    @Override
-    protected void doSendAsync(final MessageBus messageBus) {
-
     }
 }

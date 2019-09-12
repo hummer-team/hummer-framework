@@ -12,7 +12,7 @@ public enum OffsetSeekEnum {
     ;
     private int code;
 
-    private OffsetSeekEnum(final int code) {
+    OffsetSeekEnum(final int code) {
         this.code = code;
     }
 

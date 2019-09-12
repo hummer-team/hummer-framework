@@ -17,6 +17,20 @@ import java.util.Collection;
 public class RabbitMqBaseMessageBus extends BaseMessageBusTemplate {
 
     /**
+     * verified message , if verified failed then throw exception
+     *
+     * @param messageBus
+     * @return void
+     * @author liguo
+     * @date 2019/9/12 13:51
+     * @since 1.0.0
+     **/
+    @Override
+    protected void verified(MessageBus messageBus) {
+
+    }
+
+    /**
      * send one message
      *
      * @param body  message body

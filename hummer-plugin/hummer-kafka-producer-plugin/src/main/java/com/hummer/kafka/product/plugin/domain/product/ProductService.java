@@ -2,6 +2,7 @@ package com.hummer.kafka.product.plugin.domain.product;
 
 import com.hummer.common.exceptions.SysException;
 import com.hummer.kafka.product.plugin.support.pool.ProducerPool;
+import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.stereotype.Service;
 
@@ -25,13 +26,11 @@ public class ProductService implements Product {
      **/
     @Override
     public void doSendBySync(final ProducerRecord<String, Object> messageRecord
-            , final long waitCompleteTimeOutMills) {
+            , final long waitCompleteTimeOutMills
+            , final Callback callback) {
         ProducerPool
                 .get(messageRecord.topic())
-                .send(messageRecord, waitCompleteTimeOutMills, (metadata, exception) -> {
-                    //exception message send log center
-                    throw new SysException(5000, "do send message sync failed", exception);
-                });
+                .send(messageRecord, waitCompleteTimeOutMills, callback);
     }
 
     /**
@@ -44,12 +43,10 @@ public class ProductService implements Product {
      * @since 1.0.0
      **/
     @Override
-    public void doSendByAsync(final ProducerRecord<String, Object> messageRecord) {
+    public void doSendByAsync(final ProducerRecord<String, Object> messageRecord
+            , final Callback callback) {
         ProducerPool
                 .get(messageRecord.topic())
-                .sendAsync(messageRecord, ((metadata, exception) -> {
-                    //exception message send log center
-                    throw new SysException(5000, "do send message async failed", exception);
-                }));
+                .sendAsync(messageRecord,callback);
     }
 }
