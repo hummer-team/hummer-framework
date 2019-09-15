@@ -1,8 +1,12 @@
 package com.hummer.api.web;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hummer.api.dto.KafkaMessageReq;
 import com.hummer.api.dto.QueryStringDto;
+import com.hummer.common.http.HttpAsyncClient;
+import com.hummer.common.http.RequestCustomConfig;
 import com.hummer.common.utils.ObjectCopyUtils;
 import com.hummer.local.persistence.plugin.RocksDBLocalPersistence;
 import com.hummer.message.facade.publish.MessageBus;
@@ -30,6 +34,12 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.lang.management.ManagementFactory;
+
+import com.sun.management.OperatingSystemMXBean;
+
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.util.Collection;
 import java.util.Map;
 
@@ -59,11 +69,11 @@ public class ApplicationController {
 
 
     @GetMapping(value = "/local/store/list")
-    public ResourceResponse<Map<String, Object>> getList(@RequestParam("columnFamily")String columnFamily
-        ,@RequestParam("key")String key) {
+    public ResourceResponse<Map<String, Object>> getList(@RequestParam("columnFamily") String columnFamily
+        , @RequestParam("key") String key) {
 
         Map<String, Object> val = JSON.parseObject(persistence.get(columnFamily
-            ,key), Map.class);
+            , key), Map.class);
         return ResourceResponse.ok(val);
     }
 
@@ -127,5 +137,39 @@ public class ApplicationController {
             .publish();
 
         return ResourceResponse.ok();
+    }
+
+    @GetMapping(value = "/memory")
+    public ResourceResponse getMemoryInfo(@RequestParam(value = "buffer", required = false) boolean buffer) {
+        long m = 1;
+        Map<String, Object> memoryMap = Maps.newHashMapWithExpectedSize(16);
+
+        Runtime rt = Runtime.getRuntime();
+        memoryMap.put("totalMemoryForJVM", rt.totalMemory() / m);
+        OperatingSystemMXBean osmxb = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+        memoryMap.put("totalMemoryForMachine", osmxb.getTotalPhysicalMemorySize() / m);
+
+
+        RequestCustomConfig config = RequestCustomConfig.builder()
+            .setUrl("http://courseclass.soa.yeshj.com/v1/classes/19400532")
+            .setSocketTimeOutMillisecond(3000)
+            .build();
+
+        String result = HttpAsyncClient.instance().sendGet(config);
+        memoryMap.put("totalMemoryForJVM_01", rt.totalMemory() / m);
+        memoryMap.put("totalMemoryForMachine_01", osmxb.getTotalPhysicalMemorySize() / m);
+
+        if (buffer) {
+            CharBuffer charBuffer = CharBuffer.wrap(result);
+            memoryMap.put("charBufferString",  charBuffer.toString());
+        } else {
+            memoryMap.put("charBufferStringNO", result);
+        }
+
+        rt = Runtime.getRuntime();
+        memoryMap.put("totalMemoryForJVM_01", rt.totalMemory() / m);
+        memoryMap.put("totalMemoryForMachine_01", osmxb.getTotalPhysicalMemorySize() / m);
+
+        return ResourceResponse.ok(memoryMap);
     }
 }

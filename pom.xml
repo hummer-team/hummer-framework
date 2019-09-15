@@ -165,6 +165,11 @@
                 <artifactId>hummer-message-consumer-facade-plugin</artifactId>
                 <version>${hummer.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-scheduling-plugin</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
             <!--framework plugin-->
             <!-- https://mvnrepository.com/artifact/io.confluent/kafka-avro-serializer -->
             <!--<dependency>-->
