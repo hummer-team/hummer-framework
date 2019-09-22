@@ -100,6 +100,7 @@
         <libthrift.version>0.12.0</libthrift.version>
         <kafka-avro-serializer.version>5.2.1</kafka-avro-serializer.version>
         <rocksdbjni.version>6.2.2</rocksdbjni.version>
+        <nacos.version>0.2.3</nacos.version>
     </properties>
 
     <dependencyManagement>
@@ -520,6 +521,18 @@
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjweaver</artifactId>
                 <version>${aspectjweaver.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.alibaba.boot/nacos-config-spring-boot-starter -->
+            <dependency>
+                <groupId>com.alibaba.boot</groupId>
+                <artifactId>nacos-config-spring-boot-starter</artifactId>
+                <version>${nacos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.boot</groupId>
+                <artifactId>nacos-discovery-spring-boot-starter</artifactId>
+                <!--<version>${nacos.version}</version>-->
+                <version>0.2.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
