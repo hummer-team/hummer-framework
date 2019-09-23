@@ -289,7 +289,7 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
             }
 
             String env = event.getProperty(ENV);
-            if (env != null) {
+            if (!Strings.isNullOrEmpty(env)) {
                 PROPERTY_MAP.put(ENV, env);
             }
             LOAD_FLAG.set(false);
