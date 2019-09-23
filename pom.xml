@@ -322,7 +322,7 @@
                 <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
-            <!--log framework facade-->
+            <!--log framework facade,use log4j12 implement log write-->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-log4j12</artifactId>
