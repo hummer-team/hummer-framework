@@ -151,7 +151,7 @@ public class CloseableKafkaProducer<K, V> implements DisposableBean, Initializin
      */
     @Override
     public void afterPropertiesSet() throws Exception {
-
+        LOGGER.info("kafka producer inited");
     }
 
     /**
