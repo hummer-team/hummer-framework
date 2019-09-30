@@ -99,6 +99,8 @@ public final class DefaultRebalanceListener<K, V> implements ConsumerRebalanceLi
                 }
                 break;
         }
-        LOGGER.info("kafka on partition assigned {}", consumerMetadata.getOffsetSeekEnum());
+        LOGGER.info("kafka on partition assigned `{}`, partition {}"
+                , consumerMetadata.getOffsetSeekEnum()
+                , partitions);
     }
 }

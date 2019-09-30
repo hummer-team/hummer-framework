@@ -36,7 +36,8 @@ public class HummerApplicationStart {
         System.setProperty("sun.zip.encoding", "UTF-8");
         ResourceBanner rb = new ResourceBanner(new ClassPathResource("banner2.txt"));
         SpringApplicationBuilder builder = new SpringApplicationBuilder();
-        ServiceLoader.load(ApplicationListener.class).forEach(listenter -> builder.application().addListeners(listenter));
+        ServiceLoader.load(ApplicationListener.class)
+                .forEach(listenter -> builder.application().addListeners(listenter));
         builder.sources(startClass).banner(rb).run(args);
     }
 }

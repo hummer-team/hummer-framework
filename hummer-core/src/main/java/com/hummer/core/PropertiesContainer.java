@@ -199,7 +199,7 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
      * @param key
      * @return
      */
-    public static int valueOfInteger(final String key,final int defaultVal) {
+    public static int valueOfInteger(final String key, final int defaultVal) {
         return valueOf(key, Integer.class, defaultVal);
     }
 
@@ -246,6 +246,20 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
             return defVal;
         }
         return conversionService.convert(val, classType);
+    }
+
+    /**
+     * put this value
+     *
+     * @param key key
+     * @param value value
+     * @return void
+     * @author liguo
+     * @date 2019/9/30 17:47
+     * @since 1.0.0
+     **/
+    public static void put(final String key, final Object value) {
+        PROPERTY_MAP.put(key, value);
     }
 
     private static void loadPropertyData(final Properties props) {
