@@ -18,4 +18,21 @@
         from courseware limit 10
     </select>
 
+    <select id="getOneById"
+            resultMap="BaseResultMap">
+        select courseware_id,
+               courseware_library_id,
+               courseware_name
+        from courseware where courseware_id=#{coursewareId} limit 10
+    </select>
+
+
+
+    <update id="setCourseware" >
+        update  courseware set
+        courseware_name=#{coursewareName}
+        ,playtime=#{playTime}
+        where courseware_id=#{coursewareId} limit 1
+    </update>
 </mapper>
+

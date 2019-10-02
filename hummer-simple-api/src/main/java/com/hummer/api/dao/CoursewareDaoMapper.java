@@ -4,6 +4,7 @@ package com.hummer.api.dao;
 import com.hummer.api.po.CoursewarePo;
 import com.hummer.dao.annotation.DaoAnnotation;
 import com.hummer.dao.annotation.TargetDataSource;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Collection;
 
@@ -25,4 +26,12 @@ public interface CoursewareDaoMapper {
      **/
     @TargetDataSource("hj_classs_courseware")
     Collection<CoursewarePo> getOne();
+
+    @TargetDataSource("hj_classs_courseware")
+    int setCourseware(@Param("coursewareName") String coursewareName
+        , @Param("playTime") int playTime
+        , @Param("coursewareId") int coursewareId);
+
+    @TargetDataSource("hj_classs_courseware")
+    CoursewarePo getOneById(@Param("coursewareId") int coursewareId);
 }
