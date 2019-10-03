@@ -21,5 +21,6 @@
         <module>hummer-kafka-stream-plugin</module>
         <module>hummer-local-persistence-plugin</module>
         <module>hummer-scheduling-plugin</module>
+        <module>hummer-seata-spring-boot-plugin</module>
     </modules>
 </project>
