@@ -101,6 +101,7 @@
         <kafka-avro-serializer.version>5.2.1</kafka-avro-serializer.version>
         <rocksdbjni.version>6.2.2</rocksdbjni.version>
         <nacos.version>0.2.3</nacos.version>
+        <seata.version>0.8.1</seata.version>
     </properties>
 
     <dependencyManagement>
@@ -534,12 +535,12 @@
                 <!--<version>${nacos.version}</version>-->
                 <version>0.2.3</version>
             </dependency>
+            <dependency>
+                <groupId>io.seata</groupId>
+                <artifactId>seata-all</artifactId>
+                <version>${seata.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
-
     <!-- Dependencies -->
-
-
-
-
 </project>
