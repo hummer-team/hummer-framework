@@ -22,5 +22,6 @@
         <module>hummer-local-persistence-plugin</module>
         <module>hummer-scheduling-plugin</module>
         <module>hummer-seata-spring-boot-plugin</module>
+        <module>hummer-redis-plugin</module>
     </modules>
 </project>
