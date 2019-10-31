@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.hummer.redis.plugin.ops.BaseOp;
 import com.hummer.redis.plugin.ops.HashSimpleOp;
+import com.hummer.redis.plugin.ops.LockOp;
 import com.hummer.redis.plugin.ops.SetSimpleOp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +62,28 @@ public class RedisOp implements InitializingBean, DisposableBean {
                 if ((ops = (SetSimpleOp) OPS_MAP.get(redisDbGroupName)) == null) {
                     String groupName = getGroupName(redisDbGroupName);
                     ops = new SetSimpleOp(groupName);
+                    OPS_MAP.put(redisDbGroupName, ops);
+                }
+            }
+        }
+        return ops;
+    }
+
+    public LockOp lock() {
+        return (LockOp) lock("simple:lock");
+    }
+
+    public LockOp lock(String redisDbGroupName) {
+        redisDbGroupName = format(redisDbGroupName, ":lock");
+        LockOp ops = (LockOp) OPS_MAP.get(redisDbGroupName);
+        if (ops != null) {
+            return ops;
+        }
+        if ((ops = (LockOp) OPS_MAP.get(redisDbGroupName)) == null) {
+            synchronized (OPS_MAP) {
+                if ((ops = (LockOp) OPS_MAP.get(redisDbGroupName)) == null) {
+                    String groupName = getGroupName(redisDbGroupName);
+                    ops = new LockOp(groupName);
                     OPS_MAP.put(redisDbGroupName, ops);
                 }
             }

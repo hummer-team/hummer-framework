@@ -27,9 +27,22 @@ public class RedisTest {
     private RedisOp redisOp;
 
     @Test
-    public void hset(){
-        redisOp.hash().hset("hummerHash1","k1","sssssssssssss");
+    public void hset() {
+        redisOp.hash().hset("hummerHash1", "k1", "sssssssssssss");
         Assert.assertEquals("sssssssssssss"
-        ,redisOp.hash().getByFieldKey("hummerHash1","k1"));
+                , redisOp.hash().getByFieldKey("hummerHash1", "k1"));
+    }
+
+    @Test
+    public void get() {
+        System.out.println("_________________________");
+        System.out.println(redisOp.set().getKey("LOCK_A"));
+    }
+
+
+    @Test
+    public void lock() {
+        Assert.assertEquals(Boolean.TRUE, redisOp.lock().lock("LOCK_A", 120));
+        Assert.assertEquals(Boolean.TRUE, redisOp.lock().freeLock("LOCK_A"));
     }
 }
