@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hummer.api.dao.OrderDaoMapper">
+
+    <resultMap id="BaseResultMap"
+               type="com.hummer.api.po.OrderPo">
+        <id column="id" property="orderId"/>
+        <result column="order_title" property="orderTitle"/>
+        <result column="user_id" property="userId"/>
+    </resultMap>
+
+
+    <insert id="save" parameterType="com.hummer.api.po.OrderPo"
+            keyColumn="id" keyProperty="orderId" useGeneratedKeys="true">
+        insert into `order` (order_title, user_id)
+        values (#{orderPo.orderTitle}, #{orderPo.userId})
+    </insert>
+</mapper>
+

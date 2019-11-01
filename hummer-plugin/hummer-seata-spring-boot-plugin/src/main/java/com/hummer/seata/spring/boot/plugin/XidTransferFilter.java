@@ -39,23 +39,32 @@ public class XidTransferFilter extends OncePerRequestFilter {
         if (!PropertiesContainer.valueOf("distributed.transaction.enable", Boolean.class, Boolean.FALSE)) {
             filterChain.doFilter(request, response);
         }
-        final String reqXid = request.getHeader("FesCar-XId");
+        final String reqXid = request.getHeader(RootContext.KEY_XID);
         final String xid = RootContext.getXID();
+        boolean bind = false;
         LOGGER.debug("distracted transaction request id is {} and seata context xid is {}", reqXid, xid);
         if (Strings.isNullOrEmpty(xid) && !Strings.isNullOrEmpty(reqXid)) {
+            bind = true;
             RootContext.bind(reqXid);
-            LOGGER.info("distributed transaction xid {} bind to seats context", reqXid);
+            LOGGER.info("distributed transaction xid {} bind to seats context"
+                    , reqXid);
         }
 
         try {
             filterChain.doFilter(request, response);
         } finally {
-            String unBindXid = RootContext.unbind();
-            if (StringUtils.compareIgnoreCase(reqXid, unBindXid) != 0) {
-                LOGGER.error("current request distribute transaction request xid {} no match context xid {}" +
-                                ",please check"
-                        , reqXid
-                        , unBindXid);
+            if (bind) {
+                String unBindXid = RootContext.unbind();
+                if (StringUtils.compareIgnoreCase(reqXid, unBindXid) != 0) {
+                    LOGGER.warn("current request distribute transaction request xid {} no match context xid {}" +
+                                    ",please check"
+                            , reqXid
+                            , unBindXid);
+                    if (StringUtils.isNotEmpty(unBindXid)) {
+                        RootContext.bind(unBindXid);
+                        LOGGER.info("bing {} to root context", unBindXid);
+                    }
+                }
             }
         }
     }

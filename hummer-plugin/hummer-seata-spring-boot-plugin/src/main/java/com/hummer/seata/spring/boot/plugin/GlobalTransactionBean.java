@@ -34,4 +34,9 @@ public class GlobalTransactionBean {
         filter.setName("GlobalTransaction-XId-Filter");
         return filter;
     }
+
+    @Bean
+    public XidTransferFilter xidTransferFilter() {
+        return new XidTransferFilter();
+    }
 }
