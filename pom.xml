@@ -6,7 +6,6 @@
     <artifactId>hummer-framework</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <modules>
-        <module>hummer-simple-api</module>
         <module>hummer-common</module>
         <module>hummer-config</module>
         <module>hummer-rest</module>
@@ -14,6 +13,7 @@
         <module>hummer-dao</module>
         <module>hummer-boot-starter</module>
         <module>hummer-core</module>
+        <module>hummer-simple</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -106,6 +106,8 @@
         <msgpack-version>0.6.12</msgpack-version>
         <spring-test.version>5.1.8.RELEASE</spring-test.version>
         <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
+        <dubbo.version>2.7.4.1</dubbo.version>
+        <dubbo-spring-boot-starter.version>2.0.0</dubbo-spring-boot-starter.version>
     </properties>
 
     <dependencyManagement>
@@ -421,6 +423,13 @@
                 <artifactId>spring-boot-starter-web</artifactId>
                 <version>${spring.boot.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+
             <!-- https://mvnrepository.com/artifact/com.alibaba/druid -->
             <dependency>
                 <groupId>com.alibaba</groupId>
@@ -573,6 +582,25 @@
                 <version>${spring-boot.version}</version>
                 <scope>test</scope>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.dubbo/dubbo -->
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo</artifactId>
+                <version>${dubbo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-dependencies-zookeeper</artifactId>
+                <version>${dubbo.version}</version>
+                <type>pom</type>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.alibaba.spring.boot/dubbo-spring-boot-starter -->
+            <dependency>
+                <groupId>com.alibaba.spring.boot</groupId>
+                <artifactId>dubbo-spring-boot-starter</artifactId>
+                <version>${dubbo-spring-boot-starter.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
     <!-- Dependencies -->
