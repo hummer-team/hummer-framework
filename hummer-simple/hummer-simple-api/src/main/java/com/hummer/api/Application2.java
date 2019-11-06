@@ -15,14 +15,14 @@ import java.util.Collections;
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @NacosPropertySources({
     @NacosPropertySource(autoRefreshed = true, dataId = "mytest_01",groupId = "test_01"),
-    @NacosPropertySource(autoRefreshed = true, dataId = "data_01")
+    @NacosPropertySource(autoRefreshed = true, dataId = "data_01"),
 })
 public class Application2 {
 
     public static void main(String[] args) {
         HummerApplicationStart.start(Application2.class, args);
-        KafkaConsumerWrapper.start(Collections.singleton("log-type-group-out2"), "log-type-group-01"
-            , SpringApplicationContext.getBean(ConsumerHandle.class));
+        //KafkaConsumerWrapper.start(Collections.singleton("log-type-group-out2"), "log-type-group-01"
+        //    , SpringApplicationContext.getBean(ConsumerHandle.class));
     }
 
 }

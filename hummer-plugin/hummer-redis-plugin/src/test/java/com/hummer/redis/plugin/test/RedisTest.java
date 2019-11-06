@@ -13,6 +13,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @Author: lee
  * @since:1.0.0
@@ -27,10 +31,20 @@ public class RedisTest {
     private RedisOp redisOp;
 
     @Test
-    public void hset() {
+    public void hset() throws IOException {
         redisOp.hash().hset("hummerHash1", "k1", "sssssssssssss");
         Assert.assertEquals("sssssssssssss"
                 , redisOp.hash().getByFieldKey("hummerHash1", "k1"));
+        System.in.read();
+    }
+
+    @Test
+    public void  set() throws IOException  {
+        Map<String,String> kv=new HashMap<>();
+        kv.put("setA1","test");
+        kv.put("setA2","test2");
+        redisOp.set().setMultipleStringByPipeline(kv,0,Boolean.FALSE);
+        System.in.read();
     }
 
     @Test
