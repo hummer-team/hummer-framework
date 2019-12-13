@@ -23,5 +23,6 @@
         <module>hummer-scheduling-plugin</module>
         <module>hummer-seata-spring-boot-plugin</module>
         <module>hummer-redis-plugin</module>
+        <module>hummer-trace-plugin</module>
     </modules>
 </project>
