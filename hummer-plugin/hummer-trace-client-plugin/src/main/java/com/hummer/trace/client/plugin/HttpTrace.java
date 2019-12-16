@@ -1,4 +1,4 @@
-package com.hummer.trace.plugin;
+package com.hummer.trace.client.plugin;
 
 /**
  * @Author: lee

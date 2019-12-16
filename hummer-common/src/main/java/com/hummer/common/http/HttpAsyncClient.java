@@ -5,6 +5,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.google.common.base.Strings;
 
 import com.hummer.common.exceptions.SysException;
+import com.hummer.common.http.context.RequestContextWrapper;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.common.SysConstant;
 import com.hummer.common.utils.DateUtil;
@@ -54,7 +55,7 @@ import static com.hummer.common.http.HttpConstant.HTTP_PER_MAX_TOTAL;
  * @author liguo.
  * @date 2018/11/5.
  */
-public final class HttpAsyncClient {
+public final class HttpAsyncClient extends BaseHttpClient {
     private static final String USER_AGENT = "user_agent";
     private static final String HJ_IBJ = "hj_ibj";
     private static final int SUCCESS = 200;
@@ -243,12 +244,15 @@ public final class HttpAsyncClient {
         long bodyCostTime = initRequest(requestBase, customConfig);
 
         long requestStartTime2 = System.currentTimeMillis();
+        //
+        beforeHandle(requestBase);
 
         HttpResponse response = retryExecute(() ->
                         httpClient.execute(requestBase,
                                 new FutureCallbackHandle<>(customConfig
                                         , requestBase))
-                , customConfig);
+                , customConfig
+                , requestBase);
         long requestCostTime2 = System.currentTimeMillis() - requestStartTime2;
 
         long parseResultTime2 = System.currentTimeMillis();
@@ -313,7 +317,8 @@ public final class HttpAsyncClient {
         HttpResponse response = retryExecute(() ->
                         httpClient.execute(requestBase,
                                 new FutureCallbackHandle<>(customConfig, requestBase))
-                , customConfig);
+                , customConfig
+                , requestBase);
         long requestCostTime = System.currentTimeMillis() - requestStartTime;
 
         long parseResultTime = System.currentTimeMillis();
@@ -360,7 +365,8 @@ public final class HttpAsyncClient {
         HttpResponse response = retryExecute(() ->
                         httpClient.execute(requestBase,
                                 new FutureCallbackHandle<>(customConfig, requestBase))
-                , customConfig);
+                , customConfig
+                , requestBase);
         long requestCostTime = System.currentTimeMillis() - requestStartTime;
 
         long parseResultTime = System.currentTimeMillis();
@@ -402,7 +408,8 @@ public final class HttpAsyncClient {
         HttpResponse response = retryExecute(() ->
                         httpClient.execute(requestBase
                                 , new FutureCallbackHandle<>(customConfig, requestBase))
-                , customConfig);
+                , customConfig
+                , requestBase);
         long requestCostTime = System.currentTimeMillis() - requestStartTime;
 
         long parseResultTime = System.currentTimeMillis();
@@ -486,14 +493,17 @@ public final class HttpAsyncClient {
         return httpClient.isRunning();
     }
 
-    private <INPUT, OUT> OUT retryExecute(Supplier<Future<OUT>> function
-            , RequestCustomConfig<INPUT> customConfig) {
+    private <INPUT, OUT> OUT retryExecute(
+            Supplier<Future<OUT>> function
+            , RequestCustomConfig<INPUT> customConfig
+            , HttpRequestBase requestBase) {
         int i = 0;
         while (i++ <= customConfig.getRetryCount()) {
             boolean hasException = false;
             Future<OUT> future = null;
             try {
                 if (isValid()) {
+                    beforeHandle(requestBase);
                     future = function
                             .get();
                     return future.get(customConfig.getSocketTimeOutMillisecond()
@@ -501,11 +511,14 @@ public final class HttpAsyncClient {
                 }
             } catch (TimeoutException e) {
                 future.cancel(true);
+                //
+                throwHandle(requestBase,e);
             } catch (Throwable e) {
                 hasException = true;
                 logRequestFail(customConfig
                         , i
                         , e);
+                throwHandle(requestBase,e);
             }
             if (hasException) {
                 sleep(hasException, customConfig.getRetrySleepMillisecond());
@@ -526,6 +539,7 @@ public final class HttpAsyncClient {
             boolean hasException;
             try {
                 if (isValid()) {
+                    beforeHandle(httpRequestBase);
                     execute(httpRequestBase, customConfig, typeReference, handle);
                 }
                 return;
@@ -542,6 +556,8 @@ public final class HttpAsyncClient {
             }
         }
     }
+
+
 
     private <INPUT> String parseResponse(RequestCustomConfig<INPUT> customConfig
             , HttpResponse response) {
@@ -624,6 +640,8 @@ public final class HttpAsyncClient {
                 //release conn
                 requestBase.releaseConnection();
                 //
+                afterHandle(requestBase,result);
+                //
                 int statusCode = result.getStatusLine().getStatusCode();
                 if (statusCode != SUCCESS
                         && statusCode != SUCCESS_201
@@ -680,6 +698,7 @@ public final class HttpAsyncClient {
                             , System.currentTimeMillis() - parseStartTime
                             , customConfig
                             , respString);
+                    throwHandle(requestBase,e);
                 }
                 long parseConstTime = System.currentTimeMillis() - parseStartTime;
                 //
@@ -719,6 +738,8 @@ public final class HttpAsyncClient {
                         , ex);
                 //
                 handle.fail(customConfig.getRequestBody(), ex);
+                //
+                throwHandle(requestBase,ex);
             }
 
             @Override
