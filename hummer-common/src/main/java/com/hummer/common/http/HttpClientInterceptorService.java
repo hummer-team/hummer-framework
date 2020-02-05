@@ -42,7 +42,7 @@ public class HttpClientInterceptorService implements HttpClientInterceptor {
      * @author liguo
      */
     @Override
-    public void throwing(RequestContext httpRequest, Exception ex) {
+    public void throwing(RequestContext httpRequest, Throwable ex) {
 
     }
 

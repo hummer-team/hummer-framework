@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>hummer-kafka-customer-plugin</artifactId>
+    <artifactId>hummer-kafka-consumer-plugin</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <dependencies>

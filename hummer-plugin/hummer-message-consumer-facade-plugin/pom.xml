@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>com.hummer</groupId>
-            <artifactId>hummer-kafka-customer-plugin</artifactId>
+            <artifactId>hummer-kafka-consumer-plugin</artifactId>
         </dependency>
     </dependencies>
 </project>

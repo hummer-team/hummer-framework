@@ -35,7 +35,7 @@ public class ApplicationFailedListener implements ApplicationListener<Applicatio
             public void run() {
                 try {
                     TimeUnit.SECONDS.sleep(3);
-                    LOGGER.warn("System after 1s exists!");
+                    LOGGER.error("application started failed , System after 1s exists!");
                     System.exit(0);
                 } catch (InterruptedException e) {
                     LOGGER.warn(e.getMessage(), e);
