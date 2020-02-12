@@ -1,6 +1,5 @@
 package com.hummer.core.init;
 
-import com.hummer.core.PropertiesContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContextInitializer;
