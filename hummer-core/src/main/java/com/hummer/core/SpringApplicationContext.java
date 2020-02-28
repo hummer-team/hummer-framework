@@ -11,8 +11,12 @@ import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.lang.Nullable;
 
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -41,11 +45,15 @@ public class SpringApplicationContext implements ApplicationContextAware {
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         SpringApplicationContext.applicationContext = applicationContext;
+        if (SpringApplicationContext.applicationContext instanceof GenericApplicationContext) {
+            ((GenericApplicationContext) SpringApplicationContext.applicationContext)
+                    .registerShutdownHook();
+        }
         LOGGER.info("customer spring context set application context success" +
                         ".[Parent:{}\n->evn:{}\n->application name:{}]"
-                ,applicationContext.getParent()
-                ,applicationContext.getEnvironment()
-                ,applicationContext.getApplicationName());
+                , applicationContext.getParent()
+                , applicationContext.getEnvironment()
+                , applicationContext.getApplicationName());
     }
 
     public static Object getBean(String beanName) {
@@ -58,6 +66,22 @@ public class SpringApplicationContext implements ApplicationContextAware {
 
     public static <T> T getBean(String beanName, Class<T> clazz) {
         return applicationContext.getBean(beanName, clazz);
+    }
+
+    public static <T extends ApplicationEvent> void publishEvent(T event) {
+        applicationContext.publishEvent(event);
+    }
+
+    /**
+     * get message value,support multiple language
+     *
+     * @param name    this is key name
+     * @param objects this is Placeholder
+     * @param locale  local
+     * @return
+     */
+    public static String getMessage(String name, Locale locale, @Nullable Object[] objects) {
+        return applicationContext.getMessage(name, objects, locale);
     }
 
     /**

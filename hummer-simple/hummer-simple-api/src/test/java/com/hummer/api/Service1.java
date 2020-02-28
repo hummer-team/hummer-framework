@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
+
 @Component
 public class Service1 {
     @Autowired
@@ -23,5 +25,10 @@ public class Service1 {
     public void hell2() {
         //从容器中获取，每次都创建个实例
         SpringApplicationContext.getBean(RefService1.class).showMessage();
+    }
+
+    @PreDestroy
+    private void destroy() {
+        System.out.println("destroy .");
     }
 }
