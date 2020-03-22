@@ -3,43 +3,46 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>hummer-plugin</artifactId>
+        <artifactId>hummer-framework</artifactId>
         <groupId>com.hummer</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>hummer-redis-plugin</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <artifactId>hummer-test</artifactId>
+
 
     <dependencies>
         <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
+            <groupId>com.hummer</groupId>
+            <artifactId>hummer-common</artifactId>
         </dependency>
         <dependency>
             <groupId>com.hummer</groupId>
             <artifactId>hummer-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
+            <groupId>com.hummer</groupId>
+            <artifactId>hummer-redis-plugin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <scope>test</scope>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.hummer</groupId>
-            <artifactId>hummer-common</artifactId>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
-
 </project>
