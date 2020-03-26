@@ -88,10 +88,12 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
     @Override
     public SqlSessionFactory getSqlSessionFactory() {
 
-        DataSourceMetadata metadata = MultipleDataSourceMap.getDataSource();
-        LOGGER.debug("use target data source {}",metadata);
+        DataSourceMetadata metadata = MultipleDataSourceMap.getDataSourceWithNullDataSource();
         SqlSessionFactory targetSqlSessionFactory = targetSqlSessionFactoryMap
                 .get(metadata.getDbName());
+        LOGGER.debug("targetSqlSessionFactory is null ? {}, if null then use default data source"
+                , targetSqlSessionFactory == null);
+        //notice : get current thread data source , if is null then default data source
         if (targetSqlSessionFactory != null) {
             return targetSqlSessionFactory;
         } else if (defaultTargetSqlSessionFactory != null) {

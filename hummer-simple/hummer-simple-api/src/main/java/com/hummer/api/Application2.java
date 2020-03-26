@@ -6,6 +6,7 @@ import com.hummer.core.SpringApplicationContext;
 import com.hummer.core.init.HummerApplicationStart;
 import com.hummer.kafka.consumer.plugin.callback.ConsumerHandle;
 import com.hummer.message.consumer.facade.KafkaConsumerWrapper;
+import com.hummer.rest.webserver.UndertowServer;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
@@ -17,6 +18,7 @@ import java.util.Collections;
     @NacosPropertySource(autoRefreshed = true, dataId = "mytest_01",groupId = "test_01"),
     @NacosPropertySource(autoRefreshed = true, dataId = "data_01"),
 })
+@UndertowServer
 public class Application2 {
 
     public static void main(String[] args) {

@@ -31,13 +31,21 @@ public class MultipleDataSourceMap {
     /**
      * return thread context cache data source,call method need handle data source null
      *
-     * @param checkNull if true then verified metadata , if null then throw exception
      * @return
      */
     public static DataSourceMetadata getDataSource() {
         DataSourceMetadata metadata = HOLDER.get();
         Validate.isTrue(metadata != null, "current thread data source metadata is null");
         return metadata;
+    }
+
+    /**
+     * if current thread no data source then return null.
+     * @return DataSourceMetadata
+     */
+    public static DataSourceMetadata getDataSourceWithNullDataSource() {
+        DataSourceMetadata metadata = HOLDER.get();
+        return metadata == null ? new DataSourceMetadata() : metadata;
     }
 
     /**
