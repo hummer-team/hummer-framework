@@ -55,7 +55,7 @@ public class DruidDataSourceBuilder {
 
             String initialSize = (String) ds.get("initialSize");
             if (initialSize != null) {
-                druidDataSource.setInitialSize(Integer.valueOf(initialSize));
+                druidDataSource.setInitialSize(Integer.parseInt(initialSize));
             }
 
             String connectionProperties = (String) ds.get("connectionProperties");
@@ -65,22 +65,22 @@ public class DruidDataSourceBuilder {
 
             String maxActive = (String) ds.get("maxActive");
             if (maxActive != null) {
-                druidDataSource.setMaxActive(Integer.valueOf(maxActive));
+                druidDataSource.setMaxActive(Integer.parseInt(maxActive));
             }
 
             String minIdle = (String) ds.get("minIdle");
             if (minIdle != null) {
-                druidDataSource.setMinIdle(Integer.valueOf(minIdle));
+                druidDataSource.setMinIdle(Integer.parseInt(minIdle));
             }
 
             String maxWait = (String) ds.get("maxWait");
             if (maxWait != null) {
-                druidDataSource.setMaxWait(Long.valueOf(maxWait));
+                druidDataSource.setMaxWait(Long.parseLong(maxWait));
             }
 
             String timeBetweenEvictionRunsMillis = (String) ds.get("timeBetweenEvictionRunsMillis");
             if (timeBetweenEvictionRunsMillis != null) {
-                druidDataSource.setTimeBetweenEvictionRunsMillis(Long.valueOf(timeBetweenEvictionRunsMillis));
+                druidDataSource.setTimeBetweenEvictionRunsMillis(Long.parseLong(timeBetweenEvictionRunsMillis));
             }
 
             String connectionInitSqls = (String) ds.get("connectionInitSqls");
@@ -91,12 +91,12 @@ public class DruidDataSourceBuilder {
 
             String minEvictableIdleTimeMillis = (String) ds.get("minEvictableIdleTimeMillis");
             if (minEvictableIdleTimeMillis != null) {
-                druidDataSource.setMinEvictableIdleTimeMillis(Long.valueOf(minEvictableIdleTimeMillis));
+                druidDataSource.setMinEvictableIdleTimeMillis(Long.parseLong(minEvictableIdleTimeMillis));
             }
 
             String maxEvictableIdleTimeMillis = (String) ds.get("maxEvictableIdleTimeMillis");
             if (maxEvictableIdleTimeMillis != null) {
-                druidDataSource.setMaxEvictableIdleTimeMillis(Long.valueOf(maxEvictableIdleTimeMillis));
+                druidDataSource.setMaxEvictableIdleTimeMillis(Long.parseLong(maxEvictableIdleTimeMillis));
             }
             druidDataSource.setTestWhileIdle(PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_TESTWHILEIDLE
                     , Boolean.class, Boolean.TRUE));
@@ -111,12 +111,12 @@ public class DruidDataSourceBuilder {
                         (String) ds.get("maxPoolPreparedStatementPerConnectionSize");
                 if (maxPoolPreparedStatementPerConnectionSize != null) {
                     druidDataSource.setMaxPoolPreparedStatementPerConnectionSize(
-                            Integer.valueOf(maxPoolPreparedStatementPerConnectionSize));
+                            Integer.parseInt(maxPoolPreparedStatementPerConnectionSize));
                 }
             }
             String queryTimeOutVal=(String)ds.get("queryTimeout");
             if(!Strings.isNullOrEmpty(queryTimeOutVal)) {
-                druidDataSource.setQueryTimeout(Integer.valueOf(queryTimeOutVal));
+                druidDataSource.setQueryTimeout(Integer.parseInt(queryTimeOutVal));
             }
             druidDataSource.setValidationQuery("select 1");
             druidDataSource.setValidationQueryTimeout(PropertiesContainer.valueOf(
