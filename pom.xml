@@ -121,7 +121,7 @@
         <dubbo.version>2.7.4.1</dubbo.version>
         <dubbo-spring-boot-starter.version>2.0.0</dubbo-spring-boot-starter.version>
         <spring-cloud-sleuth-core.version>2.2.0-RELEASE</spring-cloud-sleuth-core.version>
-        <spring-boot-starter-undertow.version>2.1.0-RELEASE</spring-boot-starter-undertow.version>
+        <spring-boot-starter-undertow.version>2.1.0.RELEASE</spring-boot-starter-undertow.version>
     </properties>
 
     <dependencyManagement>
@@ -441,12 +441,12 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
                 <version>${spring.boot.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-starter-tomcat</artifactId>
-                    </exclusion>
-                </exclusions>
+<!--                <exclusions>-->
+<!--                    <exclusion>-->
+<!--                        <groupId>org.springframework.boot</groupId>-->
+<!--                        <artifactId>spring-boot-starter-tomcat</artifactId>-->
+<!--                    </exclusion>-->
+<!--                </exclusions>-->
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-undertow -->
             <dependency>

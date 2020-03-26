@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
 
-    <property name="LOG_HOME" value="/logs/hummer/Application"/>
+    <property name="LOG_HOME" value="../logs/hummer/Application"/>
     <property name="FILE_LOG_PATTERN" value="%d{[yyyy-MM-dd HH:mm:ss]} [%thread] %highlight(%-5level) %cyan(%logger{36}) [%X{requestId}] [%X{serverIp}]  - %msg%n"/>
     <property name="FILE_INCDIENT_PATTERN" value="%d{[yyyy-MM-dd HH:mm:ss]} [%thread] %highlight(%-5level) %cyan(%logger{36}) [%X{requestId}] [%X{serverIp}] - %msg%n"/>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
