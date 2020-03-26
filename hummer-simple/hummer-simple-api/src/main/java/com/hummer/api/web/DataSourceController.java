@@ -1,6 +1,6 @@
 package com.hummer.api.web;
 
-import com.hummer.api.dao.BizLogTableConfigDao;
+//import com.hummer.api.dao.BizLogTableConfigDao;
 import com.hummer.api.dao.CoursewareDaoMapper;
 import com.hummer.api.dao.hjclass.EvaluationTasksDao;
 import com.hummer.api.po.CoursewarePo;
@@ -25,8 +25,8 @@ import java.util.Map;
 @RequestMapping(value = "/v1")
 public class DataSourceController {
 
-    @Autowired
-    private BizLogTableConfigDao configDao;
+    //@Autowired
+    //private BizLogTableConfigDao configDao;
     @Autowired
     private EvaluationTasksDao tasksDao;
     @Autowired
@@ -43,7 +43,8 @@ public class DataSourceController {
     @GetMapping(value = "/config")
     @ResponseBody
     public Object queryAllConfig() {
-        return configDao.getAllByTableName();
+        return null;
+        //return configDao.getAllByTableName();
     }
 
     @GetMapping(value = "/multiple")
@@ -51,7 +52,7 @@ public class DataSourceController {
     public Object queryTwoDataSource() {
         Map<String, Object> map = new HashMap<>(2);
         map.put("ONE", coursewareDaoMapper.getOne());
-        map.put("TWO", configDao.getAllByTableName());
+        //map.put("TWO", configDao.getAllByTableName());
         return map;
     }
 
