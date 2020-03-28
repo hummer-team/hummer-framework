@@ -27,27 +27,27 @@
     </parent>
 
 
-    <distributionManagement>
-        <repository>
-            <id>releases-local</id>
-            <url>http://localhost:8081/nexus/content/repositories/releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots-local</id>
-            <url>http://localhost:8081/nexus/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
 <!--    <distributionManagement>-->
 <!--        <repository>-->
-<!--            <id>maven-releases</id>-->
-<!--            <url>http://10.10.10.250:8081/repository/maven-releases/</url>-->
+<!--            <id>releases-local</id>-->
+<!--            <url>http://localhost:8081/nexus/content/repositories/releases</url>-->
 <!--        </repository>-->
 <!--        <snapshotRepository>-->
-<!--            <id>nexus-snapshots</id>-->
-<!--            <url>http://10.10.10.250:8081/repository/maven-snapshots/</url>-->
+<!--            <id>snapshots-local</id>-->
+<!--            <url>http://localhost:8081/nexus/content/repositories/snapshots</url>-->
 <!--        </snapshotRepository>-->
 <!--    </distributionManagement>-->
+
+    <distributionManagement>
+        <repository>
+            <id>maven-releases</id>
+            <url>http://10.10.10.250:8081/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>http://10.10.10.250:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <!-- Properties -->
     <properties>
@@ -447,20 +447,20 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
                 <version>${spring.boot.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-starter-tomcat</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-starter-logging</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.fasterxml.jackson.core</groupId>
-                        <artifactId>jackson-databind</artifactId>
-                    </exclusion>
-                </exclusions>
+<!--                <exclusions>-->
+<!--                    <exclusion>-->
+<!--                        <groupId>org.springframework.boot</groupId>-->
+<!--                        <artifactId>spring-boot-starter-tomcat</artifactId>-->
+<!--                    </exclusion>-->
+<!--                    <exclusion>-->
+<!--                        <groupId>org.springframework.boot</groupId>-->
+<!--                        <artifactId>spring-boot-starter-logging</artifactId>-->
+<!--                    </exclusion>-->
+<!--                    <exclusion>-->
+<!--                        <groupId>com.fasterxml.jackson.core</groupId>-->
+<!--                        <artifactId>jackson-databind</artifactId>-->
+<!--                    </exclusion>-->
+<!--                </exclusions>-->
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-undertow -->
             <dependency>

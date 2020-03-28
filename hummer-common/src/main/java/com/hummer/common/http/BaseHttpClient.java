@@ -24,10 +24,13 @@ public class BaseHttpClient {
 
         ServiceLoader<HttpClientInterceptor> slHttpClientLogHandler = ServiceLoader.load(HttpClientInterceptor.class);
         for (HttpClientInterceptor filter : slHttpClientLogHandler) {
-            httpClientIntercepters.add(filter);
+            if(!filter.getClass().equals(HttpClientInterceptorService.class)) {
+                httpClientIntercepters.add(filter);
+            }
         }
-
-        httpClientIntercepters.sort(Comparator.comparing(HttpClientInterceptor::order));
+        if(CollectionUtils.isNotEmpty(httpClientIntercepters)) {
+            httpClientIntercepters.sort(Comparator.comparing(HttpClientInterceptor::order));
+        }
     }
 
     protected List<HttpClientInterceptor> httpClientIntercepters() {

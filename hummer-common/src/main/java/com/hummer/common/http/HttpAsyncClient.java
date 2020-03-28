@@ -245,7 +245,6 @@ public final class HttpAsyncClient extends BaseHttpClient {
 
         long requestStartTime2 = System.currentTimeMillis();
         //
-        beforeHandle(requestBase);
 
         HttpResponse response = retryExecute(() ->
                         httpClient.execute(requestBase,
@@ -539,7 +538,6 @@ public final class HttpAsyncClient extends BaseHttpClient {
             boolean hasException;
             try {
                 if (isValid()) {
-                    beforeHandle(httpRequestBase);
                     execute(httpRequestBase, customConfig, typeReference, handle);
                 }
                 return;
@@ -782,6 +780,8 @@ public final class HttpAsyncClient extends BaseHttpClient {
         }
 
         setRequestHead(requestBase);
+        //
+        beforeHandle(requestBase);
         //handle form body
         if (customConfig.isPostFormBody()) {
             UrlEncodedFormEntity formEntity =
