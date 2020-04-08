@@ -37,11 +37,11 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.springFramework</groupId>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springFramework</groupId>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
         <dependency>

@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.hummer.core.exceptions.KeyNotExistsException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -35,6 +36,7 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
     private static final String APOLLO_PROPERTY_SOURCE_NAME = "ApolloPropertySources";
     private static final String ENV = "spring.profiles.active";
     private static final String CLASS_RESOURCE = "applicationConfig";
+    private static final String CLASS_PATH_RESOURCE_APPLICATION ="class path resource [application-";;
 
 
     @Override
@@ -332,7 +334,9 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
      **/
     private static String parseApplicationPropertiesName(PropertySource<?> ps) {
         String name = ps.getName();
-        if (name != null && name.startsWith(CLASS_RESOURCE)) {
+        if (StringUtils.isNoneEmpty(name) &&
+                (name.startsWith(CLASS_RESOURCE)
+                || name.startsWith(CLASS_PATH_RESOURCE_APPLICATION))) {
             return name;
         }
         return null;
