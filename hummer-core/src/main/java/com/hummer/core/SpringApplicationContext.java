@@ -28,34 +28,6 @@ public class SpringApplicationContext implements ApplicationContextAware {
     private static final Logger LOGGER = LoggerFactory.getLogger(SpringApplicationContext.class);
     private static ApplicationContext applicationContext;
 
-    /**
-     * Set the ApplicationContext that this object runs in.
-     * Normally this call will be used to initialize the object.
-     * <p>Invoked after population of normal bean properties but before an init callback such
-     * as {@link InitializingBean#afterPropertiesSet()}
-     * or org.springframework.context.ApplicationListener custom init-method. Invoked after {@link ResourceLoaderAware#setResourceLoader},
-     * {@link ApplicationEventPublisherAware#setApplicationEventPublisher} and
-     * {@link MessageSourceAware}, if applicable.
-     *
-     * @param applicationContext the ApplicationContext object to be used by this object
-     * @throws ApplicationContextException in case of context initialization errors
-     * @throws BeansException              if thrown by application context methods
-     * @see BeanInitializationException
-     */
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        SpringApplicationContext.applicationContext = applicationContext;
-        if (SpringApplicationContext.applicationContext instanceof GenericApplicationContext) {
-            ((GenericApplicationContext) SpringApplicationContext.applicationContext)
-                    .registerShutdownHook();
-        }
-        LOGGER.info("customer spring context set application context success" +
-                        ".[Parent:{}\n->evn:{}\n->application name:{}]"
-                , applicationContext.getParent()
-                , applicationContext.getEnvironment()
-                , applicationContext.getApplicationName());
-    }
-
     public static Object getBean(String beanName) {
         return applicationContext.getBean(beanName);
     }
@@ -102,7 +74,6 @@ public class SpringApplicationContext implements ApplicationContextAware {
         }
     }
 
-
     /**
      * get class type,convert to map
      *
@@ -118,6 +89,38 @@ public class SpringApplicationContext implements ApplicationContextAware {
 
     public static ApplicationContext getApplicationContext() {
         return applicationContext;
+    }
+
+    /**
+     * Set the ApplicationContext that this object runs in.
+     * Normally this call will be used to initialize the object.
+     * <p>Invoked after population of normal bean properties but before an init callback such
+     * as {@link InitializingBean#afterPropertiesSet()}
+     * or org.springframework.context.ApplicationListener custom init-method. Invoked after {@link ResourceLoaderAware#setResourceLoader},
+     * {@link ApplicationEventPublisherAware#setApplicationEventPublisher} and
+     * {@link MessageSourceAware}, if applicable.
+     *
+     * @param applicationContext the ApplicationContext object to be used by this object
+     * @throws ApplicationContextException in case of context initialization errors
+     * @throws BeansException              if thrown by application context methods
+     * @see BeanInitializationException
+     */
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        if (SpringApplicationContext.applicationContext != null) {
+            LOGGER.warn("this application context already init");
+            return;
+        }
+        SpringApplicationContext.applicationContext = applicationContext;
+        if (SpringApplicationContext.applicationContext instanceof GenericApplicationContext) {
+            ((GenericApplicationContext) SpringApplicationContext.applicationContext)
+                    .registerShutdownHook();
+        }
+        LOGGER.info("customer spring context set application context success" +
+                        ".[Parent:{}\n->evn:{}\n->application name:{}]"
+                , applicationContext.getParent()
+                , applicationContext.getEnvironment()
+                , applicationContext.getApplicationName());
     }
 
     /**

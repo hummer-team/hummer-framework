@@ -1,12 +1,11 @@
 package com.hummer.core.listener;
 
-import com.hummer.core.SpringApplicationContext;
 import com.hummer.core.PropertiesContainer;
+import com.hummer.core.SpringApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.stereotype.Component;
 
 /**
  * listener spring boot link {#ApplicationPreparedEvent} event,this event express spring boot context load done,but bean
@@ -17,13 +16,13 @@ import org.springframework.stereotype.Component;
  * @version:1.0.0
  * @Date: 2019/6/13 16:27
  **/
-@Component
 public class SpringStarterListener implements ApplicationListener<ApplicationPreparedEvent> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SpringStarterListener.class);
 
     @Override
     public void onApplicationEvent(ApplicationPreparedEvent event) {
         if (SpringApplicationContext.getApplicationContext() == null) {
+            //init application context
             SpringApplicationContext context = new SpringApplicationContext();
             context.setApplicationContext(event.getApplicationContext());
 

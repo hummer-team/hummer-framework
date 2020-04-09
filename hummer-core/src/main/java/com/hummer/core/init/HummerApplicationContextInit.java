@@ -1,5 +1,6 @@
 package com.hummer.core.init;
 
+import com.hummer.core.SpringApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContextInitializer;
@@ -21,7 +22,8 @@ public class HummerApplicationContextInit implements ApplicationContextInitializ
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
         final long start = System.currentTimeMillis();
-        //PropertiesContainer.loadPropertyData(applicationContext.getEnvironment());
+        SpringApplicationContext context = new SpringApplicationContext();
+        context.setApplicationContext(applicationContext);
         LOGGER.info("......hummer init properties container done,cost {} ms....."
                 , System.currentTimeMillis() - start);
     }

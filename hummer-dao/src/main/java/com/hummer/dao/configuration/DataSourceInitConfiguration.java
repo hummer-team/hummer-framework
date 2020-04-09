@@ -7,15 +7,15 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.hummer.common.SysConstant;
 import com.hummer.common.exceptions.SysException;
+import com.hummer.core.PropertiesContainer;
+import com.hummer.core.SpringApplicationContext;
 import com.hummer.dao.annotation.DaoAnnotation;
 import com.hummer.dao.condition.DaoLoadCondition;
 import com.hummer.dao.druiddatasource.DruidDataSourceBuilder;
 import com.hummer.dao.mybatis.MybatisDynamicBean;
 import com.hummer.dao.mybatis.context.MultipleDataSourceMap;
-import com.hummer.core.PropertiesContainer;
-import com.hummer.common.SysConstant;
-import com.hummer.core.SpringApplicationContext;
 import org.apache.commons.collections.MapUtils;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javax.sql.DataSource;
@@ -39,16 +40,16 @@ import java.util.stream.Collectors;
  * @version:1.0.0
  * @Date: 2019/6/25 17:38
  **/
-public class MultipleDataSourceConfiguration {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MultipleDataSourceConfiguration.class);
+public class DataSourceInitConfiguration {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DataSourceInitConfiguration.class);
 
     private final Map<Object, Object> allDataSources = Maps.newConcurrentMap();
     private DataSource defaultTargetDataSource;
 
     @Bean
     @Conditional(DaoLoadCondition.class)
-    public NamedParameterJdbcTemplate namedParameterJdbcTemplate(){
-        return new NamedParameterJdbcTemplate(defaultTargetDataSource) ;
+    public NamedParameterJdbcTemplate namedParameterJdbcTemplate() {
+        return new NamedParameterJdbcTemplate(defaultTargetDataSource);
     }
 
     /**
@@ -62,7 +63,9 @@ public class MultipleDataSourceConfiguration {
      **/
     @Bean
     @Conditional(DaoLoadCondition.class)
+    @DependsOn(value = {"com.hummer.core.starter.BootStarterBean"})
     public MapperScannerConfigurer mapperScannerConfigurer() {
+
         String basePackage = PropertiesContainer.valueOfString(SysConstant.DaoConstant.MYBATIS_BASE_PACKAGE);
         Preconditions.checkNotNull(basePackage, "mybatis base package no settings,can not load dao");
 

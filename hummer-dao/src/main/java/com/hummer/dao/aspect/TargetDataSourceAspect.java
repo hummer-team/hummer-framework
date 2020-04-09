@@ -20,11 +20,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class TargetDataSourceAspect {
 
-
-    public void befor(){
-
-    }
-
     /**
      * interface or method
      * @param point
