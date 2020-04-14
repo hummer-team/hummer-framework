@@ -21,7 +21,7 @@ import java.util.Properties;
 @RequestMapping(value = "/v1")
 @Slf4j
 public class ConfigController {
-    @NacosValue(value = "${test.config}", autoRefreshed = true)
+    //@NacosValue(value = "${test.config}", autoRefreshed = true)
     //warning ：use @Value annotation config value no flush
     private String testConfig;
 

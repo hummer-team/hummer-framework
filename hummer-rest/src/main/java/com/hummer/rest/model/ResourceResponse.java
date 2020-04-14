@@ -28,7 +28,6 @@ public class ResourceResponse<T> {
     }
 
     public ResourceResponse() {
-
     }
 
     public int getCode() {

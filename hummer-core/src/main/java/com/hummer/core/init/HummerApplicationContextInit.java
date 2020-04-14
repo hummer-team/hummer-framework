@@ -22,9 +22,10 @@ public class HummerApplicationContextInit implements ApplicationContextInitializ
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
         final long start = System.currentTimeMillis();
+        //set application context
         SpringApplicationContext context = new SpringApplicationContext();
         context.setApplicationContext(applicationContext);
-        LOGGER.info("......hummer init properties container done,cost {} ms....."
+        LOGGER.info("......hummer init spring context container done,cost {} ms....."
                 , System.currentTimeMillis() - start);
     }
 }

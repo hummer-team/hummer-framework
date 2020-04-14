@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.0.RELEASE</version>
+        <version>2.2.0.RELEASE</version>
     </parent>
 
 
@@ -60,7 +60,6 @@
         <unit-tests.skip>false</unit-tests.skip>
         <integration-tests.skip>false</integration-tests.skip>
         <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
-        <spring.boot.version>2.1.0.RELEASE</spring.boot.version>
         <project.artifact.name>${project.artifactId}</project.artifact.name>
         <build.number>LOCAL</build.number>
         <unit-tests.skip>false</unit-tests.skip>
@@ -76,7 +75,7 @@
         <jacoco.dataFile>${project.basedir}/../target/jacoco.exec</jacoco.dataFile>
         <jacoco.reporting.outputDirectory>${project.basedir}/../target/reports/jacoco</jacoco.reporting.outputDirectory>
         <jacoco.inclNoLocationClasses>true</jacoco.inclNoLocationClasses>
-        <spring-aop.version>5.1.2.RELEASE</spring-aop.version>
+        <spring-aop.version>5.2.0.RELEASE</spring-aop.version>
         <spring.retry.version>1.2.2.RELEASE</spring.retry.version>
         <mockito-core.version>2.8.47</mockito-core.version>
         <swagger.version>2.7.0</swagger.version>
@@ -89,11 +88,11 @@
         <slf4j-api.version>1.7.25</slf4j-api.version>
         <junit.version>4.12</junit.version>
         <hummer.version>1.0.0-SNAPSHOT</hummer.version>
-        <spring-boot.version>2.1.0.RELEASE</spring-boot.version>
+        <spring-boot.version>2.2.0.RELEASE</spring-boot.version>
         <httpasync.version>4.1.2</httpasync.version>
         <fastjson.version>1.2.58</fastjson.version>
         <javax.servlet.version>3.1.0</javax.servlet.version>
-        <spring-webmvc.version>5.1.2.RELEASE</spring-webmvc.version>
+        <spring-webmvc.version>5.2.0.RELEASE</spring-webmvc.version>
         <common-lang3.version>3.8.1</common-lang3.version>
         <lombok.version>1.18.8</lombok.version>
         <zip4j.version>1.3.2</zip4j.version>
@@ -105,8 +104,8 @@
         <guava.version>20.0</guava.version>
         <swagger-annotations.version>1.5.13</swagger-annotations.version>
         <mybatis.version>3.4.6</mybatis.version>
-        <spring-tx.version>5.1.2.RELEASE</spring-tx.version>
-        <spring-jdbc.version>5.1.2.RELEASE</spring-jdbc.version>
+        <spring-tx.version>5.2.0.RELEASE</spring-tx.version>
+        <spring-jdbc.version>5.2.0.RELEASE</spring-jdbc.version>
         <mysql-connector-Java.version>5.1.10</mysql-connector-Java.version>
         <cglib.version>3.2.5</cglib.version>
         <pagehelper.version>5.1.0</pagehelper.version>
@@ -122,12 +121,14 @@
         <seata.version>0.9.0</seata.version>
         <jedis.version>3.1.0</jedis.version>
         <msgpack-version>0.6.12</msgpack-version>
-        <spring-test.version>5.1.8.RELEASE</spring-test.version>
-        <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
+        <spring-test.version>5.2.0.RELEASE</spring-test.version>
         <dubbo.version>2.7.4.1</dubbo.version>
         <dubbo-spring-boot-starter.version>2.0.0</dubbo-spring-boot-starter.version>
         <spring-cloud-sleuth-core.version>2.2.0-RELEASE</spring-cloud-sleuth-core.version>
-        <spring-boot-starter-undertow.version>2.1.0.RELEASE</spring-boot-starter-undertow.version>
+        <spring-boot-starter-undertow.version>2.2.0.RELEASE</spring-boot-starter-undertow.version>
+        <spring-boot-starter-log4j2.version>2.2.0.RELEASE</spring-boot-starter-log4j2.version>
+        <spring-core.version>5.2.0.RELEASE</spring-core.version>
+        <spring-cloud-sleuth-stream.version>1.3.6.RELEASE</spring-cloud-sleuth-stream.version>
     </properties>
 
     <dependencyManagement>
@@ -209,12 +210,6 @@
                 <version>${hummer.version}</version>
             </dependency>
             <!--framework plugin-->
-            <!-- https://mvnrepository.com/artifact/io.confluent/kafka-avro-serializer -->
-            <!--<dependency>-->
-                <!--<groupId>io.confluent</groupId>-->
-                <!--<artifactId>kafka-avro-serializer</artifactId>-->
-                <!--<version>${kafka-avro-serializer.version}</version>-->
-            <!--</dependency>-->
             <!-- https://mvnrepository.com/artifact/org.rocksdb/rocksdbjni -->
             <dependency>
                 <groupId>org.rocksdb</groupId>
@@ -388,23 +383,14 @@
                 <version>3.2.2</version>
             </dependency>
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-parent</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-actuator</artifactId>
-                <version>${spring.boot.version}</version>
+                <version>${spring-boot.version}</version>
                 <exclusions>
                     <exclusion>
                         <artifactId>spring-boot-starter-logging</artifactId>
@@ -415,12 +401,12 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-config-server</artifactId>
-                <version>2.0.0.RELEASE</version>
+                <version>${spring-boot.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
-                <version>5.1.2.RELEASE</version>
+                <version>${spring-core.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>commons-logging</groupId>
@@ -436,13 +422,13 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
-                <version>5.1.2.RELEASE</version>
+                <version>${spring-core.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-web</artifactId>
-                <version>5.1.2.RELEASE</version>
+                <version>${spring-core.version}</version>
             </dependency>
             <dependency>
                 <groupId>joda-time</groupId>
@@ -452,12 +438,12 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
-                <version>${spring.boot.version}</version>
+                <version>${spring-boot.version}</version>
                 <exclusions>
-<!--                    <exclusion>-->
-<!--                        <groupId>org.springframework.boot</groupId>-->
-<!--                        <artifactId>spring-boot-starter-tomcat</artifactId>-->
-<!--                    </exclusion>-->
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-tomcat</artifactId>
+                    </exclusion>
                     <exclusion>
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-starter-logging</artifactId>
@@ -471,13 +457,19 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-log4j2</artifactId>
-                <version>2.1.2.RELEASE</version>
+                <version>${spring-boot-starter-log4j2.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-undertow -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-undertow</artifactId>
                 <version>${spring-boot-starter-undertow.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.jboss.logging</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!-- https://mvnrepository.com/artifact/com.alibaba/druid -->
@@ -490,7 +482,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-jpa</artifactId>
-                <version>${spring.boot.version}</version>
+                <version>${spring-boot.version}</version>
                 <!-- fix cpnfict between spring cloud config server and spring boot JPA-->
                 <exclusions>
                     <exclusion>
@@ -514,7 +506,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
-                <version>2.1.4.RELEASE</version>
+                <version>${spring-boot.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -528,19 +520,7 @@
                 <artifactId>springfox-swagger-ui</artifactId>
                 <version>${swagger.version}</version>
             </dependency>
-            <!-- Logging jars -->
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-core</artifactId>
-                <version>${logback.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${logback.version}</version>
-                <scope>runtime</scope>
-            </dependency>
+
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
@@ -660,37 +640,37 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-sleuth-core</artifactId>
-                <version>2.2.0.RELEASE</version>
+                <version>${spring-boot.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-sleuth-stream -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-sleuth-stream</artifactId>
-                <version>1.3.6.RELEASE</version>
+                <version>${spring-cloud-sleuth-stream.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-sleuth -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-sleuth</artifactId>
-                <version>2.2.0.RELEASE</version>
+                <version>${spring-boot.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-stream-binder-kafka -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-stream-binder-kafka</artifactId>
-                <version>2.2.0.RELEASE</version>
+                <version>${spring-boot.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-zipkin -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-zipkin</artifactId>
-                <version>2.2.0.RELEASE</version>
+                <version>${spring-boot.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-sleuth-zipkin -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-sleuth-zipkin</artifactId>
-                <version>2.2.0.RELEASE</version>
+                <version>${spring-boot.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

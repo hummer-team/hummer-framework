@@ -32,23 +32,12 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
     private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesContainer.class);
     private static final Map<String, Object> PROPERTY_MAP = new ConcurrentHashMap<>(16);
     private static final AtomicBoolean LOAD_FLAG = new AtomicBoolean(true);
-    private static ConfigurableConversionService conversionService = new DefaultConversionService();
     private static final String APOLLO_PROPERTY_SOURCE_NAME = "ApolloPropertySources";
     private static final String ENV = "spring.profiles.active";
     private static final String CLASS_RESOURCE = "applicationConfig";
-    private static final String CLASS_PATH_RESOURCE_APPLICATION ="class path resource [application-";;
-
-
-    @Override
-    protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess
-            , Properties props) {
-        super.processProperties(beanFactoryToProcess, props);
-        if (LOAD_FLAG.get()) {
-            loadPropertyData(props);
-            LOGGER.info("load properties done by processProperties method,item count {}"
-                    , PROPERTY_MAP.size());
-        }
-    }
+    private static final String CLASS_PATH_RESOURCE_APPLICATION = "class path resource [application-";
+    private static ConfigurableConversionService conversionService = new DefaultConversionService();
+    ;
 
     /**
      * return property all keys.
@@ -184,7 +173,6 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
         return result;
     }
 
-
     /**
      * get value convert to int,if exists then return 0.
      *
@@ -253,7 +241,7 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
     /**
      * put this value
      *
-     * @param key key
+     * @param key   key
      * @param value value
      * @return void
      * @author liguo
@@ -277,6 +265,15 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
         for (String key : eps.getPropertyNames()) {
             PROPERTY_MAP.put(key, eps.getProperty(key));
         }
+    }
+
+    /**
+     * true： already configuration , false: no load configuration
+     *
+     * @return
+     */
+    public static boolean isLoadPropertyData() {
+        return LOAD_FLAG.get();
     }
 
     /**
@@ -336,9 +333,20 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
         String name = ps.getName();
         if (StringUtils.isNoneEmpty(name) &&
                 (name.startsWith(CLASS_RESOURCE)
-                || name.startsWith(CLASS_PATH_RESOURCE_APPLICATION))) {
+                        || name.startsWith(CLASS_PATH_RESOURCE_APPLICATION))) {
             return name;
         }
         return null;
+    }
+
+    @Override
+    protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess
+            , Properties props) {
+        super.processProperties(beanFactoryToProcess, props);
+        if (LOAD_FLAG.get()) {
+            loadPropertyData(props);
+            LOGGER.info("load properties done by processProperties method,item count {}"
+                    , PROPERTY_MAP.size());
+        }
     }
 }

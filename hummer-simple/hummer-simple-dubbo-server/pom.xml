@@ -14,8 +14,8 @@
 
     <dependencies>
         <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter</artifactId>-->
+        <!--<groupId>org.springframework.boot</groupId>-->
+        <!--<artifactId>spring-boot-starter</artifactId>-->
         <!--</dependency>-->
 
         <dependency>
@@ -39,159 +39,169 @@
             </resource>
         </resources>
 
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+
         <!--<finalName>${project.artifact.name}-${project.version}-${build.number}</finalName>-->
         <!--<plugins>-->
-            <!--<plugin>-->
-                <!--<artifactId>maven-assembly-plugin</artifactId>-->
-                <!--<version>3.0.0</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>app</id>-->
-                        <!--<phase>package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>single</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-                <!--<configuration>-->
-                    <!--<descriptors>-->
-                        <!--<descriptor>src/assembly/assembly.xml</descriptor>-->
-                    <!--</descriptors>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
-            <!--<plugin>-->
-                <!--<groupId>org.springframework.boot</groupId>-->
-                <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<goals>-->
-                            <!--&lt;!&ndash;打包可执行的jar/war，同时保留mvn package生成的jar/war为.origin&ndash;&gt;-->
-                            <!--<goal>repackage</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-                <!--<configuration>-->
-                    <!--<jvmArguments>-Xmx512m -XX:MaxDirectMemorySize=1200m</jvmArguments>-->
-                    <!--<mainClass>${start-class}</mainClass>-->
-                <!--</configuration>-->
-                <!--&lt;!&ndash;<executions>&ndash;&gt;-->
-                <!--&lt;!&ndash;<execution>&ndash;&gt;-->
-                <!--&lt;!&ndash;<goals>&ndash;&gt;-->
-                <!--&lt;!&ndash;<goal>build-info</goal>&ndash;&gt;-->
-                <!--&lt;!&ndash;</goals>&ndash;&gt;-->
-                <!--&lt;!&ndash;</execution>&ndash;&gt;-->
-                <!--&lt;!&ndash;</executions>&ndash;&gt;-->
-            <!--</plugin>-->
-            <!--&lt;!&ndash;执行集成测试&ndash;&gt;-->
-            <!--<plugin>-->
-                <!--<artifactId>maven-failsafe-plugin</artifactId>-->
-                <!--<configuration>-->
-                    <!--<skipTests>${integration-tests.skip}</skipTests>-->
-                    <!--<includes>-->
-                        <!--<include>**/*IT.java</include>-->
-                    <!--</includes>-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<goals>-->
-                            <!--<goal>integration-test</goal>-->
-                            <!--<goal>verify</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
-            <!--&lt;!&ndash;执行单元测试&ndash;&gt;-->
-            <!--<plugin>-->
-                <!--<artifactId>maven-surefire-plugin</artifactId>-->
-                <!--<version>2.20</version>-->
-                <!--<configuration>-->
-                    <!--<skipTests>${unit-tests.skip}</skipTests>-->
-                    <!--<excludes>-->
-                        <!--<exclude>**/*IT.java</exclude>-->
-                    <!--</excludes>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
+        <!--<plugin>-->
+        <!--<artifactId>maven-assembly-plugin</artifactId>-->
+        <!--<version>3.0.0</version>-->
+        <!--<executions>-->
+        <!--<execution>-->
+        <!--<id>app</id>-->
+        <!--<phase>package</phase>-->
+        <!--<goals>-->
+        <!--<goal>single</goal>-->
+        <!--</goals>-->
+        <!--</execution>-->
+        <!--</executions>-->
+        <!--<configuration>-->
+        <!--<descriptors>-->
+        <!--<descriptor>src/assembly/assembly.xml</descriptor>-->
+        <!--</descriptors>-->
+        <!--</configuration>-->
+        <!--</plugin>-->
+        <!--<plugin>-->
+        <!--<groupId>org.springframework.boot</groupId>-->
+        <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
+        <!--<executions>-->
+        <!--<execution>-->
+        <!--<goals>-->
+        <!--&lt;!&ndash;打包可执行的jar/war，同时保留mvn package生成的jar/war为.origin&ndash;&gt;-->
+        <!--<goal>repackage</goal>-->
+        <!--</goals>-->
+        <!--</execution>-->
+        <!--</executions>-->
+        <!--<configuration>-->
+        <!--<jvmArguments>-Xmx512m -XX:MaxDirectMemorySize=1200m</jvmArguments>-->
+        <!--<mainClass>${start-class}</mainClass>-->
+        <!--</configuration>-->
+        <!--&lt;!&ndash;<executions>&ndash;&gt;-->
+        <!--&lt;!&ndash;<execution>&ndash;&gt;-->
+        <!--&lt;!&ndash;<goals>&ndash;&gt;-->
+        <!--&lt;!&ndash;<goal>build-info</goal>&ndash;&gt;-->
+        <!--&lt;!&ndash;</goals>&ndash;&gt;-->
+        <!--&lt;!&ndash;</execution>&ndash;&gt;-->
+        <!--&lt;!&ndash;</executions>&ndash;&gt;-->
+        <!--</plugin>-->
+        <!--&lt;!&ndash;执行集成测试&ndash;&gt;-->
+        <!--<plugin>-->
+        <!--<artifactId>maven-failsafe-plugin</artifactId>-->
+        <!--<configuration>-->
+        <!--<skipTests>${integration-tests.skip}</skipTests>-->
+        <!--<includes>-->
+        <!--<include>**/*IT.java</include>-->
+        <!--</includes>-->
+        <!--</configuration>-->
+        <!--<executions>-->
+        <!--<execution>-->
+        <!--<goals>-->
+        <!--<goal>integration-test</goal>-->
+        <!--<goal>verify</goal>-->
+        <!--</goals>-->
+        <!--</execution>-->
+        <!--</executions>-->
+        <!--</plugin>-->
+        <!--&lt;!&ndash;执行单元测试&ndash;&gt;-->
+        <!--<plugin>-->
+        <!--<artifactId>maven-surefire-plugin</artifactId>-->
+        <!--<version>2.20</version>-->
+        <!--<configuration>-->
+        <!--<skipTests>${unit-tests.skip}</skipTests>-->
+        <!--<excludes>-->
+        <!--<exclude>**/*IT.java</exclude>-->
+        <!--</excludes>-->
+        <!--</configuration>-->
+        <!--</plugin>-->
 
-            <!--&lt;!&ndash;代码覆盖率检查插件&ndash;&gt;-->
-            <!--<plugin>-->
-                <!--<groupId>org.jacoco</groupId>-->
-                <!--<artifactId>jacoco-maven-plugin</artifactId>-->
-                <!--<version>0.7.9</version>-->
-                <!--<configuration>-->
-                    <!--<destFile>${sonar.jacoco.reportPaths}</destFile>-->
-                    <!--<append>true</append>-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>default-prepare-agent</id>-->
-                        <!--<goals>-->
-                            <!--<goal>prepare-agent</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                    <!--<execution>-->
-                        <!--<id>default-report</id>-->
-                        <!--<goals>-->
-                            <!--<goal>report</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<outputDirectory>${jacoco.reporting.outputDirectory}</outputDirectory>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                    <!--<execution>-->
-                        <!--<id>default-report-aggregate</id>-->
-                        <!--<phase>verify</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>report-aggregate</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<dataFileIncludes>-->
-                                <!--<dataFileInclude>${jacoco.dataFile}</dataFileInclude>-->
-                            <!--</dataFileIncludes>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
+        <!--&lt;!&ndash;代码覆盖率检查插件&ndash;&gt;-->
+        <!--<plugin>-->
+        <!--<groupId>org.jacoco</groupId>-->
+        <!--<artifactId>jacoco-maven-plugin</artifactId>-->
+        <!--<version>0.7.9</version>-->
+        <!--<configuration>-->
+        <!--<destFile>${sonar.jacoco.reportPaths}</destFile>-->
+        <!--<append>true</append>-->
+        <!--</configuration>-->
+        <!--<executions>-->
+        <!--<execution>-->
+        <!--<id>default-prepare-agent</id>-->
+        <!--<goals>-->
+        <!--<goal>prepare-agent</goal>-->
+        <!--</goals>-->
+        <!--</execution>-->
+        <!--<execution>-->
+        <!--<id>default-report</id>-->
+        <!--<goals>-->
+        <!--<goal>report</goal>-->
+        <!--</goals>-->
+        <!--<configuration>-->
+        <!--<outputDirectory>${jacoco.reporting.outputDirectory}</outputDirectory>-->
+        <!--</configuration>-->
+        <!--</execution>-->
+        <!--<execution>-->
+        <!--<id>default-report-aggregate</id>-->
+        <!--<phase>verify</phase>-->
+        <!--<goals>-->
+        <!--<goal>report-aggregate</goal>-->
+        <!--</goals>-->
+        <!--<configuration>-->
+        <!--<dataFileIncludes>-->
+        <!--<dataFileInclude>${jacoco.dataFile}</dataFileInclude>-->
+        <!--</dataFileIncludes>-->
+        <!--</configuration>-->
+        <!--</execution>-->
+        <!--</executions>-->
+        <!--</plugin>-->
 
-            <!--&lt;!&ndash;create rest api json document&ndash;&gt;-->
-            <!--&lt;!&ndash;<plugin>&ndash;&gt;-->
+        <!--&lt;!&ndash;create rest api json document&ndash;&gt;-->
+        <!--&lt;!&ndash;<plugin>&ndash;&gt;-->
 
-            <!--&lt;!&ndash;<groupId>com.github.kongchen</groupId>&ndash;&gt;-->
-            <!--&lt;!&ndash;<artifactId>swagger-maven-plugin</artifactId>&ndash;&gt;-->
-            <!--&lt;!&ndash;<version>3.0.0</version>&ndash;&gt;-->
-            <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
-            <!--&lt;!&ndash;<apiSources>&ndash;&gt;-->
-            <!--&lt;!&ndash;<apiSource>&ndash;&gt;-->
-            <!--&lt;!&ndash;<springmvc>true</springmvc>&ndash;&gt;-->
-            <!--&lt;!&ndash;<locations>${rest-locations}</locations>&ndash;&gt;-->
-            <!--&lt;!&ndash;<host>service.url:8080</host>&ndash;&gt;-->
-            <!--&lt;!&ndash;<basePath>/</basePath>&ndash;&gt;-->
-            <!--&lt;!&ndash;<info>&ndash;&gt;-->
-            <!--&lt;!&ndash;<title>Application manager swagger</title>&ndash;&gt;-->
-            <!--&lt;!&ndash;<version>0.0.1</version>&ndash;&gt;-->
-            <!--&lt;!&ndash;<contact>&ndash;&gt;-->
-            <!--&lt;!&ndash;<email>mahmoud.romeh@test.com</email>&ndash;&gt;-->
-            <!--&lt;!&ndash;<name>Mahmoud Romih</name>&ndash;&gt;-->
-            <!--&lt;!&ndash;</contact>&ndash;&gt;-->
-            <!--&lt;!&ndash;<license>&ndash;&gt;-->
-            <!--&lt;!&ndash;<url>http://www.apache.org/licenses/LICENSE-2.0.html</url>&ndash;&gt;-->
-            <!--&lt;!&ndash;<name>Apache 2.0</name>&ndash;&gt;-->
-            <!--&lt;!&ndash;</license>&ndash;&gt;-->
-            <!--&lt;!&ndash;</info>&ndash;&gt;-->
-            <!--&lt;!&ndash;<swaggerDirectory>${project.build.directory}/generated/swagger-ui</swaggerDirectory>&ndash;&gt;-->
-            <!--&lt;!&ndash;</apiSource>&ndash;&gt;-->
-            <!--&lt;!&ndash;</apiSources>&ndash;&gt;-->
-            <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
+        <!--&lt;!&ndash;<groupId>com.github.kongchen</groupId>&ndash;&gt;-->
+        <!--&lt;!&ndash;<artifactId>swagger-maven-plugin</artifactId>&ndash;&gt;-->
+        <!--&lt;!&ndash;<version>3.0.0</version>&ndash;&gt;-->
+        <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
+        <!--&lt;!&ndash;<apiSources>&ndash;&gt;-->
+        <!--&lt;!&ndash;<apiSource>&ndash;&gt;-->
+        <!--&lt;!&ndash;<springmvc>true</springmvc>&ndash;&gt;-->
+        <!--&lt;!&ndash;<locations>${rest-locations}</locations>&ndash;&gt;-->
+        <!--&lt;!&ndash;<host>service.url:8080</host>&ndash;&gt;-->
+        <!--&lt;!&ndash;<basePath>/</basePath>&ndash;&gt;-->
+        <!--&lt;!&ndash;<info>&ndash;&gt;-->
+        <!--&lt;!&ndash;<title>Application manager swagger</title>&ndash;&gt;-->
+        <!--&lt;!&ndash;<version>0.0.1</version>&ndash;&gt;-->
+        <!--&lt;!&ndash;<contact>&ndash;&gt;-->
+        <!--&lt;!&ndash;<email>mahmoud.romeh@test.com</email>&ndash;&gt;-->
+        <!--&lt;!&ndash;<name>Mahmoud Romih</name>&ndash;&gt;-->
+        <!--&lt;!&ndash;</contact>&ndash;&gt;-->
+        <!--&lt;!&ndash;<license>&ndash;&gt;-->
+        <!--&lt;!&ndash;<url>http://www.apache.org/licenses/LICENSE-2.0.html</url>&ndash;&gt;-->
+        <!--&lt;!&ndash;<name>Apache 2.0</name>&ndash;&gt;-->
+        <!--&lt;!&ndash;</license>&ndash;&gt;-->
+        <!--&lt;!&ndash;</info>&ndash;&gt;-->
+        <!--&lt;!&ndash;<swaggerDirectory>${project.build.directory}/generated/swagger-ui</swaggerDirectory>&ndash;&gt;-->
+        <!--&lt;!&ndash;</apiSource>&ndash;&gt;-->
+        <!--&lt;!&ndash;</apiSources>&ndash;&gt;-->
+        <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
 
 
-            <!--&lt;!&ndash;<executions>&ndash;&gt;-->
-            <!--&lt;!&ndash;<execution>&ndash;&gt;-->
-            <!--&lt;!&ndash;<phase>compile</phase>&ndash;&gt;-->
-            <!--&lt;!&ndash;<goals>&ndash;&gt;-->
-            <!--&lt;!&ndash;<goal>generate</goal>&ndash;&gt;-->
-            <!--&lt;!&ndash;</goals>&ndash;&gt;-->
-            <!--&lt;!&ndash;</execution>&ndash;&gt;-->
-            <!--&lt;!&ndash;</executions>&ndash;&gt;-->
-            <!--&lt;!&ndash;</plugin>&ndash;&gt;-->
+        <!--&lt;!&ndash;<executions>&ndash;&gt;-->
+        <!--&lt;!&ndash;<execution>&ndash;&gt;-->
+        <!--&lt;!&ndash;<phase>compile</phase>&ndash;&gt;-->
+        <!--&lt;!&ndash;<goals>&ndash;&gt;-->
+        <!--&lt;!&ndash;<goal>generate</goal>&ndash;&gt;-->
+        <!--&lt;!&ndash;</goals>&ndash;&gt;-->
+        <!--&lt;!&ndash;</execution>&ndash;&gt;-->
+        <!--&lt;!&ndash;</executions>&ndash;&gt;-->
+        <!--&lt;!&ndash;</plugin>&ndash;&gt;-->
 
         <!--</plugins>-->
     </build>
