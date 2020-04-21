@@ -1,5 +1,8 @@
 package com.hummer.rest.model;
 
+import com.hummer.common.SysConstant;
+import org.slf4j.MDC;
+
 import java.util.Date;
 
 /**
@@ -28,6 +31,9 @@ public class ResourceResponse<T> {
     }
 
     public ResourceResponse() {
+        if(MDC.getMDCAdapter()!=null) {
+            this.trackId = MDC.get(SysConstant.REQUEST_ID);
+        }
     }
 
     public int getCode() {
