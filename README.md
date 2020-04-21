@@ -28,4 +28,4 @@ glue spring boot,mybatis,kafka,rabbitmq,redis,mongodb...framework,Make business 
     - customer multiple thread pipeline
 - hummer-rest
     - glue fast json serial deserialization http request response message
-    - customer simple binding module,convert http query string parameter to business entity      
+    - customer simple binding module,convert http query string parameter to business entity...      
