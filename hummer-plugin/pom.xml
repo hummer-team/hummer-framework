@@ -24,5 +24,6 @@
         <module>hummer-seata-spring-boot-plugin</module>
         <module>hummer-redis-plugin</module>
         <module>hummer-trace-client-plugin</module>
+        <module>hummer-swagger-plugin</module>
     </modules>
 </project>
