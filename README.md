@@ -11,9 +11,13 @@ glue spring boot,mybatis,kafka,rabbitmq,redis,mongodb...framework,Make business 
 - Spring boot 2.1.0.RELEASE+
 - Lombok abstraction
 - Swagger 2 API documentation
-- REST API model validation 
+- REST API model validation
+- Kafka
+- redis
+- rocksDB
+- multiple thread 
 
-## model describe：
+## model describe
 
 - hummer-api
     - this is demo module,include all feature test
