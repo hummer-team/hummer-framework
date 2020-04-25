@@ -1,3 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 com.hummer.common.eventbus.EventBusBean,\
-com.hummer.common.eventbus.EventBusRegister
+com.hummer.common.eventbus.EventBusRegister,\
+com.hummer.common.threadholder.RegisterThreadUnExceptionConfiguration  

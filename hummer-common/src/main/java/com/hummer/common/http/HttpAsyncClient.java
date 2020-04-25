@@ -871,7 +871,6 @@ public final class HttpAsyncClient extends BaseHttpClient {
 
     private static void setRequestHead(HttpMessage httpMessage) {
         httpMessage.addHeader(SysConstant.REQUEST_ID, MDC.get(SysConstant.REQUEST_ID));
-        httpMessage.addHeader(USER_AGENT, HJ_IBJ);
         httpMessage.addHeader(SysConstant.HEADER_REQ_TIME, String.valueOf(DateUtil.getTimestampInMillis()));
     }
 
