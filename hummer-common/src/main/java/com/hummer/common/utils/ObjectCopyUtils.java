@@ -45,6 +45,24 @@ public class ObjectCopyUtils {
     }
 
     /**
+     * copy object
+     *
+     * @param source source object
+     * @param target target object
+     * @return T
+     * @author chen wei
+     * @date 2020/4/24 16:50
+     */
+    public static void copy(Object source, Object target) {
+        if (source == null || target == null) {
+            return;
+        }
+
+        BeanCopier copier = BeanCopier.create(source.getClass(), target.getClass(), false);
+        copier.copy(source, target, null);
+    }
+
+    /**
      * copy list
      *
      * @param sourceData source
@@ -86,14 +104,13 @@ public class ObjectCopyUtils {
         return result;
     }
 
-
     private static <T> T newInstance(Class<T> clazz) {
         Assert.notNull(clazz, "The class must not be null");
         try {
             return clazz.newInstance();
         } catch (Throwable throwable) {
-            throw new SysException(SysConstant.SYS_ERROR_CODE
-                    , String.format("instance %s failed", clazz.getSimpleName()), throwable);
+            throw new SysException(SysConstant.SYS_ERROR_CODE,
+                String.format("instance %s failed", clazz.getSimpleName()), throwable);
         }
     }
 }
