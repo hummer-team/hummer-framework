@@ -81,8 +81,8 @@ public final class HttpAsyncClient extends BaseHttpClient {
      * @date 2019/6/20 15:00
      * @version 1.0.0
      **/
-    public static HttpAsyncClient instance() {
-        return instance(null);
+    public static  HttpAsyncClient create() {
+        return create(null);
     }
 
     /**
@@ -94,7 +94,7 @@ public final class HttpAsyncClient extends BaseHttpClient {
      * @date 2019/6/20 15:00
      * @version 1.0.0
      **/
-    public static HttpAsyncClient instance(final String groupName) {
+    public static HttpAsyncClient create(final String groupName) {
         String key = Strings.isNullOrEmpty(groupName) ? DEFAULT_GROUP_HTTP_ASYNC : groupName;
 
         HttpAsyncClient asyncClient = INSTANCE_MAP.get(key);

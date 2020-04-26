@@ -18,7 +18,7 @@ public class HttpAsyncClientTest {
                 .setUrl("http://www")
                 .build();
 
-        String result = HttpAsyncClient.instance().sendGet(config);
+        String result = HttpAsyncClient.create().sendGet(config);
         System.out.println(result);
     }
 }

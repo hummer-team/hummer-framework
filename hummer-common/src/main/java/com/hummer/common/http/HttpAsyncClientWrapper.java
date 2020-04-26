@@ -6,6 +6,6 @@ public class HttpAsyncClientWrapper {
     }
 
     private static class Inner {
-        private static final HttpAsyncClient CLIENT = HttpAsyncClient.instance();
+        private static final HttpAsyncClient CLIENT = HttpAsyncClient.create();
     }
 }

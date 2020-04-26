@@ -155,7 +155,7 @@ public class ApplicationController {
             .setSocketTimeOutMillisecond(3000)
             .build();
 
-        String result = HttpAsyncClient.instance().sendGet(config);
+        String result = HttpAsyncClient.create().sendGet(config);
         memoryMap.put("totalMemoryForJVM_01", rt.totalMemory() / m);
         memoryMap.put("totalMemoryForMachine_01", osmxb.getTotalPhysicalMemorySize() / m);
 
