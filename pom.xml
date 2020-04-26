@@ -27,27 +27,27 @@
     </parent>
 
 
-<!--    <distributionManagement>-->
-<!--        <repository>-->
-<!--            <id>releases-local</id>-->
-<!--            <url>http://localhost:8081/nexus/content/repositories/releases</url>-->
-<!--        </repository>-->
-<!--        <snapshotRepository>-->
-<!--            <id>snapshots-local</id>-->
-<!--            <url>http://localhost:8081/nexus/content/repositories/snapshots</url>-->
-<!--        </snapshotRepository>-->
-<!--    </distributionManagement>-->
-
     <distributionManagement>
         <repository>
-            <id>maven-releases</id>
-            <url>http://10.10.10.250:8081/repository/maven-releases/</url>
+            <id>releases-local</id>
+            <url>http://localhost:8081/nexus/content/repositories/releases</url>
         </repository>
         <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <url>http://10.10.10.250:8081/repository/maven-snapshots/</url>
+            <id>snapshots-local</id>
+            <url>http://localhost:8081/nexus/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
+
+<!--    <distributionManagement>-->
+<!--        <repository>-->
+<!--            <id>maven-releases</id>-->
+<!--            <url>http://10.10.10.250:8081/repository/maven-releases/</url>-->
+<!--        </repository>-->
+<!--        <snapshotRepository>-->
+<!--            <id>nexus-snapshots</id>-->
+<!--            <url>http://10.10.10.250:8081/repository/maven-snapshots/</url>-->
+<!--        </snapshotRepository>-->
+<!--    </distributionManagement>-->
 
     <!-- Properties -->
     <properties>
@@ -129,6 +129,7 @@
         <spring-boot-starter-log4j2.version>2.2.0.RELEASE</spring-boot-starter-log4j2.version>
         <spring-core.version>5.2.0.RELEASE</spring-core.version>
         <spring-cloud-sleuth-stream.version>1.3.6.RELEASE</spring-cloud-sleuth-stream.version>
+        <LatencyUtils.version>2.0.3</LatencyUtils.version>
     </properties>
 
     <dependencyManagement>
@@ -676,6 +677,11 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-sleuth-zipkin</artifactId>
                 <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.latencyutils</groupId>
+                <artifactId>LatencyUtils</artifactId>
+                <version>${LatencyUtils.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

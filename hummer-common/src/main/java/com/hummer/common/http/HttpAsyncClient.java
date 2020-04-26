@@ -850,7 +850,6 @@ public final class HttpAsyncClient extends BaseHttpClient {
             PoolingNHttpClientConnectionManager cm = new PoolingNHttpClientConnectionManager(ioReactor);
             cm.setDefaultMaxPerRoute(localMaxPerRoute);
             cm.setMaxTotal(localMaxTotal);
-
             httpClient = HttpAsyncClients.custom().setConnectionManager(cm).build();
             httpClient.start();
         } catch (IOReactorException e) {

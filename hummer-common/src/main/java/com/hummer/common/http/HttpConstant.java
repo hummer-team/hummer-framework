@@ -19,6 +19,11 @@ public class HttpConstant {
     public static final int HEAD_LOG_DATA_LENGTH = 1990;
     public static final int EXCEPTION_MESSAGE_MAX_LENGTH =50000;
     public static final int TRACKED_LOG_HTTP_HEAD_MAX_LENGTH =495;
+    public static final String HTTPCLIENT_CONNTIMEOUTRETRY_ENABLE = "httpclient.connTimeoutRetry.enable";
+    /**
+     * HttpClientUtil Connection reset retry 重试开关 默认:true
+     */
+    public static final String HTTPCLIENT_CONNRESETRETRY_ENABLE = "httpclient.connResetRetry.enable";
     /**
      * 当前http请求参数缓存key
      **/

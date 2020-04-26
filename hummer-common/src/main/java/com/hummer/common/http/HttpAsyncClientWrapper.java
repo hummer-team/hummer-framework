@@ -1,6 +1,10 @@
 package com.hummer.common.http;
 
 public class HttpAsyncClientWrapper {
+    private HttpAsyncClientWrapper(){
+
+    }
+
     public static HttpAsyncClient getSingleInstance() {
         return Inner.CLIENT;
     }
