@@ -102,8 +102,8 @@ public class RequestFilter implements Filter {
                     , HttpServletRequestUtil.getCurrentUrl(httpRequest)
                     , System.currentTimeMillis() - start);
         } finally {
-            MDC.clear();
             outputLog(httpResponse, httpRequest, System.currentTimeMillis() - start);
+            MDC.clear();
         }
     }
 

@@ -140,7 +140,8 @@ public class HttpSyncClient {
                                     , HTTP_CONN_SOCKET_TIMEOUT))
                             .setConnectTimeout(
                                     PropertiesContainer.valueOf("httpclient.connectTimeout"
-                                            , Integer.class, HTTP_CONN_TIMEOUT))
+                                            , Integer.class
+                                            , HTTP_CONN_TIMEOUT))
                             .setConnectionRequestTimeout(PropertiesContainer.valueOf("httpclient.connectionRequestTimeout"
                                     , Integer.class
                                     , HTTP_CONN_TIMEOUT))
@@ -303,6 +304,33 @@ public class HttpSyncClient {
     public static String sendHttpPost(String httpUrl, Map<String, String> parameters, long timeout, TimeUnit timeUnit,
                                       Header... header) {
         return sendHttpPostByRetry(httpUrl, parameters, timeout, timeUnit, 0, header);
+    }
+
+    /**
+     * send post with from data
+     * @param httpUrl
+     * @param nameValuePairs
+     * @param timeout
+     * @param timeUnit
+     * @param retryCount
+     * @param header
+     * @return
+     */
+    public static String sendHttpPostByRetry(String httpUrl, List<NameValuePair> nameValuePairs
+            , long timeout
+            , TimeUnit timeUnit
+            , int retryCount
+            , Header... header) {
+        HttpPost httpPost = new HttpPost(httpUrl);
+        try {
+            if (header != null) {
+                httpPost.setHeaders(header);
+            }
+            httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+        } catch (Exception e) {
+            throw new SysException(SYS_ERROR_CODE, e.getMessage(), e);
+        }
+        return sendHttpPostByRetry(httpPost, timeout, timeUnit, retryCount);
     }
 
     /**
