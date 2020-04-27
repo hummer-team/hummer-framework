@@ -27,7 +27,7 @@
     </parent>
 
 
-    <distributionManagement>
+    <!-- <distributionManagement>
         <repository>
             <id>releases-local</id>
             <url>http://localhost:8081/nexus/content/repositories/releases</url>
@@ -36,18 +36,18 @@
             <id>snapshots-local</id>
             <url>http://localhost:8081/nexus/content/repositories/snapshots</url>
         </snapshotRepository>
-    </distributionManagement>
+    </distributionManagement> -->
 
-<!--    <distributionManagement>-->
-<!--        <repository>-->
-<!--            <id>maven-releases</id>-->
-<!--            <url>http://10.10.10.250:8081/repository/maven-releases/</url>-->
-<!--        </repository>-->
-<!--        <snapshotRepository>-->
-<!--            <id>nexus-snapshots</id>-->
-<!--            <url>http://10.10.10.250:8081/repository/maven-snapshots/</url>-->
-<!--        </snapshotRepository>-->
-<!--    </distributionManagement>-->
+   <distributionManagement>
+       <repository>
+           <id>maven-releases</id>
+           <url>http://10.10.10.250:8081/repository/maven-releases/</url>
+       </repository>
+       <snapshotRepository>
+           <id>nexus-snapshots</id>
+           <url>http://10.10.10.250:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <!-- Properties -->
     <properties>

@@ -9,7 +9,7 @@ import com.hummer.common.http.context.ResponseContext;
  * @since:1.0.0
  * @Date: 2019/12/16 17:01
  **/
-public interface HttpClientInterceptor {
+public interface HttpClientInterceptor extends Comparable<HttpClientInterceptor>{
     /**
      * request service before callback
      *

@@ -1,9 +1,12 @@
 package com.hummer.common.http;
 
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.Lists;
 import com.hummer.common.exceptions.AppException;
 import com.hummer.common.exceptions.SysException;
+import com.hummer.common.http.context.RequestContext;
+import com.hummer.common.http.context.RequestContextWrapper;
+import com.hummer.common.http.context.ResponseContext;
+import com.hummer.common.http.context.ResponseContextWrapper;
 import com.hummer.core.PropertiesContainer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Header;
@@ -77,7 +80,8 @@ public class HttpSyncClient {
     private static volatile LatencyStatsRegistry latencyStatsRegistry;
 
     private static List<HttpClientHandler> httpClientHandlers = new ArrayList<>();
-    private static List<HttpClientIntercepter> httpClientIntercepters = new ArrayList<>();
+    private static List<HttpClientInterceptor> HttpClientInterceptors = new ArrayList<>();
+    private static RequestConfig requestConfig = null;
 
     static {
 
@@ -86,21 +90,20 @@ public class HttpSyncClient {
             httpClientHandlers.add(filter);
         }
 
-        ServiceLoader<HttpClientIntercepter> slHttpClientLogHandler = ServiceLoader.load(HttpClientIntercepter.class);
-        for (HttpClientIntercepter filter : slHttpClientLogHandler) {
-            httpClientIntercepters.add(filter);
+        ServiceLoader<HttpClientInterceptor> slHttpClientLogHandler = ServiceLoader.load(HttpClientInterceptor.class);
+        for (HttpClientInterceptor filter : slHttpClientLogHandler) {
+            HttpClientInterceptors.add(filter);
         }
 
-        Collections.sort(httpClientIntercepters);
+        Collections.sort(HttpClientInterceptors);
     }
 
     private HttpSyncClient() {
     }
 
-    private static RequestConfig requestConfig = null;
-
     /**
      * this is single instance and setting properties
+     *
      * @return
      */
     public static CloseableHttpClient getHttpClient() {
@@ -714,7 +717,7 @@ public class HttpSyncClient {
             throw new SysException(SYS_ERROR_CODE, "HttpRequestBase is null!");
         }
         HttpResult result = null;
-        HttpRequestWrapper httpRequest = null;
+        RequestContext httpRequest = null;
         CloseableHttpResponse response = null;
         String responseContent = null;
 
@@ -751,19 +754,19 @@ public class HttpSyncClient {
                 closeResources(response, httpRequestBase);
             }
             /**tryMetricsMark(httpRequestBase.getMethod().toLowerCase()
-                    , httpRequestBase.getURI().getPath()
-                    , begin.stop().elapsed(TimeUnit.NANOSECONDS));**/
+             , httpRequestBase.getURI().getPath()
+             , begin.stop().elapsed(TimeUnit.NANOSECONDS));**/
         }
     }
 
 
-    private static HttpRequestWrapper beforeLog(HttpRequestBase httpRequestBase) {
-        HttpRequestWrapper wrapper = null;
-        if (httpClientIntercepters.size() > 0) {
-            wrapper = new HttpRequestWrapperImpl(MDC.get(REQUEST_ID), httpRequestBase);
-            for (HttpClientIntercepter intercepter : httpClientIntercepters) {
+    private static RequestContext beforeLog(HttpRequestBase httpRequestBase) {
+        RequestContext wrapper = null;
+        if (HttpClientInterceptors.size() > 0) {
+            wrapper = new RequestContextWrapper(httpRequestBase, MDC.get(REQUEST_ID));
+            for (HttpClientInterceptor interceptor : HttpClientInterceptors) {
                 try {
-                    intercepter.before(wrapper);
+                    interceptor.before(wrapper);
                 } catch (Exception e) {
                     log.warn(e.getMessage(), e);
                 }
@@ -772,13 +775,13 @@ public class HttpSyncClient {
         return wrapper;
     }
 
-    private static void afterLog(HttpRequestWrapper requestWrapper, CloseableHttpResponse response) {
-        HttpResponseWrapper wrapper = null;
-        if (httpClientIntercepters.size() > 0) {
-            wrapper = new HttpResponseWrapperImpl(MDC.get(REQUEST_ID), response);
-            for (HttpClientIntercepter intercepter : httpClientIntercepters) {
+    private static void afterLog(RequestContext requestWrapper, CloseableHttpResponse response) {
+        ResponseContext wrapper = null;
+        if (HttpClientInterceptors.size() > 0) {
+            wrapper = new ResponseContextWrapper(response, MDC.get(REQUEST_ID));
+            for (HttpClientInterceptor interceptor : HttpClientInterceptors) {
                 try {
-                    intercepter.after(requestWrapper, wrapper);
+                    interceptor.after(requestWrapper, wrapper);
                 } catch (Exception e) {
                     log.warn(e.getMessage(), e);
                 }
@@ -787,10 +790,10 @@ public class HttpSyncClient {
         }
     }
 
-    private static void afterThrowingLog(HttpRequestWrapper wrapper, Exception ex) {
-        for (HttpClientIntercepter intercepter : httpClientIntercepters) {
+    private static void afterThrowingLog(RequestContext wrapper, Exception ex) {
+        for (HttpClientInterceptor interceptor : HttpClientInterceptors) {
             try {
-                intercepter.afterThrowing(wrapper, ex);
+                interceptor.throwing(wrapper, ex);
             } catch (Exception e) {
                 log.warn(e.getMessage(), e);
             }
