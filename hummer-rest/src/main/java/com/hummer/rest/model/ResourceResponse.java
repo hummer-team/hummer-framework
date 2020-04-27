@@ -1,6 +1,7 @@
 package com.hummer.rest.model;
 
 import com.hummer.common.SysConstant;
+import com.hummer.common.utils.DateUtil;
 import org.slf4j.MDC;
 
 import java.util.Date;
@@ -31,9 +32,58 @@ public class ResourceResponse<T> {
     }
 
     public ResourceResponse() {
-        if(MDC.getMDCAdapter()!=null) {
+        if (MDC.getMDCAdapter() != null) {
             this.trackId = MDC.get(SysConstant.REQUEST_ID);
         }
+        this.time = DateUtil.now();
+    }
+
+    public static <T> ResourceResponse<T> newInstance() {
+        return new ResourceResponse<>();
+    }
+
+    public static <V> ResourceResponse<V> fail(final String message) {
+        ResourceResponse<V> result = new ResourceResponse<>();
+        result.setMessage(message);
+        result.setCode(-1);
+        return result;
+    }
+
+    public static <V> ResourceResponse<V> fail(final int status, final String message) {
+        ResourceResponse<V> result = new ResourceResponse<>();
+        result.setCode(status);
+        result.setMessage(message);
+        return result;
+    }
+
+    public static <V> ResourceResponse<V> ok() {
+        ResourceResponse<V> result = new ResourceResponse<>();
+        result.setMessage("success");
+        return result;
+    }
+
+    public static <V> ResourceResponse<V> ok(final V data) {
+        ResourceResponse<V> result = new ResourceResponse<>();
+        result.setCode(0);
+        result.setMessage("success");
+        result.setData(data);
+        return result;
+    }
+
+    public static <V> ResourceResponse<V> ok(final String message, final V data) {
+        ResourceResponse<V> result = new ResourceResponse<>();
+        result.setMessage(message);
+        result.setData(data);
+        return result;
+    }
+
+    public static <V> ResourceResponse<V> ok(final int status, final String message, final V data) {
+        ResourceResponse<V> result = new ResourceResponse<>();
+        result.setCode(status);
+        result.setMessage(message);
+        result.setData(data);
+        result.setTime(new Date());
+        return result;
     }
 
     public int getCode() {
@@ -58,6 +108,11 @@ public class ResourceResponse<T> {
         return data;
     }
 
+    public ResourceResponse<T> setData(T data) {
+        this.data = data;
+        return this;
+    }
+
     public Date getTime() {
         return time;
     }
@@ -67,21 +122,8 @@ public class ResourceResponse<T> {
         return this;
     }
 
-    public ResourceResponse<T> setData(T data) {
-        this.data = data;
-        return this;
-    }
-
     public String getTrackId() {
         return trackId;
-    }
-
-    public static <T> ResourceResponse<T> newInstance() {
-        return new ResourceResponse<>();
-    }
-
-    public ResourceResponse<T> build() {
-        return this;
     }
 
     public ResourceResponse<T> setTrackId(final String trackId) {
@@ -89,49 +131,8 @@ public class ResourceResponse<T> {
         return this;
     }
 
-    public static <V> ResourceResponse<V> fail(final String message) {
-        ResourceResponse<V> result = new ResourceResponse<>();
-        result.setMessage(message);
-        result.setCode(-1);
-        return result;
-    }
-
-    public static <V> ResourceResponse<V> fail(final int status, final String message) {
-        ResourceResponse<V> result = new ResourceResponse<>();
-        result.setCode(status);
-        result.setMessage(message);
-        return result;
-    }
-
-    public static <V> ResourceResponse<V> ok() {
-        ResourceResponse<V> result = new ResourceResponse<>();
-        result.setMessage("success");
-        return result;
-    }
-
-
-    public static <V> ResourceResponse<V> ok(final V data) {
-        ResourceResponse<V> result = new ResourceResponse<>();
-        result.setCode(0);
-        result.setMessage("success");
-        result.setData(data);
-        return result;
-    }
-
-    public static <V> ResourceResponse<V> ok(final String message, final V data) {
-        ResourceResponse<V> result = new ResourceResponse<>();
-        result.setMessage(message);
-        result.setData(data);
-        return result;
-    }
-
-    public static <V> ResourceResponse<V> ok(final int status,final String message,final V data) {
-        ResourceResponse<V> result = new ResourceResponse<>();
-        result.setCode(status);
-        result.setMessage(message);
-        result.setData(data);
-        result.setTime(new Date());
-        return result;
+    public ResourceResponse<T> build() {
+        return this;
     }
 
     @Override
