@@ -55,13 +55,13 @@ public class GlobalExceptionHandler {
     private CustomerExceptionHandler handler;
     private static final Map<Class<?>, Integer> EXCEPTIONS = new HashMap<>(16);
 
-    @Value("${pro.response.error.code.ratio:100}")
+    @Value("${hummer.response.error.code.ratio:100}")
     private Integer codeRatio;
 
-    @Value("${pro.response.error.SysException.code:500}")
+    @Value("${hummer.response.error.SysException.code:500}")
     private Integer sysExceptionCode;
 
-    @Value("${pro.response.error.SysException.code:400}")
+    @Value("${hummer.response.error.SysException.code:400}")
     private Integer errorRequestExceptionCode;
 
     static {
