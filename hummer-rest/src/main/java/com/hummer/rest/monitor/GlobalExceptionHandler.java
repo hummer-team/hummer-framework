@@ -1,9 +1,10 @@
 package com.hummer.rest.monitor;
 
 import com.google.common.base.Strings;
-import com.hummer.rest.model.ResourceResponse;
 import com.hummer.common.SysConstant;
 import com.hummer.common.exceptions.AppException;
+import com.hummer.common.exceptions.ErrorRequestException;
+import com.hummer.rest.model.ResourceResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.slf4j.MDC;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.validation.BindException;
@@ -53,6 +55,15 @@ public class GlobalExceptionHandler {
     private CustomerExceptionHandler handler;
     private static final Map<Class<?>, Integer> EXCEPTIONS = new HashMap<>(16);
 
+    @Value("${pro.response.error.code.ratio:100}")
+    private Integer codeRatio;
+
+    @Value("${pro.response.error.SysException.code:500}")
+    private Integer sysExceptionCode;
+
+    @Value("${pro.response.error.SysException.code:400}")
+    private Integer errorRequestExceptionCode;
+
     static {
         EXCEPTIONS.put(HttpRequestMethodNotSupportedException.class, HttpServletResponse.SC_METHOD_NOT_ALLOWED);
         EXCEPTIONS.put(HttpMediaTypeNotSupportedException.class, HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
@@ -70,6 +81,7 @@ public class GlobalExceptionHandler {
         EXCEPTIONS.put(NoHandlerFoundException.class, HttpServletResponse.SC_NOT_FOUND);
         EXCEPTIONS.put(IllegalArgumentException.class, HttpServletResponse.SC_BAD_REQUEST);
         EXCEPTIONS.put(MethodArgumentTypeMismatchException.class, HttpServletResponse.SC_BAD_REQUEST);
+        EXCEPTIONS.put(ErrorRequestException.class, HttpServletResponse.SC_BAD_REQUEST);
     }
 
     @ExceptionHandler(value = Throwable.class)
@@ -88,10 +100,10 @@ public class GlobalExceptionHandler {
                     .iterator()
                     .next()
                     .getMessage();
-            status = 40000;
+            status = HttpServletResponse.SC_BAD_REQUEST * codeRatio;
             rep.setCode(status);
             rep.setMessage(errorMessage);
-        } else if (!(e instanceof AppException)) {
+        } else if ((e instanceof ErrorRequestException) || !(e instanceof AppException)) {
             sb.append("current request failed :")
                     .append(StringUtils.LF)
                     .append("url:")
@@ -102,7 +114,7 @@ public class GlobalExceptionHandler {
                     .append(String.format("request id:%s > stack: %s", id, ExceptionUtils.getStackTrace(e)));
             LOGGER.error(sb.toString());
             status = EXCEPTIONS.get(e.getClass());
-            rep.setCode(status == null ? 500 * 100 : status * 100);
+            rep.setCode(status == null ? sysExceptionCode * codeRatio : status * codeRatio);
             rep.setMessage(e.getMessage());
         } else {
             //output
