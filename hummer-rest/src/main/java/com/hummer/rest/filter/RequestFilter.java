@@ -1,20 +1,15 @@
 package com.hummer.rest.filter;
 
-import com.hummer.core.PropertiesContainer;
 import com.hummer.common.SysConstant;
 import com.hummer.common.utils.HttpServletRequestUtil;
 import com.hummer.common.utils.IpUtil;
+import com.hummer.core.PropertiesContainer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -115,11 +110,12 @@ public class RequestFilter implements Filter {
         if (response.getStatus() != successCode
                 || costTime >= PropertiesContainer.valueOf("request.cost.time.slow.value"
                 , Integer.class, defaultSlowCostTimeMills)) {
-            LOGGER.warn("request {} handle done,response status {},total cost {} millis"
+            LOGGER.warn("request {} handle done,response status {},total cost {} millis,user-agent {}"
                     , HttpServletRequestUtil.getCurrentUrl(httpRequest)
                     , response.getStatus()
-                    , costTime);
+                    , costTime, HttpServletRequestUtil.getUserAgent(httpRequest));
         }
+
     }
 
     /**

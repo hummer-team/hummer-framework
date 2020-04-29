@@ -1,6 +1,7 @@
 package com.hummer.common.utils;
 
 import com.google.common.base.Strings;
+import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,5 +28,12 @@ public class HttpServletRequestUtil {
             }
         }
         return null;
+    }
+
+    public static String getUserAgent(HttpServletRequest request) {
+        if (request == null) {
+            return null;
+        }
+        return request.getHeader(HttpHeaders.USER_AGENT);
     }
 }
