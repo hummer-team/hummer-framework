@@ -3,8 +3,10 @@ package com.hummer.pipeline.plugin;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.hummer.core.PropertiesContainer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -20,6 +22,7 @@ import java.util.concurrent.TimeUnit;
  * @Date: 2018/12/10 18:49
  **/
 @Configuration
+@DependsOn(value = {"com.hummer.core.starter.BootStarterBean"})
 public class TaskThreadPoolBean {
 
     /**
@@ -38,22 +41,20 @@ public class TaskThreadPoolBean {
     @Bean(name = "defaultTaskGroup")
     @Lazy
     public ListeningExecutorService initTaskGroupV1ThreadPool() {
-        int size = 1000 /**BaseProperties.getProperty("task-queue-max-size"
-                , Integer.class
-                , 1000)**/;
-
+        int size = PropertiesContainer.valueOfInteger("hummer.task.memory.queue.max.size", 1000);
+        String threadName = PropertiesContainer.valueOfString("hummer.task.thread.name", "hummer-thread");
+        int coreThread = PropertiesContainer.valueOfInteger("hummer.task.thread.core.limit"
+                , Runtime.getRuntime().availableProcessors());
+        int maxThread = PropertiesContainer.valueOfInteger("hummer.task.thread.max.limit"
+                , Runtime.getRuntime().availableProcessors() * 2);
         ThreadFactory tf =
                 new ThreadFactoryBuilder()
-                        .setNameFormat(String.format("%s-Th"
-                                , /**BaseProperties.getProperty("task-queue-biz-name"
-                                        , String.class
-                                        , "defaultTaskGroup")
-                                        + "-%d"*/1))
+                        .setNameFormat(threadName + "-%d")
                         .setDaemon(true)
                         .build();
 
-        ExecutorService executor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors()
-                , Runtime.getRuntime().availableProcessors() * 2
+        ExecutorService executor = new ThreadPoolExecutor(coreThread
+                , maxThread
                 , 0
                 , TimeUnit.MILLISECONDS
                 , new LinkedBlockingQueue<>(size)
@@ -79,24 +80,24 @@ public class TaskThreadPoolBean {
     @Bean(name = "defaultTaskGroupV2")
     @Lazy
     public ExecutorService initTaskGroupV2ThreadPool() {
-        int size = 1000/**BaseProperties.getProperty("task-queue-max-size"
-                , Integer.class
-                , 1000)**/;
+
+        int size = PropertiesContainer.valueOfInteger("hummer.task.memory.queue.max.size", 1000);
+        String threadName = PropertiesContainer.valueOfString("hummer.task.thread.name", "hummer-thread");
 
         ThreadFactory tf =
                 new ThreadFactoryBuilder()
-                        .setNameFormat(String.format("%s-Th"
-                                , /**BaseProperties.getProperty("task-queue-biz-name"
-                                        , String.class
-                                        , "defaultTaskGroupV2")
-                                        + "-%d"**/1))
+                        .setNameFormat(threadName + "-%d")
                         .setDaemon(true)
                         .build();
 
         final MdcTaskDecorator taskDecorator = new MdcTaskDecorator();
 
-        return new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors()
-                , Runtime.getRuntime().availableProcessors() * 2
+        int coreThread = PropertiesContainer.valueOfInteger("hummer.task.thread.core.limit"
+                , Runtime.getRuntime().availableProcessors());
+        int maxThread = PropertiesContainer.valueOfInteger("hummer.task.thread.max.limit"
+                , Runtime.getRuntime().availableProcessors() * 2);
+        return new ThreadPoolExecutor(coreThread
+                , maxThread
                 , 0
                 , TimeUnit.MILLISECONDS
                 , new LinkedBlockingQueue<>(size)
@@ -125,17 +126,12 @@ public class TaskThreadPoolBean {
     @Bean(name = "defaultTaskOenThreadGroupV2")
     @Lazy
     public ExecutorService initTaskOenThreadGroupV2ThreadPool() {
-        int size =1000; /**BaseProperties.getProperty("task-queue-max-size"
-                , Integer.class
-                , 1000)**/;
+        int size = PropertiesContainer.valueOfInteger("hummer.task.memory.queue.max.size", 1000);
+        String threadName = PropertiesContainer.valueOfString("hummer.task.thread.name", "hummer-thread");
 
         ThreadFactory tf =
                 new ThreadFactoryBuilder()
-                        .setNameFormat(String.format("%s-Th"
-                                , /**BaseProperties.getProperty("task-queue-biz-name"
-                                        , String.class
-                                        , "defaultTaskOenThreadGroupV2")
-                                        + "-%d"**/1))
+                        .setNameFormat(threadName + "-%d")
                         .setDaemon(true)
                         .build();
 
@@ -173,25 +169,24 @@ public class TaskThreadPoolBean {
     @Bean(name = "defaultTaskGroupV3")
     @Lazy
     public ThreadPoolTaskExecutor initTaskGroupV3ThreadPool() {
-
+        int size = PropertiesContainer.valueOfInteger("hummer.task.memory.queue.max.size", 1000);
+        String threadName = PropertiesContainer.valueOfString("hummer.task.thread.name", "hummer-thread");
+        int coreThread = PropertiesContainer.valueOfInteger("hummer.task.thread.core.limit"
+                , Runtime.getRuntime().availableProcessors());
+        int maxThread = PropertiesContainer.valueOfInteger("hummer.task.thread.max.limit"
+                , Runtime.getRuntime().availableProcessors() * 2);
         ThreadFactory tf =
                 new ThreadFactoryBuilder()
-                        .setNameFormat(String.format("%s-Th"
-                                , /**BaseProperties.getProperty("task-queue-biz-name"
-                                        , String.class
-                                        , "defaultTaskGroupV3")
-                                        + "-%d"**/1))
+                        .setNameFormat(threadName + "-%d")
                         .setDaemon(true)
                         .build();
 
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-        taskExecutor.setCorePoolSize(Runtime.getRuntime().availableProcessors());
-        taskExecutor.setMaxPoolSize(Runtime.getRuntime().availableProcessors() * 2);
+        taskExecutor.setCorePoolSize(coreThread);
+        taskExecutor.setMaxPoolSize(maxThread);
         taskExecutor.setKeepAliveSeconds(60);
         taskExecutor.setTaskDecorator(new MdcTaskDecorator());
-        taskExecutor.setQueueCapacity(/**BaseProperties.getProperty("task-queue-max-size"
-                , Integer.class
-                , 1000)**/1);
+        taskExecutor.setQueueCapacity(size);
         taskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         taskExecutor.setThreadFactory(tf);
 
