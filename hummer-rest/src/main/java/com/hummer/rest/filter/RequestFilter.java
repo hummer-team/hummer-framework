@@ -93,9 +93,9 @@ public class RequestFilter implements Filter {
             // TODO: 2019/6/24 insert response logic 
             chain.doFilter(request, response);
         } catch (Throwable throwable) {
-            LOGGER.error("request {} handle failed,cost {} millis"
+            LOGGER.error("request {} handle failed,cost {} millis,user-agent {}"
                     , HttpServletRequestUtil.getCurrentUrl(httpRequest)
-                    , System.currentTimeMillis() - start);
+                    , System.currentTimeMillis() - start, HttpServletRequestUtil.getUserAgent(httpRequest));
         } finally {
             outputLog(httpResponse, httpRequest, System.currentTimeMillis() - start);
             MDC.clear();
