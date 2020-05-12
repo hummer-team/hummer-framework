@@ -17,7 +17,7 @@ public class ParameterAssertUtil {
     }
 
     public static void assertRequestValidated(Errors errors, boolean getAll) {
-        assertRequestValidated(4000, errors, getAll);
+        assertRequestValidated(40000, errors, getAll);
     }
 
     public static void assertRequestValidated(int errorCode, Errors errors, boolean getAll) {
@@ -26,23 +26,27 @@ public class ParameterAssertUtil {
         } else {
             if (errors != null && errors.hasErrors()) {
                 org.springframework.validation.FieldError fieldError = errors.getFieldError();
-                throw new AppException(errorCode, fieldError.getDefaultMessage());
+                if (fieldError != null) {
+                    throw new AppException(errorCode, fieldError.getDefaultMessage());
+                } else {
+                    throw new AppException(errorCode,"input parameter validation error。");
+                }
             }
         }
     }
 
-    public static void assertRequestFristValidated(Errors errors) {
+    public static void assertRequestFirstValidated(Errors errors) {
         assertRequestValidated(errors, false);
     }
 
-    public static void assertRequestFristValidated(int errorCode, Errors errors) {
+    public static void assertRequestFirstValidated(int errorCode, Errors errors) {
 
         assertRequestValidated(errorCode, errors, false);
     }
 
     public static void assertRequestValidated(Errors errors) {
 
-        assertRequestValidated(4000, errors);
+        assertRequestValidated(40000, errors);
     }
 
     public static void assertRequestValidated(int errorCode, Errors errors) {
