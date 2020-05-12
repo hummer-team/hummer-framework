@@ -17,7 +17,7 @@ public class ParameterAssertUtil {
     }
 
     public static void assertRequestValidated(Errors errors, boolean getAll) {
-        assertRequestValidated(-4000, errors, getAll);
+        assertRequestValidated(4000, errors, getAll);
     }
 
     public static void assertRequestValidated(int errorCode, Errors errors, boolean getAll) {
@@ -42,7 +42,7 @@ public class ParameterAssertUtil {
 
     public static void assertRequestValidated(Errors errors) {
 
-        assertRequestValidated(-4000, errors);
+        assertRequestValidated(4000, errors);
     }
 
     public static void assertRequestValidated(int errorCode, Errors errors) {

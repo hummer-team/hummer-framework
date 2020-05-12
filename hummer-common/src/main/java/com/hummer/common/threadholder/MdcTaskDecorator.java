@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * use simple
  * <code>
- *     <pre>
+ * <pre>
  *          ThreadFactory tf =
  *                 new ThreadFactoryBuilder()
  *                         .setNameFormat(String.format("%s-Th"
@@ -35,6 +35,7 @@ import java.util.Map;
  *         };
  *     </pre>
  * </code>
+ *
  * @author liguo
  * @date 2017/9/5
  */
