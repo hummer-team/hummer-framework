@@ -93,7 +93,7 @@ public class ApplicationController {
     public ResourceResponse<QueryStringDto> queryStringParse(@BindRestParameterSimpleModel @Valid
                                                                  QueryStringDto queryStringDto
         , Errors errors) {
-        ParameterAssertUtil.assertRequestFristValidated(errors);
+        ParameterAssertUtil.assertRequestFirstValidated(errors);
         return ResourceResponse.ok(ObjectCopyUtils.copy(queryStringDto, QueryStringDto.class));
     }
 
@@ -101,7 +101,7 @@ public class ApplicationController {
     public ResourceResponse<QueryStringDto> queryStringParse2(@ModelAttribute @Valid
                                                                   QueryStringDto queryStringDto
         , Errors errors) {
-        ParameterAssertUtil.assertRequestFristValidated(errors);
+        ParameterAssertUtil.assertRequestFirstValidated(errors);
         return ResourceResponse.ok(ObjectCopyUtils.copy(queryStringDto, QueryStringDto.class));
     }
 
