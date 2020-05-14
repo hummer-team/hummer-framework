@@ -75,7 +75,8 @@ public class InternalRedisPool {
             return jedisPool;
         }
         synchronized (POOL) {
-            if (SENTINEL_POOL.get(db) == null) {
+            jedisPool = SENTINEL_POOL.get(db);
+            if (jedisPool == null) {
                 RedisConfig.SentinelConfig sentinelConfig = RedisPropertiesBuilder.builderSentinelConfig(db);
                 jedisPool = new JedisSentinelPool(sentinelConfig.getMasterName()
                         , sentinelConfig.getSentinelNode()
