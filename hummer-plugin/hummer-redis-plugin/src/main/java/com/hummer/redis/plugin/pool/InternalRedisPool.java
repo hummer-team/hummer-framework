@@ -43,21 +43,24 @@ public class InternalRedisPool {
             return jedisPool;
         }
 
-        JedisPoolConfig poolConfig = RedisPropertiesBuilder.builderPoolConfig(db);
-        RedisConfig.SimpleConfig redisProperties = RedisPropertiesBuilder.builderConfig(db);
+        synchronized (POOL) {
+            if (POOL.get(db) == null) {
+                JedisPoolConfig poolConfig = RedisPropertiesBuilder.builderPoolConfig(db);
+                RedisConfig.SimpleConfig redisProperties = RedisPropertiesBuilder.builderConfig(db);
 
-        jedisPool = new JedisPool(poolConfig, redisProperties.getHost(), redisProperties.getPort()
-                , redisProperties.getTimeOut()
-                , redisProperties.getPassword()
-                , redisProperties.getDbNumber()
-                , redisProperties.getClientName());
-        LOGGER.debug("db {} jedis pool instance is null,create new redis pool success, config is {}"
-                , db
-                , redisProperties);
+                jedisPool = new JedisPool(poolConfig, redisProperties.getHost(), redisProperties.getPort()
+                        , redisProperties.getTimeOut()
+                        , redisProperties.getPassword()
+                        , redisProperties.getDbNumber()
+                        , redisProperties.getClientName());
+                LOGGER.debug("db {} jedis pool instance is null,create new redis pool success, config is {}"
+                        , db
+                        , redisProperties);
 
-        //add to cache
-        POOL.put(db, jedisPool);
-
+                //add to cache
+                POOL.put(db, jedisPool);
+            }
+        }
         return jedisPool;
     }
 
@@ -69,17 +72,21 @@ public class InternalRedisPool {
             LOGGER.debug("db {} get jedis sentinel pool for cache", db);
             return jedisPool;
         }
-        RedisConfig.SentinelConfig sentinelConfig = RedisPropertiesBuilder.builderSentinelConfig(db);
-        jedisPool = new JedisSentinelPool(sentinelConfig.getMasterName()
-                , sentinelConfig.getSentinelNode()
-                , RedisPropertiesBuilder.builderObjectPoolConfig(db)
-                , sentinelConfig.getTimeOut()
-                , sentinelConfig.getPassword()
-                , sentinelConfig.getDbNumber()
-                , sentinelConfig.getClientName());
-        LOGGER.debug("db {} jedis sentinel pool instance is null,create new redis pool success."
-                , db);
-        SENTINEL_POOL.put(db, jedisPool);
+        synchronized (POOL) {
+            if (SENTINEL_POOL.get(db) == null) {
+                RedisConfig.SentinelConfig sentinelConfig = RedisPropertiesBuilder.builderSentinelConfig(db);
+                jedisPool = new JedisSentinelPool(sentinelConfig.getMasterName()
+                        , sentinelConfig.getSentinelNode()
+                        , RedisPropertiesBuilder.builderObjectPoolConfig(db)
+                        , sentinelConfig.getTimeOut()
+                        , sentinelConfig.getPassword()
+                        , sentinelConfig.getDbNumber()
+                        , sentinelConfig.getClientName());
+                LOGGER.debug("db {} jedis sentinel pool instance is null,create new redis pool success."
+                        , db);
+                SENTINEL_POOL.put(db, jedisPool);
+            }
+        }
         return jedisPool;
     }
 
