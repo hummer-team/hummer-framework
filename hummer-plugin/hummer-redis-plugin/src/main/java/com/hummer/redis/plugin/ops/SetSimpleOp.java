@@ -25,12 +25,29 @@ public class SetSimpleOp extends BaseOp {
         redis(this.redisDbGroupName);
     }
 
+
     public String getKey(final String key) {
         return redis(redisDbGroupName).doExecute(jedis -> jedis.get(key));
     }
 
     public byte[] getKey(final byte[] key) {
         return redis(redisDbGroupName).doExecute(jedis -> jedis.get(key));
+    }
+
+    public String set(final String key, final String value) {
+        return redis(REDIS_DB_GROUP_NAME).doExecute(jedis -> jedis.set(key, value));
+    }
+
+    public String set(final byte[] key, final byte[] value) {
+        return redis(REDIS_DB_GROUP_NAME).doExecute(jedis -> jedis.set(key, value));
+    }
+
+    public String set(final String key, final String value, final int seconds) {
+        return redis(REDIS_DB_GROUP_NAME).doExecute(jedis -> jedis.setex(key, seconds, value));
+    }
+
+    public String set(final byte[] key, final byte[] value, final int seconds) {
+        return redis(REDIS_DB_GROUP_NAME).doExecute(jedis -> jedis.setex(key, seconds, value));
     }
 
     public void setMultipleBinaryByPipeline(
