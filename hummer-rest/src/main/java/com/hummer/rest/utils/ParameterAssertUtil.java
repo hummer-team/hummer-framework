@@ -19,15 +19,15 @@ public class ParameterAssertUtil {
 
     }
 
-    public static <T extends AppException> void assertConditionTrue(boolean condition
-            , Supplier<T> exception) {
+    public static void assertConditionTrue(boolean condition
+            , Supplier<? extends AppException> exception) {
         if (!condition) {
             throw exception.get();
         }
     }
 
-    public static <T extends AppException> void assertConditionFalse(boolean condition
-            , Supplier<T> exception) {
+    public static void assertConditionFalse(boolean condition
+            , Supplier<? extends AppException> exception) {
         if (condition) {
             throw exception.get();
         }
@@ -75,7 +75,7 @@ public class ParameterAssertUtil {
                 stringBuilder.append(",");
             });
 
-            if(LOGGER.isDebugEnabled()) {
+            if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("assertRequestValidated has error is {}", stringBuilder.toString());
             }
 
