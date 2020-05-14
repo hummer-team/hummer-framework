@@ -37,7 +37,6 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
     private static final String CLASS_RESOURCE = "applicationConfig";
     private static final String CLASS_PATH_RESOURCE_APPLICATION = "class path resource [application";
     private static ConfigurableConversionService conversionService = new DefaultConversionService();
-    ;
 
     /**
      * return property all keys.
