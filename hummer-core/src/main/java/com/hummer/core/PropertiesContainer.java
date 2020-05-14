@@ -35,7 +35,7 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
     private static final String APOLLO_PROPERTY_SOURCE_NAME = "ApolloPropertySources";
     private static final String ENV = "spring.profiles.active";
     private static final String CLASS_RESOURCE = "applicationConfig";
-    private static final String CLASS_PATH_RESOURCE_APPLICATION = "class path resource [application-";
+    private static final String CLASS_PATH_RESOURCE_APPLICATION = "class path resource [application";
     private static ConfigurableConversionService conversionService = new DefaultConversionService();
     ;
 
