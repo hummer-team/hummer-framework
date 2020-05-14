@@ -2,7 +2,6 @@ package com.hummer.redis.plugin.ops;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-
 import com.hummer.redis.plugin.pool.InternalRedisPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,7 @@ public abstract class BaseOp {
     protected final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     protected String REDIS_DB_GROUP_NAME = "simple";
 
-    private final Map<String, InternalRedisPool> REDIS_CLIENT_INSTANCE_MAP
+    private static final Map<String, InternalRedisPool> REDIS_CLIENT_INSTANCE_MAP
             = new ConcurrentHashMap<>();
 
     public BaseOp() {
@@ -47,7 +46,7 @@ public abstract class BaseOp {
         return redis(REDIS_DB_GROUP_NAME).doExecute(jedis -> jedis.ttl(key));
     }
 
-    public Long ttlByKey(final byte[] key){
+    public Long ttlByKey(final byte[] key) {
         return redis(REDIS_DB_GROUP_NAME).doExecute(jedis -> jedis.ttl(key));
     }
 
@@ -55,7 +54,7 @@ public abstract class BaseOp {
         return redis(REDIS_DB_GROUP_NAME).doExecute(jedis -> jedis.del(key));
     }
 
-    public Long delByKey(final byte[] key){
+    public Long delByKey(final byte[] key) {
         return redis(REDIS_DB_GROUP_NAME).doExecute(jedis -> jedis.del(key));
     }
 

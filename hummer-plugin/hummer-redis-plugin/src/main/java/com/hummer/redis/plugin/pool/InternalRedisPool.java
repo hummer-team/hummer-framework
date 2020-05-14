@@ -32,6 +32,7 @@ public class InternalRedisPool {
 
     public InternalRedisPool(final String dbName) {
         this.db = dbName;
+        LOGGER.debug("create a new InternalRedisPool.dbName=={}", dbName);
     }
 
     private JedisPool getJedisPool() {
@@ -44,7 +45,8 @@ public class InternalRedisPool {
         }
 
         synchronized (POOL) {
-            if (POOL.get(db) == null) {
+            jedisPool = POOL.get(db);
+            if (jedisPool == null) {
                 JedisPoolConfig poolConfig = RedisPropertiesBuilder.builderPoolConfig(db);
                 RedisConfig.SimpleConfig redisProperties = RedisPropertiesBuilder.builderConfig(db);
 
