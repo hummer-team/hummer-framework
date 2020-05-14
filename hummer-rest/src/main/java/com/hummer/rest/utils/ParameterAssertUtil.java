@@ -4,6 +4,9 @@ import com.hummer.common.exceptions.AppException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
+
+import java.util.function.Supplier;
 
 /**
  * spring controller request body pram assert
@@ -16,6 +19,20 @@ public class ParameterAssertUtil {
 
     }
 
+    public static <T extends AppException> void assertConditionTrue(boolean condition
+            , Supplier<T> exception) {
+        if (!condition) {
+            throw exception.get();
+        }
+    }
+
+    public static <T extends AppException> void assertConditionFalse(boolean condition
+            , Supplier<T> exception) {
+        if (condition) {
+            throw exception.get();
+        }
+    }
+
     public static void assertRequestValidated(Errors errors, boolean getAll) {
         assertRequestValidated(40000, errors, getAll);
     }
@@ -25,11 +42,11 @@ public class ParameterAssertUtil {
             assertRequestValidated(errors);
         } else {
             if (errors != null && errors.hasErrors()) {
-                org.springframework.validation.FieldError fieldError = errors.getFieldError();
+                FieldError fieldError = errors.getFieldError();
                 if (fieldError != null) {
                     throw new AppException(errorCode, fieldError.getDefaultMessage());
                 } else {
-                    throw new AppException(errorCode,"input parameter validation error。");
+                    throw new AppException(errorCode, "input parameter validation error。");
                 }
             }
         }
@@ -57,6 +74,11 @@ public class ParameterAssertUtil {
                 stringBuilder.append(e.getDefaultMessage());
                 stringBuilder.append(",");
             });
+
+            if(LOGGER.isDebugEnabled()) {
+                LOGGER.debug("assertRequestValidated has error is {}", stringBuilder.toString());
+            }
+
             throw new AppException(errorCode, String.format("%s", stringBuilder.toString()));
         }
     }
