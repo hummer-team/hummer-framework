@@ -36,8 +36,8 @@ public class Rsa {
      * init RSA PublicKey privateKey,key format must base64.
      * use {@link #createKeyPair()} or {@link #createKeyTuple()} export key
      *
-     * @param base64PublicKey  public key
-     * @param privateKey private key
+     * @param base64PublicKey public key
+     * @param privateKey      private key
      * @throws SysException
      * @author liguo
      * @date 2019/7/12 13:41
@@ -55,13 +55,13 @@ public class Rsa {
         }
     }
 
-    public Rsa(KeyPairTuple tuple){
-       this(tuple.publicKey(),tuple.privateKey());
+    public Rsa(KeyPairTuple tuple) {
+        this(tuple.publicKey(), tuple.privateKey());
     }
 
-    public Rsa(KeyPair keyPair){
+    public Rsa(KeyPair keyPair) {
         this(Base64.encodeBase64String(keyPair.getPublic().getEncoded())
-                ,Base64.encodeBase64String(keyPair.getPrivate().getEncoded()));
+                , Base64.encodeBase64String(keyPair.getPrivate().getEncoded()));
     }
 
     /**
@@ -101,6 +101,28 @@ public class Rsa {
         String publicKeyStr = Base64.encodeBase64String(keyPair.getPublic().getEncoded());
         String privateKeyStr = Base64.encodeBase64String(keyPair.getPrivate().getEncoded());
         return new KeyPairTuple(privateKeyStr, publicKeyStr);
+    }
+
+    private static byte[] segment(Cipher cipher, int mode, byte[] data, int keySize) {
+        int maxBlock = mode == Cipher.DECRYPT_MODE ? keySize / 8 : keySize / 8 - 11;
+        int offSet = 0;
+        byte[] buff;
+        int i = 0;
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            while (data.length > offSet) {
+                if (data.length - offSet > maxBlock) {
+                    buff = cipher.doFinal(data, offSet, maxBlock);
+                } else {
+                    buff = cipher.doFinal(data, offSet, data.length - offSet);
+                }
+                out.write(buff, 0, buff.length);
+                i++;
+                offSet = i * maxBlock;
+            }
+            return out.toByteArray();
+        } catch (Throwable throwable) {
+            throw new SysException(SYS_ERROR_CODE, "rsa segment exception", throwable);
+        }
     }
 
     /**
@@ -240,34 +262,11 @@ public class Rsa {
         }
     }
 
-    private static byte[] segment(Cipher cipher, int mode, byte[] data, int keySize) {
-        int maxBlock = mode == Cipher.DECRYPT_MODE ? keySize / 8 : keySize / 8 - 11;
-        int offSet = 0;
-        byte[] buff;
-        int i = 0;
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            while (data.length > offSet) {
-                if (data.length - offSet > maxBlock) {
-                    buff = cipher.doFinal(data, offSet, maxBlock);
-                } else {
-                    buff = cipher.doFinal(data, offSet, data.length - offSet);
-                }
-                out.write(buff, 0, buff.length);
-                i++;
-                offSet = i * maxBlock;
-            }
-            return out.toByteArray();
-        } catch (Throwable throwable) {
-            throw new SysException(SYS_ERROR_CODE, "rsa segment exception", throwable);
-        }
-    }
-
-    static class KeyPairTuple {
-        private String privateKey;
-        private String publicKey;
-
+    public static class KeyPairTuple {
         public static final String DEFAULT_PRIVATE_KEY = "MIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEAni+GuG36davqnCWlzvF3QzRF8B3akrVwChj1Ywt+Y5WG1BJtgcXh+GfVPcL4Y3vtZN/wJYrrKcHSfwhDsynPMwIDAQABAkB2W4ElxcQ8/2EPbGvfp3Rg6F/cBbphQziNlZclgJgU0cKmgf6eolKgT8bWZNhivKyiMpU+SZTMT1a02pcqdZEhAiEA2AUBtx4rxqqwPMvTKxErn90QnAQA5H/jcPT0YxBVaLcCIQC7dlpBUV3VNTA9IorsqySOm0wlnvIGt2EHHdtugc95ZQIhAIm5D3HnG3PK6Repv5UKmmyOrYM6jjMgUip3EcSC6mEbAiA55npGBm2m9sCpgUvLgajO6yR/0jIK5QTw/8XQwgNlCQIgKpNxXRH32phL06kv2qiEW2YleiAA6put3ZrYRlblyE4=";
         public static final String DEFAULT_PUBLIC_KEY = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJ4vhrht+nWr6pwlpc7xd0M0RfAd2pK1cAoY9WMLfmOVhtQSbYHF4fhn1T3C+GN77WTf8CWK6ynB0n8IQ7MpzzMCAwEAAQ==";
+        private String privateKey;
+        private String publicKey;
 
         public KeyPairTuple(String privateKey, String publicKey) {
             this.privateKey = privateKey;
