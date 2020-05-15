@@ -137,7 +137,7 @@ public class Rsa {
      * @date 2019/7/12 13:25
      * @since 1.0.0
      **/
-    public String decryptByPriavte(String data) {
+    public String decryptByPrivate(String data) {
         try {
             Cipher cipher = Cipher.getInstance(RSA_ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, privateKey);

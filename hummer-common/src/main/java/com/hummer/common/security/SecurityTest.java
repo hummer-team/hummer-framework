@@ -73,7 +73,7 @@ public class SecurityTest {
         Rsa rsa = new Rsa(keyPairTuple.publicKey(),keyPairTuple.privateKey());
         String result = rsa.encryptByPublish(val);
         System.out.println(result);
-        String result3 = rsa.decryptByPriavte(result);
+        String result3 = rsa.decryptByPrivate(result);
 
         Assert.assertEquals(val,result3);
         //
