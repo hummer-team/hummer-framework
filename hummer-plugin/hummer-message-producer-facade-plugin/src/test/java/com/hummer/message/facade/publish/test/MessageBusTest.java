@@ -1,6 +1,8 @@
-package com.hummer.message.facade.publish;
+package com.hummer.message.facade.publish.test;
 
-import org.testng.annotations.Test;
+import com.hummer.message.facade.publish.MessageBus;
+import org.junit.Test;
+
 
 /**
  * @Author: lee

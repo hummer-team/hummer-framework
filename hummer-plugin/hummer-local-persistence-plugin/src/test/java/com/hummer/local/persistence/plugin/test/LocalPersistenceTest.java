@@ -1,9 +1,11 @@
-package com.hummer.local.persistence.plugin;
+package com.hummer.local.persistence.plugin.test;
 
 
-import org.testng.Assert;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
+import com.hummer.local.persistence.plugin.RocksDBLocalPersistence;
+import com.hummer.local.persistence.plugin.RocksDbPersistence;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author bingy
@@ -11,7 +13,7 @@ import org.testng.annotations.Test;
 public class LocalPersistenceTest {
     private RocksDBLocalPersistence persistence;
 
-    @BeforeTest
+    @Before
     public void init() {
         persistence = new RocksDbPersistence();
     }
@@ -20,6 +22,6 @@ public class LocalPersistenceTest {
     public void putAndGet() {
         persistence.put("a", "bbb".getBytes());
         String val = new String(persistence.getByKey("a"));
-        Assert.assertEquals("bb", val);
+        Assert.assertEquals("bbb", val);
     }
 }

@@ -1,7 +1,8 @@
-package com.hummer.pipeline.plugin;
+package com.hummer.pipeline.plugin.test;
 
 
-import org.testng.annotations.Test;
+import com.hummer.pipeline.plugin.ThreadWithCancel;
+import org.junit.Test;
 
 public class ThreadWithCancelTest {
     @Test

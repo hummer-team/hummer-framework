@@ -119,7 +119,7 @@ public class RocksDbPersistence implements RocksDBLocalPersistence {
 
     private String getDbPath() {
         return PropertiesContainer.valueOfString("hummer.local.persistence.path"
-                , "/home/hummer/db");
+                , "/var/hummer/db");
     }
 
 

@@ -1,8 +1,12 @@
-package com.hummer.common.http;
+package com.hummer.common.test;
 
 import com.hummer.common.exceptions.SysException;
+import com.hummer.common.http.HttpAsyncClient;
+import com.hummer.common.http.HttpSyncClient;
+import com.hummer.common.http.RequestCustomConfig;
+import org.junit.Test;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.testng.annotations.Test;
+
 
 import java.net.UnknownHostException;
 
@@ -25,7 +29,7 @@ public class HttpClientTest {
         System.out.println(result);
     }
 
-    @Test(expectedExceptions = {SysException.class, UnknownHostException.class})
+    @Test(expected = SysException.class)
     public void sendGetBySyncClient() {
         String httpGet = HttpSyncClient.sendHttpGet("http://www.baidu2.com");
         System.out.println(httpGet);

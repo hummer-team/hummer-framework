@@ -4,8 +4,6 @@ import com.alibaba.nacos.api.NacosFactory;
 import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.config.listener.Listener;
 import com.alibaba.nacos.api.exception.NacosException;
-import com.alibaba.nacos.client.config.impl.CacheData;
-import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -48,10 +46,5 @@ public class ConfigTest {
 
 
         System.in.read();
-    }
-
-    @Test
-    public void getConfigContent(){
-
     }
 }

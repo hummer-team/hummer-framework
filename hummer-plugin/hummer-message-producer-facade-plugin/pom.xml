@@ -30,5 +30,9 @@
             <groupId>com.hummer</groupId>
             <artifactId>hummer-kafka-producer-plugin</artifactId>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
     </dependencies>
 </project>

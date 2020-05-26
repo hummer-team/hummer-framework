@@ -1,6 +1,7 @@
 package com.hummer.dao.mybatis;
 
 import com.github.pagehelper.PageInterceptor;
+import com.google.common.collect.Lists;
 import com.hummer.common.SysConstant;
 import com.hummer.dao.interceptor.DbTypeInterceptor;
 import com.hummer.dao.interceptor.MybatisSlowSqlLogInterceptor;
@@ -19,7 +20,6 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.testng.collections.Lists;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -112,7 +112,7 @@ public class MybatisDynamicBean {
         //
         //loading business customer interceptor plugin
         Map<String, Interceptor> customerInterceptorMap = SpringApplicationContext.getBeansAsMap(Interceptor.class);
-        List<Interceptor> interceptors = Lists.newArrayList(16);
+        List<Interceptor> interceptors = Lists.newArrayListWithCapacity(16);
         if (MapUtils.isNotEmpty(customerInterceptorMap)) {
             interceptors.addAll(customerInterceptorMap.values());
         }
