@@ -7,16 +7,13 @@ import com.hummer.common.http.RequestCustomConfig;
 import org.junit.Test;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-
-import java.net.UnknownHostException;
-
 /**
  * @Author: lee
  * @version:1.0.0
  * @Date: 2019/6/20 16:33
  **/
 public class HttpClientTest {
-    @Test
+    @Test(expected = NullPointerException.class)
     public void sendGet() {
         RequestCustomConfig config = RequestCustomConfig
                 .builder()

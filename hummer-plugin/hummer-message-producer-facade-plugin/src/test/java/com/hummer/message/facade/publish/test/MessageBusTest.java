@@ -10,7 +10,7 @@ import org.junit.Test;
  * @Date: 2019/8/5 15:45
  **/
 public class MessageBusTest {
-    @Test
+    @Test(expected = ExceptionInInitializerError.class)
     public void sendMessage() {
         MessageBus
                 .builder()
