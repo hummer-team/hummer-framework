@@ -97,7 +97,7 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
         if (targetSqlSessionFactory != null) {
             return targetSqlSessionFactory;
         } else if (defaultTargetSqlSessionFactory != null) {
-            LOGGER.warn("target sql session factory instance missing,return default sql session instance.");
+            LOGGER.debug("target sql session factory instance missing,return default sql session instance.");
             return defaultTargetSqlSessionFactory;
         }
         throw new SysException(50000, "target session and default session is null.");
