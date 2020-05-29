@@ -51,7 +51,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -700,8 +699,12 @@ public class HttpSyncClient {
                     throw new SysException(SYS_ERROR_CODE, e.getMessage(), e);
                 }
             } catch (Exception e) {
-                if (i == retryCount) {
-                    log.error("exceptionLogHttp:" + e.getMessage() + " url:" + httpRequestBase.getURI().toString(), e);
+                if (i == retryCount && retryCount > 0) {
+                    log.error("Still failed after retrying, retry count {} error {}: url :{} "
+                            , retryCount
+                            , e.getMessage()
+                            , httpRequestBase.getURI().toString()
+                            , e);
                 }
                 if (e instanceof AppException) {
                     throw (AppException) e;
@@ -802,10 +805,7 @@ public class HttpSyncClient {
             , int statusCode) {
         final List<Integer> okCode = ImmutableList.of(200, 201, 204);
         if (!okCode.contains(statusCode)) {
-            log.error(">>>call {} failed,status code is {},response is {}",
-                    httpRequestBase.getURI().toString()
-                    , statusCode
-                    , Optional.ofNullable(result).orElse(new HttpResult()).getResult());
+
             throw new SysException(SYS_ERROR_CODE, String.format("call %s failed.code %s"
                     , httpRequestBase.getURI().toString()
                     , statusCode)

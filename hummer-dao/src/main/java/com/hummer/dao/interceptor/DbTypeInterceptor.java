@@ -25,7 +25,7 @@ public class DbTypeInterceptor implements Interceptor {
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         String dbType = ((Connection) invocation.getArgs()[0]).getMetaData().getDatabaseProductName();
-        LOGGER.info("DbTypeInterceptor intercept db type {}", dbType);
+        LOGGER.debug("DbTypeInterceptor intercept db type {}", dbType);
         if (DBTYPE_SQLSERVER.equals(dbType)) {
             //MultipleDataSourceMap.setDataType(JdbcUtils.SQL_SERVER);
         } else {
