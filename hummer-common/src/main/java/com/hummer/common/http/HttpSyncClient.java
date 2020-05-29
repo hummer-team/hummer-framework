@@ -1,6 +1,7 @@
 package com.hummer.common.http;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.ImmutableList;
 import com.hummer.common.exceptions.AppException;
 import com.hummer.common.exceptions.SysException;
 import com.hummer.common.http.context.RequestContext;
@@ -50,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -308,6 +310,7 @@ public class HttpSyncClient {
 
     /**
      * send post with from data
+     *
      * @param httpUrl
      * @param nameValuePairs
      * @param timeout
@@ -756,6 +759,7 @@ public class HttpSyncClient {
             addGlobalHeader(httpRequestBase);
             httpRequest = beforeLog(httpRequestBase);
             response = getHttpClient().execute(httpRequestBase);
+
             afterLog(httpRequest, response);
             if (isRturnHttpResponse) {
                 result = new HttpResult(response);
@@ -772,6 +776,12 @@ public class HttpSyncClient {
                 afterCompletion(response.getAllHeaders());
             }
 
+            assertResponseStatusCode(httpRequestBase
+                    , result
+                    , response == null || response.getStatusLine() == null
+                            ? 500
+                            : response.getStatusLine().getStatusCode());
+
             return result;
         } catch (Exception e) {
             afterThrowingLog(httpRequest, e);
@@ -784,6 +794,22 @@ public class HttpSyncClient {
             /**tryMetricsMark(httpRequestBase.getMethod().toLowerCase()
              , httpRequestBase.getURI().getPath()
              , begin.stop().elapsed(TimeUnit.NANOSECONDS));**/
+        }
+    }
+
+    private static void assertResponseStatusCode(HttpRequestBase httpRequestBase
+            , HttpResult result
+            , int statusCode) {
+        final List<Integer> okCode = ImmutableList.of(200, 201, 204);
+        if (!okCode.contains(statusCode)) {
+            log.error(">>>call {} failed,status code is {},response is {}",
+                    httpRequestBase.getURI().toString()
+                    , statusCode
+                    , Optional.ofNullable(result).orElse(new HttpResult()).getResult());
+            throw new SysException(SYS_ERROR_CODE, String.format("call %s failed.code %s"
+                    , httpRequestBase.getURI().toString()
+                    , statusCode)
+                    , result);
         }
     }
 
