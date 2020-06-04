@@ -12,7 +12,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * use cglib copy object
+ * use cglib copy object.
+ * <p>
+ *     notice: ony copy of first one level pojo object
+ * </p>
  *
  * @Author: lee
  * @since:1.0.0
@@ -107,7 +110,7 @@ public class ObjectCopyUtils {
     private static <T> T newInstance(Class<T> clazz) {
         Assert.notNull(clazz, "The class must not be null");
         try {
-            return clazz.newInstance();
+            return clazz.getDeclaredConstructor().newInstance();
         } catch (Throwable throwable) {
             throw new SysException(SysConstant.SYS_ERROR_CODE,
                 String.format("instance %s failed", clazz.getSimpleName()), throwable);

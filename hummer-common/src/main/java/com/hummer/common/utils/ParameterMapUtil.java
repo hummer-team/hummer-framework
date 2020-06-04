@@ -29,6 +29,10 @@ public class ParameterMapUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ParameterMapUtil.class);
 
+    private ParameterMapUtil() {
+
+    }
+
     /**
      * map key value convert to pojo model.
      *
