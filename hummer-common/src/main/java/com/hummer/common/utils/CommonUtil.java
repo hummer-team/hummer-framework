@@ -1,14 +1,17 @@
 package com.hummer.common.utils;
 
 /**
- * CommonUtils
+ * CommonUtil
  *
  * @author chen wei
  * @version 1.0
  * <p>Copyright: Copyright (c) 2020</p>
  * @date 2020/6/2 13:32
  */
-public class CommonUtils {
+public class CommonUtil {
+
+    private CommonUtil() {
+    }
 
     /**
      * ifNull return deft , else return resource
