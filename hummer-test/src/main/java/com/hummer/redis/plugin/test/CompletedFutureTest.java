@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,6 +16,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -56,6 +58,17 @@ public class CompletedFutureTest {
     }
 
     @Test
+    public void syncToAsyncWrapper() {
+        CompletableFuture<Void> cf = CompletableFuture.runAsync(() -> {
+            // TODO: 2020/6/6
+        });
+        //wait of complete
+        cf.join();
+        assertTrue(cf.isDone());
+    }
+
+
+    @Test
     public void runAsync() {
         CompletableFuture<Void> cf = CompletableFuture.runAsync(() -> {
             assertTrue(Thread.currentThread().isDaemon());
@@ -67,13 +80,109 @@ public class CompletedFutureTest {
     }
 
     @Test
+    public void thenApplyForAsync() {
+        CompletableFuture<String> cf = CompletableFuture
+                .supplyAsync(() -> {
+                    System.out.println(Thread.currentThread().getName());
+                    return "message";
+                })
+                .thenApply(s -> {
+                    System.out.println(Thread.currentThread().getName());
+                    return s.toUpperCase();
+                });
+        assertEquals("MESSAGE", cf.getNow(null));
+    }
+
+    @Test
+    public void handleException() {
+        CompletableFuture<String> cf = CompletableFuture
+                .supplyAsync(() -> {
+                    if (Boolean.TRUE) {
+                        throw new RuntimeException("test exception");
+                    }
+                    return "message";
+                })
+                .thenApply(t -> t.toUpperCase())
+                .handle((r, t) -> {
+                    System.out.println("exception is " + t);
+                    return r;
+                });
+        //wait of completable
+        cf.join();
+    }
+
+    @Test
+    public void waitAnyOf() {
+        CompletableFuture<Void> cf = CompletableFuture.runAsync(() -> {
+            randomSleep();
+            System.out.println("C1");
+        });
+
+        CompletableFuture<Void> cf2 = CompletableFuture.runAsync(() -> {
+            randomSleep();
+            System.out.println("C2");
+        });
+        //wait cf or cf2
+        CompletableFuture.anyOf(cf, cf2).whenComplete((result, throwable) -> {
+            //handle exception
+        });
+    }
+
+    @Test
+    public void timeOutCancel() {
+        CompletableFuture<String> cf = CompletableFuture.supplyAsync(() -> {
+            sleepEnough(500);
+            System.out.println("C1");
+            return "C1";
+        }).thenCombine(CompletableFuture.supplyAsync(() -> {
+            sleepEnough(1500);
+            return "SS";
+        }), (r1, r2) -> {
+            return String.format("%s-%s", r1, r2);
+        });
+        try {
+            //超过800毫秒则取消
+            cf.get(800, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            boolean cancel = cf.cancel(true);
+            //这里并不总是断言成功
+            assertTrue(cancel);
+        }
+        assertTrue(cf.isCancelled());
+    }
+
+
+    @Test
+    public void composeMore() {
+        CompletableFuture<String> cf = CompletableFuture.completedFuture("A");
+        cf.thenCompose(r -> CompletableFuture.completedFuture(String.format("%sB", r)))
+                .thenCompose(r -> CompletableFuture.completedFuture(String.format("%sC", r)))
+                .thenAccept(r -> System.out.println(r));
+        cf.join();
+        assertEquals("A", cf.getNow(null));
+    }
+
+    @Test
+    public void combineMore() {
+        //流程：A，B，C 分别由独立对future处理，且都依赖前面都结果
+        CompletableFuture<String> cf = CompletableFuture.completedFuture("A")
+                .thenCombine(CompletableFuture.completedFuture("B"), (r1, r2) -> r1 + r2)
+                .thenCombine(CompletableFuture.completedFuture("C"), (r1, r2) -> r1 + r2)
+                .whenComplete((r,throwable)->System.out.println(r));
+        //assert result
+        assertEquals("ABC", cf.join());
+    }
+
+    @Test
     public void thenApply() {
         //run at same thread
         CompletableFuture<String> cf = CompletableFuture.completedFuture("message")
                 .thenApply(s -> {
                     assertFalse(Thread.currentThread().isDaemon());
+                    System.out.println(Thread.currentThread().getName());
                     return s.toUpperCase();
                 });
+        System.out.println(Thread.currentThread().getName());
         assertEquals("MESSAGE", cf.getNow(null));
     }
 
@@ -243,11 +352,11 @@ public class CompletedFutureTest {
                 .collect(Collectors.toList());
         CompletableFuture.anyOf(futures.toArray(new CompletableFuture[futures.size()]))
                 .whenComplete((res, th) -> {
-            if(th == null) {
-                assertTrue(isUpperCase((String) res));
-                result.append(res);
-            }
-        });
+                    if (th == null) {
+                        assertTrue(isUpperCase((String) res));
+                        result.append(res);
+                    }
+                });
         assertTrue("Result was empty", result.length() > 0);
     }
 
@@ -270,7 +379,7 @@ public class CompletedFutureTest {
     }
 
     @Test
-    public void allOf(){
+    public void allOf() {
         StringBuilder result = new StringBuilder();
         List<String> messages = Arrays.asList("a", "b", "c");
         List<CompletableFuture<String>> futures = messages.stream()
@@ -284,7 +393,7 @@ public class CompletedFutureTest {
     }
 
     @Test
-    public void allOfAsync(){
+    public void allOfAsync() {
         StringBuilder result = new StringBuilder();
         List<String> messages = Arrays.asList("a", "b", "c");
         List<CompletableFuture<String>> futures = messages.stream()
