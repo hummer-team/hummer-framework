@@ -26,10 +26,9 @@ public class SpringStarterListener implements ApplicationListener<ApplicationPre
             SpringApplicationContext context = new SpringApplicationContext();
             context.setApplicationContext(event.getApplicationContext());
 
-            //load property configuration
-            PropertiesContainer.loadPropertyData(event.getApplicationContext().getEnvironment());
-
             LOGGER.info("SpringContext load success,property configuration load success,now begin create bean");
         }
+        //load property configuration
+        PropertiesContainer.loadPropertyData(event.getApplicationContext().getEnvironment());
     }
 }

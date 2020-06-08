@@ -1,5 +1,7 @@
 package com.hummer.core.starter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.ResourceBanner;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationListener;
@@ -15,6 +17,7 @@ import java.util.ServiceLoader;
  * @Date: 2019/6/13 18:34
  **/
 public class HummerApplicationStart {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HummerApplicationStart.class);
 
     private HummerApplicationStart() {
 
@@ -37,7 +40,9 @@ public class HummerApplicationStart {
         ResourceBanner rb = new ResourceBanner(new ClassPathResource("banner2.txt"));
         SpringApplicationBuilder builder = new SpringApplicationBuilder();
         ServiceLoader.load(ApplicationListener.class)
-                .forEach(listenter -> builder.application().addListeners(listenter));
+                .forEach(listener -> builder.application().addListeners(listener));
+        LOGGER.debug("register application listener list {}"
+                , builder.application().getListeners());
         builder.sources(startClass).banner(rb).run(args);
     }
 }
