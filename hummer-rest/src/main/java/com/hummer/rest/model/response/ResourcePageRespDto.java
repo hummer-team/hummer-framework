@@ -3,7 +3,9 @@ package com.hummer.rest.model.response;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.apache.commons.collections.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,6 +19,8 @@ import java.util.List;
 @ApiModel
 @Data
 public class ResourcePageRespDto<T> {
+
+    public static final ResourcePageRespDto<?> EMPTY = new ResourcePageRespDto<>();
 
     @ApiModelProperty("当前页码")
     private Integer pageNumber;
@@ -32,6 +36,12 @@ public class ResourcePageRespDto<T> {
 
     @ApiModelProperty("数据记录")
     private List<T> dataItem;
+
+    public List<T> getDataItem() {
+        return CollectionUtils.isEmpty(dataItem)
+                ? Collections.emptyList()
+                : dataItem;
+    }
 
     public Integer getTotalPage() {
         if (totalPage != null) {
