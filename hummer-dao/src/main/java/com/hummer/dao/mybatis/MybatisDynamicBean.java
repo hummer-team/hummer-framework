@@ -1,12 +1,15 @@
 package com.hummer.dao.mybatis;
 
 import com.github.pagehelper.PageInterceptor;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.hummer.common.SysConstant;
-import com.hummer.dao.interceptor.DbTypeInterceptor;
-import com.hummer.dao.interceptor.MybatisSlowSqlLogInterceptor;
+import com.hummer.common.exceptions.SysException;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.core.SpringApplicationContext;
+import com.hummer.dao.interceptor.DbTypeInterceptor;
+import com.hummer.dao.interceptor.MybatisSlowSqlLogInterceptor;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.io.VFS;
@@ -17,14 +20,17 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -121,18 +127,13 @@ public class MybatisDynamicBean {
         interceptors.add(DbTypeInterceptor.instance());
         //add all interceptor
         sqlSessionBean.addPropertyValue("plugins", interceptors);
+        Resource[] resourceList = parseResources(dataSourceKey);
 
-        //mapper resource
-        PathMatchingResourcePatternResolver resource = new PathMatchingResourcePatternResolver();
-        sqlSessionBean.addPropertyValue("mapperLocations"
-                , resource.getResources(PropertiesContainer
-                        .valueOfString(String.format(SysConstant.DaoConstant.MYBATIS_RESOURCE_MAPPER_PATH
-                                , dataSourceKey))));
+        sqlSessionBean.addPropertyValue("mapperLocations", resourceList);
         //register sql session bean
         SpringApplicationContext.registerDynamicBen(sqlSessionName, sqlSessionBean.getRawBeanDefinition());
         LOGGER.info("bean `{}` register done.", sqlSessionName);
     }
-
 
     /**
      * register data source transaction
@@ -200,5 +201,31 @@ public class MybatisDynamicBean {
         slowSqlLogProperties.setProperty("show.sql"
                 , showSqlStringValue);
         return slowSqlLogProperties;
+    }
+
+    private static Resource[] parseResources(String dataSourceKey) {
+        //mapper resource
+        List<String> resourcePaths =
+                Splitter.on(",")
+                        .splitToList(PropertiesContainer
+                                .valueOfString(String.format(SysConstant.DaoConstant.MYBATIS_RESOURCE_MAPPER_PATH
+                                        , dataSourceKey)));
+        if (CollectionUtils.isEmpty(resourcePaths)) {
+            throw new SysException(50000, "no mapper resource path.");
+        }
+        PathMatchingResourcePatternResolver resource = new PathMatchingResourcePatternResolver();
+        return resourcePaths
+                .stream()
+                .map(m -> {
+                    try {
+                        return resource.getResources(m);
+                    } catch (IOException e) {
+                        LOGGER.error("loading resource error path is {} exception is ", m, e);
+                    }
+                    return null;
+                })
+                .filter(Objects::nonNull)
+                .flatMap(Arrays::stream)
+                .toArray(Resource[]::new);
     }
 }
