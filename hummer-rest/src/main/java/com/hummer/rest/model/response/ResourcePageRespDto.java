@@ -20,7 +20,7 @@ import java.util.List;
 @Data
 public class ResourcePageRespDto<T> {
 
-    public static final ResourcePageRespDto<?> EMPTY = new ResourcePageRespDto<>();
+    public static final ResourcePageRespDto EMPTY = new ResourcePageRespDto<>();
 
     @ApiModelProperty("当前页码")
     private Integer pageNumber;
