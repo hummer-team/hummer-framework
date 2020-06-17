@@ -100,4 +100,11 @@ public class DateUtil {
 
         return (end - start);
     }
+
+    public static Date addHour(final Date date, final int increment) {
+        if (date == null) {
+            return null;
+        }
+        return new DateTime(date).plusHours(increment).toDate();
+    }
 }
