@@ -6,6 +6,7 @@ import lombok.Data;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 /**
  * ResourcePageReqDto
@@ -20,10 +21,12 @@ import javax.validation.constraints.Min;
 public class ResourcePageReqDto<T> {
 
     @ApiModelProperty("当前页码")
+    @NotNull(message = "this page number can't null")
     @Min(value = 1, message = "pageNumber min 1")
     private Integer pageNumber;
 
     @ApiModelProperty("单页记录数")
+    @NotNull(message = "this page size can't null")
     @Min(value = 1, message = "pageSize min 1")
     private Integer pageSize;
 

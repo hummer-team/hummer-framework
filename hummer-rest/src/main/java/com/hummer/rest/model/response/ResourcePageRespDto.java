@@ -21,21 +21,35 @@ import java.util.List;
 public class ResourcePageRespDto<T> {
 
     public static final ResourcePageRespDto EMPTY = new ResourcePageRespDto<>();
-
     @ApiModelProperty("当前页码")
     private Integer pageNumber;
-
     @ApiModelProperty("单页记录数")
     private Integer pageSize;
-
     @ApiModelProperty("总条数")
     private Integer totalCount = 0;
-
     @ApiModelProperty("总页码")
     private Integer totalPage;
-
     @ApiModelProperty("数据记录")
     private List<T> dataItem;
+
+    @SuppressWarnings("unchekced")
+    public static <T> ResourcePageRespDto<T> emptyPage() {
+        return (ResourcePageRespDto<T>) EMPTY;
+    }
+
+    public static <T> ResourcePageRespDto<T> builderPage(int pageNumber
+            , int pageSize
+            , int totalCount
+            , List<T> dataItem) {
+
+        ResourcePageRespDto<T> page = new ResourcePageRespDto<T>();
+        page.setDataItem(dataItem);
+        page.setPageNumber(pageNumber);
+        page.setPageSize(pageSize);
+        page.setTotalCount(totalCount);
+
+        return page;
+    }
 
     public List<T> getDataItem() {
         return CollectionUtils.isEmpty(dataItem)
