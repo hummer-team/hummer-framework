@@ -1,6 +1,5 @@
 package com.hummer.common.http;
 
-import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.hummer.common.exceptions.AppException;
 import com.hummer.common.exceptions.SysException;
@@ -746,7 +745,7 @@ public class HttpSyncClient {
 
     public static HttpResult execute2Result(HttpRequestBase httpRequestBase, long timeout, TimeUnit timeUnit,
                                             boolean isRturnHttpResponse) throws Exception {
-        Stopwatch begin = Stopwatch.createStarted();
+
         if (httpRequestBase == null) {
             throw new SysException(SYS_ERROR_CODE, "HttpRequestBase is null!");
         }
@@ -761,7 +760,10 @@ public class HttpSyncClient {
             setConfig(httpRequestBase, timeout, timeUnit);
             addGlobalHeader(httpRequestBase);
             httpRequest = beforeLog(httpRequestBase);
+
+            long startTime = System.currentTimeMillis();
             response = getHttpClient().execute(httpRequestBase);
+            log.debug(">>request {},cost {} millis", httpRequestBase.getURI(), System.currentTimeMillis() - startTime);
 
             afterLog(httpRequest, response);
             if (isRturnHttpResponse) {
