@@ -182,6 +182,11 @@
             </dependency>
             <dependency>
                 <groupId>com.hummer</groupId>
+                <artifactId>hummer-user-plugin</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hummer</groupId>
                 <artifactId>hummer-kafka-consumer-plugin</artifactId>
                 <version>${hummer.version}</version>
             </dependency>

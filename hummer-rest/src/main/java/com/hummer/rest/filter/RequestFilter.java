@@ -47,7 +47,7 @@ public class RequestFilter implements Filter {
      */
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        LOGGER.debug("hummer request filter register done,`RequestFilter`");
     }
 
     /**
