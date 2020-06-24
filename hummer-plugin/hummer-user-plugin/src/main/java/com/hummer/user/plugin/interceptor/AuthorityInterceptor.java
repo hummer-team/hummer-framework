@@ -58,7 +58,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         NeedAuthority login = ((HandlerMethod) handler).getMethod().getAnnotation(NeedAuthority.class);
         if (login == null) {
             login = handler.getClass().getAnnotation(NeedAuthority.class);
-            if (login == null ) {
+            if (login == null) {
                 return true;
             }
         }
@@ -84,7 +84,14 @@ public class AuthorityInterceptor implements HandlerInterceptor {
                     , userContext.getTrueName()));
         }
 
+        //if this user is supper admin then allow all operation
+        if (Boolean.TRUE.equals(userContext.getIsSupperAdmin())) {
+            UserHolder.set(userContext);
+            return true;
+        }
+
         if (ArrayUtils.isEmpty(login.authorityCode())) {
+            UserHolder.set(userContext);
             return true;
         }
 
