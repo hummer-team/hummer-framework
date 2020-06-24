@@ -123,8 +123,10 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             }
         }
 
-        throw new AppException(40004, String.format("this user %s,operation no authority,operation code is %s"
-                , userContext.getTrueName()
-                , Arrays.toString(login.authorityCode())));
+        throw new AppException(40004,
+                String.format("this user %s,operation no authority,operation code is %s,remark is %s"
+                        , userContext.getTrueName()
+                        , Arrays.toString(login.authorityCode()), login.remark())
+        );
     }
 }

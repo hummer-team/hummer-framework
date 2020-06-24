@@ -4,11 +4,11 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.hummer.core.PropertiesContainer;
 import com.hummer.rest.message.handle.MessageSerialConfig;
 import com.hummer.rest.message.handle.RequestBodyHandle;
 import com.hummer.rest.message.handle.ResponseBodyHandle;
 import com.hummer.rest.message.service.FastJsonHttpMessageConverterService;
-import com.hummer.core.PropertiesContainer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ import static com.hummer.common.SysConstant.RestConstant.MVC_SERIALIZERFEATURE;
  **/
 @Configuration
 public class MessageConverterBean {
-    private static final Logger LOGGER= LoggerFactory.getLogger(MessageConverterBean.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageConverterBean.class);
     @Autowired(required = false)
     private RequestBodyHandle requestBodyHandle;
     @Autowired(required = false)
@@ -82,8 +82,8 @@ public class MessageConverterBean {
             fastJsonConfig.setSerializerFeatures(listFeature.toArray(new SerializerFeature[0]));
         }
         //date time format
-        if(!listFeature.contains(SerializerFeature.UseISO8601DateFormat)){
-           fastJsonConfig.setSerializerFeatures(SerializerFeature.UseISO8601DateFormat);
+        if (!listFeature.contains(SerializerFeature.UseISO8601DateFormat)) {
+            fastJsonConfig.setSerializerFeatures(SerializerFeature.UseISO8601DateFormat);
         }
         //flush config
         service.setFastJsonConfig(fastJsonConfig);
