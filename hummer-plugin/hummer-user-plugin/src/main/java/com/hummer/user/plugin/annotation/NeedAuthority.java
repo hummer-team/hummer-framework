@@ -23,8 +23,9 @@ public @interface NeedAuthority {
      */
     String[] authorityCode() default {};
 
+    String remark() default "";
+
     /**
-     *
      * @return
      */
     AuthorityConditionEnum authorityCondition() default AuthorityConditionEnum.ALL_OF;
