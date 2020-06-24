@@ -76,6 +76,8 @@ public class AuthorityInterceptor implements HandlerInterceptor {
                     , userContext.getTrueName()));
         }
 
+        UserHolder.set(userContext);
+
         boolean disableAuthority = PropertiesContainer.valueOf("disable.authority", Boolean.class, Boolean.FALSE);
         if (disableAuthority) {
             return true;
