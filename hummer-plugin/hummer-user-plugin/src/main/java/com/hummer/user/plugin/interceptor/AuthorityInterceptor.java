@@ -55,19 +55,6 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        boolean disableAuthority = PropertiesContainer.valueOf("disable.authority", Boolean.class, Boolean.FALSE);
-        if (disableAuthority) {
-            return true;
-        }
-
-        NeedAuthority login = ((HandlerMethod) handler).getMethod().getAnnotation(NeedAuthority.class);
-        if (login == null) {
-            login = handler.getClass().getAnnotation(NeedAuthority.class);
-            if (login == null) {
-                return true;
-            }
-        }
-
 
         String tokenKey = PropertiesContainer.valueOfString("ticket.request.key", "token");
         String token = RequestContextHolder.get(tokenKey);
@@ -87,6 +74,19 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             log.warn("this user {} is locked,can't any operation", userContext.getTrueName());
             throw new AppException(40003, String.format("this user %s current status is locked."
                     , userContext.getTrueName()));
+        }
+
+        boolean disableAuthority = PropertiesContainer.valueOf("disable.authority", Boolean.class, Boolean.FALSE);
+        if (disableAuthority) {
+            return true;
+        }
+
+        NeedAuthority login = ((HandlerMethod) handler).getMethod().getAnnotation(NeedAuthority.class);
+        if (login == null) {
+            login = handler.getClass().getAnnotation(NeedAuthority.class);
+            if (login == null) {
+                return true;
+            }
         }
 
         //if this user is supper admin then allow all operation
