@@ -24,7 +24,6 @@ public class CustomFastJsonConfigs implements MessageSerialConfig {
 
     @Override
     public void register(SerializeConfig serializeConfig) {
-
     }
 
     @Override

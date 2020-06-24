@@ -33,7 +33,8 @@ public class UserInterceptorConfiguration implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AuthorityInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(new AuthorityInterceptor()).addPathPatterns("/**")
+                .excludePathPatterns("/warmup*");
         log.debug("hummer AuthorityInterceptor register done,with url /**");
         //WebMvcConfigurer.super.addInterceptors(registry);
     }
