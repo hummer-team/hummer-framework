@@ -15,6 +15,18 @@ public class UserHolder {
         return LOCAL.get();
     }
 
+    public static String getTrueName() {
+        return get().getTrueName();
+    }
+
+    public static String getNickName() {
+        return get().getNickName();
+    }
+
+    public static String getUserId() {
+        return get().getUserId();
+    }
+
     public static void set(@NotNull UserContext userContext) {
         LOCAL.set(userContext);
     }
