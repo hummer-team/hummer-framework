@@ -12,7 +12,7 @@ public class UserContext {
     private String mobilePhone;
     private String mail;
     private Boolean isLocked;
-    private Boolean isSupperAdmin;
+    private Boolean isSuperAdmin;
 
     private List<RoleContext> role;
     private List<AuthorityContext> authority;

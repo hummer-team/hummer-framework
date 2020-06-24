@@ -85,7 +85,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         }
 
         //if this user is supper admin then allow all operation
-        if (Boolean.TRUE.equals(userContext.getIsSupperAdmin())) {
+        if (Boolean.TRUE.equals(userContext.getIsSuperAdmin())) {
             UserHolder.set(userContext);
             return true;
         }
