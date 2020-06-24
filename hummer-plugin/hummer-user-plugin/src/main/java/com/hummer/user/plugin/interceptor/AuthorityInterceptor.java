@@ -55,6 +55,11 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        boolean disableAuthority = PropertiesContainer.valueOf("disable.authority", Boolean.class, Boolean.FALSE);
+        if (disableAuthority) {
+            return true;
+        }
+
         NeedAuthority login = ((HandlerMethod) handler).getMethod().getAnnotation(NeedAuthority.class);
         if (login == null) {
             login = handler.getClass().getAnnotation(NeedAuthority.class);
@@ -67,7 +72,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         String tokenKey = PropertiesContainer.valueOfString("ticket.request.key", "token");
         String token = RequestContextHolder.get(tokenKey);
         if (StringUtils.isEmpty(token)) {
-            return false;
+            throw new AppException(40001, "this request ticket not exists.");
         }
 
         UserContext userContext = AuthorityServiceAgent.getUserContext(token);
@@ -75,12 +80,12 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             log.debug("this request url {} ,controller method is {},ticket invalid"
                     , request.getRequestURI()
                     , ((HandlerMethod) handler).getMethod().getName());
-            return false;
+            throw new AppException(40002, "this request ticket invalid.");
         }
 
         if (Boolean.TRUE.equals(userContext.getIsLocked())) {
             log.warn("this user {} is locked,can't any operation", userContext.getTrueName());
-            throw new AppException(40001, String.format("this user %s current status is locked."
+            throw new AppException(40003, String.format("this user %s current status is locked."
                     , userContext.getTrueName()));
         }
 
@@ -118,7 +123,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             }
         }
 
-        throw new AppException(40001, String.format("this user %s,operation no authority,operation code is %s"
+        throw new AppException(40004, String.format("this user %s,operation no authority,operation code is %s"
                 , userContext.getTrueName()
                 , Arrays.toString(login.authorityCode())));
     }
