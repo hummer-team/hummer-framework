@@ -46,6 +46,7 @@ public class CustomStringDeserializer implements ObjectSerializer, ObjectDeseria
         out.writeString(value);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <T> T deserialze(DefaultJSONParser parser, Type clazz, Object fieldName) {
         if (clazz == StringBuffer.class) {

@@ -90,7 +90,7 @@
         <hummer.version>1.0.0-SNAPSHOT</hummer.version>
         <spring-boot.version>2.2.0.RELEASE</spring-boot.version>
         <httpasync.version>4.1.2</httpasync.version>
-        <fastjson.version>1.2.58</fastjson.version>
+        <fastjson.version>1.2.71</fastjson.version>
         <javax.servlet.version>3.1.0</javax.servlet.version>
         <spring-webmvc.version>5.2.0.RELEASE</spring-webmvc.version>
         <common-lang3.version>3.8.1</common-lang3.version>
