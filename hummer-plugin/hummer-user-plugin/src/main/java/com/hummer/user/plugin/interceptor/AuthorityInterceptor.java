@@ -34,7 +34,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
      * typically sending an HTTP error or writing a custom response.
      * <p><strong>Note:</strong> special considerations apply for asynchronous
      * request processing. For more details see
-     * {@link AsyncHandlerInterceptor}.
+     * {@link HandlerInterceptor}.
      * <p>The default implementation returns {@code true}.
      *
      * @param request  current HTTP request
@@ -55,6 +55,13 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        NeedAuthority login = ((HandlerMethod) handler).getMethod().getAnnotation(NeedAuthority.class);
+        if (login == null) {
+            login = handler.getClass().getAnnotation(NeedAuthority.class);
+            if (login == null) {
+                return true;
+            }
+        }
 
         String tokenKey = PropertiesContainer.valueOfString("ticket.request.key", "token");
         String token = RequestContextHolder.get(tokenKey);
@@ -81,14 +88,6 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         boolean disableAuthority = PropertiesContainer.valueOf("disable.authority", Boolean.class, Boolean.FALSE);
         if (disableAuthority) {
             return true;
-        }
-
-        NeedAuthority login = ((HandlerMethod) handler).getMethod().getAnnotation(NeedAuthority.class);
-        if (login == null) {
-            login = handler.getClass().getAnnotation(NeedAuthority.class);
-            if (login == null) {
-                return true;
-            }
         }
 
         //if this user is supper admin then allow all operation
