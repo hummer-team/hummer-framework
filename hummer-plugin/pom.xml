@@ -26,5 +26,6 @@
         <module>hummer-trace-client-plugin</module>
         <module>hummer-swagger-plugin</module>
         <module>hummer-user-plugin</module>
+        <module>hummer-excel-plugin</module>
     </modules>
 </project>
