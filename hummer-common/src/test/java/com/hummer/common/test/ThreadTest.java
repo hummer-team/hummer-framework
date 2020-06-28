@@ -1,4 +1,4 @@
-package com.hummer.common.threadholder;
+package com.hummer.common.test;
 
 import org.junit.Test;
 import sun.applet.AppletClassLoader;

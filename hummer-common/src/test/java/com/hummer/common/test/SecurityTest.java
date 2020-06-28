@@ -1,5 +1,8 @@
-package com.hummer.common.security;
+package com.hummer.common.test;
 
+import com.hummer.common.security.Aes;
+import com.hummer.common.security.Md5;
+import com.hummer.common.security.Rsa;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Assert;
 import org.junit.Test;
