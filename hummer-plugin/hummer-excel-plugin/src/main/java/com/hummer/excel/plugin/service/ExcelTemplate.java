@@ -1,6 +1,7 @@
 package com.hummer.excel.plugin.service;
 
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.support.ExcelTypeEnum;
 import com.hummer.common.exceptions.AppException;
 import com.hummer.excel.plugin.handle.data.ExcelDataHandler;
 import com.hummer.excel.plugin.handle.read.ExcelReader;
@@ -12,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -74,6 +77,25 @@ public class ExcelTemplate<T> implements ExcelReader<T>, ExcelWriter<T> {
             LOGGER.error("excel reading multipartFile.getInputStream fail ", e);
             throw new AppException(50001, "文件读取错误");
         }
+    }
+
+    public void readTopSheet(File file, ExcelDataHandler<T> excelDataHandler) {
+        long start = System.currentTimeMillis();
+        assertExcelFile(file);
+        DataEasyListener<T> listener = DataEasyListener.<T>builder().excelDataHandler(excelDataHandler).build();
+        try {
+            EasyExcel.read(new FileInputStream(file))
+                    .registerReadListener(listener)
+                    .head(cla)
+                    .ignoreEmptyRow(true)
+                    .excelType(ExcelTypeEnum.XLSX)
+                    .doReadAll();
+        } catch (FileNotFoundException e) {
+            LOGGER.error("excel reading FileInputStream fail ", e);
+            throw new AppException(50001, "文件读取错误");
+        }
+        long end = System.currentTimeMillis();
+        LOGGER.info("readTopSheet fileName=={},fileLen=={} cost time =={}", file.getName(), file.length(), end - start);
     }
 
     @Override
