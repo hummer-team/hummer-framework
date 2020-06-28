@@ -28,7 +28,7 @@ public class CustomFastJsonConfigs implements MessageSerialConfig {
 
     @Override
     public void register(FastJsonConfig fastJsonConfig) {
-        if (PropertiesContainer.valueOf("fastJson.deserializer.String.custom.enable", Boolean.class, true)) {
+        if (PropertiesContainer.valueOf("fastJson.deserializer.String.custom.enable", Boolean.class, false)) {
 
             ParserConfig parserConfig = fastJsonConfig.getParserConfig();
             if (parserConfig != null) {

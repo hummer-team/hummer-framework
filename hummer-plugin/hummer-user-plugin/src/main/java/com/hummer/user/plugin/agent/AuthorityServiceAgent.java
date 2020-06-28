@@ -30,7 +30,7 @@ public class AuthorityServiceAgent {
         }
         ticketContext.setBase64(true);
         String url = String.format("%s/v1/admin/ticket/verify-new"
-                , PropertiesContainer.valueOfString("login.service.host"));
+                , PropertiesContainer.valueOfStringWithAssertNotNull("login.service.host"));
 
         String response = HttpSyncClient.sendHttpPostByRetry(url
                 , JSON.toJSONString(ticketContext)
