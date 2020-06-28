@@ -38,14 +38,14 @@
         </snapshotRepository>
     </distributionManagement> -->
 
-   <distributionManagement>
-       <repository>
-           <id>maven-releases</id>
-           <url>http://10.10.10.250:8081/repository/maven-releases/</url>
-       </repository>
-       <snapshotRepository>
-           <id>nexus-snapshots</id>
-           <url>http://10.10.10.250:8081/repository/maven-snapshots/</url>
+    <distributionManagement>
+        <repository>
+            <id>maven-releases</id>
+            <url>http://10.10.10.250:8081/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>http://10.10.10.250:8081/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -183,6 +183,11 @@
             <dependency>
                 <groupId>com.hummer</groupId>
                 <artifactId>hummer-user-plugin</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-excel-plugin</artifactId>
                 <version>${hummer.version}</version>
             </dependency>
             <dependency>
