@@ -69,7 +69,7 @@ public class ExcelTemplate<T> implements ExcelReader<T>, ExcelWriter<T> {
                     .registerReadListener(listener)
                     .head(cla)
                     .ignoreEmptyRow(true)
-                    .sheet(0).build();
+                    .sheet(0).doRead();
             long end = System.currentTimeMillis();
             LOGGER.info("readTopSheet fileName=={},fileLen=={}, cost time =={}", multipartFile.getOriginalFilename(),
                     multipartFile.getSize(), end - start);

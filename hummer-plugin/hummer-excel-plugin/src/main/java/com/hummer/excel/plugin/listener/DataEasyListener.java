@@ -2,7 +2,6 @@ package com.hummer.excel.plugin.listener;
 
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
-import com.alibaba.fastjson.JSON;
 import com.hummer.excel.plugin.handle.data.ExcelDataHandler;
 import lombok.Builder;
 import org.slf4j.Logger;
@@ -35,7 +34,6 @@ public class DataEasyListener<T> extends AnalysisEventListener<T> {
      */
     @Override
     public void invoke(T data, AnalysisContext context) {
-        LOGGER.info("解析到一条数据:{}", JSON.toJSONString(data));
         if (excelDataHandler != null) {
             excelDataHandler.handle(data);
         }
