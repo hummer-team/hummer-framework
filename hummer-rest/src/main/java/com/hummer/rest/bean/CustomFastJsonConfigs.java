@@ -36,8 +36,8 @@ public class CustomFastJsonConfigs implements MessageSerialConfig {
             }
         }
         if (StringUtils
-                .isNotBlank(PropertiesContainer.valueOfString("fastJson.deserializer.dateFormat.custom.type"))) {
-            fastJsonConfig.setDateFormat(PropertiesContainer.valueOfString("fastJson.deserializer.dateFormat.custom.type"));
+                .isBlank(PropertiesContainer.valueOfString("fastJson.deserializer.dateFormat.custom.type"))) {
+            fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
         }
     }
 }
