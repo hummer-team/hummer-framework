@@ -29,7 +29,6 @@ public class AuthorityServiceAgent {
     }
 
     public static List<UserBasicInfoPluginRespDto> getUserBasicInfo(UserBasicInfoPluginReqDto reqDto) {
-        long start = System.currentTimeMillis();
         if (reqDto == null) {
             reqDto = new UserBasicInfoPluginReqDto();
         }
@@ -40,13 +39,12 @@ public class AuthorityServiceAgent {
                 , PropertiesContainer.valueOf("authority.service.call.timeout.millis", Long.class, 5000L)
                 , TimeUnit.MILLISECONDS
                 , 1);
-        long end = System.currentTimeMillis();
 
-        LOGGER.debug("AuthorityServiceAgent.getUserBasicInfo cost time===={}", end - start);
         return ResponseUtil.parseResponseV2WithStatus(response
                 , new TypeReference<ResourceResponse<List<UserBasicInfoPluginRespDto>>>() {
                 });
     }
+
 
     public static UserContext getUserContext(final String ticket) {
 
