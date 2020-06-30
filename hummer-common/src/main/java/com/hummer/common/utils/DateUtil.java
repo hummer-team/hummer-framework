@@ -1,10 +1,12 @@
 package com.hummer.common.utils;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * date util,if customer imp date feature recommend use {@link org.joda.time.DateTime}
@@ -81,7 +83,14 @@ public class DateUtil {
      * @since 1.0.0
      **/
     public static Date now() {
-        return DateTime.now(DateTimeZone.UTC).toDate();
+        TimeZone timeZone = TimeZone.getTimeZone("GMT+8");
+        TimeZone.setDefault(timeZone);
+        return DateTime.now(DateTimeZone.forTimeZone(TimeZone.getDefault())).toDate();
+    }
+
+    public static void main(String[] args) {
+        Date date = now();
+        System.out.println(DateFormatUtils.format(date, "yyyy-MM-dd HH:mm:ss"));
     }
 
     /**
