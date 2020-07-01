@@ -1,11 +1,9 @@
 package com.hummer.rest.bean;
 
-import com.alibaba.fastjson.parser.ParserConfig;
 import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.rest.message.handle.MessageSerialConfig;
-import com.hummer.rest.serializer.CustomStringDeserializer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Configuration;
 
@@ -28,16 +26,11 @@ public class CustomFastJsonConfigs implements MessageSerialConfig {
 
     @Override
     public void register(FastJsonConfig fastJsonConfig) {
-        if (PropertiesContainer.valueOf("fastJson.deserializer.String.custom.enable", Boolean.class, false)) {
-
-            ParserConfig parserConfig = fastJsonConfig.getParserConfig();
-            if (parserConfig != null) {
-                parserConfig.putDeserializer(String.class, CustomStringDeserializer.instance);
-            }
-        }
         if (StringUtils
                 .isBlank(PropertiesContainer.valueOfString("fastJson.deserializer.dateFormat.custom.type"))) {
-            fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
+            fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ssS");
+        } else {
+            fastJsonConfig.setDateFormat(PropertiesContainer.valueOfString("fastJson.deserializer.dateFormat.custom.type"));
         }
     }
 }
