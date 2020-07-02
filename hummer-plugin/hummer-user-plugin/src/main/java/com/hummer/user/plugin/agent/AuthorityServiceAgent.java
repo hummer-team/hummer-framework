@@ -52,22 +52,28 @@ public class AuthorityServiceAgent {
         TicketContext ticketContext = new TicketContext();
         ticketContext.setTicket(getBase64Encode(ticket, urldecoding));
         if (StringUtils.isEmpty(ticketContext.getTicket())) {
-            throw new AppException(45000, "this ticket is invalid");
+            throw new AppException(41001, "this ticket is invalid");
         }
         ticketContext.setBase64(true);
+
+        return getUserContext(ticketContext);
+    }
+
+    public static UserContext getUserContext(TicketContext reqDto) {
+
         String url = String.format("%s/v1/admin/ticket/verify-new"
                 , PropertiesContainer.valueOfStringWithAssertNotNull("login.service.host"));
 
         String response = HttpSyncClient.sendHttpPostByRetry(url
-                , JSON.toJSONString(ticketContext)
+                , JSON.toJSONString(reqDto)
                 , PropertiesContainer.valueOf("login.service.call.timeout.millis", Long.class, 5000L)
                 , TimeUnit.MILLISECONDS
                 , 1);
-
         return ResponseUtil.parseResponseV2WithStatus(response
                 , new TypeReference<ResourceResponse<UserContext>>() {
                 });
     }
+
 
     private static String getBase64Encode(String ticket, boolean decoding) {
         return decoding

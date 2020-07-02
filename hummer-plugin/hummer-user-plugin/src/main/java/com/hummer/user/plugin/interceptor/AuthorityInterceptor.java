@@ -66,7 +66,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         String tokenKey = PropertiesContainer.valueOfString("ticket.request.key", "token");
         String token = RequestContextHolder.get(tokenKey);
         if (StringUtils.isEmpty(token)) {
-            throw new AppException(40001, "this request ticket not exists.");
+            throw new AppException(41001, "this request ticket not exists.");
         }
 
         UserContext userContext = AuthorityServiceAgent.getUserContext(token);
@@ -74,7 +74,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             log.debug("this request url {} ,controller method is {},ticket invalid"
                     , request.getRequestURI()
                     , ((HandlerMethod) handler).getMethod().getName());
-            throw new AppException(40002, "this request ticket invalid.");
+            throw new AppException(41003, "this request ticket invalid.");
         }
 
         if (Boolean.TRUE.equals(userContext.getIsLocked())) {
@@ -124,7 +124,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             }
         }
 
-        throw new AppException(40004,
+        throw new AppException(40100,
                 String.format("this user %s,operation no authority,operation code is %s,remark is %s"
                         , userContext.getTrueName()
                         , Arrays.toString(login.authorityCode()), login.remark())
