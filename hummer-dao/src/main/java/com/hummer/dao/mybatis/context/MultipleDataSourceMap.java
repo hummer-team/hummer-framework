@@ -99,6 +99,7 @@ public class MultipleDataSourceMap {
      * remove current thread cache data source metadata
      */
     public static void clean() {
+        DATA_SOURCE_SETS.clear();
         HOLDER.remove();
     }
 }
