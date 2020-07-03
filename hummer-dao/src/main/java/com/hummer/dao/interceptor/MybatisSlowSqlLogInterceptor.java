@@ -1,7 +1,7 @@
 package com.hummer.dao.interceptor;
 
-import com.hummer.core.PropertiesContainer;
 import com.hummer.common.SysConstant;
+import com.hummer.core.PropertiesContainer;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -43,7 +43,7 @@ public class MybatisSlowSqlLogInterceptor implements Interceptor {
         Object obj = invocation.proceed();
         long costTime = System.currentTimeMillis() - startTime;
         //record slow sql
-        if (Boolean.TRUE.equals(isShowSql) && costTime >= sqlTimout) {
+        if (costTime >= sqlTimout) {
             final Object[] args = invocation.getArgs();
             MappedStatement mappedStatement = (MappedStatement) args[0];
             String sqlId = mappedStatement.getId();
@@ -51,7 +51,10 @@ public class MybatisSlowSqlLogInterceptor implements Interceptor {
             BoundSql boundSql = mappedStatement.getBoundSql(parameterObject);
             String sqlStr = boundSql.getSql();
             //out put log
-            LOGGER.warn("slow sql,sql id : {},sql info :{}", sqlId, sqlStr);
+            LOGGER.warn("slow sql,sql id : {},sql cost {} millis,sql info :{}"
+                    , sqlId
+                    , costTime
+                    , isShowSql ? sqlStr : "");
         }
         return obj;
     }
