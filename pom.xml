@@ -101,7 +101,7 @@
         <mybatis-spring.version>2.0.1</mybatis-spring.version>
         <hibernate-validator.version>6.0.13.Final</hibernate-validator.version>
         <joda-time.version>2.9.9</joda-time.version>
-        <guava.version>20.0</guava.version>
+        <guava.version>29.0-jre</guava.version>
         <swagger-annotations.version>1.5.13</swagger-annotations.version>
         <mybatis.version>3.4.6</mybatis.version>
         <spring-tx.version>5.2.0.RELEASE</spring-tx.version>
