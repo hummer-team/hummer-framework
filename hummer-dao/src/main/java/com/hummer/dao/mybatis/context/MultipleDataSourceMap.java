@@ -1,10 +1,8 @@
 package com.hummer.dao.mybatis.context;
 
 import com.google.common.base.Strings;
-import com.hummer.common.exceptions.SysException;
 import org.apache.commons.lang3.Validate;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -25,6 +23,7 @@ public class MultipleDataSourceMap {
     public static void setDataSource(final String name) {
         Validate.isTrue(!Strings.isNullOrEmpty(name), "metadata is null");
         DataSourceMetadata metadata = getMeta(name);
+        HOLDER.remove();
         HOLDER.set(metadata);
     }
 
@@ -41,6 +40,7 @@ public class MultipleDataSourceMap {
 
     /**
      * if current thread no data source then return null.
+     *
      * @return DataSourceMetadata
      */
     public static DataSourceMetadata getDataSourceWithNullDataSource() {
@@ -57,12 +57,7 @@ public class MultipleDataSourceMap {
      */
     private static DataSourceMetadata getMeta(final String dbName) {
         Validate.isTrue(exists(dbName), String.format("dbName %s is invalid", dbName));
-
-        DataSourceMetadata meta = HOLDER.get();
-        if (meta == null) {
-            meta = new DataSourceMetadata(dbName);
-        }
-        return meta;
+        return new DataSourceMetadata(dbName);
     }
 
     /**
@@ -99,7 +94,11 @@ public class MultipleDataSourceMap {
      * remove current thread cache data source metadata
      */
     public static void clean() {
-        DATA_SOURCE_SETS.clear();
         HOLDER.remove();
+    }
+
+    public static void cleanAll(){
+        clean();
+        DATA_SOURCE_SETS.clear();
     }
 }
