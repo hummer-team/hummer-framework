@@ -15,7 +15,7 @@
         <module>hummer-core</module>
         <module>hummer-simple</module>
         <module>hummer-test</module>
-        <module>hummer-eureka</module>
+        <module>hummer-supper-zookeeper</module>
     </modules>
     <packaging>pom</packaging>
     <name>hummer-framework</name>
