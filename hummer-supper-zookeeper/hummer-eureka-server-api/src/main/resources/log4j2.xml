@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- status=debug 可以查看log4j的装配过程 -->
+<configuration status="OFF" monitorInterval="1800" packages="org.apache.logging.log4j.core">
+	<properties>
+		<property name="LOG_PATH">/var</property>
+		<property name="project_name">hummer.register.server.panli.com</property>
+		<Property name="PID">????</Property>
+		<Property name="LOG_EXCEPTION_CONVERSION_WORD">%xwEx</Property>
+		<Property name="LOG_LEVEL_PATTERN">%5p</Property>
+		<Property name="LOG_DATEFORMAT_PATTERN">yyyy-MM-dd HH:mm:ss.SSS</Property>
+		<Property name="CONSOLE_LOG_PATTERN">%clr{%d{${LOG_DATEFORMAT_PATTERN}}}{faint} %clr{${LOG_LEVEL_PATTERN}} [%X{requestId}] [%X{serverIp}] %clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD}</Property>
+		<Property name="FILE_LOG_PATTERN">%d{${LOG_DATEFORMAT_PATTERN}} ${LOG_LEVEL_PATTERN} [%X{requestId}] [%X{serverIp}] [%t] %-40.40c{1.} : %m%n${LOG_EXCEPTION_CONVERSION_WORD}</Property>
+		<Property name="splitSize">100 MB</Property>
+	</properties>
+	<appenders>
+		<Console name="Console" target="SYSTEM_OUT" follow="true">
+			<PatternLayout pattern="${CONSOLE_LOG_PATTERN}" />
+		</Console>
+
+		<RollingRandomAccessFile name="LogstashFile"
+								 fileName="${LOG_PATH}/logs/${project_name}/logstash.log"
+								 filePattern="${LOG_PATH}/logs/${project_name}/%d{yyyy-MM-dd}_logstash.log">
+			<PatternLayout pattern="${FILE_LOG_PATTERN}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="6" modulate="true"/>
+				<SizeBasedTriggeringPolicy size="${splitSize}"/>
+			</Policies>
+			<Filters>
+				<ThresholdFilter level="debug" onMatch="ACCEPT"
+								 onMismatch="DENY" />
+			</Filters>
+			<DefaultRolloverStrategy max="50"/>
+		</RollingRandomAccessFile>
+
+		<RollingRandomAccessFile name="RollingInfoFile"
+								 fileName="${LOG_PATH}/logs/${project_name}/info.log" filePattern="${LOG_PATH}/logs/${project_name}/info_%d{yyyy-MM-dd}.log">
+			<PatternLayout pattern="${FILE_LOG_PATTERN}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="6" modulate="true"/>
+				<SizeBasedTriggeringPolicy size="${splitSize}"/>
+			</Policies>
+			<Filters>
+				<ThresholdFilter level="error" onMatch="DENY"
+								 onMismatch="NEUTRAL" />
+				<ThresholdFilter level="info" onMatch="ACCEPT"
+								 onMismatch="DENY" />
+			</Filters>
+			<DefaultRolloverStrategy max="50"/>
+		</RollingRandomAccessFile>
+
+		<RollingRandomAccessFile name="RollingErrorFile"
+								 fileName="${LOG_PATH}/logs/${project_name}/error.log" filePattern="${LOG_PATH}/logs/${project_name}/error_%d{yyyy-MM-dd}.log">
+			<PatternLayout pattern="${FILE_LOG_PATTERN}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="6" modulate="true"/>
+				<SizeBasedTriggeringPolicy size="${splitSize}"/>
+			</Policies>
+			<Filters>
+				<ThresholdFilter level="error" onMatch="ACCEPT"
+								 onMismatch="DENY" />
+			</Filters>
+			<DefaultRolloverStrategy max="50"/>
+		</RollingRandomAccessFile>
+
+		<RollingRandomAccessFile name="RollingDebugFile"
+								 fileName="${LOG_PATH}/logs/${project_name}/debug.log"
+								 filePattern="${LOG_PATH}/logs/${project_name}/debug_%d{yyyy-MM-dd}.log">
+			<PatternLayout pattern="${FILE_LOG_PATTERN}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="6" modulate="true"/>
+				<SizeBasedTriggeringPolicy size="${splitSize}"/>
+			</Policies>
+			<Filters>
+				<!--伐值过滤-->
+				<ThresholdFilter level="error" onMatch="DENY"
+								 onMismatch="NEUTRAL" />
+				<ThresholdFilter level="debug" onMatch="ACCEPT"
+								 onMismatch="DENY" />
+			</Filters>
+			<DefaultRolloverStrategy max="50"/>
+		</RollingRandomAccessFile>
+
+	</appenders>
+	<loggers>
+		<!-- 3rdparty Loggers -->
+		<Logger name="org.springframework" level="error" />
+		<Logger name="com.google" level="error" />
+		<Logger name="net.rubyeye" level="error" />
+		<Logger name="org.hibernate" level="error" />
+		<Logger name="com.alibaba.dubbo" level="error" />
+		<Logger name="org.mybatis" level="debug" />
+		<Logger name="org.apache" level="error" />
+		<Logger name="io.undertow" level="error"/>
+		<Logger name="springfox.documentation" level="error" />
+		<Root level="debug">
+			<appender-ref ref="LogstashFile" />
+		</Root>
+	</loggers>
+
+</configuration>
