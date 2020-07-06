@@ -15,6 +15,7 @@
         <module>hummer-core</module>
         <module>hummer-simple</module>
         <module>hummer-test</module>
+        <module>hummer-eureka</module>
     </modules>
     <packaging>pom</packaging>
     <name>hummer-framework</name>
@@ -130,6 +131,7 @@
         <spring-core.version>5.2.0.RELEASE</spring-core.version>
         <spring-cloud-sleuth-stream.version>1.3.6.RELEASE</spring-cloud-sleuth-stream.version>
         <LatencyUtils.version>2.0.3</LatencyUtils.version>
+        <spring-cloud-eureka.version>2.2.0.RELEASE</spring-cloud-eureka.version>
     </properties>
 
     <dependencyManagement>
@@ -687,6 +689,54 @@
                 <groupId>org.latencyutils</groupId>
                 <artifactId>LatencyUtils</artifactId>
                 <version>${LatencyUtils.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-server -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+                <version>${spring-cloud-eureka.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.netflix.ribbon/ribbon-eureka -->
+            <dependency>
+                <groupId>com.netflix.ribbon</groupId>
+                <artifactId>ribbon-eureka</artifactId>
+                <version>2.3.0</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.glassfish.jaxb/jaxb-runtime -->
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>2.3.3</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter</artifactId>
+                <version>2.2.0.RELEASE</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-netflix-eureka-server -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-netflix-eureka-server</artifactId>
+                <version>2.2.0.RELEASE</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-archaius -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-netflix-archaius</artifactId>
+                <version>2.2.0.RELEASE</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-ribbon -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+                <version>2.2.0.RELEASE</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-loadbalancer -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+                <version>2.2.0.RELEASE</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
