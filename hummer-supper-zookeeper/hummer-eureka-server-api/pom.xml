@@ -57,6 +57,10 @@
                     <artifactId>servlet-api</artifactId>
                     <groupId>javax.servlet</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>eureka-client</artifactId>
+                    <groupId>com.netflix.eureka</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
