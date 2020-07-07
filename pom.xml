@@ -227,6 +227,16 @@
                 <artifactId>hummer-swagger-plugin</artifactId>
                 <version>${hummer.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-eureka-server-api</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-eureka-client-config</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
             <!--framework plugin-->
             <!-- https://mvnrepository.com/artifact/org.rocksdb/rocksdbjni -->
             <dependency>

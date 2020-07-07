@@ -36,6 +36,15 @@ public class SpringApplicationContext implements ApplicationContextAware {
         return applicationContext.getBean(clazz);
     }
 
+    public static <T> T getBeanIfNullThrow(Class<T> tClass) {
+        T tReturn = applicationContext.getBean(tClass);
+        if (tReturn == null) {
+            throw new IllegalArgumentException("this class not exists SpringApplicationContext");
+        }
+
+        return tReturn;
+    }
+
     public static <T> T getBean(String beanName, Class<T> clazz) {
         return applicationContext.getBean(beanName, clazz);
     }
