@@ -14,5 +14,6 @@
 
     <modules>
         <module>hummer-eureka-server-api</module>
+        <module>hummer-eureka-client-config</module>
     </modules>
 </project>

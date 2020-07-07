@@ -599,8 +599,7 @@
             <dependency>
                 <groupId>com.alibaba.boot</groupId>
                 <artifactId>nacos-discovery-spring-boot-starter</artifactId>
-                <!--<version>${nacos.version}</version>-->
-                <version>0.2.3</version>
+                <version>${nacos.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.seata</groupId>
@@ -712,37 +711,37 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter</artifactId>
-                <version>2.2.0.RELEASE</version>
+                <version>${spring-cloud-eureka.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-netflix-eureka-server -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-netflix-eureka-server</artifactId>
-                <version>2.2.0.RELEASE</version>
+                <version>${spring-cloud-eureka.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-archaius -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-netflix-archaius</artifactId>
-                <version>2.2.0.RELEASE</version>
+                <version>${spring-cloud-eureka.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-ribbon -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
-                <version>2.2.0.RELEASE</version>
+                <version>${spring-cloud-eureka.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-loadbalancer -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-loadbalancer</artifactId>
-                <version>2.2.0.RELEASE</version>
+                <version>${spring-cloud-eureka.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-client -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-                <version>2.2.0.RELEASE</version>
+                <version>${spring-cloud-eureka.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
