@@ -9,4 +9,5 @@ import org.springframework.context.annotation.Import;
 @ComponentScan(basePackages = "com.hummer.eureka.client.config")
 @Import(value = {BlockingLoadBalancerClientAutoConfiguration.class})
 public class ExportEurekaClientConfig {
+
 }

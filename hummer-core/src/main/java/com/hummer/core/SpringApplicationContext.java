@@ -27,6 +27,8 @@ import java.util.Map;
 public class SpringApplicationContext implements ApplicationContextAware {
     private static final Logger LOGGER = LoggerFactory.getLogger(SpringApplicationContext.class);
     private static ApplicationContext applicationContext;
+    private static boolean isRegisterShutdownHook = false;
+    private static final Object obj = new Object();
 
     public static Object getBean(String beanName) {
         return applicationContext.getBean(beanName);
@@ -118,12 +120,19 @@ public class SpringApplicationContext implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         if (SpringApplicationContext.applicationContext != null) {
             LOGGER.warn("this application context already init");
-            return;
         }
         SpringApplicationContext.applicationContext = applicationContext;
+
         if (SpringApplicationContext.applicationContext instanceof GenericApplicationContext) {
-            ((GenericApplicationContext) SpringApplicationContext.applicationContext)
-                    .registerShutdownHook();
+            if (Boolean.FALSE.equals(isRegisterShutdownHook)) {
+                synchronized (obj) {
+                    if (Boolean.FALSE.equals(isRegisterShutdownHook)) {
+                        ((GenericApplicationContext) SpringApplicationContext.applicationContext)
+                                .registerShutdownHook();
+                        isRegisterShutdownHook = true;
+                    }
+                }
+            }
         }
         LOGGER.info("customer spring context set application context success" +
                         ".[Parent:{}\n->evn:{}\n->application name:{}]"
