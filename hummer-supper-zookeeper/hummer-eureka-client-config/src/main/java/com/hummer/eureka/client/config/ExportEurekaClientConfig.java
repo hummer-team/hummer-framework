@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import(value = {BlockingLoadBalancerClientAutoConfiguration.class})
 @ComponentScan(basePackages = "com.hummer.eureka.client.config")
+@Import(value = {BlockingLoadBalancerClientAutoConfiguration.class})
 public class ExportEurekaClientConfig {
 }

@@ -1,6 +1,5 @@
 package com.hummer.kafka.product.plugin.domain.product;
 
-import com.hummer.common.exceptions.SysException;
 import com.hummer.kafka.product.plugin.support.pool.ProducerPool;
 import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.ProducerRecord;

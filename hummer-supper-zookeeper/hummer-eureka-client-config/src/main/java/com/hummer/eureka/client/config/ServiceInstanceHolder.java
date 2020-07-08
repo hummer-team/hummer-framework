@@ -5,10 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
 @Slf4j
+@Service
 public class ServiceInstanceHolder {
     @Autowired
     private LoadBalancerClient loadBalancerClient;
@@ -23,6 +23,7 @@ public class ServiceInstanceHolder {
             throw new NullPointerException(String.format("this service app name %s not exists"
                     , refApplicationId));
         }
+
         //DiscoveryClient
         String serviceHost = instance.getUri().toString();
         log.debug("app id {} uri is {},LoadBalancerRule {}"
