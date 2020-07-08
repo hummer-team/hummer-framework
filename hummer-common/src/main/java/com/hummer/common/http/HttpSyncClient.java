@@ -698,8 +698,8 @@ public class HttpSyncClient {
                     throw new SysException(SYS_ERROR_CODE, e.getMessage(), e);
                 }
             } catch (Exception e) {
-                if (i == retryCount && retryCount > 0) {
-                    log.error("Still failed after retrying, retry count {} error {}: url :{} "
+                if (i == retryCount) {
+                    log.error("Still failed after retrying, retry count {} error {}: url :{}, "
                             , retryCount
                             , e.getMessage()
                             , httpRequestBase.getURI().toString()
