@@ -13,22 +13,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class DruidStatController {
     @GetMapping("/druid/stat")
-    public Object druidStat(@RequestParam("user")String user
-            , @RequestParam("password")String password
-            ,@RequestParam(value = "includeSql",defaultValue = "false")String includeSql){
-        if(Strings.isNullOrEmpty(user)|| Strings.isNullOrEmpty(password)){
+    public Object druidStat(@RequestParam("user") String user
+            , @RequestParam("password") String password
+            , @RequestParam(value = "includeSql", defaultValue = "false") String includeSql) {
+        if (Strings.isNullOrEmpty(user) || Strings.isNullOrEmpty(password)) {
             return null;
         }
-        String userName= PropertiesContainer.valueOfString("druid.stat.user","admin");
-        String pwd =PropertiesContainer.valueOfString("druid.stat.user.password","123456");
-        if(!user.equals(userName) || !password.equals(pwd)){
+        String userName = PropertiesContainer.valueOfString("druid.stat.user", "admin");
+        String pwd = PropertiesContainer.valueOfString("druid.stat.user.password", "123456");
+        if (!user.equals(userName) || !password.equals(pwd)) {
             return null;
         }
 
-        boolean showSql=Boolean.TRUE.equals(includeSql);
+        boolean showSql = Boolean.TRUE.equals(includeSql);
 
-         return DruidStatManagerFacade
-                 .getInstance()
-                 .getDataSourceStatDataList(showSql);
+        return DruidStatManagerFacade
+                .getInstance()
+                .getDataSourceStatDataList(showSql);
     }
 }
