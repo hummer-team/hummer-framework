@@ -5,16 +5,15 @@ import com.alibaba.fastjson.TypeReference;
 import com.hummer.common.exceptions.AppException;
 import com.hummer.common.http.HttpSyncClient;
 import com.hummer.core.PropertiesContainer;
+import com.hummer.core.SpringApplicationContext;
+import com.hummer.eureka.client.config.ServiceInstanceHolder;
 import com.hummer.rest.model.ResourceResponse;
 import com.hummer.rest.utils.ResponseUtil;
-import com.hummer.user.plugin.constants.Constants;
 import com.hummer.user.plugin.dto.request.UserBasicInfoPluginReqDto;
 import com.hummer.user.plugin.dto.response.UserBasicInfoPluginRespDto;
 import com.hummer.user.plugin.user.TicketContext;
 import com.hummer.user.plugin.user.UserContext;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -22,8 +21,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class AuthorityServiceAgent {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AuthorityServiceAgent.class);
-
     private AuthorityServiceAgent() {
 
     }
@@ -32,11 +29,17 @@ public class AuthorityServiceAgent {
         if (reqDto == null) {
             reqDto = new UserBasicInfoPluginReqDto();
         }
-        String url = String.format("%s/v1/user/query/department/basic/info/list"
-                , PropertiesContainer.valueOfString("authority.service.host", Constants.ServiceRouteHost.AUTHORITY_SERVICE_HOST));
+
+        String applicationName = PropertiesContainer.valueOfStringWithAssertNotNull("authority.application.name");
+        String host = SpringApplicationContext
+                .getBean(ServiceInstanceHolder.class)
+                .getServiceInstance(applicationName);
+
+        String url = String.format("%s/v1/user/query/department/basic/info/list", host);
         String response = HttpSyncClient.sendHttpPostByRetry(url
                 , JSON.toJSONString(reqDto)
-                , PropertiesContainer.valueOf("authority.service.call.timeout.millis", Long.class, 5000L)
+                , PropertiesContainer.valueOf(String.format("%s.timeout.millis", applicationName)
+                        , Long.class, 5000L)
                 , TimeUnit.MILLISECONDS
                 , 1);
 
@@ -61,12 +64,17 @@ public class AuthorityServiceAgent {
 
     public static UserContext getUserContext(TicketContext reqDto) {
 
-        String url = String.format("%s/v1/admin/ticket/verify-new"
-                , PropertiesContainer.valueOfStringWithAssertNotNull("login.service.host"));
+        String applicationName = PropertiesContainer.valueOfStringWithAssertNotNull("login.application.name");
+        String host = SpringApplicationContext
+                .getBean(ServiceInstanceHolder.class)
+                .getServiceInstance(applicationName);
+
+        String url = String.format("%s/v1/admin/ticket/verify-new", host);
 
         String response = HttpSyncClient.sendHttpPostByRetry(url
                 , JSON.toJSONString(reqDto)
-                , PropertiesContainer.valueOf("login.service.call.timeout.millis", Long.class, 5000L)
+                , PropertiesContainer.valueOf(String.format("%s.timeout.millis", applicationName)
+                        , Long.class, 5000L)
                 , TimeUnit.MILLISECONDS
                 , 1);
         return ResponseUtil.parseResponseV2WithStatus(response

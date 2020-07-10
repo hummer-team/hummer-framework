@@ -14,17 +14,22 @@ public class ServiceInstanceHolder {
     private LoadBalancerClient loadBalancerClient;
 
     public String getServiceInstance(String refApplicationId) {
-        ServiceInstance instance = loadBalancerClient
-                .choose(refApplicationId);
+        ServiceInstance instance = null;
+        try {
+            instance = loadBalancerClient
+                    .choose(refApplicationId);
 
+        } catch (Throwable e) {
+            log.error("get {} service instance failed,"
+                    , refApplicationId, e);
+        }
         //LoadBalancerBuilder.newBuilder().withClientConfig(IClientConfig.Builder.newBuilder().build());
 
         if (instance == null) {
-            throw new NullPointerException(String.format("this service app name %s not exists"
-                    , refApplicationId));
+            log.warn("application id {} not exists,use application properties", refApplicationId);
+            return PropertiesContainer.valueOfStringWithAssertNotNull(String.format("%s.host", refApplicationId));
         }
 
-        //DiscoveryClient
         String serviceHost = instance.getUri().toString();
         log.debug("app id {} uri is {},LoadBalancerRule {}"
                 , refApplicationId

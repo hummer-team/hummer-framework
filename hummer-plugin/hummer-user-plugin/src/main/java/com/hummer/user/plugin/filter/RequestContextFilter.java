@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Enumeration;
 
 @Slf4j
-public class    RequestContextFilter implements Filter {
+public class RequestContextFilter implements Filter {
 
     private void readRequestContextHolder(HttpServletRequest request) {
         String keyCfg = PropertiesContainer.valueOfString("read.request.key", "*");

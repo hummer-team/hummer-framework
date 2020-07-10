@@ -21,5 +21,9 @@
             <groupId>com.hummer</groupId>
             <artifactId>hummer-rest</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.hummer</groupId>
+            <artifactId>hummer-eureka-client-config</artifactId>
+        </dependency>
     </dependencies>
 </project>
