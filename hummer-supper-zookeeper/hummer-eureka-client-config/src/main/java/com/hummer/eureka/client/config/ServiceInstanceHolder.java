@@ -14,6 +14,11 @@ public class ServiceInstanceHolder {
     private LoadBalancerClient loadBalancerClient;
 
     public String getServiceInstance(String refApplicationId) {
+        if (Boolean.FALSE
+                .equals(PropertiesContainer.valueOf("eureka.client.enabled", Boolean.class, Boolean.FALSE))) {
+            return PropertiesContainer.valueOfStringWithAssertNotNull(String.format("%s.host", refApplicationId));
+        }
+
         ServiceInstance instance = null;
         try {
             instance = loadBalancerClient
