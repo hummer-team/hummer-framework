@@ -9,18 +9,10 @@ import com.hummer.common.http.context.ResponseContext;
 import com.hummer.common.http.context.ResponseContextWrapper;
 import com.hummer.core.PropertiesContainer;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpMessage;
-import org.apache.http.NameValuePair;
-import org.apache.http.NoHttpResponseException;
+import org.apache.http.*;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.*;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.config.SocketConfig;
@@ -46,22 +38,12 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.MDC;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.ServiceLoader;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-import static com.hummer.common.SysConstant.DEFAULT_CHARSET_NAME;
-import static com.hummer.common.SysConstant.HEADER_REQ_TIME;
-import static com.hummer.common.SysConstant.REQUEST_ID;
-import static com.hummer.common.SysConstant.SYS_ERROR_CODE;
-import static com.hummer.common.http.HttpConstant.HTTPCLIENT_CONNRESETRETRY_ENABLE;
-import static com.hummer.common.http.HttpConstant.HTTPCLIENT_CONNTIMEOUTRETRY_ENABLE;
-import static com.hummer.common.http.HttpConstant.HTTP_CONN_SOCKET_TIMEOUT;
-import static com.hummer.common.http.HttpConstant.HTTP_CONN_TIMEOUT;
+import static com.hummer.common.SysConstant.*;
+import static com.hummer.common.http.HttpConstant.*;
 
 /**
  * http client sync wrapper
@@ -763,7 +745,7 @@ public class HttpSyncClient {
 
             long startTime = System.currentTimeMillis();
             response = getHttpClient().execute(httpRequestBase);
-            log.debug(">>request {},cost {} millis", httpRequestBase.getURI(), System.currentTimeMillis() - startTime);
+            log.info(">>request {},cost {} millis", httpRequestBase.getURI(), System.currentTimeMillis() - startTime);
 
             afterLog(httpRequest, response);
             if (isRturnHttpResponse) {
