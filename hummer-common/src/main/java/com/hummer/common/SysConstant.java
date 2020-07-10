@@ -30,6 +30,7 @@ public class SysConstant {
         public static final String EXCLUSIONS_URL_PATTEER = "/do_not_delete/*,/warmup*,*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*";
         public static final String SERVER_IP = "serverIp";
         public static final String CLIENT_IP = "clientIp";
+        public static final String REQUEST_COST_TIME = "costTime";
         public static final String MVC_SERIALIZERFEATURE = "mvc.serializerFeature";
         public static final String SYSTEM_REMOTE_IP_SPLIT_CHAR = "system.remote.ip.split.char";
         public static final String REST_REQUESTILTER_IINCLUDE_URL = "rest.requestfilter.include.url";
@@ -44,21 +45,21 @@ public class SysConstant {
         public static final String SHOW_SQL = "show.sql";
         public static final String SHOW_TIMEOUT = "sql.slow.time.millis";
         public static final String SQL_SESSION_TEMPLATE_NAME = "jdbcTemplate";
-        public static final String MYBATIS_BASE_PACKAGE ="mybatis.base.package";
-        public static final String DB_NAME_KEY ="db.names";
-        public static final String DB_PREFIX ="spring.jdbc.";
+        public static final String MYBATIS_BASE_PACKAGE = "mybatis.base.package";
+        public static final String DB_NAME_KEY = "db.names";
+        public static final String DB_PREFIX = "spring.jdbc.";
         /**
          * mybatis.hj_class_learning_biz_log.resource.mapper
          */
-        public static final String MYBATIS_RESOURCE_MAPPER_PATH ="mybatis.%s.resource.mapper";
+        public static final String MYBATIS_RESOURCE_MAPPER_PATH = "mybatis.%s.resource.mapper";
         /**
          * mybatis.HJ_Class.po.package
          */
-        public static final String MYBATIS_PO_MODEL_PACKAGE ="mybatis.%s.po.package";
+        public static final String MYBATIS_PO_MODEL_PACKAGE = "mybatis.%s.po.package";
         /**
          * dao interface package
          */
-        public static final String MYBATIS_DAO_INTERFACE_PACKAGE ="mybatis.%s.interface.package";
+        public static final String MYBATIS_DAO_INTERFACE_PACKAGE = "mybatis.%s.interface.package";
         public static final String JDBC_TESTWHILEIDLE = "jdbc.testWhileIdle";
         public static final String JDBC_TESTONBORROW = "jdbc.testOnBorrow";
         public static final String JDBC_TESTONRETURN = "jdbc.testOnReturn";
@@ -69,7 +70,7 @@ public class SysConstant {
         public static final String DRUID_SHOW_TIMEOUT = "druid.sql.timeout";
         public static final String DRUID_SHOW_SQL = "druid.show.sql";
         public static final String DRUID_MERGE_SQL = "druid.merge.sql";
-        public static final String JDBC_CHECK_SQL="jdbc.check.sql";
+        public static final String JDBC_CHECK_SQL = "jdbc.check.sql";
         public static final String DRUID_SELECT_UNION_CHECK = "druid.select.union.check";
     }
 }

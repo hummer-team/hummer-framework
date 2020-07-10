@@ -90,16 +90,49 @@ public class RequestFilter implements Filter {
         buildRequestId(httpRequest);
         long start = System.currentTimeMillis();
         try {
-            // TODO: 2019/6/24 insert response logic 
+            // response
+            composeResponse(httpResponse);
+            // TODO: 2019/6/24 insert response logic
             chain.doFilter(request, response);
         } catch (Throwable throwable) {
             LOGGER.error("request {} handle failed,cost {} millis,user-agent {}"
                     , HttpServletRequestUtil.getCurrentUrl(httpRequest)
                     , System.currentTimeMillis() - start, HttpServletRequestUtil.getUserAgent(httpRequest));
         } finally {
-            outputLog(httpResponse, httpRequest, System.currentTimeMillis() - start);
+            long costTime = System.currentTimeMillis() - start;
+            outputLog(httpResponse, httpRequest, costTime);
             MDC.clear();
         }
+    }
+
+    private void composeResponse(HttpServletResponse response) {
+        if (response == null) {
+            return;
+        }
+        response.addHeader(SysConstant.REQUEST_ID, MDC.get(SysConstant.REQUEST_ID));
+        response.addHeader(SysConstant.RestConstant.SERVER_IP, createResponseIp(MDC.get(SysConstant.RestConstant.SERVER_IP)));
+        response.addHeader(SysConstant.RestConstant.CLIENT_IP, createResponseIp(MDC.get(SysConstant.RestConstant.CLIENT_IP)));
+    }
+
+    private String createResponseIp(String ip) {
+        if (StringUtils.isBlank(ip)) {
+            return null;
+        }
+        String result = ip.replace(".", "@");
+        return result.substring(getLastNumIndex(result, 2, "@"));
+    }
+
+    private int getLastNumIndex(String s, int lastNum, String d) {
+        int index = s.length();
+        while (lastNum > 0) {
+            int temp = s.lastIndexOf(d, index - 1);
+            lastNum--;
+            if (temp == -1) {
+                return index;
+            }
+            index = temp;
+        }
+        return index;
     }
 
     private void outputLog(final HttpServletResponse response
