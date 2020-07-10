@@ -5,11 +5,17 @@ import com.hummer.common.utils.HttpServletRequestUtil;
 import com.hummer.common.utils.IpUtil;
 import com.hummer.core.PropertiesContainer;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -95,9 +101,10 @@ public class RequestFilter implements Filter {
             // TODO: 2019/6/24 insert response logic
             chain.doFilter(request, response);
         } catch (Throwable throwable) {
-            LOGGER.error("request {} handle failed,cost {} millis,user-agent {}"
+            LOGGER.error("request {} handle failed,cost {} millis,user-agent {},error=={}"
                     , HttpServletRequestUtil.getCurrentUrl(httpRequest)
-                    , System.currentTimeMillis() - start, HttpServletRequestUtil.getUserAgent(httpRequest));
+                    , System.currentTimeMillis() - start, HttpServletRequestUtil.getUserAgent(httpRequest)
+                    , ExceptionUtils.getStackTrace(throwable));
         } finally {
             long costTime = System.currentTimeMillis() - start;
             outputLog(httpResponse, httpRequest, costTime);
