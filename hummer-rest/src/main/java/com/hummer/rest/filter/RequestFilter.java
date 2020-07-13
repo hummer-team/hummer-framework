@@ -103,7 +103,8 @@ public class RequestFilter implements Filter {
         } catch (Throwable throwable) {
             LOGGER.error("request {} handle failed,cost {} millis,user-agent {},error=={}"
                     , HttpServletRequestUtil.getCurrentUrl(httpRequest)
-                    , System.currentTimeMillis() - start, HttpServletRequestUtil.getUserAgent(httpRequest)
+                    , System.currentTimeMillis() - start
+                    , HttpServletRequestUtil.getUserAgent(httpRequest)
                     , ExceptionUtils.getStackTrace(throwable));
         } finally {
             long costTime = System.currentTimeMillis() - start;

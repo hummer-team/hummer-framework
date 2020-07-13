@@ -109,7 +109,8 @@ public class GlobalExceptionHandler {
                     .append("url:")
                     .append(requestUrl(request))
                     .append(StringUtils.LF)
-                    .append("request body:").append(bodyString)
+                    .append("request body:")
+                    .append(bodyString)
                     .append(StringUtils.LF)
                     .append(String.format("request id:%s > stack: %s", id, ExceptionUtils.getStackTrace(e)));
             LOGGER.error(sb.toString());

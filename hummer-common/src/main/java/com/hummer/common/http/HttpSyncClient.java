@@ -791,7 +791,9 @@ public class HttpSyncClient {
         } catch (Exception e) {
             afterThrowingLog(httpRequest, e);
             throwException(e);
-            throw new SysException(SYS_ERROR_CODE, e.getMessage(), e);
+            throw new SysException(SYS_ERROR_CODE, String.format("%s -> %s"
+                    , e.getMessage(), httpRequestBase.getURI())
+                    , e);
         } finally {
             if (!isRturnHttpResponse) {
                 closeResources(response, httpRequestBase);

@@ -21,7 +21,12 @@ import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
@@ -38,12 +43,12 @@ import java.util.zip.GZIPInputStream;
  **/
 public class FastJsonHttpMessageConverterService extends FastJsonHttpMessageConverter {
     private static final Logger LOGGER = LoggerFactory.getLogger(FastJsonHttpMessageConverterService.class);
-    private FastJsonConfig fastJsonConfig;
-    private final RequestBodyHandle requestBodyHandle;
-    private final ResponseBodyHandle responseBodyHandle;
     private static final String HEADER_GZIP_STR = "gzip";
     private static final String HEADER_CONTENT_ENCODING = "Content-Encoding";
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
+    private final RequestBodyHandle requestBodyHandle;
+    private final ResponseBodyHandle responseBodyHandle;
+    private FastJsonConfig fastJsonConfig;
 
     public FastJsonHttpMessageConverterService(FastJsonConfig fastJsonConfig
             , RequestBodyHandle requestBodyHandle
@@ -181,8 +186,8 @@ public class FastJsonHttpMessageConverterService extends FastJsonHttpMessageConv
             }
         }
 
-        LOGGER.debug("request body content size {} byte"
-                , contentStr.getBytes(DEFAULT_CHARSET).length);
+        LOGGER.info("request body content size {} byte,info {}"
+                , contentStr.getBytes(DEFAULT_CHARSET).length, contentStr);
         //parse content to domain entity
         try {
             return JSON.parseObject(contentStr, type, fastJsonConfig.getParserConfig());
