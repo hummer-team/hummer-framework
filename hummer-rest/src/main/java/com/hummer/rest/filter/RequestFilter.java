@@ -1,5 +1,7 @@
 package com.hummer.rest.filter;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
 import com.hummer.common.SysConstant;
 import com.hummer.common.utils.HttpServletRequestUtil;
 import com.hummer.common.utils.IpUtil;
@@ -126,22 +128,15 @@ public class RequestFilter implements Filter {
         if (StringUtils.isBlank(ip)) {
             return null;
         }
-        String result = ip.replace(".", "@");
-        return result.substring(getLastNumIndex(result, 2, "@"));
+        Iterable<String> iterable = Splitter.on(".").split(ip);
+        if (iterable == null) {
+            return null;
+        }
+        String first = Iterables.get(iterable, 2, null);
+        String last = Iterables.get(iterable, 3, null);
+        return String.format("%s@%s", first, last);
     }
 
-    private int getLastNumIndex(String s, int lastNum, String d) {
-        int index = s.length();
-        while (lastNum > 0) {
-            int temp = s.lastIndexOf(d, index - 1);
-            lastNum--;
-            if (temp == -1) {
-                return index;
-            }
-            index = temp;
-        }
-        return index;
-    }
 
     private void outputLog(final HttpServletResponse response
             , final HttpServletRequest httpRequest

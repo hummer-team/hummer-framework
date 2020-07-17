@@ -65,8 +65,12 @@ public class RequestContextFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
-        readRequestContextHolder((HttpServletRequest) servletRequest);
-        filterChain.doFilter(servletRequest, servletResponse);
+        try {
+            readRequestContextHolder((HttpServletRequest) servletRequest);
+            filterChain.doFilter(servletRequest, servletResponse);
+        } finally {
+            destroy();
+        }
     }
 
     @Override
