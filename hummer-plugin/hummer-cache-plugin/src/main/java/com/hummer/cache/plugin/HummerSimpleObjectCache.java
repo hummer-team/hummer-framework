@@ -27,6 +27,11 @@ public @interface HummerSimpleObjectCache {
     String businessCode() default "";
 
     /**
+     * this is define cache group name,e.g:kingkong-service:default.cache.store.type=REDIS
+     */
+    String cacheGroup() default "default";
+
+    /**
      * time out seconds
      */
     int timeoutSeconds() default 30;

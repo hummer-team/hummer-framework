@@ -8,6 +8,7 @@ import com.hummer.cache.plugin.driver.SimpleRedisCache;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.core.SpringApplicationContext;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -35,7 +36,7 @@ public class HummerFirstCacheAspect {
             SimpleGuavaCache guavaCache =
                     SpringApplicationContext.getBean(SimpleGuavaCache.class);
             return guavaCache.getOrSet(guavaCache.formatKey(
-                    cache.applicationName()
+                    getNameSpace(cache)
                     , cache.businessCode()
                     , KeyUtil.getFieldNameValueMap(point))
                     , () -> point.proceed(point.getArgs()));
@@ -45,23 +46,31 @@ public class HummerFirstCacheAspect {
             SimpleRedisCache redisCache =
                     SpringApplicationContext.getBean(SimpleRedisCache.class);
             return redisCache.getOrSet(redisCache.formatKey(
-                    cache.applicationName()
+                    getNameSpace(cache)
                     , cache.businessCode()
                     , KeyUtil.getFieldNameValueMap(point))
                     , cache.timeoutSeconds()
                     , () -> point.proceed(point.getArgs())
-                    , ((MethodSignature)point.getSignature()).getReturnType());
+                    , ((MethodSignature) point.getSignature()).getReturnType());
         }
 
 
         return point.proceed(point.getArgs());
     }
 
+    private String getNameSpace(HummerSimpleObjectCache cache) {
+        String nameSpace = cache.applicationName();
+        if (Strings.isEmpty(nameSpace)) {
+            return PropertiesContainer.valueOfString("spring.application.name");
+        }
+        return nameSpace;
+    }
+
 
     private CacheDriverTypeEnum getCacheDriverType(HummerSimpleObjectCache cache) {
         String driver = PropertiesContainer.valueOfStringWithAssertNotNull(String.format("%s.%s.cache.store.type"
-                , cache.applicationName()
-                , cache.businessCode()));
+                , getNameSpace(cache)
+                , cache.cacheGroup()));
         return CacheDriverTypeEnum.getBy(driver);
     }
 }

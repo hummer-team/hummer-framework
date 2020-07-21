@@ -69,6 +69,9 @@ public class SimpleRedisCache {
     public String formatKey(final String nameSpace
             , final String businessCode
             , final Map<String, Object> parameterMap) {
+        if (Strings.isEmpty(businessCode)) {
+            throw new IllegalArgumentException("hummer cache business code can not null");
+        }
         return KeyUtil.formatKey(nameSpace, businessCode, parameterMap);
     }
 }
