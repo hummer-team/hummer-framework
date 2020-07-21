@@ -27,9 +27,9 @@ public class DataSourceController {
 
     //@Autowired
     //private BizLogTableConfigDao configDao;
-    @Autowired
+    @Autowired(required = false)
     private EvaluationTasksDao tasksDao;
-    @Autowired
+    @Autowired(required = false)
     private CoursewareDaoMapper coursewareDaoMapper;
 
     @GetMapping(value = "/course")

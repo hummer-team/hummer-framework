@@ -26,7 +26,7 @@ import java.util.ArrayList;
 @Service(value = MessagePublishMetadataKey.KAFKA_MESSAGE_DRIVER_NAME)
 public class KafkaBaseMessageBus extends BaseMessageBusTemplate {
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaBaseMessageBus.class);
-    @Autowired
+    @Autowired(required = false)
     private Product product;
 
     /**

@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  **/
 public class InternalRedisPool {
     private static final Logger LOGGER = LoggerFactory.getLogger(InternalRedisPool.class);
-    private final Map<String, JedisPool> POOL = new ConcurrentHashMap<>();
+    private final Map<String, JedisPool> poolMap = new ConcurrentHashMap<>();
     private final Map<String, JedisSentinelPool> SENTINEL_POOL = new ConcurrentHashMap<>();
     private final String db;
 
@@ -38,14 +38,14 @@ public class InternalRedisPool {
     private JedisPool getJedisPool() {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(db)
                 , "get jedis pool db can not null.");
-        JedisPool jedisPool = POOL.get(db);
+        JedisPool jedisPool = poolMap.get(db);
         if (jedisPool != null) {
             LOGGER.debug("db {} get jedis pool for cache", db);
             return jedisPool;
         }
 
-        synchronized (POOL) {
-            jedisPool = POOL.get(db);
+        synchronized (poolMap) {
+            jedisPool = poolMap.get(db);
             if (jedisPool == null) {
                 JedisPoolConfig poolConfig = RedisPropertiesBuilder.builderPoolConfig(db);
                 RedisConfig.SimpleConfig redisProperties = RedisPropertiesBuilder.builderConfig(db);
@@ -60,7 +60,7 @@ public class InternalRedisPool {
                         , redisProperties);
 
                 //add to cache
-                POOL.put(db, jedisPool);
+                poolMap.put(db, jedisPool);
             }
         }
         return jedisPool;
@@ -74,7 +74,7 @@ public class InternalRedisPool {
             LOGGER.debug("db {} get jedis sentinel pool for cache", db);
             return jedisPool;
         }
-        synchronized (POOL) {
+        synchronized (poolMap) {
             jedisPool = SENTINEL_POOL.get(db);
             if (jedisPool == null) {
                 RedisConfig.SentinelConfig sentinelConfig = RedisPropertiesBuilder.builderSentinelConfig(db);
@@ -126,6 +126,7 @@ public class InternalRedisPool {
             //free this jedis instance
             if (jedis != null) {
                 jedis.close();
+                LOGGER.debug("release redis connection done.");
             }
         }
         return value;
@@ -152,7 +153,7 @@ public class InternalRedisPool {
     }
 
     public void closeAll() {
-        for (Map.Entry<String, JedisPool> entry : POOL.entrySet()) {
+        for (Map.Entry<String, JedisPool> entry : poolMap.entrySet()) {
             entry.getValue().close();
         }
 

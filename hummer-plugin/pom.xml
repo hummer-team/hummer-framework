@@ -27,5 +27,6 @@
         <module>hummer-swagger-plugin</module>
         <module>hummer-user-plugin</module>
         <module>hummer-excel-plugin</module>
+        <module>hummer-cache-plugin</module>
     </modules>
 </project>

@@ -1,20 +1,23 @@
 package com.hummer.api.web;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
+import com.hummer.api.dto.CacheTestReqDto;
 import com.hummer.api.dto.KafkaMessageReq;
 import com.hummer.api.dto.QueryStringDto;
+import com.hummer.cache.plugin.HummerSimpleObjectCacheKey;
+import com.hummer.cache.plugin.HummerSimpleObjectCache;
 import com.hummer.common.http.HttpAsyncClient;
 import com.hummer.common.http.RequestCustomConfig;
 import com.hummer.common.utils.ObjectCopyUtils;
+import com.hummer.core.PropertiesContainer;
+import com.hummer.core.SpringApplicationContext;
 import com.hummer.local.persistence.plugin.RocksDBLocalPersistence;
 import com.hummer.message.facade.publish.MessageBus;
 import com.hummer.rest.annotations.BindRestParameterSimpleModel;
 import com.hummer.rest.model.ResourceResponse;
 import com.hummer.rest.utils.ParameterAssertUtil;
-import com.hummer.core.PropertiesContainer;
-import com.hummer.core.SpringApplicationContext;
+import com.sun.management.OperatingSystemMXBean;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,10 +38,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.lang.management.ManagementFactory;
-
-import com.sun.management.OperatingSystemMXBean;
-
-import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.util.Collection;
 import java.util.Map;
@@ -161,7 +160,7 @@ public class ApplicationController {
 
         if (buffer) {
             CharBuffer charBuffer = CharBuffer.wrap(result);
-            memoryMap.put("charBufferString",  charBuffer.toString());
+            memoryMap.put("charBufferString", charBuffer.toString());
         } else {
             memoryMap.put("charBufferStringNO", result);
         }
@@ -171,5 +170,26 @@ public class ApplicationController {
         memoryMap.put("totalMemoryForMachine_01", osmxb.getTotalPhysicalMemorySize() / m);
 
         return ResourceResponse.ok(memoryMap);
+    }
+
+    @PostMapping(value = "/cache")
+    @HummerSimpleObjectCache(applicationName = "hummer", businessCode = "test",timeoutSeconds = 120)
+    public ResourceResponse<String> getCacheTest(@RequestBody CacheTestReqDto req) {
+        return ResourceResponse.ok(req.getUserId());
+    }
+
+    @PostMapping(value = "/cache2")
+    @HummerSimpleObjectCache(applicationName = "hummer", businessCode = "test")
+    public ResourceResponse<String> getCacheTest2(@RequestBody CacheTestReqDto req
+        , @RequestParam(value = "name") @HummerSimpleObjectCacheKey String name) {
+        return ResourceResponse.ok(req.getUserId() + ":" + name);
+    }
+
+    @PostMapping(value = "/cache3")
+    @HummerSimpleObjectCache(applicationName = "hummer", businessCode = "test")
+    public ResourceResponse<String> getCacheTest2(
+         @RequestParam(value = "name") @HummerSimpleObjectCacheKey String name
+        , @RequestParam(value = "arg") @HummerSimpleObjectCacheKey String arg) {
+        return ResourceResponse.ok(name + ":" + arg);
     }
 }

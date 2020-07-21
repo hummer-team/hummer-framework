@@ -16,24 +16,28 @@ import redis.clients.jedis.Protocol;
  **/
 public class RedisPropertiesBuilder {
 
-    private static final String REDIS_PREFIX="redis.";
-    
+    private static final String REDIS_PREFIX = "redis.";
+
     private RedisPropertiesBuilder() {
 
     }
 
-    public static String perfix(){
+    public static String perfix() {
         return REDIS_PREFIX;
     }
 
     public static RedisConfig.SimpleConfig builderConfig(final String dbGroup) {
+        int dbIndex = PropertiesContainer.valueOfInteger(String.format("%s%s%s"
+                , REDIS_PREFIX
+                , dbGroup
+                , ".db.index")
+                , Protocol.DEFAULT_DATABASE);
+        if (dbIndex > 16) {
+            throw new IllegalArgumentException("redis db index max values is 16,please update");
+        }
         return RedisConfig.SimpleConfig
                 .builder()
-                .dbNumber(PropertiesContainer.valueOfInteger(String.format("%s%s%s"
-                        , REDIS_PREFIX
-                        , dbGroup
-                        , ".ds")
-                        , Protocol.DEFAULT_DATABASE))
+                .dbNumber(dbIndex)
                 .host(PropertiesContainer.valueOfStringWithAssertNotNull(String.format("%s%s%s"
                         , REDIS_PREFIX, dbGroup, ".host")))
                 .port(PropertiesContainer.valueOfInteger(String.format("%s%s%s", REDIS_PREFIX, dbGroup, ".port")
@@ -49,7 +53,8 @@ public class RedisPropertiesBuilder {
                         , REDIS_PREFIX
                         , dbGroup
                         , ".clientname")
-                        , "hummer-plugin"))
+                        , String.format("hummer-plugin-%s"
+                                , PropertiesContainer.valueOfString("spring.profiles.active"))))
                 .build();
     }
 

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class OrderService {
 
-    @Autowired
+    @Autowired(required = false)
     private OrderDaoMapper orderDaoMapper;
 
     @GlobalTransactional(timeoutMills = 30000, name = "save-order")
