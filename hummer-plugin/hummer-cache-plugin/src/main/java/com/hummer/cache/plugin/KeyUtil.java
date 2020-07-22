@@ -2,7 +2,7 @@ package com.hummer.cache.plugin;
 
 import com.google.common.collect.Maps;
 import com.hummer.common.security.Md5;
-import com.hummer.core.PropertiesContainer;
+import com.hummer.common.utils.CacheKeyFormatUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -70,21 +70,7 @@ public class KeyUtil {
         return key.maxKeyMd5() ? Md5.encryptMd5(value) : value;
     }
 
-    public static String formatKey(String nameSpace, String businessCode, Map<String, Object> parameterMap) {
-        StringBuilder key = new StringBuilder();
-        key.append(nameSpace)
-                .append(":")
-                .append(businessCode).append(":")
-                .append(PropertiesContainer.valueOfString("spring.profiles.active"))
-                .append(":");
-        for (Map.Entry<String, Object> entry : parameterMap.entrySet()) {
-            key.append(entry.getKey())
-                    .append(":")
-                    .append(entry.getValue())
-                    .append(":");
-        }
-        String formatKey = StringUtils.removeEnd(key.toString(), ":");
-        log.debug("hummer simple cache format key is -> {}", formatKey);
-        return formatKey;
+    public static String formatKey(String applicationName, String businessCode, Map<String, Object> parameterMap) {
+        return CacheKeyFormatUtil.formatKey(applicationName,businessCode,parameterMap);
     }
 }
