@@ -75,7 +75,7 @@ public class NaCosConfig implements InitializingBean {
                         try {
                             putConfigToContainer(groupId, dataId, configInfo);
                             LOGGER.info("receive for nacos config change notice,chance config is [{}]"
-                            ,configInfo);
+                                    , configInfo);
                         } catch (IOException e) {
                             //ignore
                         }

@@ -5,8 +5,8 @@ import com.google.common.collect.Maps;
 import com.hummer.api.dto.CacheTestReqDto;
 import com.hummer.api.dto.KafkaMessageReq;
 import com.hummer.api.dto.QueryStringDto;
-import com.hummer.cache.plugin.HummerSimpleObjectCacheKey;
 import com.hummer.cache.plugin.HummerSimpleObjectCache;
+import com.hummer.cache.plugin.HummerSimpleObjectCacheKey;
 import com.hummer.common.http.HttpAsyncClient;
 import com.hummer.common.http.RequestCustomConfig;
 import com.hummer.common.utils.ObjectCopyUtils;
@@ -22,7 +22,6 @@ import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,7 +54,7 @@ public class ApplicationController {
     @Autowired
     private RocksDBLocalPersistence persistence;
 
-    @Value("${test.A}")
+    //    @Value("${test.A}")
     private int value;
 
     @PostMapping(value = "/local/store")
@@ -173,7 +172,7 @@ public class ApplicationController {
     }
 
     @PostMapping(value = "/cache")
-    @HummerSimpleObjectCache(applicationName = "hummer", businessCode = "test",timeoutSeconds = 120)
+    @HummerSimpleObjectCache(applicationName = "hummer", businessCode = "test", timeoutSeconds = 120)
     public ResourceResponse<String> getCacheTest(@RequestBody CacheTestReqDto req) {
         return ResourceResponse.ok(req.getUserId());
     }
@@ -188,7 +187,7 @@ public class ApplicationController {
     @PostMapping(value = "/cache3")
     @HummerSimpleObjectCache(applicationName = "hummer", businessCode = "test")
     public ResourceResponse<String> getCacheTest2(
-         @RequestParam(value = "name") @HummerSimpleObjectCacheKey String name
+        @RequestParam(value = "name") @HummerSimpleObjectCacheKey String name
         , @RequestParam(value = "arg") @HummerSimpleObjectCacheKey String arg) {
         return ResourceResponse.ok(name + ":" + arg);
     }

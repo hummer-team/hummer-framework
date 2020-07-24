@@ -10,8 +10,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @SpringBootApplication(scanBasePackages = "com.hummer.api")
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @NacosPropertySources({
-    @NacosPropertySource(autoRefreshed = true, dataId = "mytest_01",groupId = "test_01"),
-    @NacosPropertySource(autoRefreshed = true, dataId = "data_01"),
+    @NacosPropertySource(autoRefreshed = true, dataId = "cloud_conf_data_1", groupId = "example")
 })
 @UndertowServer
 public class Application2 {
