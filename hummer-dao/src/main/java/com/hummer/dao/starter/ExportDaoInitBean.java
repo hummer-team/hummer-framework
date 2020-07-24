@@ -7,6 +7,7 @@ import com.hummer.dao.configuration.DataSourceInitConfiguration;
 import com.hummer.dao.configuration.DruidFilterConfiguration;
 import com.hummer.dao.monitor.DruidStatController;
 import com.hummer.dao.monitor.stat.DruidConfiguration;
+import com.hummer.dao.warump.DaoWarmup;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
 
@@ -20,7 +21,8 @@ import org.springframework.context.annotation.Import;
         , TargetDataSourceAspect.class
         , TargetDataSourceTMAspect.class
         , DruidStatController.class
-        , DruidConfiguration.class})
+        , DruidConfiguration.class
+        , DaoWarmup.class})
 @Conditional(DaoLoadCondition.class)
 public class ExportDaoInitBean {
 

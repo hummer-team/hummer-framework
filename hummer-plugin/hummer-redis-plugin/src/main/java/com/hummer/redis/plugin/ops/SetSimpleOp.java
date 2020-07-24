@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * @author bingy
  */
-public class SetSimpleOp extends BaseOp {
+public class SetSimpleOp extends BaseOp<SetSimpleOp> {
     private String redisDbGroupName;
 
     public SetSimpleOp() {

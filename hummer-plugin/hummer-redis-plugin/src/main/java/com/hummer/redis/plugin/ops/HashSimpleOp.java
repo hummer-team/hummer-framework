@@ -16,7 +16,7 @@ import java.util.Map;
  * @since:1.0.0
  * @Date: 2019/10/25 14:00
  **/
-public class HashSimpleOp extends BaseOp {
+public class HashSimpleOp extends BaseOp<HashSimpleOp> {
     private String redisDbGroupName;
 
     public HashSimpleOp() {

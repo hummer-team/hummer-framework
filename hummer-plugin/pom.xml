@@ -28,5 +28,6 @@
         <module>hummer-user-plugin</module>
         <module>hummer-excel-plugin</module>
         <module>hummer-cache-plugin</module>
+        <module>hummer-warmup-plugin</module>
     </modules>
 </project>

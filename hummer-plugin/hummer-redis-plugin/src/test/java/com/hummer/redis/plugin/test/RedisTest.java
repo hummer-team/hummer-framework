@@ -39,12 +39,12 @@ public class RedisTest {
     }
 
     @Test
-    public void  set() throws IOException  {
-        Map<String,String> kv=new HashMap<>();
-        kv.put("setA1","test");
-        kv.put("setA2","test2");
-        redisOp.set().setMultipleStringByPipeline(kv,0,Boolean.FALSE);
-        System.in.read();
+    public void set() throws IOException {
+        Map<String, String> kv = new HashMap<>();
+        kv.put("setA1", "test");
+        kv.put("setA2", "test2");
+        redisOp.set().setMultipleStringByPipeline(kv, 0, Boolean.FALSE);
+        //System.in.read();
     }
 
     @Test
@@ -58,5 +58,25 @@ public class RedisTest {
     public void lock() {
         Assert.assertEquals(Boolean.TRUE, redisOp.lock().lock("LOCK_A", 120));
         Assert.assertEquals(Boolean.TRUE, redisOp.lock().freeLock("LOCK_A"));
+    }
+
+    @Test
+    public void multiOp() {
+        redisOp.multiOp().setAndHsetByPipeline("TTTT", "OOOOOOOO"
+                , "THash", 60);
+
+        String v1 = redisOp.set().getKey("TTTT");
+        Assert.assertEquals("OOOOOOOO", v1);
+
+        v1 = redisOp.hash().getByFieldKey("THash", "TTTT");
+        Assert.assertEquals("NL", v1);
+
+        Map<String, String> map = redisOp.hash().getAll("THash");
+        System.out.println(map);
+
+        redisOp.set().del(map.keySet().toArray(new String[]{}));
+
+        v1 = redisOp.set().getKey("TTTT");
+        Assert.assertEquals(null, v1);
     }
 }

@@ -6,6 +6,7 @@ import com.google.common.collect.Iterables;
 import com.hummer.redis.plugin.ops.BaseOp;
 import com.hummer.redis.plugin.ops.HashSimpleOp;
 import com.hummer.redis.plugin.ops.LockOp;
+import com.hummer.redis.plugin.ops.MultiOp;
 import com.hummer.redis.plugin.ops.SetSimpleOp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +24,32 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RedisOp implements InitializingBean, DisposableBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(RedisOp.class);
 
-    private final Map<String, BaseOp> OPS_MAP = new ConcurrentHashMap<>();
+    private final Map<String, BaseOp<? extends BaseOp<?>>> OPS_MAP = new ConcurrentHashMap<>();
 
-    public Map<String, BaseOp> getAllOpInstance() {
+    public Map<String, ? extends BaseOp<?>> getAllOpInstance() {
         return ImmutableMap.copyOf(OPS_MAP);
+    }
+
+    public MultiOp multiOp(String redisDbGroupName) {
+        redisDbGroupName = format(redisDbGroupName, ":multi");
+        MultiOp ops = (MultiOp) OPS_MAP.get(redisDbGroupName);
+        if (ops != null) {
+            return ops;
+        }
+        if ((ops = (MultiOp) OPS_MAP.get(redisDbGroupName)) == null) {
+            synchronized (OPS_MAP) {
+                if ((ops = (MultiOp) OPS_MAP.get(redisDbGroupName)) == null) {
+                    String groupName = getGroupName(redisDbGroupName);
+                    ops = new MultiOp(groupName);
+                    OPS_MAP.put(redisDbGroupName, ops);
+                }
+            }
+        }
+        return ops;
+    }
+
+    public MultiOp multiOp() {
+        return (MultiOp) multiOp("simple:multi");
     }
 
     public HashSimpleOp hash(String redisDbGroupName) {
@@ -116,7 +139,7 @@ public class RedisOp implements InitializingBean, DisposableBean {
      */
     @Override
     public void destroy() throws Exception {
-        for (Map.Entry<String, BaseOp> entry : OPS_MAP.entrySet()) {
+        for (Map.Entry<String, BaseOp<? extends BaseOp<?>>> entry : OPS_MAP.entrySet()) {
             entry.getValue().closeAll();
         }
         LOGGER.info("`ben destroy` class all redis client done.");
@@ -135,7 +158,7 @@ public class RedisOp implements InitializingBean, DisposableBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            for (Map.Entry<String, BaseOp> entry : OPS_MAP.entrySet()) {
+            for (Map.Entry<String, BaseOp<? extends BaseOp<?>>> entry : OPS_MAP.entrySet()) {
                 entry.getValue().closeAll();
             }
             LOGGER.info("`thread addShutdownHook` class all redis client done.");

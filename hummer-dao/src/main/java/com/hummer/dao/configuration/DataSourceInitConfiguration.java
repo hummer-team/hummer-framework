@@ -4,6 +4,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -43,13 +44,17 @@ import java.util.stream.Collectors;
 public class DataSourceInitConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataSourceInitConfiguration.class);
 
-    private final Map<Object, Object> allDataSources = Maps.newConcurrentMap();
+    private final Map<String, DruidDataSource> allDataSources = Maps.newConcurrentMap();
     private DataSource defaultTargetDataSource;
 
     @Bean
     @Conditional(DaoLoadCondition.class)
     public NamedParameterJdbcTemplate namedParameterJdbcTemplate() {
         return new NamedParameterJdbcTemplate(defaultTargetDataSource);
+    }
+
+    public final ImmutableMap<String, DruidDataSource> dataSourceMap() {
+        return ImmutableMap.copyOf(allDataSources);
     }
 
     /**

@@ -12,6 +12,7 @@ import com.hummer.common.ErrorCodeConsts;
 import com.hummer.common.SysConstant;
 import com.hummer.common.exceptions.SysException;
 import com.hummer.core.PropertiesContainer;
+import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,11 +29,11 @@ import static com.alibaba.druid.util.JdbcConstants.MYSQL_DRIVER;
  * @Date: 2019/6/26 17:35
  **/
 public class DruidDataSourceBuilder {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DruidDataSource.class);
+
     private DruidDataSourceBuilder() {
 
     }
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DruidDataSource.class);
 
     /**
      * builder druid data source instance .see also <a href='https://github.com/alibaba/druid'>https://github.com/alibaba/druid</a>
@@ -45,7 +46,7 @@ public class DruidDataSourceBuilder {
      **/
     public static DruidDataSource buildDataSource(Map<String, Object> ds) {
         long start = System.currentTimeMillis();
-        try  {
+        try {
             DruidDataSource druidDataSource = new DruidDataSource();
             String driverClassName = (String) ds.get("driverClassName");
             druidDataSource.setDriverClassName(driverClassName);
@@ -98,12 +99,27 @@ public class DruidDataSourceBuilder {
             if (maxEvictableIdleTimeMillis != null) {
                 druidDataSource.setMaxEvictableIdleTimeMillis(Long.parseLong(maxEvictableIdleTimeMillis));
             }
-            druidDataSource.setTestWhileIdle(PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_TESTWHILEIDLE
-                    , Boolean.class, Boolean.TRUE));
-            druidDataSource.setTestOnBorrow(PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_TESTONBORROW
-                    , Boolean.class, Boolean.TRUE));
-            druidDataSource.setTestOnReturn(PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_TESTONRETURN
-                    , Boolean.class, Boolean.FALSE));
+            //
+            String testWhileIdleCfg = (String) ds.get("testWhileIdle");
+            Boolean testWhileIdleVal = Strings.isNullOrEmpty(testWhileIdleCfg)
+                    ? PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_TESTWHILEIDLE
+                    , Boolean.class, Boolean.TRUE)
+                    : BooleanUtils.toBoolean(testWhileIdleCfg);
+            druidDataSource.setTestWhileIdle(testWhileIdleVal);
+            //
+            String testOnBorrowCfg = (String) ds.get("testOnBorrow");
+            Boolean testOnBorrowVal = Strings.isNullOrEmpty(testOnBorrowCfg)
+                    ? PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_TESTONBORROW
+                    , Boolean.class, Boolean.TRUE)
+                    : BooleanUtils.toBoolean(testOnBorrowCfg);
+            druidDataSource.setTestOnBorrow(testOnBorrowVal);
+            //
+            String testOnReturnCfg = (String) ds.get("testOnReturn");
+            Boolean testOnReturnVal = Strings.isNullOrEmpty(testOnReturnCfg)
+                    ? PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_TESTONRETURN
+                    , Boolean.class, Boolean.FALSE)
+                    : BooleanUtils.toBoolean(testOnReturnCfg);
+            druidDataSource.setTestOnReturn(testOnReturnVal);
 
             if (!MYSQL_DRIVER.equals(driverClassName)) {
                 druidDataSource.setPoolPreparedStatements(true);
@@ -114,30 +130,53 @@ public class DruidDataSourceBuilder {
                             Integer.parseInt(maxPoolPreparedStatementPerConnectionSize));
                 }
             }
-            String queryTimeOutVal=(String)ds.get("queryTimeout");
-            if(!Strings.isNullOrEmpty(queryTimeOutVal)) {
+            String queryTimeOutVal = (String) ds.get("queryTimeout");
+            if (!Strings.isNullOrEmpty(queryTimeOutVal)) {
                 druidDataSource.setQueryTimeout(Integer.parseInt(queryTimeOutVal));
             }
             druidDataSource.setValidationQuery("select 1");
-            druidDataSource.setValidationQueryTimeout(PropertiesContainer.valueOf(
-                    SysConstant.DaoConstant.JDBC_VALIDATIONQUERYTIMEOUT
-                    , Integer.class, 5));
+
+            //validationQueryTimeout
+            String validationQueryTimeoutCfg = (String) ds.get("validationQueryTimeout");
+            Integer validationQueryTimeoutVal = Strings.isNullOrEmpty(validationQueryTimeoutCfg)
+                    ? PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_VALIDATIONQUERYTIMEOUT, Integer.class
+                    , 5)
+                    : Integer.parseInt(validationQueryTimeoutCfg);
+            druidDataSource.setValidationQueryTimeout(validationQueryTimeoutVal);
+
             //timeout remove connections
-            druidDataSource.setRemoveAbandoned(PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_REMOVEABANDONED
-                    , Boolean.class, Boolean.TRUE));
+            String removeAbandonedCfg = (String) ds.get("removeAbandoned");
+            Boolean removeAbandonedVal = Strings.isNullOrEmpty(removeAbandonedCfg)
+                    ? PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_REMOVEABANDONED, Boolean.class
+                    , Boolean.TRUE)
+                    : BooleanUtils.toBoolean(removeAbandonedCfg);
+            druidDataSource.setRemoveAbandoned(removeAbandonedVal);
+
             //time out 30s
-            druidDataSource.setRemoveAbandonedTimeout(PropertiesContainer.valueOf(
-                    SysConstant.DaoConstant.JDBC_REMOVEABANDONEDTIMEOUT
-                    , Integer.class, 30));
+            String removeAbandonedTimeoutCfg = (String) ds.get("removeAbandonedTimeout");
+            Integer removeAbandonedTimeoutVal = Strings.isNullOrEmpty(removeAbandonedTimeoutCfg)
+                    ? PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_REMOVEABANDONEDTIMEOUT
+                    , Integer.class, 30)
+                    : Integer.parseInt(removeAbandonedTimeoutCfg);
+            druidDataSource.setRemoveAbandonedTimeout(removeAbandonedTimeoutVal);
+
             //close connection output error logs
-            druidDataSource.setLogAbandoned(PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_LOGABANDONED
-                    , Boolean.class, Boolean.TRUE));
+            String logAbandonedCfg = (String) ds.get("logAbandoned");
+            Boolean logAbandonedVal = Strings.isNullOrEmpty(logAbandonedCfg)
+                    ? PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_LOGABANDONED
+                    , Boolean.class, Boolean.TRUE)
+                    : BooleanUtils.toBoolean(logAbandonedCfg);
+            druidDataSource.setLogAbandoned(logAbandonedVal);
 
-            List<Filter> filters = Lists.newArrayList(statFilter());
+            List<Filter> filters = Lists.newArrayList(statFilter(ds));
 
-            if (PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_CHECK_SQL
-                    , Boolean.class, Boolean.TRUE)) {
-                filters.add(wallFilter());
+            String sqlCheckCfg = (String) ds.get("sqlCheck");
+            Boolean sqlCheckVal = Strings.isNullOrEmpty(sqlCheckCfg)
+                    ? PropertiesContainer.valueOf(SysConstant.DaoConstant.JDBC_CHECK_SQL
+                    , Boolean.class, Boolean.TRUE)
+                    : BooleanUtils.toBoolean(sqlCheckCfg);
+            if (sqlCheckVal) {
+                filters.add(wallFilter(ds));
             }
             druidDataSource.setProxyFilters(filters);
             LOGGER.info("builder data source done cost {} ms "
@@ -150,26 +189,48 @@ public class DruidDataSourceBuilder {
         }
     }
 
-    private static WallFilter wallFilter() {
+    private static WallFilter wallFilter(Map<String, Object> ds) {
         WallFilter wallFilter = new WallFilter();
         WallConfig wallConfig = new WallConfig();
         wallConfig.setMultiStatementAllow(true);
         wallConfig.setSelectWhereAlwayTrueCheck(false);
         wallConfig.setSelectHavingAlwayTrueCheck(false);
-        wallConfig.setSelectUnionCheck(PropertiesContainer.valueOf(SysConstant.DaoConstant.DRUID_SELECT_UNION_CHECK
-                , Boolean.class, Boolean.TRUE));
+
+        String selectUnionCheckCfg = (String) ds.get("selectUnionCheck");
+        Boolean selectUnionCheckVal = Strings.isNullOrEmpty(selectUnionCheckCfg)
+                ? PropertiesContainer.valueOf(SysConstant.DaoConstant.DRUID_SELECT_UNION_CHECK
+                , Boolean.class, Boolean.TRUE)
+                : BooleanUtils.toBoolean(selectUnionCheckCfg);
+        wallConfig.setSelectUnionCheck(selectUnionCheckVal);
+
         wallFilter.setConfig(wallConfig);
         return wallFilter;
     }
 
-    private static StatFilter statFilter() {
+    private static StatFilter statFilter(Map<String, Object> ds) {
         StatFilter statFilter = new StatFilter();
-        statFilter.setSlowSqlMillis(PropertiesContainer.valueOf(SysConstant.DaoConstant.DRUID_SHOW_TIMEOUT
-                , Long.class, 3000L));
-        statFilter.setLogSlowSql(PropertiesContainer.valueOf(SysConstant.DaoConstant.DRUID_SHOW_SQL
-                , Boolean.class, Boolean.TRUE));
-        statFilter.setMergeSql(PropertiesContainer.valueOf(SysConstant.DaoConstant.DRUID_MERGE_SQL
-                , Boolean.class, Boolean.FALSE));
+
+        String slowSqlCfg = (String) ds.get("slowSqlMillis");
+        Long slowSqlVal = Strings.isNullOrEmpty(slowSqlCfg)
+                ? PropertiesContainer.valueOf(SysConstant.DaoConstant.DRUID_SHOW_TIMEOUT
+                , Long.class, 3000L)
+                : Long.parseLong(slowSqlCfg);
+        statFilter.setSlowSqlMillis(slowSqlVal);
+        //
+        String showSlowSqlCfg = (String) ds.get("showSlowSql");
+        Boolean showSlowSqlVal = Strings.isNullOrEmpty(showSlowSqlCfg)
+                ? PropertiesContainer.valueOf(SysConstant.DaoConstant.DRUID_SHOW_SQL
+                , Boolean.class, Boolean.TRUE)
+                : BooleanUtils.toBoolean(showSlowSqlCfg);
+        statFilter.setLogSlowSql(showSlowSqlVal);
+        //
+        String mergeSqlCfg = (String) ds.get("mergeSql");
+        Boolean mergeSqlVal = Strings.isNullOrEmpty(mergeSqlCfg)
+                ? PropertiesContainer.valueOf(SysConstant.DaoConstant.DRUID_MERGE_SQL
+                , Boolean.class, Boolean.FALSE)
+                : BooleanUtils.toBoolean(mergeSqlCfg);
+        statFilter.setMergeSql(mergeSqlVal);
+        //
         return statFilter;
     }
 }

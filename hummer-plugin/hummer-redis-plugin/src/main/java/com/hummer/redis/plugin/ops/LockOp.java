@@ -10,7 +10,7 @@ import java.util.Collections;
  *
  * @author bingy
  */
-public class LockOp extends BaseOp {
+public class LockOp extends BaseOp<LockOp> {
     private String redisDbGroupName;
     private static final String SET_IF_NOT_EXIST = "NX";
     private static final String SET_WITH_EXPIRE_TIME = "EX";
