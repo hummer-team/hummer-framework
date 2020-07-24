@@ -51,9 +51,6 @@ public class RequestContextFilter implements Filter {
                 }
             }
         }
-
-        log.debug("reader request context item count {},add to this holder"
-                , RequestContextHolder.size());
     }
 
 
@@ -77,6 +74,5 @@ public class RequestContextFilter implements Filter {
     public void destroy() {
         RequestContextHolder.clearHolder();
         UserHolder.clean();
-        log.debug("clean hummer request context hold,clean of user.");
     }
 }
