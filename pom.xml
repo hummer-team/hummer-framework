@@ -304,6 +304,12 @@
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-connector-java.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>protobuf-java</artifactId>
+                        <groupId>com.google.protobuf</groupId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
