@@ -23,6 +23,10 @@
         </dependency>
         <dependency>
             <groupId>com.hummer</groupId>
+            <artifactId>hummer-rest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.hummer</groupId>
             <artifactId>hummer-redis-plugin</artifactId>
         </dependency>
         <dependency>
@@ -43,6 +47,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-test</artifactId>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.hummer</groupId>
+            <artifactId>hummer-user-plugin</artifactId>
         </dependency>
     </dependencies>
 </project>
