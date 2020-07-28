@@ -17,6 +17,7 @@
         <module>hummer-simple-api</module>
         <module>hummer-simple-dubbo-server</module>
         <module>hummer-simple-dubbo-client</module>
+        <module>hummer-simple-nacos-client</module>
     </modules>
 
 </project>
