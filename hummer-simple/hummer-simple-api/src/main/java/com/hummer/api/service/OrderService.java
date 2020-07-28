@@ -5,19 +5,17 @@ import com.hummer.api.po.OrderPo;
 import com.hummer.dao.annotation.TargetDataSourceTM;
 import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * @Author: lee
  * @since:1.0.0
  * @Date: 2019/11/1 17:46
  **/
-@Service
+//@Service
 @Slf4j
 public class OrderService {
 
-    @Autowired
+//    @Autowired
     private OrderDaoMapper orderDaoMapper;
 
     @GlobalTransactional(timeoutMills = 30000, name = "save-order")

@@ -1,10 +1,15 @@
 package com.hummer.config;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.nacos.api.NacosFactory;
 import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.config.listener.Listener;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
+import com.hummer.common.utils.DateUtil;
+import com.hummer.common.utils.IpUtil;
+import com.hummer.config.agent.ClientConfigAgent;
+import com.hummer.config.dto.ClientConfigUploadReqDto;
 import com.hummer.core.PropertiesContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +17,11 @@ import org.springframework.beans.factory.InitializingBean;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public class NaCosConfig implements InitializingBean {
@@ -75,11 +82,13 @@ public class NaCosConfig implements InitializingBean {
                         try {
                             putConfigToContainer(groupId, dataId, configInfo);
                             LOGGER.info("receive for nacos config change notice,chance config is [{}]"
-                            ,configInfo);
+                                    , configInfo);
                         } catch (IOException e) {
                             //ignore
                         }
                     }
+                    // 客户端配置上传至服务端
+                    uploadConfig();
                 }
             });
             String value = configService.getConfig(dataId, groupId, 3000);
@@ -87,6 +96,8 @@ public class NaCosConfig implements InitializingBean {
                 putConfigToContainer(groupId, dataId, value);
             }
         }
+        // 客户端配置上传至服务端
+        uploadConfig();
 
         LOGGER.info("append nacos config to PropertiesContainer done,cos {} ms ",
                 System.currentTimeMillis() - start);
@@ -102,5 +113,40 @@ public class NaCosConfig implements InitializingBean {
                         , dataId, groupId, map);
             }
         }
+    }
+
+    private void uploadConfig() {
+        Boolean enable = PropertiesContainer.get("nacos.config.upload.enable", Boolean.class, true);
+        if (!enable) {
+            return;
+        }
+        uploadConfigAsync();
+    }
+
+    private void uploadConfigAsync() {
+        CompletableFuture.supplyAsync(() -> {
+            ClientConfigAgent.uploadConfig(composeClientConfigUploadReqDto());
+            return Void.TYPE;
+        });
+    }
+
+    private ClientConfigUploadReqDto composeClientConfigUploadReqDto() {
+        Map<String, String> map = new HashMap<>(16);
+        PropertiesContainer.allKey().forEach(key -> map.put(key, PropertiesContainer.get(key, String.class)));
+        ClientConfigUploadReqDto reqDto = new ClientConfigUploadReqDto();
+        reqDto.setBusinessCode("panli.application.config");
+        reqDto.setOperationType("config");
+        Map<String, String> extentMap = new HashMap<>(16);
+        extentMap.put("appIp", IpUtil.getLocalIp());
+        extentMap.put("appName", PropertiesContainer.get("spring.application.name", String.class));
+        extentMap.put("appPort", PropertiesContainer.get("server.port", String.class));
+        extentMap.put("configInfo", JSON.toJSONString(map));
+        reqDto.setExtendData(extentMap);
+        reqDto.setNewValue(JSON.toJSONString(map));
+        reqDto.setOperatorName(extentMap.get("appName"));
+        reqDto.setOperatorId(extentMap.get("appIp"));
+        reqDto.setRemark(extentMap.get("appPort"));
+        reqDto.setOperatorTime(DateUtil.now());
+        return reqDto;
     }
 }
