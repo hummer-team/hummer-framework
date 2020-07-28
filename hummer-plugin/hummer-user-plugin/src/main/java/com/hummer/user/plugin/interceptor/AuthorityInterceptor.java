@@ -77,12 +77,14 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             throw new AppException(41003, "this request ticket invalid.");
         }
 
+        log.info("method {} by userInfo userId=={},userName=={}",
+                ((HandlerMethod) handler).getMethod().getName(), userContext.getUserId(), userContext.getTrueName());
+
         if (Boolean.TRUE.equals(userContext.getIsLocked())) {
             log.warn("this user {} is locked,can't any operation", userContext.getTrueName());
             throw new AppException(40003, String.format("this user %s current status is locked."
                     , userContext.getTrueName()));
         }
-
         UserHolder.set(userContext);
 
         boolean disableAuthority = PropertiesContainer.valueOf("disable.authority", Boolean.class, Boolean.FALSE);
