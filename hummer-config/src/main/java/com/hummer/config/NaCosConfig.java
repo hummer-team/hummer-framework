@@ -12,6 +12,7 @@ import com.hummer.config.agent.ClientConfigAgent;
 import com.hummer.config.bo.NacosConfigParams;
 import com.hummer.config.dto.ClientConfigUploadReqDto;
 import com.hummer.core.PropertiesContainer;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -47,7 +48,7 @@ public class NaCosConfig implements InitializingBean {
         LOGGER.info("begin append nacos config to PropertiesContainer");
 
         putConfigToContainer(true);
-        
+
         LOGGER.info("append nacos config to PropertiesContainer done,cos {} ms ",
                 System.currentTimeMillis() - start);
     }
@@ -59,7 +60,6 @@ public class NaCosConfig implements InitializingBean {
         }
         //nacos server instance
         ConfigService configService = NacosFactory.createConfigService(params.getProperties());
-
         for (int i = 0; i < params.getGroupIdList().size(); i++) {
             String groupId = params.getGroupIdList().get(i);
             String dataId = i <= params.getDataIdList().size() ? params.getDataIdList().get(i) : null;
@@ -111,11 +111,16 @@ public class NaCosConfig implements InitializingBean {
             LOGGER.warn("no setting nacos group id,PropertiesContainer nacos config will is empty.");
             return null;
         }
+        String namespace = PropertiesContainer.valueOfString("nacos.config.namespace");
         NacosConfigParams configParams = new NacosConfigParams();
         String service = PropertiesContainer.valueOfStringWithAssertNotNull("nacos.config.server-addr");
         //nacos properties
         Properties properties = new Properties();
         properties.put("serverAddr", service);
+        if (StringUtils.isNotBlank(namespace)) {
+
+            properties.put("namespace", namespace);
+        }
 
         List<String> groupIdList = Splitter.on(",").splitToList(groupIds);
         List<String> dataIdList = Splitter.on(",").splitToList(dataIds);
