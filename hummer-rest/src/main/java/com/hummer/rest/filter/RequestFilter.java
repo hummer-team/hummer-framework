@@ -149,7 +149,8 @@ public class RequestFilter implements Filter {
             LOGGER.warn("request {} handle done,response status {},total cost {} millis,user-agent {}"
                     , HttpServletRequestUtil.getCurrentUrl(httpRequest)
                     , response.getStatus()
-                    , costTime, HttpServletRequestUtil.getUserAgent(httpRequest));
+                    , costTime, HttpServletRequestUtil.getUserAgent(httpRequest)
+            );
         }
 
     }
