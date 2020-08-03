@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hummer.doorgod.dao.SimpleDemoDao">
+    <resultMap id="BaseMap"
+               type="com.hummer.doorgod.support.model.po.SimpleDemoPo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="batch_id" property="batchId" jdbcType="VARCHAR"/>
+        <result column="third_party_delivery_id" property="thirdPartyDeliveryId" jdbcType="VARCHAR"/>
+        <result column="delivery_company_code" property="deliveryCompanyCode" jdbcType="VARCHAR"/>
+        <result column="buyer_id" property="buyerId" jdbcType="VARCHAR"/>
+        <result column="created_date_time" property="createdDateTime" jdbcType="TIMESTAMP"/>
+        <result column="created_user_id" property="createdUserId" jdbcType="VARCHAR"/>
+        <result column="last_modified_date_time" property="lastModifiedDateTime" jdbcType="TIMESTAMP"/>
+        <result column="last_modified_user_id" property="lastModifiedUserId" jdbcType="VARCHAR"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="BIT"/>
+        <result column="delivery_type" property="deliveryType" jdbcType="INTEGER"/>
+        <result column="delivery_type_describe" property="deliveryTypeDescribe" jdbcType="VARCHAR"/>
+        <result column="delivery_info_channel" property="deliveryInfoChannel" jdbcType="VARCHAR"/>
+        <result column="proxy_express_company_code" property="proxyExpressCompanyCode" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <insert id="insert" parameterType="com.hummer.doorgod.support.model.po.SimpleDemoPo"
+            keyColumn="id"
+            keyProperty="id"
+            useGeneratedKeys="true">
+        insert into `delivery_channel_info_batch`
+        (batch_id,
+        third_party_delivery_id,
+        delivery_company_code,
+        buyer_id,
+        created_user_id,
+        delivery_type,
+        delivery_type_describe,
+        delivery_info_channel,
+        proxy_express_company_code
+        )values
+        (
+        #{po.batchId},
+        #{po.thirdPartyDeliveryId},
+        #{po.deliveryCompanyCode},
+        #{po.buyerId},
+        #{po.createdUserId},
+        #{po.deliveryType},
+        #{po.deliveryTypeDescribe},
+        #{po.deliveryInfoChannel},
+        #{po.proxyExpressCompanyCode}
+        )
+    </insert>
+
+    <select id="querySingleById"
+            resultType="com.hummer.doorgod.support.model.po.SimpleDemoPo"
+            resultMap="BaseMap">
+        select id,
+        batch_id,
+        third_party_delivery_id,
+        delivery_company_code,
+        buyer_id,
+        created_date_time,
+        created_user_id,
+        last_modified_date_time,
+        last_modified_user_id,
+        is_deleted,
+        delivery_type,
+        delivery_type_describe,
+        delivery_info_channel,
+        proxy_express_company_code
+        from delivery_channel_info_batch where
+        third_party_delivery_id=#{id}
+        and is_deleted=0
+    </select>
+</mapper>

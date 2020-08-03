@@ -1,4 +1,4 @@
-package com.hummer.rest.utils;
+package com.hummer.common.utils;
 
 import com.hummer.common.exceptions.AppException;
 import org.slf4j.Logger;
@@ -11,10 +11,7 @@ import java.util.function.Supplier;
 /**
  * spring controller request body pram assert
  * Created by liguo on 2017/9/20.
- *
- * @deprecated {@link com.hummer.common.utils.ParameterAssertUtil}
  */
-@Deprecated
 public class ParameterAssertUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParameterAssertUtil.class);
 

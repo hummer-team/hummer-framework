@@ -293,12 +293,12 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
                 setPropertySource(environment, name);
             }
 
-            PropertySource<?> apolloPS = environment
+            /**PropertySource<?> apolloPS = environment
                     .getPropertySources()
                     .get(APOLLO_PROPERTY_SOURCE_NAME);
             if (apolloPS != null) {
                 PropertiesContainer.setPropertySource(apolloPS);
-            }
+            }**/
 
             String env = event.getProperty(ENV);
             if (!Strings.isNullOrEmpty(env)) {

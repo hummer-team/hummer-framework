@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>door-god</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>door-god</name>
+    <url>http://maven.apache.org</url>
+
+    <parent>
+        <artifactId>hummer-gateway</artifactId>
+        <groupId>com.hummer</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <description>door-god project for Spring Boot</description>
+    <distributionManagement>
+        <repository>
+            <id>maven-releases</id>
+            <url>http://10.10.10.250:8081/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>http://10.10.10.250:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+    <repositories>
+        <repository>
+            <id>ygfmaven</id>
+            <name>maven-public</name>
+            <url>http://10.10.10.250:8081/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+    <properties>
+
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <unit-tests.skip>false</unit-tests.skip>
+        <integration-tests.skip>false</integration-tests.skip>
+        <unit-tests.skip>false</unit-tests.skip>
+        <integration-tests.skip>false</integration-tests.skip>
+        <hummer.version>1.0.0-SNAPSHOT</hummer.version>
+        <business.version>1.0-SNAPSHOT</business.version>
+        <spring-cloud-dependencies.version>Hoxton.SR6</spring-cloud-dependencies.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>door-god-domain</artifactId>
+                <version>${business.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>door-god-integration</artifactId>
+                <version>${business.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>door-god-dao</artifactId>
+                <version>${business.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>door-god-facade</artifactId>
+                <version>${business.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>door-god</artifactId>
+                <version>${business.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>door-god-support</artifactId>
+                <version>${business.version}</version>
+            </dependency>
+            <!--hummer framework-->
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-dao</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-core</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-common</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+<modules>
+    <module>door-god-api</module>
+    <module>door-god-domain</module>
+    <module>door-god-dao</module>
+    <module>door-god-facade</module>
+    <module>door-god-support</module>
+    <module>door-god-integration</module>
+    <module>door-god-test</module>
+  </modules>
+</project>
