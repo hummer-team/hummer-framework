@@ -9,8 +9,10 @@ import com.google.common.base.Strings;
 import com.hummer.common.utils.DateUtil;
 import com.hummer.common.utils.IpUtil;
 import com.hummer.config.agent.ClientConfigAgent;
+import com.hummer.config.bo.NacosConfigParams;
 import com.hummer.config.dto.ClientConfigUploadReqDto;
 import com.hummer.core.PropertiesContainer;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -42,55 +44,52 @@ public class NaCosConfig implements InitializingBean {
      */
     @Override
     public void afterPropertiesSet() throws Exception {
-        String dataIds = PropertiesContainer.valueOfString("nacos.config.data-ids");
-        if (Strings.isNullOrEmpty(dataIds)) {
-            LOGGER.warn("no setting nacos data id,PropertiesContainer nacos config will is empty.");
-            return;
-        }
-        String groupIds = PropertiesContainer.valueOfString("nacos.config.group");
-        if (Strings.isNullOrEmpty(groupIds)) {
-            LOGGER.warn("no setting nacos group id,PropertiesContainer nacos config will is empty.");
-            return;
-        }
         final long start = System.currentTimeMillis();
         LOGGER.info("begin append nacos config to PropertiesContainer");
-        String service = PropertiesContainer.valueOfStringWithAssertNotNull("nacos.config.server-addr");
-        //nacos properties
-        Properties properties = new Properties();
-        properties.put("serverAddr", service);
+
+        putConfigToContainer(true);
+
+        LOGGER.info("append nacos config to PropertiesContainer done,cos {} ms ",
+                System.currentTimeMillis() - start);
+    }
+
+    public void putConfigToContainer(boolean addListener) throws Exception {
+        NacosConfigParams params = createNacosConfigParams();
+        if (params == null) {
+            return;
+        }
         //nacos server instance
-        ConfigService configService = NacosFactory.createConfigService(properties);
-
-        List<String> groupIdList = Splitter.on(",").splitToList(groupIds);
-        List<String> dataIdList = Splitter.on(",").splitToList(dataIds);
-
-        for (int i = 0; i < groupIdList.size(); i++) {
-            String groupId = groupIdList.get(i);
-            String dataId = i <= dataIdList.size() ? dataIdList.get(i) : null;
+        ConfigService configService = NacosFactory.createConfigService(params.getProperties());
+        for (int i = 0; i < params.getGroupIdList().size(); i++) {
+            String groupId = params.getGroupIdList().get(i);
+            String dataId = i <= params.getDataIdList().size() ? params.getDataIdList().get(i) : null;
             if (Strings.isNullOrEmpty(groupId) || Strings.isNullOrEmpty(dataId)) {
                 continue;
             }
-            configService.addListener(dataId, groupId, new Listener() {
-                @Override
-                public Executor getExecutor() {
-                    return null;
-                }
+            if (addListener) {
 
-                @Override
-                public void receiveConfigInfo(String configInfo) {
-                    if (!Strings.isNullOrEmpty(configInfo)) {
-                        try {
-                            putConfigToContainer(groupId, dataId, configInfo);
-                            LOGGER.info("receive for nacos config change notice,chance config is [{}]"
-                                    , configInfo);
-                        } catch (IOException e) {
-                            //ignore
-                        }
+                configService.addListener(dataId, groupId, new Listener() {
+                    @Override
+                    public Executor getExecutor() {
+                        return null;
                     }
-                    // 客户端配置上传至服务端
-                    uploadConfig();
-                }
-            });
+
+                    @Override
+                    public void receiveConfigInfo(String configInfo) {
+                        if (!Strings.isNullOrEmpty(configInfo)) {
+                            try {
+                                putConfigToContainer(groupId, dataId, configInfo);
+                                LOGGER.info("receive for nacos config change notice,chance config is [{}]"
+                                        , configInfo);
+                            } catch (IOException e) {
+                                //ignore
+                            }
+                        }
+                        // 客户端配置上传至服务端
+                        uploadConfig();
+                    }
+                });
+            }
             String value = configService.getConfig(dataId, groupId, 3000);
             if (!Strings.isNullOrEmpty(value)) {
                 putConfigToContainer(groupId, dataId, value);
@@ -98,9 +97,37 @@ public class NaCosConfig implements InitializingBean {
         }
         // 客户端配置上传至服务端
         uploadConfig();
+    }
 
-        LOGGER.info("append nacos config to PropertiesContainer done,cos {} ms ",
-                System.currentTimeMillis() - start);
+    private NacosConfigParams createNacosConfigParams() {
+
+        String dataIds = PropertiesContainer.valueOfString("nacos.config.data-ids");
+        if (Strings.isNullOrEmpty(dataIds)) {
+            LOGGER.warn("no setting nacos data id,PropertiesContainer nacos config will is empty.");
+            return null;
+        }
+        String groupIds = PropertiesContainer.valueOfString("nacos.config.group");
+        if (Strings.isNullOrEmpty(groupIds)) {
+            LOGGER.warn("no setting nacos group id,PropertiesContainer nacos config will is empty.");
+            return null;
+        }
+        String namespace = PropertiesContainer.valueOfString("nacos.config.namespace");
+        NacosConfigParams configParams = new NacosConfigParams();
+        String service = PropertiesContainer.valueOfStringWithAssertNotNull("nacos.config.server-addr");
+        //nacos properties
+        Properties properties = new Properties();
+        properties.put("serverAddr", service);
+        if (StringUtils.isNotBlank(namespace)) {
+
+            properties.put("namespace", namespace);
+        }
+
+        List<String> groupIdList = Splitter.on(",").splitToList(groupIds);
+        List<String> dataIdList = Splitter.on(",").splitToList(dataIds);
+        configParams.setDataIdList(dataIdList);
+        configParams.setGroupIdList(groupIdList);
+        configParams.setProperties(properties);
+        return configParams;
     }
 
     private void putConfigToContainer(String groupId, String dataId, String value) throws IOException {
