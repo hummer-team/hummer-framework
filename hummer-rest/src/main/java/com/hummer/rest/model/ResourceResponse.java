@@ -12,9 +12,8 @@ import java.util.Date;
  * @Author: lee
  * @version:1.0.0
  * @Date: 2019/6/20 18:00
- * @deprecated use {@link com.hummer.common.resource.ResourceResponse<T>}
+ *
  **/
-@Deprecated
 public class ResourceResponse<T> {
     private int code;
     private String message;

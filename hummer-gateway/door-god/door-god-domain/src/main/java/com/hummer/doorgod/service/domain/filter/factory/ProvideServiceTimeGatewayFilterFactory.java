@@ -1,4 +1,4 @@
-package com.hummer.doorgod.service.domain.filter;
+package com.hummer.doorgod.service.domain.filter.factory;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -9,40 +9,40 @@ import org.springframework.core.Ordered;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.util.function.Consumer;
+import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 public class ProvideServiceTimeGatewayFilterFactory
         extends AbstractGatewayFilterFactory<ProvideServiceTimeGatewayFilterFactory.Config> {
+    private static final String KEY = "slowTimeMills";
+    @Override
+    public List<String> shortcutFieldOrder() {
+        return Arrays.asList(KEY);
+    }
 
     public ProvideServiceTimeGatewayFilterFactory() {
         super(Config.class);
     }
 
     @Override
-    public GatewayFilter apply(String routeId, Consumer<Config> consumer) {
-        return super.apply(routeId, consumer);
-    }
-
-    @Override
     public GatewayFilter apply(Config config) {
-       return ((exchange, chain) -> {
-           System.out.println("?????????????????");
-           exchange.getAttributes().put("REQUEST_TIME_KEY", System.currentTimeMillis());
-           return chain.filter(exchange).then(Mono.fromRunnable(()->{
-               Long startTime = (Long) exchange.getAttributes().get("REQUEST_TIME_KEY");
-               log.debug("this route id {} url {} cost {} millis"
-                       , config.getRouteId()
-                       , exchange.getRequest().getURI()
-                       , System.currentTimeMillis() - startTime);
-           }));
-       });
+        return new RequestTimeFilter(config);
     }
 
     public static class Config implements HasRouteId {
         private long slowTimeMills;
 
         private String routeId;
+        private Integer order;
+
+        public Integer getOrder() {
+            return order;
+        }
+
+        public void setOrder(Integer order) {
+            this.order = order;
+        }
 
         public long getSlowTimeMills() {
             return slowTimeMills;
@@ -63,7 +63,7 @@ public class ProvideServiceTimeGatewayFilterFactory
         }
     }
 
-    private static class RequestTimeFilter implements GatewayFilter, Ordered {
+    public static class RequestTimeFilter implements GatewayFilter, Ordered {
 
         private static final String REQUEST_TIME_KEY = "requestTime";
         private final Config config;
@@ -96,7 +96,7 @@ public class ProvideServiceTimeGatewayFilterFactory
 
         @Override
         public int getOrder() {
-            return Integer.MAX_VALUE;
+            return config.getOrder() == null ? 1 : config.getOrder();
         }
     }
 }

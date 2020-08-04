@@ -2,8 +2,10 @@ package com.hummer.common.utils;
 
 import com.google.common.base.Strings;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.function.Supplier;
 
 /**
  * this class wrapper http servlet sample feature
@@ -35,5 +37,29 @@ public class HttpServletRequestUtil {
             return null;
         }
         return request.getHeader(HttpHeaders.USER_AGENT);
+    }
+
+    public static String getHeaderFirstByKey(ServerHttpRequest request, String key) {
+        if (request == null) {
+            return null;
+        }
+
+        HttpHeaders httpHeaders = request.getHeaders();
+        if (httpHeaders == null) {
+            return null;
+        }
+
+        return httpHeaders.getFirst(key);
+    }
+
+    public static String getHeaderFirstByKey(ServerHttpRequest request, String key, Supplier<String> defaultKey) {
+        String val = getHeaderFirstByKey(request, key);
+        return Strings.isNullOrEmpty(val) ? defaultKey.get() : val;
+    }
+
+    public static String getHeaderFirstByKey(ServerHttpRequest request, String key
+            , String defaultVal) {
+        String val = getHeaderFirstByKey(request, key);
+        return Strings.isNullOrEmpty(val) ? defaultVal : val;
     }
 }

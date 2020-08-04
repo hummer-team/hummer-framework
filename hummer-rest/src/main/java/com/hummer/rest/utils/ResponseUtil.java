@@ -9,9 +9,8 @@ import com.hummer.rest.model.ResourceResponse;
  * @Author: lee
  * @version:1.0.0
  * @Date: 2019/6/21 16:57
- * @deprecated {@link com.hummer.common.utils.ResponseUtil}
+ *
  **/
-@Deprecated
 public class ResponseUtil {
     private ResponseUtil() {
 

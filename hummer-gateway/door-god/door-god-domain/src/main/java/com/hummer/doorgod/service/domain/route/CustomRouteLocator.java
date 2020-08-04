@@ -8,12 +8,9 @@ import org.springframework.context.annotation.Configuration;
 public class CustomRouteLocator {
 
 //    @Bean
-//    public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
+//    public RouteLocator routeLocator(RouteLocatorBuilder builder) {
 //        return builder
 //                .routes()
-//                .route("kingkong"
-//                        , r -> r.path("/ky3")
-//                                .uri("http://10.17.164.15:20005"))
 //                .build();
 //    }
 }
