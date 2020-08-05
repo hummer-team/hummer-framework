@@ -1,5 +1,12 @@
 package com.hummer.common.utils;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.ReflectionUtils;
+
+import java.lang.reflect.Method;
+
 /**
  * CommonUtil
  *
@@ -9,6 +16,8 @@ package com.hummer.common.utils;
  * @date 2020/6/2 13:32
  */
 public class CommonUtil {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommonUtil.class);
 
     private CommonUtil() {
     }
@@ -27,5 +36,21 @@ public class CommonUtil {
             return deft;
         }
         return resource;
+    }
+
+    public static <T> T typeChange(String resource, Class<? extends Number> cla) {
+        if (StringUtils.isBlank(resource)) {
+            return null;
+        }
+        try {
+            Method method = ReflectionUtils.findMethod(cla, "valueOf", String.class);
+            if (method == null) {
+                return null;
+            }
+            return (T) ReflectionUtils.invokeMethod(method, cla, resource);
+        } catch (Exception e) {
+            LOGGER.warn("String convert number fail", e);
+        }
+        return null;
     }
 }

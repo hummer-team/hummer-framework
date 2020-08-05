@@ -48,6 +48,8 @@ public class RequestContextFilter implements Filter {
                             RequestContextHolder.set(readKey, value);
                         }
                     }
+                } else {
+                    RequestContextHolder.set(readKey, value);
                 }
             }
         }
