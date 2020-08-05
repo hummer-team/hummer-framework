@@ -5,20 +5,20 @@ import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.cloud.gateway.support.HasRouteId;
-import org.springframework.core.Ordered;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
 public class ProvideServiceTimeGatewayFilterFactory
         extends AbstractGatewayFilterFactory<ProvideServiceTimeGatewayFilterFactory.Config> {
     private static final String KEY = "slowTimeMills";
+
     @Override
     public List<String> shortcutFieldOrder() {
-        return Arrays.asList(KEY);
+        return Collections.singletonList(KEY);
     }
 
     public ProvideServiceTimeGatewayFilterFactory() {
@@ -27,7 +27,7 @@ public class ProvideServiceTimeGatewayFilterFactory
 
     @Override
     public GatewayFilter apply(Config config) {
-        return new RequestTimeFilter(config);
+       return new RequestTimeFilter(config);
     }
 
     public static class Config implements HasRouteId {
@@ -63,7 +63,7 @@ public class ProvideServiceTimeGatewayFilterFactory
         }
     }
 
-    public static class RequestTimeFilter implements GatewayFilter, Ordered {
+    public static class RequestTimeFilter implements GatewayFilter/**, Ordered**/ {
 
         private static final String REQUEST_TIME_KEY = "requestTime";
         private final Config config;
@@ -94,9 +94,9 @@ public class ProvideServiceTimeGatewayFilterFactory
             }));
         }
 
-        @Override
-        public int getOrder() {
-            return config.getOrder() == null ? 1 : config.getOrder();
-        }
+//        @Override
+//        public int getOrder() {
+//            return config.getOrder() == null ? 1 : config.getOrder();
+//        }
     }
 }

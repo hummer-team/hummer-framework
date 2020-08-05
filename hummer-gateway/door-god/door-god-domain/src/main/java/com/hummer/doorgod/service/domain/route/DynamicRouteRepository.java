@@ -17,27 +17,18 @@ public class DynamicRouteRepository {
     @Autowired
     private RouteDefinitionRepository routeDefinitionWriter;
 
-    public String add(RouteDefinition definition) {
+    public void add(RouteDefinition definition) {
         routeDefinitionWriter.save(Mono.just(definition)).subscribe();
         SpringApplicationContext.publishEvent(new RefreshRoutesEvent(this));
-        return "success";
     }
 
-    public String update(RouteDefinition definition) {
-        try {
-            routeDefinitionWriter.save(Mono.just(definition)).subscribe();
-            SpringApplicationContext.publishEvent(new RefreshRoutesEvent(this));
-            return "success";
-        } catch (Exception e) {
-            log.error("save route failed,route id is {},"
-                    , definition.getId(), e);
-            return "fail";
-        }
+    public void update(RouteDefinition definition) {
+        routeDefinitionWriter.save(Mono.just(definition)).subscribe();
+        SpringApplicationContext.publishEvent(new RefreshRoutesEvent(this));
     }
 
-    public String delete(String id) {
+    public void delete(String id) {
         routeDefinitionWriter.delete(Mono.just(id));
-        return "success";
     }
 
     public Mono<List<RouteDefinition>> getAllRouteForBlock() {

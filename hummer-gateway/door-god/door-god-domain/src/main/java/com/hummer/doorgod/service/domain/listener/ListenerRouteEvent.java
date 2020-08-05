@@ -133,13 +133,15 @@ public class ListenerRouteEvent implements CommandLineRunner, DisposableBean {
                         return;
                     }
 
-                    setRoute(configInfo, dataId);
+                    setRoute(configInfo);
+                    log.debug(">>>>>>receive config data id {} info: \n {}"
+                            , dataId, configInfo);
                 }
             };
 
             String configVal = configService.getConfigAndSignListener(dataId, groupId, timeoutMillis, listener);
             if (!Strings.isNullOrEmpty(configVal)) {
-                setRoute(configVal, dataId);
+                setRoute(configVal);
                 listenerMap.put(dataId
                         , ListenerEventInfo
                                 .builder()
@@ -151,10 +153,9 @@ public class ListenerRouteEvent implements CommandLineRunner, DisposableBean {
         }
     }
 
-    private void setRoute(String configInfo, String dataId) {
+    private void setRoute(String configInfo) {
         List<RouteDefinition> gatewayConfig = JSON.parseObject(configInfo, new TypeReference<List<RouteDefinition>>() {
         });
-        log.debug("receive config data id {} item size {}", dataId, gatewayConfig.size());
         for (RouteDefinition route : gatewayConfig) {
             routeRepository.update(route);
         }
