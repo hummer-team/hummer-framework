@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
+import java.util.UUID;
 
 /**
  * CommonUtil
@@ -38,6 +39,15 @@ public class CommonUtil {
         return resource;
     }
 
+    /**
+     * 字符串转化为数字格式
+     *
+     * @param resource 字符串
+     * @param cla      目标类型
+     * @return T
+     * @author chen wei
+     * @date 2020/8/5
+     */
     public static <T> T typeChange(String resource, Class<? extends Number> cla) {
         if (StringUtils.isBlank(resource)) {
             return null;
@@ -52,5 +62,28 @@ public class CommonUtil {
             LOGGER.warn("String convert number fail", e);
         }
         return null;
+    }
+
+    /**
+     * 获取uuid字符串
+     *
+     * @return java.lang.String
+     * @author chen wei
+     * @date 2020/8/5
+     */
+    public static String getUuid() {
+        return UUID.randomUUID().toString();
+    }
+
+
+    /**
+     * 获取uuid字符串，并移除-
+     *
+     * @return java.lang.String
+     * @author chen wei
+     * @date 2020/8/5
+     */
+    public static String getUuidShort() {
+        return getUuid().replace("-", "");
     }
 }
