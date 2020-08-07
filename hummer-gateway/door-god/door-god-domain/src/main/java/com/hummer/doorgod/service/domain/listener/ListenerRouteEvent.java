@@ -56,7 +56,7 @@ public class ListenerRouteEvent implements CommandLineRunner, DisposableBean {
             log.warn("no gateway config.");
             return;
         }
-
+        log.debug("gateway group id is {}", gatewayGroup);
         addListener(gatewayGroup
                 , groupId
                 , timeoutMillis

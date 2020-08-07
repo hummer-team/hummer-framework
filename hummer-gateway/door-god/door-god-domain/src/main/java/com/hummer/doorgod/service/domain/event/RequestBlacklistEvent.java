@@ -2,10 +2,10 @@ package com.hummer.doorgod.service.domain.event;
 
 import org.springframework.web.server.ServerWebExchange;
 
-public class GlobalExceptionEvent extends BaseEvent {
+public class RequestBlacklistEvent extends BaseEvent {
     private Throwable throwable;
 
-    public GlobalExceptionEvent(Object source, String traceId
+    public RequestBlacklistEvent(Object source, String traceId
             , String routeId
             , ServerWebExchange exchange
             , Throwable throwable) {
@@ -13,7 +13,7 @@ public class GlobalExceptionEvent extends BaseEvent {
         this.throwable = throwable;
     }
 
-    public GlobalExceptionEvent(Object source, Throwable throwable) {
+    public RequestBlacklistEvent(Object source, Throwable throwable) {
         super(source);
         this.throwable = throwable;
     }

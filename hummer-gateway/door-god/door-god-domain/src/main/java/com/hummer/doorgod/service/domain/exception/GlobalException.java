@@ -1,8 +1,8 @@
 package com.hummer.doorgod.service.domain.exception;
 
 import com.alibaba.fastjson.JSON;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hummer.common.SysConstant;
+import com.hummer.common.exceptions.AppException;
 import com.hummer.doorgod.service.domain.event.GlobalExceptionEvent;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -12,11 +12,16 @@ import org.slf4j.MDC;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBufferFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
+import java.net.URI;
+
+import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR;
 
 /**
  * @author edz
@@ -26,7 +31,6 @@ import reactor.core.publisher.Mono;
 @Order(-1)
 @RequiredArgsConstructor
 public class GlobalException implements ErrorWebExceptionHandler {
-    private final ObjectMapper objectMapper;
 
     /**
      * Handle the given exception. A completion signal through the return value
@@ -44,29 +48,39 @@ public class GlobalException implements ErrorWebExceptionHandler {
         exchange.getApplicationContext()
                 .publishEvent(new GlobalExceptionEvent(this
                         , MDC.get(SysConstant.REQUEST_ID)
-                        , ex
-                        , exchange));
+                        , null
+                        , exchange
+                        , ex));
 
         ServerHttpResponse response = exchange.getResponse();
+        setResponseCode(ex, response);
+
         if (response.isCommitted()) {
             return Mono.error(ex);
         }
 
-        if (ex instanceof ResponseStatusException) {
-            response.setStatusCode(((ResponseStatusException) ex).getStatus());
-        }
-
         String traceId = MDC.get(SysConstant.REQUEST_ID);
-
+        URI uri = (URI) exchange.getAttributes().get(GATEWAY_REQUEST_URL_ATTR);
+        String url = uri == null ? exchange.getRequest().getPath().toString() : uri.toString();
         return response
                 .writeWith(Mono.fromSupplier(() -> {
                     DataBufferFactory bufferFactory = response.bufferFactory();
                     ErrorResponse er = new ErrorResponse();
-                    er.setMessage(String.format("%s - %s", exchange.getRequest().getURI(), ex.getMessage()));
+                    er.setMessage(String.format("%s - %s"
+                            , url, ex.getMessage()));
                     er.setTraceId(traceId);
                     byte[] by = JSON.toJSONBytes(er);
                     return bufferFactory.wrap(by);
                 }));
+    }
+
+    private void setResponseCode(Throwable ex, ServerHttpResponse response) {
+        response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (ex instanceof ResponseStatusException) {
+            response.setStatusCode(((ResponseStatusException) ex).getStatus());
+        } else if (ex instanceof AppException) {
+            response.getHeaders().add("error", Integer.toString(((AppException) ex).getCode()));
+        }
     }
 
     @Data

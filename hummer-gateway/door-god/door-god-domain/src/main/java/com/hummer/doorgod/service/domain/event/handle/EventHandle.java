@@ -2,6 +2,7 @@ package com.hummer.doorgod.service.domain.event.handle;
 
 import com.hummer.doorgod.service.domain.event.GlobalExceptionEvent;
 import com.hummer.doorgod.service.domain.event.GlobalRequestEvent;
+import com.hummer.doorgod.service.domain.event.RequestBlacklistEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -25,5 +26,10 @@ public class EventHandle {
                 , event.getTraceId()
                 , event.getExchange().getRequest().getURI()
                 , event.getExchange().getResponse().getStatusCode());
+    }
+
+    @EventListener
+    public void handle(RequestBlacklistEvent event) {
+        log.error("handle RequestBlacklistEvent {}", event);
     }
 }

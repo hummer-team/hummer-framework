@@ -5,21 +5,16 @@ import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.cloud.gateway.support.HasRouteId;
+import org.springframework.core.Ordered;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.util.Collections;
-import java.util.List;
-
+/**
+ * @author lee
+ */
 @Slf4j
 public class ProvideServiceTimeGatewayFilterFactory
         extends AbstractGatewayFilterFactory<ProvideServiceTimeGatewayFilterFactory.Config> {
-    private static final String KEY = "slowTimeMills";
-
-    @Override
-    public List<String> shortcutFieldOrder() {
-        return Collections.singletonList(KEY);
-    }
 
     public ProvideServiceTimeGatewayFilterFactory() {
         super(Config.class);
@@ -27,7 +22,7 @@ public class ProvideServiceTimeGatewayFilterFactory
 
     @Override
     public GatewayFilter apply(Config config) {
-       return new RequestTimeFilter(config);
+        return new RequestTimeGatewayFilter(config);
     }
 
     public static class Config implements HasRouteId {
@@ -63,12 +58,12 @@ public class ProvideServiceTimeGatewayFilterFactory
         }
     }
 
-    public static class RequestTimeFilter implements GatewayFilter/**, Ordered**/ {
+    public static class RequestTimeGatewayFilter implements GatewayFilter, Ordered {
 
         private static final String REQUEST_TIME_KEY = "requestTime";
         private final Config config;
 
-        public RequestTimeFilter(Config config) {
+        public RequestTimeGatewayFilter(Config config) {
             this.config = config;
         }
 
@@ -82,7 +77,6 @@ public class ProvideServiceTimeGatewayFilterFactory
          */
         @Override
         public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-            System.out.println(">>>>>>>>>>>>>>>>>>");
             exchange.getAttributes().put(REQUEST_TIME_KEY, System.currentTimeMillis());
             //aop
             return chain.filter(exchange).then(Mono.fromRunnable(() -> {
@@ -94,9 +88,9 @@ public class ProvideServiceTimeGatewayFilterFactory
             }));
         }
 
-//        @Override
-//        public int getOrder() {
-//            return config.getOrder() == null ? 1 : config.getOrder();
-//        }
+        @Override
+        public int getOrder() {
+            return config.getOrder() == null ? 1 : config.getOrder();
+        }
     }
 }
