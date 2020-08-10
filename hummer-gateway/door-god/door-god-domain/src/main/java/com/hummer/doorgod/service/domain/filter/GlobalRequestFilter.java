@@ -40,11 +40,13 @@ public class GlobalRequestFilter implements GlobalFilter, Ordered {
         MDC.put(SysConstant.REQUEST_ID, requestId);
         MDC.put(SysConstant.RestConstant.SERVER_IP, IpUtil.getLocalIp());
 
+        //modified request header
         exchange.getRequest().mutate().header(SysConstant.REQUEST_ID, requestId);
 
-        //
+        //per filter
         return chain.filter(exchange)
                 .then(Mono.fromRunnable(() -> {
+                    //this impl post filter
                     long startTime = (Long) exchange.getAttributes().get("globalRequestTime");
                     log.debug("this request total cost {} millis,uri {} -> {} response status code {}"
                             , System.currentTimeMillis() - startTime
