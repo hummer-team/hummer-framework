@@ -126,7 +126,8 @@
         <libthrift.version>0.12.0</libthrift.version>
         <kafka-avro-serializer.version>5.2.1</kafka-avro-serializer.version>
         <rocksdbjni.version>6.2.2</rocksdbjni.version>
-        <nacos.version>0.2.7</nacos.version>
+        <nacos-spring.version>0.2.7</nacos-spring.version>
+        <nacos-client.version>1.3.2</nacos-client.version>
         <seata.version>0.9.0</seata.version>
         <jedis.version>3.1.0</jedis.version>
         <msgpack-version>0.6.12</msgpack-version>
@@ -135,7 +136,7 @@
         <dubbo.version>2.7.4.1</dubbo.version>
         <dubbo-spring-boot-starter.version>2.0.0</dubbo-spring-boot-starter.version>
         <spring-cloud-sleuth-stream.version>1.3.6.RELEASE</spring-cloud-sleuth-stream.version>
-
+        <sentinel.version>1.7.2</sentinel.version>
     </properties>
 
     <dependencyManagement>
@@ -247,6 +248,22 @@
                 <version>${hummer.version}</version>
             </dependency>
             <!--framework plugin-->
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-core</artifactId>
+                <version>${sentinel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-datasource-nacos</artifactId>
+                <version>${sentinel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-spring-cloud-gateway-adapter</artifactId>
+                <version>${sentinel.version}</version>
+            </dependency>
+
             <!-- https://mvnrepository.com/artifact/org.rocksdb/rocksdbjni -->
             <dependency>
                 <groupId>org.rocksdb</groupId>
@@ -602,7 +619,7 @@
             <dependency>
                 <groupId>com.alibaba.boot</groupId>
                 <artifactId>nacos-config-spring-boot-starter</artifactId>
-                <version>${nacos.version}</version>
+                <version>${nacos-spring.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>ch.qos.logback</groupId>
@@ -610,6 +627,12 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <dependency>
+                <groupId>com.alibaba.nacos</groupId>
+                <artifactId>nacos-client</artifactId>
+                <version>${nacos-client.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.alibaba.boot</groupId>
                 <artifactId>nacos-discovery-spring-boot-starter</artifactId>

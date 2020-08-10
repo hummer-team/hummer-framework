@@ -1,5 +1,10 @@
 package com.hummer.doorgod.service.domain.listener;
 
+import com.alibaba.csp.sentinel.adapter.gateway.common.api.GatewayApiDefinitionManager;
+import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayRuleManager;
+import com.alibaba.csp.sentinel.slots.block.authority.AuthorityRuleManager;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
+import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.nacos.api.NacosFactory;
@@ -8,6 +13,7 @@ import com.alibaba.nacos.api.config.listener.Listener;
 import com.alibaba.nacos.api.exception.NacosException;
 import com.google.common.base.Strings;
 import com.hummer.core.PropertiesContainer;
+import com.hummer.doorgod.service.domain.configuration.DoorGoodConfig;
 import com.hummer.doorgod.service.domain.route.DynamicRouteRepository;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +36,7 @@ import java.util.concurrent.Executor;
  */
 @Component
 @Slf4j
-public class ListenerRouteEvent implements CommandLineRunner, DisposableBean {
+public class ListenerConfigEvent implements CommandLineRunner, DisposableBean {
     private final ConcurrentHashMap<String, ListenerEventInfo> listenerMap = new ConcurrentHashMap<>();
 
     @Autowired
@@ -42,6 +48,9 @@ public class ListenerRouteEvent implements CommandLineRunner, DisposableBean {
     }
 
     private void listener() throws NacosException {
+        System.getProperties().setProperty("csp.sentinel.log.dir"
+                , PropertiesContainer.valueOfString("csp.sentinel.log.dir"));
+
         Properties properties = getConfigServerProperties();
         ConfigService configService = NacosFactory.createConfigService(properties);
 
@@ -49,7 +58,7 @@ public class ListenerRouteEvent implements CommandLineRunner, DisposableBean {
                 , "DEFAULT_GROUP");
         long timeoutMillis = PropertiesContainer.valueOf("config.center.gateway.timeout.millis"
                 , Long.class, 5000L);
-
+        //load all gateway group config
         String content = getGatewayIdGroupString(configService, groupId, timeoutMillis);
         List<String> gatewayGroup = JSON.parseArray(content, String.class);
         if (CollectionUtils.isEmpty(gatewayGroup)) {
@@ -132,16 +141,19 @@ public class ListenerRouteEvent implements CommandLineRunner, DisposableBean {
                     if (Strings.isNullOrEmpty(configInfo)) {
                         return;
                     }
+                    //refresh config
+                    refresh(configInfo);
 
-                    setRoute(configInfo);
-                    log.debug(">>>>>>receive config data id {} info: \n {}"
-                            , dataId, configInfo);
+                    //setRoute(configInfo);
                 }
             };
 
             String configVal = configService.getConfigAndSignListener(dataId, groupId, timeoutMillis, listener);
             if (!Strings.isNullOrEmpty(configVal)) {
-                setRoute(configVal);
+                //refresh config
+                refresh(configVal);
+
+                //setRoute(configVal);
                 listenerMap.put(dataId
                         , ListenerEventInfo
                                 .builder()
@@ -151,6 +163,21 @@ public class ListenerRouteEvent implements CommandLineRunner, DisposableBean {
                                 .build());
             }
         }
+    }
+
+    private void refresh(String configInfo) {
+        DoorGoodConfig doorGoodConfig = JSON.parseObject(configInfo, new TypeReference<DoorGoodConfig>() {
+        });
+        routeRepository.update(doorGoodConfig.getRouteDefinition());
+
+        FlowRuleManager.loadRules(Collections.singletonList(doorGoodConfig.getSentinelConfig().getFlowRule()));
+        DegradeRuleManager.loadRules(Collections.singletonList(doorGoodConfig.getSentinelConfig().getDegradeRule()));
+        AuthorityRuleManager.loadRules(Collections.singletonList(doorGoodConfig.getSentinelConfig().getAuthorityRule()));
+
+        GatewayApiDefinitionManager.loadApiDefinitions(doorGoodConfig.getSentinelConfig().getApiDefinitions());
+        GatewayRuleManager.loadRules(doorGoodConfig.getSentinelConfig().getGatewayFlowRules());
+
+        log.debug("refresh config done,config value is \n{}", configInfo);
     }
 
     private void setRoute(String configInfo) {

@@ -1,8 +1,10 @@
 package com.hummer.doorgod.service.domain.exception;
 
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.fastjson.JSON;
 import com.hummer.common.SysConstant;
 import com.hummer.common.exceptions.AppException;
+import com.hummer.doorgod.service.domain.event.CustomSentinelGatewayBlockExceptionHandler;
 import com.hummer.doorgod.service.domain.event.GlobalExceptionEvent;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -59,19 +61,25 @@ public class GlobalException implements ErrorWebExceptionHandler {
             return Mono.error(ex);
         }
 
-        String traceId = MDC.get(SysConstant.REQUEST_ID);
-        URI uri = (URI) exchange.getAttributes().get(GATEWAY_REQUEST_URL_ATTR);
-        String url = uri == null ? exchange.getRequest().getPath().toString() : uri.toString();
-        return response
-                .writeWith(Mono.fromSupplier(() -> {
-                    DataBufferFactory bufferFactory = response.bufferFactory();
-                    ErrorResponse er = new ErrorResponse();
-                    er.setMessage(String.format("%s - %s"
-                            , url, ex.getMessage()));
-                    er.setTraceId(traceId);
-                    byte[] by = JSON.toJSONBytes(er);
-                    return bufferFactory.wrap(by);
-                }));
+        // This exception handler only handles rejection by Sentinel.
+        if (!BlockException.isBlockException(ex)) {
+            String traceId = MDC.get(SysConstant.REQUEST_ID);
+            URI uri = (URI) exchange.getAttributes().get(GATEWAY_REQUEST_URL_ATTR);
+            String url = uri == null ? exchange.getRequest().getPath().toString() : uri.toString();
+
+            return response
+                    .writeWith(Mono.fromSupplier(() -> {
+                        DataBufferFactory bufferFactory = response.bufferFactory();
+                        ErrorResponse er = new ErrorResponse();
+                        er.setMessage(String.format("%s - %s"
+                                , url, ex.getMessage()));
+                        er.setTraceId(traceId);
+                        byte[] by = JSON.toJSONBytes(er);
+                        return bufferFactory.wrap(by);
+                    }));
+        } else {
+            return new CustomSentinelGatewayBlockExceptionHandler().handle(exchange, ex);
+        }
     }
 
     private void setResponseCode(Throwable ex, ServerHttpResponse response) {
