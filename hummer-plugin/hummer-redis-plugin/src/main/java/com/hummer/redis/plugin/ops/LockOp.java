@@ -65,7 +65,7 @@ public class LockOp extends BaseOp<LockOp> {
                         , SetParams.setParams().nx().ex(lockExpiredSecond)));
 
         final String ok = "OK";
-        LOGGER.debug("key {} acquire lock result {}",key,result);
+        LOGGER.debug("key {} acquire lock result {}", key, result);
         return ok.equalsIgnoreCase(result);
     }
 
