@@ -3,8 +3,10 @@ package com.hummer.doorgod.service.domain.configuration;
 import lombok.Data;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 
+import java.util.List;
+
 @Data
 public class DoorGoodConfig {
-    private RouteDefinition routeDefinition;
+    private List<RouteDefinition> routeDefinition;
     private SentinelConfig sentinelConfig;
 }
