@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.core.annotation.Order;
-import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
@@ -69,13 +68,16 @@ public class GlobalException implements ErrorWebExceptionHandler {
 
             return response
                     .writeWith(Mono.fromSupplier(() -> {
-                        DataBufferFactory bufferFactory = response.bufferFactory();
                         ErrorResponse er = new ErrorResponse();
-                        er.setMessage(String.format("%s - %s"
+                        er.setMessage(String.format("%s --> %s"
                                 , url, ex.getMessage()));
+                        er.setCode(50000);
+                        if (ex instanceof AppException) {
+                            er.setCode(((AppException) ex).getCode());
+                        }
                         er.setTraceId(traceId);
                         byte[] by = JSON.toJSONBytes(er);
-                        return bufferFactory.wrap(by);
+                        return response.bufferFactory().wrap(by);
                     }));
         } else {
             return new CustomSentinelGatewayBlockExceptionHandler().handle(exchange, ex);
@@ -95,5 +97,6 @@ public class GlobalException implements ErrorWebExceptionHandler {
     public static class ErrorResponse {
         private String message;
         private String traceId;
+        private Integer code;
     }
 }

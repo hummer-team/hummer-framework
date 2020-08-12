@@ -168,7 +168,10 @@ public class ListenerConfigEvent implements CommandLineRunner, DisposableBean {
     private void refresh(String configInfo) {
         DoorGoodConfig doorGoodConfig = JSON.parseObject(configInfo, new TypeReference<DoorGoodConfig>() {
         });
-        routeRepository.update(doorGoodConfig.getRouteDefinition());
+
+        for(RouteDefinition route: doorGoodConfig.getRouteDefinition()) {
+            routeRepository.update(route);
+        }
 
         FlowRuleManager.loadRules(Collections.singletonList(doorGoodConfig.getSentinelConfig().getFlowRule()));
         DegradeRuleManager.loadRules(Collections.singletonList(doorGoodConfig.getSentinelConfig().getDegradeRule()));
