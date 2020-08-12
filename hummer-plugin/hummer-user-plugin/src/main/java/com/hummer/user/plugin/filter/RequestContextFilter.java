@@ -45,12 +45,14 @@ public class RequestContextFilter implements Filter {
                     for (Cookie cookie : request.getCookies()) {
                         if (readKey.equalsIgnoreCase(cookie.getName())) {
                             value = cookie.getValue();
-                            RequestContextHolder.set(readKey, value);
+                            break;
                         }
                     }
-                } else {
-                    RequestContextHolder.set(readKey, value);
                 }
+                if (StringUtils.isEmpty(value)) {
+                    continue;
+                }
+                RequestContextHolder.set(readKey, value);
             }
         }
     }

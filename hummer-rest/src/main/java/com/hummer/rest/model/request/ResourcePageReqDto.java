@@ -15,11 +15,9 @@ import javax.validation.constraints.NotNull;
  * @version 1.0
  * <p>Copyright: Copyright (c) 2020</p>
  * @date 2020/6/3 14:03
- * @deprecated {@link com.hummer.common.resource.ResourcePageReqDto<T>}
  */
 @ApiModel
 @Data
-@Deprecated
 public class ResourcePageReqDto<T> {
 
     @ApiModelProperty("当前页码")

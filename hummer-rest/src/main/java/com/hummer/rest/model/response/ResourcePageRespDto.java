@@ -15,11 +15,9 @@ import java.util.List;
  * @version 1.0
  * <p>Copyright: Copyright (c) 2020</p>
  * @date 2020/6/3 14:04
- * @deprecated use {@link com.hummer.common.resource.ResourcePageRespDto<T>}
  */
 @ApiModel
 @Data
-@Deprecated
 public class ResourcePageRespDto<T> {
 
     public static final ResourcePageRespDto EMPTY = new ResourcePageRespDto<>();
