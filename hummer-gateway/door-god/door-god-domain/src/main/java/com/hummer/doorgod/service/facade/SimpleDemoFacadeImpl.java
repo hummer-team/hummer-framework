@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SimpleDemoFacadeImpl implements SimpleDemoFacade {
 
-    @Autowired
+    @Autowired(required = false)
     private SimpleDemoDao simpleDemoDao;
 
     @Override
