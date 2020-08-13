@@ -1,6 +1,8 @@
 package com.hummer.doorgod.service.domain.filter.factory;
 
+import com.alibaba.cloud.nacos.ribbon.NacosRule;
 import com.hummer.common.exceptions.AppException;
+import com.hummer.doorgod.service.domain.loadbalancer.NacosWeightedRule;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.cloud.client.ServiceInstance;
@@ -37,11 +39,14 @@ public class FailoverLoadBalancerGatewayFilterFactory
         extends AbstractGatewayFilterFactory<FailoverLoadBalancerGatewayFilterFactory.Config> {
 
     private static final ConcurrentHashMap<String, URI> uriMap = new ConcurrentHashMap<>();
+    private static final String schemeKey = "@schemekey";
     private final LoadBalancerClientFactory clientFactory;
+    private final NacosRule nacosRule;
 
-    public FailoverLoadBalancerGatewayFilterFactory(LoadBalancerClientFactory clientFactory) {
+    public FailoverLoadBalancerGatewayFilterFactory(LoadBalancerClientFactory clientFactory, NacosRule nacosRule) {
         super(Config.class);
         this.clientFactory = clientFactory;
+        this.nacosRule = nacosRule;
     }
 
     @PreDestroy
@@ -51,17 +56,20 @@ public class FailoverLoadBalancerGatewayFilterFactory
 
     @Override
     public GatewayFilter apply(Config config) {
-        return new CustomReactiveLoadBalancerClientFilter(config, clientFactory);
+        return new CustomReactiveLoadBalancerClientFilter(config, clientFactory, nacosRule);
     }
 
     public static class CustomReactiveLoadBalancerClientFilter implements GatewayFilter, Ordered {
         private final Config config;
         private final LoadBalancerClientFactory clientFactory;
+        private final NacosRule nacosRule;
 
         public CustomReactiveLoadBalancerClientFilter(Config config
-                , LoadBalancerClientFactory clientFactory) {
+                , LoadBalancerClientFactory clientFactory
+                , NacosRule nacosRule) {
             this.config = config;
             this.clientFactory = clientFactory;
+            this.nacosRule = nacosRule;
         }
 
         /**
@@ -90,10 +98,10 @@ public class FailoverLoadBalancerGatewayFilterFactory
                 return chain.filter(exchange);
             }
 
-            if (!"lb2".equals(url.getScheme()) && !"lb2".equals(schemePrefix)) {
+            if (!"lb".equals(url.getScheme()) && !"lb".equals(schemePrefix)) {
                 return chain.filter(exchange);
             }
-
+            exchange.getAttributes().put(schemeKey, route.getUri().getHost());
             // preserve the original url
             addOriginalRequestUrl(exchange, url);
 
@@ -103,7 +111,7 @@ public class FailoverLoadBalancerGatewayFilterFactory
             }
 
             String finalSchemePrefix = schemePrefix;
-            return tryChoose(exchange).doOnSuccess(response -> {
+            return tryChoose2(exchange).doOnSuccess(response -> {
                 if (!response.hasServer()) {
                     URI uri = chooseBackUpHostIfNotNull(route.getId(), url);
                     exchange.getAttributes().put(GATEWAY_REQUEST_URL_ATTR, uri);
@@ -129,7 +137,7 @@ public class FailoverLoadBalancerGatewayFilterFactory
                     exchange.getAttributes().put(GATEWAY_REQUEST_URL_ATTR, requestUrl);
                 }
             }).doOnError(throwable -> {
-                URI uri = chooseBackUpHostIfNotNull(route.getId(),url);
+                URI uri = chooseBackUpHostIfNotNull(route.getId(), url);
                 exchange.getAttributes().put(GATEWAY_REQUEST_URL_ATTR, uri);
             }).then(chain.filter(exchange));
         }
@@ -157,6 +165,19 @@ public class FailoverLoadBalancerGatewayFilterFactory
 
         protected URI reconstructURI(ServiceInstance serviceInstance, URI original) {
             return LoadBalancerUriTools.reconstructURI(serviceInstance, original);
+        }
+
+        private Mono<Response<ServiceInstance>> tryChoose2(ServerWebExchange exchange) {
+            Mono<Response<ServiceInstance>> service =
+                   new NacosWeightedRule(nacosRule, (String)exchange.getAttribute(schemeKey))
+                            .choose(createRequest());
+
+            if (service == null) {
+                URI uri = exchange.getAttribute(GATEWAY_REQUEST_URL_ATTR);
+                throw new NotFoundException("No loadbalancer available for " + uri.getHost());
+            }
+
+            return service;
         }
 
         private Mono<Response<ServiceInstance>> tryChoose(ServerWebExchange exchange) {

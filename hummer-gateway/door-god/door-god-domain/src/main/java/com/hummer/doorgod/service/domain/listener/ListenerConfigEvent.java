@@ -194,9 +194,9 @@ public class ListenerConfigEvent implements CommandLineRunner, DisposableBean {
     private Properties getConfigServerProperties() {
         Properties properties = new Properties();
         properties.put("namespace"
-                , PropertiesContainer.valueOfString("config.center.gateway.namespace", "gateway"));
+                , PropertiesContainer.valueOfString("spring.cloud.nacos.discovery.namespace", "gateway"));
         properties.put("serverAddr"
-                , PropertiesContainer.valueOfStringWithAssertNotNull("config.center.server-addr"));
+                , PropertiesContainer.valueOfStringWithAssertNotNull("spring.cloud.nacos.discovery.server-addr"));
         return properties;
     }
 
