@@ -29,7 +29,7 @@ import javax.validation.constraints.NotEmpty;
 @Api(value = "this simple controller demo for learning")
 @Validated
 public class SimpleController {
-    @Autowired
+    @Autowired(required = false)
     private SimpleDemoFacade simpleDemoFacade;
 
     @PostMapping(value = "/simple/save")
