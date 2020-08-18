@@ -40,9 +40,9 @@ public class ConfigController {
 
     @ApiOperation("从配置中心获取最新配置")
     @GetMapping("/refresh")
-    public ResourceResponse<Boolean> refreshConf() throws Exception {
+    public ResourceResponse<Boolean> refreshConf() {
 
-        naCosConfig.putConfigToContainer(false);
+        naCosConfig.refreshConfig();
         return ResourceResponse.ok();
     }
 

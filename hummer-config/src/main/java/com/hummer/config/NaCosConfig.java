@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.nacos.api.NacosFactory;
 import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.config.listener.Listener;
+import com.alibaba.nacos.api.exception.NacosException;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.hummer.common.exceptions.AppException;
@@ -64,11 +65,15 @@ public class NaCosConfig implements InitializingBean {
                 System.currentTimeMillis() - start);
     }
 
-    public void registerConfigListenerV2() {
-
+    public void refreshConfig() {
+        try {
+            registerConfigListener(false);
+        } catch (NacosException e) {
+            LOGGER.warn("refresh config failed ", e);
+        }
     }
 
-    public void registerConfigListener(boolean addListener) throws Exception {
+    public void registerConfigListener(boolean addListener) throws NacosException {
         NacosConfigParams params = createNacosConfigParams();
         if (params == null) {
             return;
@@ -92,21 +97,18 @@ public class NaCosConfig implements InitializingBean {
                     @Override
                     public void receiveConfigInfo(String configInfo) {
                         if (!Strings.isNullOrEmpty(configInfo)) {
-                            try {
-                                putConfigToContainer(groupId
-                                        , dataId
-                                        , configInfo
-                                        , params.getProperties().getProperty("dataType"));
-                                LOGGER.info("receive for nacos config change notice,chance config is [{}]"
-                                        , configInfo);
-                            } catch (IOException e) {
-                                //ignore
-                            }
+                            putConfigToContainer(groupId
+                                    , dataId
+                                    , configInfo
+                                    , params.getProperties().getProperty("dataType"));
+                            LOGGER.info("receive for nacos config change notice,chance config is [{}]"
+                                    , configInfo);
                         }
                         // 客户端配置上传至服务端
                         uploadConfig();
                     }
                 });
+
             }
             String value = configService.getConfig(dataId, groupId, 3000);
             if (!Strings.isNullOrEmpty(value)) {
@@ -139,7 +141,6 @@ public class NaCosConfig implements InitializingBean {
         Properties properties = new Properties();
         properties.put("serverAddr", service);
         if (StringUtils.isNotBlank(namespace)) {
-
             properties.put("namespace", namespace);
         }
         properties.put("dataType", PropertiesContainer.valueOfString("nacos.config.type", "properties"));
