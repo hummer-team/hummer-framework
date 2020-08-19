@@ -4,6 +4,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.hummer.redis.plugin.ops.BaseOp;
+import com.hummer.redis.plugin.ops.GeoOp;
 import com.hummer.redis.plugin.ops.HashSimpleOp;
 import com.hummer.redis.plugin.ops.LockOp;
 import com.hummer.redis.plugin.ops.MultiOp;
@@ -112,6 +113,28 @@ public class RedisOp implements InitializingBean, DisposableBean {
             }
         }
         return ops;
+    }
+
+    public GeoOp geo() {
+        return (GeoOp) geo("simple:geo");
+    }
+
+    public GeoOp geo(String redisDbGroupName) {
+        redisDbGroupName = format(redisDbGroupName, ":geo");
+        GeoOp geo = (GeoOp) OPS_MAP.get(redisDbGroupName);
+        if (geo != null) {
+            return geo;
+        }
+        if ((geo = (GeoOp) OPS_MAP.get(redisDbGroupName)) == null) {
+            synchronized (OPS_MAP) {
+                if ((geo = (GeoOp) OPS_MAP.get(redisDbGroupName)) == null) {
+                    String groupName = getGroupName(redisDbGroupName);
+                    geo = new GeoOp(groupName);
+                    OPS_MAP.put(redisDbGroupName, geo);
+                }
+            }
+        }
+        return geo;
     }
 
     private String format(String redisDbGroupName, String s) {
