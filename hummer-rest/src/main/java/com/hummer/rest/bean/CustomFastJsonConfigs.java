@@ -1,6 +1,7 @@
 package com.hummer.rest.bean;
 
 import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.rest.message.handle.MessageSerialConfig;
@@ -32,5 +33,6 @@ public class CustomFastJsonConfigs implements MessageSerialConfig {
         } else {
             fastJsonConfig.setDateFormat(PropertiesContainer.valueOfString("fastJson.deserializer.dateFormat.custom.type"));
         }
+        fastJsonConfig.setSerializerFeatures(SerializerFeature.DisableCircularReferenceDetect);
     }
 }
