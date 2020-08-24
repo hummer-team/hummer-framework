@@ -35,6 +35,7 @@ import java.util.function.Consumer;
 public class NaCosConfig implements InitializingBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(NaCosConfig.class);
     final Map<String, Consumer<Config>> fillMap = new ConcurrentHashMap<>();
+    private volatile boolean isInitializing = false;
 
     {
         fillMap.put("properties", this::fillByProperties);
@@ -68,6 +69,14 @@ public class NaCosConfig implements InitializingBean {
     public void refreshConfig() {
         try {
             registerConfigListener(false);
+        } catch (NacosException e) {
+            LOGGER.warn("refresh config failed ", e);
+        }
+    }
+
+    public void refreshConfig(boolean addListener) {
+        try {
+            registerConfigListener(addListener);
         } catch (NacosException e) {
             LOGGER.warn("refresh config failed ", e);
         }
