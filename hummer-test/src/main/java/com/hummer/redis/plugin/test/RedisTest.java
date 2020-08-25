@@ -4,7 +4,6 @@ import com.hummer.core.config.PropertiesConfig;
 import com.hummer.core.init.HummerApplicationContextInit;
 import com.hummer.core.starter.BootStarterBean;
 import com.hummer.redis.plugin.RedisOp;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import java.io.IOException;
 
 @RunWith(value = SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ConfigFileApplicationContextInitializer.class
-, HummerApplicationContextInit.class})
+        , HummerApplicationContextInit.class})
 @Import(value = {PropertiesConfig.class, BootStarterBean.class, RedisOp.class})
 @PropertySource(value = {"classpath:application.properties"})
 public class RedisTest {
@@ -28,8 +27,10 @@ public class RedisTest {
 
     @Test
     public void hset() throws IOException {
-        redisOp.hash().hset("hummerHash1", "k1", "sssssssssssss");
-        Assert.assertEquals("sssssssssssss"
-                , redisOp.hash().getByFieldKey("hummerHash1", "k1"));
+
+        String geoKey = "community_group_head_geo";
+        Long result = redisOp.geo().add(geoKey, "b75c40a944f2497b93122b87c71c3e78", 121.323261
+                , 31.209601);
+        System.out.println(result);
     }
 }

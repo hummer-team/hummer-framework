@@ -19,7 +19,7 @@ import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.DisposableBean;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -32,17 +32,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
-public class NaCosConfig implements InitializingBean {
+public class NaCosConfig implements  DisposableBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(NaCosConfig.class);
     final Map<String, Consumer<Config>> fillMap = new ConcurrentHashMap<>();
 
     {
         fillMap.put("properties", this::fillByProperties);
         fillMap.put("json", this::fillByJson);
-    }
-
-    public void initNaCosConfig() {
-
     }
 
     /**
@@ -54,7 +50,6 @@ public class NaCosConfig implements InitializingBean {
      * @throws Exception in the event of misconfiguration (such as failure to set an
      *                   essential property) or if initialization fails for any other reason
      */
-    @Override
     public void afterPropertiesSet() throws Exception {
         final long start = System.currentTimeMillis();
         LOGGER.info("begin append nacos config to PropertiesContainer");
@@ -68,6 +63,14 @@ public class NaCosConfig implements InitializingBean {
     public void refreshConfig() {
         try {
             registerConfigListener(false);
+        } catch (NacosException e) {
+            LOGGER.warn("refresh config failed ", e);
+        }
+    }
+
+    public void refreshConfig(boolean addListener) {
+        try {
+            registerConfigListener(addListener);
         } catch (NacosException e) {
             LOGGER.warn("refresh config failed ", e);
         }
@@ -225,6 +228,17 @@ public class NaCosConfig implements InitializingBean {
         reqDto.setRemark(extentMap.get("appPort"));
         reqDto.setOperatorTime(DateUtil.now());
         return reqDto;
+    }
+
+    /**
+     * Invoked by the containing {@code BeanFactory} on destruction of a bean.
+     *
+     * @throws Exception in case of shutdown errors. Exceptions will get logged
+     *                   but not rethrown to allow other beans to release their resources as well.
+     */
+    @Override
+    public void destroy() throws Exception {
+
     }
 
     @Data

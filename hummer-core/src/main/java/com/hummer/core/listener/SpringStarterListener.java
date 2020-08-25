@@ -2,10 +2,15 @@ package com.hummer.core.listener;
 
 import com.hummer.core.PropertiesContainer;
 import com.hummer.core.SpringApplicationContext;
+import com.hummer.core.spi.CustomizeContextInit;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.ConfigurableApplicationContext;
+
+import java.util.ServiceLoader;
 
 /**
  * listener spring boot link {#ApplicationPreparedEvent} event,this event express spring boot context load done,but bean
@@ -19,6 +24,7 @@ import org.springframework.context.ApplicationListener;
 public class SpringStarterListener implements ApplicationListener<ApplicationPreparedEvent> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SpringStarterListener.class);
 
+    @SneakyThrows
     @Override
     public void onApplicationEvent(ApplicationPreparedEvent event) {
         if (SpringApplicationContext.getApplicationContext() == null) {
@@ -30,5 +36,16 @@ public class SpringStarterListener implements ApplicationListener<ApplicationPre
         }
         //load property configuration
         PropertiesContainer.loadPropertyData(event.getApplicationContext().getEnvironment());
+        executeCustomizeContextInit(event.getApplicationContext());
+    }
+
+    private void executeCustomizeContextInit(ConfigurableApplicationContext context) {
+        //
+        ServiceLoader<CustomizeContextInit> loaders =
+                ServiceLoader.load(CustomizeContextInit.class);
+
+        for (CustomizeContextInit init : loaders) {
+            init.init(context);
+        }
     }
 }
