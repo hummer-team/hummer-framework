@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.ServiceLoader;
 
@@ -35,16 +36,16 @@ public class SpringStarterListener implements ApplicationListener<ApplicationPre
         }
         //load property configuration
         PropertiesContainer.loadPropertyData(event.getApplicationContext().getEnvironment());
-        executeCustomizeContextInit();
+        executeCustomizeContextInit(event.getApplicationContext());
     }
 
-    private void executeCustomizeContextInit() {
+    private void executeCustomizeContextInit(ConfigurableApplicationContext context) {
         //
         ServiceLoader<CustomizeContextInit> loaders =
                 ServiceLoader.load(CustomizeContextInit.class);
 
-        while (loaders.iterator().hasNext()) {
-           loaders.iterator().next().init();
+        for (CustomizeContextInit init : loaders) {
+            init.init(context);
         }
     }
 }
