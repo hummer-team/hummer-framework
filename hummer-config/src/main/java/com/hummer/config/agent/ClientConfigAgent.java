@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * description     java类作用描述
+ * ClientConfigAgent
  *
  * @author chen wei
  * @version 1.0

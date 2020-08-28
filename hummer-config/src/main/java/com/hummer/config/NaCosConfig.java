@@ -11,8 +11,12 @@ import com.hummer.common.exceptions.AppException;
 import com.hummer.common.utils.DateUtil;
 import com.hummer.common.utils.IpUtil;
 import com.hummer.config.agent.ClientConfigAgent;
+import com.hummer.config.bo.ConfigListenerKey;
 import com.hummer.config.bo.NacosConfigParams;
 import com.hummer.config.dto.ClientConfigUploadReqDto;
+import com.hummer.config.enums.ConfigEnums;
+import com.hummer.config.listener.ConfigListener;
+import com.hummer.config.subscription.ConfigSubscriptionManager;
 import com.hummer.core.PropertiesContainer;
 import lombok.Builder;
 import lombok.Data;
@@ -32,9 +36,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
-public class NaCosConfig implements  DisposableBean {
+public class NaCosConfig implements DisposableBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(NaCosConfig.class);
     final Map<String, Consumer<Config>> fillMap = new ConcurrentHashMap<>();
+
+    private ConfigSubscriptionManager configSubscriptionManager;
 
     {
         fillMap.put("properties", this::fillByProperties);
@@ -99,16 +105,8 @@ public class NaCosConfig implements  DisposableBean {
 
                     @Override
                     public void receiveConfigInfo(String configInfo) {
-                        if (!Strings.isNullOrEmpty(configInfo)) {
-                            putConfigToContainer(groupId
-                                    , dataId
-                                    , configInfo
-                                    , params.getProperties().getProperty("dataType"));
-                            LOGGER.info("receive for nacos config change notice,chance config is [{}]"
-                                    , configInfo);
-                        }
-                        // 客户端配置上传至服务端
-                        uploadConfig();
+
+                        handleConfigChange(dataId, groupId, configInfo, params);
                     }
                 });
 
@@ -123,6 +121,65 @@ public class NaCosConfig implements  DisposableBean {
         }
         // 客户端配置上传至服务端
         uploadConfig();
+    }
+
+    private void handleConfigChange(String dataId, String groupId, String configInfo, NacosConfigParams params) {
+        // 更新项目配置本地缓存
+        if (!Strings.isNullOrEmpty(configInfo)) {
+            putConfigToContainer(groupId
+                    , dataId
+                    , configInfo
+                    , params.getProperties().getProperty("dataType"));
+            LOGGER.info("receive for nacos config change notice,chance config is [{}]"
+                    , configInfo);
+        }
+        // 客户端配置上传至服务端
+        uploadConfig();
+        // 配置变更订阅处理
+        configChangeDispatch(dataId, groupId, configInfo, params);
+    }
+
+    private Map<String, String> parsingConfigInfo(String dataId, String groupId, String configInfo, String dataType) {
+
+        return "json".equals(dataType) ? parsingJsonConfigInfo(configInfo) :
+                "properties".equals(dataType) ? parsingMapConfigInfo(dataId, groupId, configInfo) : null;
+    }
+
+    private Map<String, String> parsingJsonConfigInfo(String configInfo) {
+        return JSON.parseObject(configInfo, Map.class);
+    }
+
+    private Map<String, String> parsingMapConfigInfo(String dataId, String groupId, String configInfo) {
+        Map<String, String> map = new HashMap<>();
+        try {
+            Properties properties = new Properties();
+            properties.load(new StringReader(configInfo));
+            for (Map.Entry<Object, Object> item : properties.entrySet()) {
+                if (item.getKey() == null) {
+                    continue;
+                }
+                map.put(item.getKey().toString(), item.getValue() == null ? null : item.getValue().toString());
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("nacos config data id {},group id {},config {} put to PropertiesContainer"
+                            , dataId, groupId, map);
+                }
+            }
+        } catch (IOException e) {
+            LOGGER.error("read config failed data id:{},group:{},value:\n{}"
+                    , dataId
+                    , groupId
+                    , configInfo);
+        }
+        return map;
+    }
+
+    private void configChangeDispatch(String dataId, String groupId, String configInfo, NacosConfigParams params) {
+        if (configSubscriptionManager == null) {
+            return;
+        }
+        // TODO 当前颗粒度到dataId，后续加深到properties key
+        Map<String, String> map = parsingMapConfigInfo(dataId, groupId, configInfo);
+        configSubscriptionManager.doDispatch(dataId, groupId, ConfigEnums.ConfigActions.UPDATE, map);
     }
 
     private NacosConfigParams createNacosConfigParams() {
@@ -247,5 +304,19 @@ public class NaCosConfig implements  DisposableBean {
         private String groupId;
         private String dataId;
         private String value;
+    }
+
+    public void setConfigSubscriptionManager(ConfigSubscriptionManager configSubscriptionManager) {
+        this.configSubscriptionManager = configSubscriptionManager;
+    }
+
+    public int addListener(ConfigListenerKey key, ConfigListener listener) {
+
+        return this.configSubscriptionManager.addListener(key, listener);
+    }
+
+    public void removeListener(ConfigListenerKey key) {
+
+        this.configSubscriptionManager.removeListener(key);
     }
 }
