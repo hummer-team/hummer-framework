@@ -76,11 +76,19 @@ public class ConfigCacheManager {
 
     @SuppressWarnings("unchecked")
     private Map<String, Object> fillByJson(Config config) {
+        Map<String, Object> map = null;
         ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
-        Object o = JSON.parseObject(config.value);
-        PropertiesContainer.put(config.getDataId(), o);
-        ParserConfig.getGlobalInstance().setAutoTypeSupport(false);
-        Map<String, Object> map = JSONObject.parseObject(JSONObject.toJSONString(o), Map.class);
+        try {
+            Object o = JSON.parseObject(config.value);
+            PropertiesContainer.put(config.getDataId(), o);
+
+            map = JSONObject.parseObject(JSONObject.toJSONString(o), Map.class);
+        } catch (Exception e) {
+            map = JSON.parseObject(config.value, Map.class);
+            PropertiesContainer.put(config.getDataId(), map);
+        } finally {
+            ParserConfig.getGlobalInstance().setAutoTypeSupport(false);
+        }
         return map;
     }
 
