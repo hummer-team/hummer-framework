@@ -36,7 +36,7 @@ public class ConfigListenerKey {
         return Objects.equals(dataId, key.dataId) &&
                 Objects.equals(groupId, key.groupId) &&
                 ((propertiesKey == null && key.getPropertiesKey() == null)
-                        || propertiesKey.containsAll(key.getPropertiesKey()));
+                        || (propertiesKey != null && propertiesKey.containsAll(key.getPropertiesKey())));
     }
 
     @Override
