@@ -1,5 +1,6 @@
 package com.hummer.config;
 
+import com.hummer.config.subscription.ConfigSubscriptionManagerImpl;
 import com.hummer.core.spi.CustomizeContextInit;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -9,6 +10,6 @@ public class NacosConfigInit implements CustomizeContextInit {
      */
     @Override
     public void init(ConfigurableApplicationContext context) {
-        new NaCosConfig().refreshConfig(true);
+        new NaCosConfig(new ConfigSubscriptionManagerImpl()).refreshConfig(true);
     }
 }

@@ -15,9 +15,8 @@ import org.springframework.context.annotation.Configuration;
 public class ConfigBean {
     @Bean
     public NaCosConfig naCosConfig() {
-        NaCosConfig config = new NaCosConfig();
-        config.setConfigSubscriptionManager(new ConfigSubscriptionManagerImpl());
-        return config;
+
+        return new NaCosConfig(new ConfigSubscriptionManagerImpl());
     }
 
 }

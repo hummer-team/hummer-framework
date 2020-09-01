@@ -7,44 +7,43 @@ import com.alibaba.nacos.api.config.listener.Listener;
 import com.alibaba.nacos.api.exception.NacosException;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
-import com.hummer.common.exceptions.AppException;
 import com.hummer.common.utils.DateUtil;
 import com.hummer.common.utils.IpUtil;
 import com.hummer.config.agent.ClientConfigAgent;
+import com.hummer.config.bo.ConfigDataInfoBo;
 import com.hummer.config.bo.ConfigListenerKey;
+import com.hummer.config.bo.ConfigPropertiesChangeInfoBo;
 import com.hummer.config.bo.NacosConfigParams;
 import com.hummer.config.dto.ClientConfigUploadReqDto;
-import com.hummer.config.enums.ConfigEnums;
-import com.hummer.config.listener.ConfigListener;
+import com.hummer.config.listener.AbstractConfigListener;
+import com.hummer.config.subscription.ConfigCacheManager;
 import com.hummer.config.subscription.ConfigSubscriptionManager;
 import com.hummer.core.PropertiesContainer;
-import lombok.Builder;
-import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
-import java.util.function.Consumer;
 
 public class NaCosConfig implements DisposableBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(NaCosConfig.class);
-    final Map<String, Consumer<Config>> fillMap = new ConcurrentHashMap<>();
 
     private ConfigSubscriptionManager configSubscriptionManager;
 
+    private final ConfigCacheManager configCacheManager;
+
+    public NaCosConfig(ConfigSubscriptionManager configSubscriptionManager) {
+        this.configSubscriptionManager = configSubscriptionManager;
+    }
+
     {
-        fillMap.put("properties", this::fillByProperties);
-        fillMap.put("json", this::fillByJson);
+        configCacheManager = new ConfigCacheManager();
     }
 
     /**
@@ -106,80 +105,44 @@ public class NaCosConfig implements DisposableBean {
                     @Override
                     public void receiveConfigInfo(String configInfo) {
 
-                        handleConfigChange(dataId, groupId, configInfo, params);
+                        handleConfigChange(groupId, dataId, configInfo, params);
                     }
                 });
 
             }
             String value = configService.getConfig(dataId, groupId, 3000);
             if (!Strings.isNullOrEmpty(value)) {
-                putConfigToContainer(groupId
+                ConfigDataInfoBo dataInfoBo = configCacheManager.putConfigToContainer(groupId
                         , dataId
                         , value
                         , params.getProperties().getProperty("dataType"));
+
+                System.out.println(1);
             }
         }
         // 客户端配置上传至服务端
         uploadConfig();
     }
 
-    private void handleConfigChange(String dataId, String groupId, String configInfo, NacosConfigParams params) {
+    private void handleConfigChange(String groupId, String dataId, String configInfo, NacosConfigParams params) {
         // 更新项目配置本地缓存
-        if (!Strings.isNullOrEmpty(configInfo)) {
-            putConfigToContainer(groupId
-                    , dataId
-                    , configInfo
-                    , params.getProperties().getProperty("dataType"));
-            LOGGER.info("receive for nacos config change notice,chance config is [{}]"
-                    , configInfo);
-        }
+        ConfigDataInfoBo dataInfoBo = configCacheManager.putConfigToContainer(groupId, dataId, configInfo
+                , params.getProperties().getProperty("dataType"));
         // 客户端配置上传至服务端
         uploadConfig();
         // 配置变更订阅处理
-        configChangeDispatch(dataId, groupId, configInfo, params);
+        configChangeDispatch(dataInfoBo);
     }
 
-    private Map<String, String> parsingConfigInfo(String dataId, String groupId, String configInfo, String dataType) {
 
-        return "json".equals(dataType) ? parsingJsonConfigInfo(configInfo) :
-                "properties".equals(dataType) ? parsingMapConfigInfo(dataId, groupId, configInfo) : null;
-    }
-
-    private Map<String, String> parsingJsonConfigInfo(String configInfo) {
-        return JSON.parseObject(configInfo, Map.class);
-    }
-
-    private Map<String, String> parsingMapConfigInfo(String dataId, String groupId, String configInfo) {
-        Map<String, String> map = new HashMap<>();
-        try {
-            Properties properties = new Properties();
-            properties.load(new StringReader(configInfo));
-            for (Map.Entry<Object, Object> item : properties.entrySet()) {
-                if (item.getKey() == null) {
-                    continue;
-                }
-                map.put(item.getKey().toString(), item.getValue() == null ? null : item.getValue().toString());
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("nacos config data id {},group id {},config {} put to PropertiesContainer"
-                            , dataId, groupId, map);
-                }
-            }
-        } catch (IOException e) {
-            LOGGER.error("read config failed data id:{},group:{},value:\n{}"
-                    , dataId
-                    , groupId
-                    , configInfo);
-        }
-        return map;
-    }
-
-    private void configChangeDispatch(String dataId, String groupId, String configInfo, NacosConfigParams params) {
+    private void configChangeDispatch(ConfigDataInfoBo dataInfoBo) {
         if (configSubscriptionManager == null) {
             return;
         }
-        // TODO 当前颗粒度到dataId，后续加深到properties key
-        Map<String, String> map = parsingMapConfigInfo(dataId, groupId, configInfo);
-        configSubscriptionManager.doDispatch(dataId, groupId, ConfigEnums.ConfigActions.UPDATE, map);
+        // 比对新旧配置，获得变化的属性信息
+        List<ConfigPropertiesChangeInfoBo> changeInfoBos
+                = configCacheManager.parsingConfigPropertiesChanges(dataInfoBo);
+        configSubscriptionManager.doDispatch(dataInfoBo, changeInfoBos);
     }
 
     private NacosConfigParams createNacosConfigParams() {
@@ -212,45 +175,6 @@ public class NaCosConfig implements DisposableBean {
         return configParams;
     }
 
-    private void putConfigToContainer(String groupId
-            , String dataId
-            , String value
-            , String dataType
-    ) {
-
-        fillMap.getOrDefault(dataType, config -> {
-            throw new AppException(40004, String.format("%s no supported", dataType));
-        }).accept(Config.builder()
-                .groupId(groupId)
-                .dataId(dataId)
-                .value(value)
-                .build());
-    }
-
-    @SuppressWarnings("unchecked")
-    private void fillByJson(Config config) {
-        Map<String, Object> map = JSON.parseObject(config.value, Map.class);
-        PropertiesContainer.put(config.getDataId(), map);
-    }
-
-    private void fillByProperties(Config config) {
-        try {
-            Properties properties1 = new Properties();
-            properties1.load(new StringReader(config.getValue()));
-            for (Map.Entry<Object, Object> map : properties1.entrySet()) {
-                PropertiesContainer.put(map.getKey().toString(), map.getValue());
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("nacos config data id {},group id {},config {} put to PropertiesContainer"
-                            , config.getDataId(), config.getGroupId(), map);
-                }
-            }
-        } catch (IOException e) {
-            LOGGER.error("read config failed data id:{},group:{},value:\n{}"
-                    , config.getDataId()
-                    , config.getGroupId()
-                    , config.getValue());
-        }
-    }
 
     private void uploadConfig() {
         Boolean enable = PropertiesContainer.get("nacos.config.upload.enable", Boolean.class, true);
@@ -298,19 +222,7 @@ public class NaCosConfig implements DisposableBean {
 
     }
 
-    @Data
-    @Builder
-    private static class Config {
-        private String groupId;
-        private String dataId;
-        private String value;
-    }
-
-    public void setConfigSubscriptionManager(ConfigSubscriptionManager configSubscriptionManager) {
-        this.configSubscriptionManager = configSubscriptionManager;
-    }
-
-    public int addListener(ConfigListenerKey key, ConfigListener listener) {
+    public int addListener(ConfigListenerKey key, AbstractConfigListener listener) {
 
         return this.configSubscriptionManager.addListener(key, listener);
     }
@@ -318,5 +230,10 @@ public class NaCosConfig implements DisposableBean {
     public void removeListener(ConfigListenerKey key) {
 
         this.configSubscriptionManager.removeListener(key);
+    }
+
+    public void removeListener(ConfigListenerKey key, AbstractConfigListener listener) {
+
+        this.configSubscriptionManager.removeListener(key, listener);
     }
 }

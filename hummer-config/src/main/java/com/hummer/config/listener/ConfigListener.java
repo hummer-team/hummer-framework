@@ -1,6 +1,9 @@
 package com.hummer.config.listener;
 
-import java.util.Map;
+import com.hummer.config.bo.ConfigListenerKey;
+import com.hummer.config.bo.ConfigPropertiesChangeInfoBo;
+
+import java.util.List;
 
 /**
  * ConfigListener
@@ -12,5 +15,7 @@ import java.util.Map;
  */
 public interface ConfigListener {
 
-    void handleChange(final Map<String, String> configInfo);
+    String getId();
+
+    void handleChange(ConfigListenerKey key, List<ConfigPropertiesChangeInfoBo> changeInfoBos);
 }

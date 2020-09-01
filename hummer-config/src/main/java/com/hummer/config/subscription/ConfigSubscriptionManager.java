@@ -1,10 +1,11 @@
 package com.hummer.config.subscription;
 
+import com.hummer.config.bo.ConfigDataInfoBo;
 import com.hummer.config.bo.ConfigListenerKey;
-import com.hummer.config.enums.ConfigEnums;
-import com.hummer.config.listener.ConfigListener;
+import com.hummer.config.bo.ConfigPropertiesChangeInfoBo;
+import com.hummer.config.listener.AbstractConfigListener;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * ConfigSubscriptionManagerImpl
@@ -17,13 +18,11 @@ import java.util.Map;
 public interface ConfigSubscriptionManager {
 
 
-    int addListener(ConfigListenerKey key, ConfigListener listener);
+    int addListener(ConfigListenerKey key, AbstractConfigListener listener);
 
     void removeListener(ConfigListenerKey key);
 
-    void setListener(ConfigListenerKey key, ConfigListener listener);
+    void removeListener(ConfigListenerKey key, AbstractConfigListener listener);
 
-    void doDispatch(ConfigListenerKey key, Map<String, String> changedPropertiesInfo);
-
-    void doDispatch(String dataId, String groupId, ConfigEnums.ConfigActions option, Map<String, String> configInfo);
+    void doDispatch(ConfigDataInfoBo dataInfoBo, final List<ConfigPropertiesChangeInfoBo> changeInfoBos);
 }

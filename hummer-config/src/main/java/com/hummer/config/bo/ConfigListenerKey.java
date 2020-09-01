@@ -1,8 +1,11 @@
 package com.hummer.config.bo;
 
-import com.hummer.config.enums.ConfigEnums;
 import lombok.Builder;
 import lombok.Data;
+
+import javax.validation.constraints.NotEmpty;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * ConfigListenerKey
@@ -16,11 +19,28 @@ import lombok.Data;
 @Data
 public class ConfigListenerKey {
 
+    @NotEmpty
     private String dataId;
 
+    @NotEmpty
     private String groupId;
 
-    private String propertiesKey;
+    @NotEmpty
+    private List<String> propertiesKey;
 
-    private ConfigEnums.ConfigActions option;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ConfigListenerKey key = (ConfigListenerKey) o;
+        return Objects.equals(dataId, key.dataId) &&
+                Objects.equals(groupId, key.groupId) &&
+                ((propertiesKey == null && key.getPropertiesKey() == null)
+                        || propertiesKey.containsAll(key.getPropertiesKey()));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dataId, groupId, propertiesKey);
+    }
 }
