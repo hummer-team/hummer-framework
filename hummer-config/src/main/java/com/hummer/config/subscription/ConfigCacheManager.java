@@ -1,6 +1,8 @@
 package com.hummer.config.subscription;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.parser.ParserConfig;
 import com.hummer.common.exceptions.AppException;
 import com.hummer.config.bo.ConfigDataInfoBo;
 import com.hummer.config.bo.ConfigListenerKey;
@@ -74,8 +76,11 @@ public class ConfigCacheManager {
 
     @SuppressWarnings("unchecked")
     private Map<String, Object> fillByJson(Config config) {
-        Map<String, Object> map = JSON.parseObject(config.value, Map.class);
-        PropertiesContainer.put(config.getDataId(), map);
+        ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+        Object o = JSON.parseObject(config.value);
+        PropertiesContainer.put(config.getDataId(), o);
+        ParserConfig.getGlobalInstance().setAutoTypeSupport(false);
+        Map<String, Object> map = JSONObject.parseObject(JSONObject.toJSONString(o), Map.class);
         return map;
     }
 
