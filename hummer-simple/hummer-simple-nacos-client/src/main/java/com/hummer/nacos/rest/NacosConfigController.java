@@ -5,8 +5,9 @@ import com.hummer.config.bo.ConfigListenerKey;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.nacos.model.CustomListener;
 import com.hummer.rest.model.ResourceResponse;
+import com.hummer.user.plugin.annotation.member.MemberNeedAuthority;
 import com.hummer.user.plugin.holder.UserHolder;
-import com.hummer.user.plugin.user.UserContext;
+import com.hummer.user.plugin.user.member.MemberUserContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -40,12 +41,13 @@ public class NacosConfigController {
 
     @ApiOperation("获取所有配置")
     @GetMapping("/all")
-    public ResourceResponse<Map<String, String>> getAll(
+    @MemberNeedAuthority
+    public ResourceResponse<Map<String, Object>> getAll(
             @RequestHeader(value = "token") String userToken
     ) {
-        UserContext userContext = UserHolder.get();
-        Map<String, String> map = new HashMap<>(16);
-        PropertiesContainer.allKey().forEach(key -> map.put(key, PropertiesContainer.get(key, String.class)));
+        MemberUserContext userContext = UserHolder.getMemberByAssertNull();
+        Map<String, Object> map = new HashMap<>(16);
+        PropertiesContainer.allKey().forEach(key -> map.put(key, PropertiesContainer.get(key, Object.class)));
         return ResourceResponse.ok(map);
     }
 

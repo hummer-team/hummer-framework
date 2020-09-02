@@ -9,7 +9,6 @@ import com.hummer.rest.model.ResourceResponse;
  * @Author: lee
  * @version:1.0.0
  * @Date: 2019/6/21 16:57
- *
  **/
 public class ResponseUtil {
     private ResponseUtil() {
@@ -78,5 +77,15 @@ public class ResponseUtil {
             throw new AppException(response.getCode(), response.getMessage());
         }
         return response.getData();
+    }
+
+    public static <T> T parseResponseV3WithStatus(final String jsonValue
+            , TypeReference<T> typeReference) {
+        T response = JSON.parseObject(jsonValue, typeReference);
+
+        if (response == null) {
+            throw new AppException(50000, "call service failed.");
+        }
+        return response;
     }
 }
