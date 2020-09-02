@@ -155,13 +155,16 @@ public class ConfigCacheManager {
         }
         for (Map.Entry<String, Object> entry : dataInfoBo.getOriginValue().entrySet()) {
             Object currentValue = dataInfoBo.getCurrentValue().get(entry.getKey());
-            if (entry.getValue() == currentValue || entry.getValue().equals(currentValue)) {
+            if (entry.getValue() == null && currentValue == null) {
                 continue;
             }
+
             if (entry.getValue() == null) {
                 action = ConfigEnums.ConfigActions.ADD;
             } else if (currentValue == null) {
                 action = ConfigEnums.ConfigActions.DELETE;
+            } else if (entry.getValue().equals(currentValue)) {
+                continue;
             } else {
                 action = ConfigEnums.ConfigActions.UPDATE;
             }
