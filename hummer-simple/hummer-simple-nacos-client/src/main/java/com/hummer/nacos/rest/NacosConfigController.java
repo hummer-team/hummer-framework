@@ -56,7 +56,7 @@ public class NacosConfigController {
     public ResourceResponse<Integer> addListener(
             @RequestParam("dataId") String dataId
             , @RequestParam("groupId") String groupId
-            , @RequestParam("propertiesKeys") List<String> propertiesKeys
+            , @RequestParam(value = "propertiesKeys", required = false) List<String> propertiesKeys
     ) {
         CustomListener listener = new CustomListener();
         listener.setId("123456");

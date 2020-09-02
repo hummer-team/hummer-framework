@@ -153,12 +153,22 @@ public class ConfigCacheManager {
                         .propertiesKey(entry.getKey()).build());
             }
         }
+        // 记录处理本次新增属性
+        for (Map.Entry<String, Object> entry : dataInfoBo.getCurrentValue().entrySet()) {
+            if (!dataInfoBo.getOriginValue().containsKey(entry.getKey())) {
+                list.add(ConfigPropertiesChangeInfoBo.builder()
+                        .action(ConfigEnums.ConfigActions.ADD)
+                        .currentValue(entry.getValue())
+                        .originValue(dataInfoBo.getOriginValue().get(entry.getKey()))
+                        .propertiesKey(entry.getKey()).build());
+            }
+        }
+        // 更新属性
         for (Map.Entry<String, Object> entry : dataInfoBo.getOriginValue().entrySet()) {
             Object currentValue = dataInfoBo.getCurrentValue().get(entry.getKey());
             if (entry.getValue() == null && currentValue == null) {
                 continue;
             }
-
             if (entry.getValue() == null) {
                 action = ConfigEnums.ConfigActions.ADD;
             } else if (currentValue == null) {
