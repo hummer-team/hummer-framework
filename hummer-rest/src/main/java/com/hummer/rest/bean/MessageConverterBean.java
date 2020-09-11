@@ -21,7 +21,6 @@ import org.springframework.http.MediaType;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
 
 import static com.hummer.common.SysConstant.RestConstant.MVC_SERIALIZERFEATURE;
 
@@ -33,6 +32,7 @@ import static com.hummer.common.SysConstant.RestConstant.MVC_SERIALIZERFEATURE;
  **/
 @Configuration
 public class MessageConverterBean {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageConverterBean.class);
     @Autowired(required = false)
     private RequestBodyHandle requestBodyHandle;
@@ -52,8 +52,6 @@ public class MessageConverterBean {
      **/
     @Bean
     public HttpMessageConverters fastJsonHttpMessageConverters() {
-        // 指定时区为北京时区，东八区
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
 
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         FastJsonHttpMessageConverterService service = new FastJsonHttpMessageConverterService(fastJsonConfig
@@ -85,17 +83,6 @@ public class MessageConverterBean {
             }
             fastJsonConfig.setSerializerFeatures(listFeature.toArray(new SerializerFeature[0]));
         }
-
-//        if (StringUtils
-//                .isBlank(PropertiesContainer.valueOfString("fastJson.deserializer.dateFormat.custom.type"))) {
-//            fastJsonConfig.setSerializerFeatures(SerializerFeature.UseISO8601DateFormat);
-//        } else {
-//            fastJsonConfig.setDateFormat(PropertiesContainer.valueOfString("fastJson.deserializer.dateFormat.custom.type"));
-//        }
-        //date time format
-//        if (!listFeature.contains(SerializerFeature.WriteDateUseDateFormat)) {
-//            fastJsonConfig.setSerializerFeatures(SerializerFeature.WriteDateUseDateFormat);
-//        }
         //flush config
         service.setFastJsonConfig(fastJsonConfig);
 
