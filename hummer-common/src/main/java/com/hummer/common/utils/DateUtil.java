@@ -1,9 +1,13 @@
 package com.hummer.common.utils;
 
+import com.hummer.common.exceptions.AppException;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.springframework.util.StringUtils;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -16,8 +20,29 @@ import java.util.TimeZone;
  * @Date: 2019/6/20 14:45
  **/
 public class DateUtil {
+
+
     private DateUtil() {
 
+    }
+
+    public enum DateTimeFormat {
+        F1("yyyy-MM-dd HH:mm:ss"),
+        F2("yyyy-MM-dd"),
+        F3("HH:mm:ss"),
+        F4("yyyyMMddHHmmss"),
+        F5("yyyyMMddHHmmsss"),
+        F6("yyyyMMdd"),
+        ;
+        private String value;
+
+        DateTimeFormat(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
     }
 
     /**
@@ -88,11 +113,6 @@ public class DateUtil {
         return DateTime.now(DateTimeZone.forTimeZone(TimeZone.getDefault())).toDate();
     }
 
-    public static void main(String[] args) {
-        Date date = now();
-        System.out.println(DateFormatUtils.format(date, "yyyy-MM-dd HH:mm:ss"));
-    }
-
     /**
      * targetDate subtract now
      *
@@ -115,5 +135,23 @@ public class DateUtil {
             return null;
         }
         return new DateTime(date).plusHours(increment).toDate();
+    }
+
+    public static Date parsingToDate(final String dateStr, final DateTimeFormat format) {
+        if (StringUtils.isEmpty(dateStr) || format == null) {
+            return null;
+        }
+        try {
+            return DateUtils.parseDate(dateStr, format.getValue());
+        } catch (ParseException e) {
+            throw new AppException(40000, String.format("String to date fail,s==%s,format==%s", dateStr, format.value));
+        }
+    }
+
+    public static String dateFormat(final Date d, final DateTimeFormat format) {
+        if (d == null || format == null) {
+            return null;
+        }
+        return DateFormatUtils.format(d, format.value);
     }
 }
