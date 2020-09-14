@@ -31,8 +31,9 @@ public class DateUtil {
         F2("yyyy-MM-dd"),
         F3("HH:mm:ss"),
         F4("yyyyMMddHHmmss"),
-        F5("yyyyMMddHHmmsss"),
+        F5("yyyyMMddHHmmssSS"),
         F6("yyyyMMdd"),
+        F7("yyyyMMddHHmmssSSS"),
         ;
         private String value;
 
