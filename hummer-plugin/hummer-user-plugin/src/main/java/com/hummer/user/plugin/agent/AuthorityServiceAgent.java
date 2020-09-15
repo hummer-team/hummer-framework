@@ -13,6 +13,9 @@ import com.hummer.user.plugin.dto.request.UserBasicInfoPluginReqDto;
 import com.hummer.user.plugin.dto.response.UserBasicInfoPluginRespDto;
 import com.hummer.user.plugin.user.TicketContext;
 import com.hummer.user.plugin.user.UserContext;
+import com.hummer.user.plugin.user.member.MemberTicketVerifyReqDto;
+import com.hummer.user.plugin.user.member.MemberTicketVerifyRespDto;
+import com.hummer.user.plugin.user.member.MemberUserContext;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -95,5 +98,26 @@ public class AuthorityServiceAgent {
         } catch (UnsupportedEncodingException e) {
             return null;
         }
+    }
+
+
+    public static MemberUserContext getMemberUserContext(final String ticket) {
+        String applicationName = "user-auth.host.name";
+        String host = PropertiesContainer.valueOfStringWithAssertNotNull(applicationName);
+        String url = String.format("%s/api/Auth4Service", host);
+
+        String response = HttpSyncClient.sendHttpPostByRetry(url
+                , JSON.toJSONString(MemberTicketVerifyReqDto.builder().cookieValue(ticket).build())
+                , PropertiesContainer.valueOf(String.format("%s.timeout.millis", applicationName)
+                        , Long.class, 5000L)
+                , TimeUnit.MILLISECONDS
+                , 1);
+        MemberTicketVerifyRespDto respDto = ResponseUtil.parseResponseV3WithStatus(response
+                , new TypeReference<MemberTicketVerifyRespDto>() {
+                });
+        if (respDto.getCode() != 200 || respDto.getData() == null || StringUtils.isEmpty(respDto.getData().getUserId())) {
+            return null;
+        }
+        return MemberUserContext.builder().userId(respDto.getData().getUserId()).build();
     }
 }

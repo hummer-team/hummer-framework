@@ -1,5 +1,6 @@
 package com.hummer.config;
 
+import com.hummer.config.subscription.ConfigSubscriptionManagerImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +14,9 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(value = "com.hummer.config")
 public class ConfigBean {
     @Bean
-    public NaCosConfig naCosConfig(){
-        return new NaCosConfig();
+    public NaCosConfig naCosConfig() {
+
+        return new NaCosConfig(new ConfigSubscriptionManagerImpl());
     }
+
 }

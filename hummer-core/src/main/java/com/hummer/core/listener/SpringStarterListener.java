@@ -2,10 +2,14 @@ package com.hummer.core.listener;
 
 import com.hummer.core.PropertiesContainer;
 import com.hummer.core.SpringApplicationContext;
+import com.hummer.core.spi.CustomizeContextInit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.ConfigurableApplicationContext;
+
+import java.util.ServiceLoader;
 
 /**
  * listener spring boot link {#ApplicationPreparedEvent} event,this event express spring boot context load done,but bean
@@ -18,6 +22,7 @@ import org.springframework.context.ApplicationListener;
  **/
 public class SpringStarterListener implements ApplicationListener<ApplicationPreparedEvent> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SpringStarterListener.class);
+    private static volatile boolean isLoad = false;
 
     @Override
     public void onApplicationEvent(ApplicationPreparedEvent event) {
@@ -25,10 +30,23 @@ public class SpringStarterListener implements ApplicationListener<ApplicationPre
             //init application context
             SpringApplicationContext context = new SpringApplicationContext();
             context.setApplicationContext(event.getApplicationContext());
-
-            LOGGER.info("SpringContext load success,property configuration load success,now begin create bean");
         }
+        LOGGER.info("SpringContext load success,property configuration load success,now begin create bean");
         //load property configuration
         PropertiesContainer.loadPropertyData(event.getApplicationContext().getEnvironment());
+        if (!isLoad) {
+            executeCustomizeContextInit(event.getApplicationContext());
+            isLoad = true;
+        }
+    }
+
+    private void executeCustomizeContextInit(ConfigurableApplicationContext context) {
+        //
+        ServiceLoader<CustomizeContextInit> loaders =
+                ServiceLoader.load(CustomizeContextInit.class);
+
+        for (CustomizeContextInit init : loaders) {
+            init.init(context);
+        }
     }
 }

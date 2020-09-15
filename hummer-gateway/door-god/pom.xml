@@ -68,6 +68,11 @@
             </dependency>
             <dependency>
                 <groupId>com.hummer</groupId>
+                <artifactId>door-god-dao</artifactId>
+                <version>${business.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hummer</groupId>
                 <artifactId>door-god-facade</artifactId>
                 <version>${business.version}</version>
             </dependency>
@@ -82,6 +87,12 @@
                 <version>${business.version}</version>
             </dependency>
             <!--hummer framework-->
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-dao</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.hummer</groupId>
                 <artifactId>hummer-core</artifactId>

@@ -4,21 +4,26 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.nacos.api.NacosFactory;
 import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.config.listener.Listener;
+import com.alibaba.nacos.api.exception.NacosException;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.hummer.common.utils.DateUtil;
 import com.hummer.common.utils.IpUtil;
 import com.hummer.config.agent.ClientConfigAgent;
+import com.hummer.config.bo.ConfigDataInfoBo;
+import com.hummer.config.bo.ConfigListenerKey;
+import com.hummer.config.bo.ConfigPropertiesChangeInfoBo;
 import com.hummer.config.bo.NacosConfigParams;
 import com.hummer.config.dto.ClientConfigUploadReqDto;
+import com.hummer.config.listener.AbstractConfigListener;
+import com.hummer.config.subscription.ConfigCacheManager;
+import com.hummer.config.subscription.ConfigSubscriptionManager;
 import com.hummer.core.PropertiesContainer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.DisposableBean;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,11 +31,19 @@ import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public class NaCosConfig implements InitializingBean {
+public class NaCosConfig implements DisposableBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(NaCosConfig.class);
 
-    public void initNaCosConfig() {
+    private ConfigSubscriptionManager configSubscriptionManager;
 
+    private final ConfigCacheManager configCacheManager;
+
+    public NaCosConfig(ConfigSubscriptionManager configSubscriptionManager) {
+        this.configSubscriptionManager = configSubscriptionManager;
+    }
+
+    {
+        configCacheManager = new ConfigCacheManager();
     }
 
     /**
@@ -42,18 +55,33 @@ public class NaCosConfig implements InitializingBean {
      * @throws Exception in the event of misconfiguration (such as failure to set an
      *                   essential property) or if initialization fails for any other reason
      */
-    @Override
     public void afterPropertiesSet() throws Exception {
         final long start = System.currentTimeMillis();
         LOGGER.info("begin append nacos config to PropertiesContainer");
 
-        putConfigToContainer(true);
+        registerConfigListener(true);
 
         LOGGER.info("append nacos config to PropertiesContainer done,cos {} ms ",
                 System.currentTimeMillis() - start);
     }
 
-    public void putConfigToContainer(boolean addListener) throws Exception {
+    public void refreshConfig() {
+        try {
+            registerConfigListener(false);
+        } catch (NacosException e) {
+            LOGGER.warn("refresh config failed ", e);
+        }
+    }
+
+    public void refreshConfig(boolean addListener) {
+        try {
+            registerConfigListener(addListener);
+        } catch (NacosException e) {
+            LOGGER.warn("refresh config failed ", e);
+        }
+    }
+
+    public void registerConfigListener(boolean addListener) throws NacosException {
         NacosConfigParams params = createNacosConfigParams();
         if (params == null) {
             return;
@@ -76,27 +104,45 @@ public class NaCosConfig implements InitializingBean {
 
                     @Override
                     public void receiveConfigInfo(String configInfo) {
-                        if (!Strings.isNullOrEmpty(configInfo)) {
-                            try {
-                                putConfigToContainer(groupId, dataId, configInfo);
-                                LOGGER.info("receive for nacos config change notice,chance config is [{}]"
-                                        , configInfo);
-                            } catch (IOException e) {
-                                //ignore
-                            }
-                        }
-                        // 客户端配置上传至服务端
-                        uploadConfig();
+
+                        handleConfigChange(groupId, dataId, configInfo, params);
                     }
                 });
+
             }
             String value = configService.getConfig(dataId, groupId, 3000);
             if (!Strings.isNullOrEmpty(value)) {
-                putConfigToContainer(groupId, dataId, value);
+                ConfigDataInfoBo dataInfoBo = configCacheManager.putConfigToContainer(groupId
+                        , dataId
+                        , value
+                        , params.getProperties().getProperty("dataType"));
+
+                System.out.println(1);
             }
         }
         // 客户端配置上传至服务端
         uploadConfig();
+    }
+
+    private void handleConfigChange(String groupId, String dataId, String configInfo, NacosConfigParams params) {
+        // 更新项目配置本地缓存
+        ConfigDataInfoBo dataInfoBo = configCacheManager.putConfigToContainer(groupId, dataId, configInfo
+                , params.getProperties().getProperty("dataType"));
+        // 客户端配置上传至服务端
+        uploadConfig();
+        // 配置变更订阅处理
+        configChangeDispatch(dataInfoBo);
+    }
+
+
+    private void configChangeDispatch(ConfigDataInfoBo dataInfoBo) {
+        if (configSubscriptionManager == null) {
+            return;
+        }
+        // 比对新旧配置，获得变化的属性信息
+        List<ConfigPropertiesChangeInfoBo> changeInfoBos
+                = configCacheManager.parsingConfigPropertiesChanges(dataInfoBo);
+        configSubscriptionManager.doDispatch(dataInfoBo, changeInfoBos);
     }
 
     private NacosConfigParams createNacosConfigParams() {
@@ -118,10 +164,9 @@ public class NaCosConfig implements InitializingBean {
         Properties properties = new Properties();
         properties.put("serverAddr", service);
         if (StringUtils.isNotBlank(namespace)) {
-
             properties.put("namespace", namespace);
         }
-
+        properties.put("dataType", PropertiesContainer.valueOfString("nacos.config.type", "properties"));
         List<String> groupIdList = Splitter.on(",").splitToList(groupIds);
         List<String> dataIdList = Splitter.on(",").splitToList(dataIds);
         configParams.setDataIdList(dataIdList);
@@ -130,17 +175,6 @@ public class NaCosConfig implements InitializingBean {
         return configParams;
     }
 
-    private void putConfigToContainer(String groupId, String dataId, String value) throws IOException {
-        Properties properties1 = new Properties();
-        properties1.load(new StringReader(value));
-        for (Map.Entry<Object, Object> map : properties1.entrySet()) {
-            PropertiesContainer.put(map.getKey().toString(), map.getValue());
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("nacos config data id {},group id {},config {} put to PropertiesContainer"
-                        , dataId, groupId, map);
-            }
-        }
-    }
 
     private void uploadConfig() {
         Boolean enable = PropertiesContainer.get("nacos.config.upload.enable", Boolean.class, true);
@@ -175,5 +209,31 @@ public class NaCosConfig implements InitializingBean {
         reqDto.setRemark(extentMap.get("appPort"));
         reqDto.setOperatorTime(DateUtil.now());
         return reqDto;
+    }
+
+    /**
+     * Invoked by the containing {@code BeanFactory} on destruction of a bean.
+     *
+     * @throws Exception in case of shutdown errors. Exceptions will get logged
+     *                   but not rethrown to allow other beans to release their resources as well.
+     */
+    @Override
+    public void destroy() throws Exception {
+
+    }
+
+    public int addListener(ConfigListenerKey key, AbstractConfigListener listener) {
+
+        return this.configSubscriptionManager.addListener(key, listener);
+    }
+
+    public void removeListener(ConfigListenerKey key) {
+
+        this.configSubscriptionManager.removeListener(key);
+    }
+
+    public void removeListener(ConfigListenerKey key, AbstractConfigListener listener) {
+
+        this.configSubscriptionManager.removeListener(key, listener);
     }
 }

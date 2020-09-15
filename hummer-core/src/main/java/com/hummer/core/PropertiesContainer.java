@@ -30,9 +30,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
     private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesContainer.class);
-    private static final Map<String, Object> PROPERTY_MAP = new ConcurrentHashMap<>(16);
+    private static final ConcurrentHashMap<String, Object> PROPERTY_MAP = new ConcurrentHashMap<>(16);
     private static final AtomicBoolean LOAD_FLAG = new AtomicBoolean(true);
-    private static final String APOLLO_PROPERTY_SOURCE_NAME = "ApolloPropertySources";
     private static final String ENV = "spring.profiles.active";
     private static final String CLASS_RESOURCE = "applicationConfig";
     private static final String CLASS_PATH_RESOURCE_APPLICATION = "class path resource [application";
@@ -292,13 +291,6 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
                 String name = parseApplicationPropertiesName(iter.next());
                 setPropertySource(environment, name);
             }
-
-            /**PropertySource<?> apolloPS = environment
-                    .getPropertySources()
-                    .get(APOLLO_PROPERTY_SOURCE_NAME);
-            if (apolloPS != null) {
-                PropertiesContainer.setPropertySource(apolloPS);
-            }**/
 
             String env = event.getProperty(ENV);
             if (!Strings.isNullOrEmpty(env)) {

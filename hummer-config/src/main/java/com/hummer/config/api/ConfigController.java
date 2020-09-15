@@ -31,18 +31,18 @@ public class ConfigController {
 
     @ApiOperation("查看当前所有配置信息")
     @GetMapping(value = "/all", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResourceResponse<Map<String, String>> getAllConf() {
+    public ResourceResponse<Map<String, Object>> getAllConf() {
 
-        Map<String, String> map = new HashMap<>(16);
-        PropertiesContainer.allKey().forEach(key -> map.put(key, PropertiesContainer.get(key, String.class)));
+        Map<String, Object> map = new HashMap<>(16);
+        PropertiesContainer.allKey().forEach(key -> map.put(key, PropertiesContainer.get(key, Object.class)));
         return ResourceResponse.ok(map);
     }
 
     @ApiOperation("从配置中心获取最新配置")
     @GetMapping("/refresh")
-    public ResourceResponse<Boolean> refreshConf() throws Exception {
+    public ResourceResponse<Boolean> refreshConf() {
 
-        naCosConfig.putConfigToContainer(false);
+        naCosConfig.refreshConfig();
         return ResourceResponse.ok();
     }
 
