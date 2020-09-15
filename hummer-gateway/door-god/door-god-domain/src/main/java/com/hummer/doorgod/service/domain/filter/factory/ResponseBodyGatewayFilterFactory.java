@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
+import org.springframework.cloud.gateway.filter.NettyWriteResponseFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.cloud.gateway.filter.factory.rewrite.CachedBodyOutputMessage;
 import org.springframework.cloud.gateway.support.BodyInserterContext;
@@ -19,6 +20,8 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Objects;
 
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.ORIGINAL_RESPONSE_CONTENT_TYPE_ATTR;
 
@@ -49,7 +52,7 @@ public class ResponseBodyGatewayFilterFactory
         }
 
         @SuppressWarnings("unchecked")
-        ServerHttpResponse decorate(ServerWebExchange exchange) {
+        private ServerHttpResponse decorate(ServerWebExchange exchange) {
             return new ServerHttpResponseDecorator(exchange.getResponse()) {
 
                 @Override
@@ -65,15 +68,13 @@ public class ResponseBodyGatewayFilterFactory
                             originalResponseContentType);
 
                     ClientResponse clientResponse = ClientResponse
-                            .create(exchange.getResponse().getStatusCode())
+                            .create(Objects.requireNonNull(exchange.getResponse().getStatusCode()))
                             .headers(headers -> headers.putAll(httpHeaders))
                             .body(Flux.from(body))
                             .build();
 
                     Mono modifiedBody = clientResponse.bodyToMono(inClass)
                             .flatMap(originalBody -> {
-
-                                System.out.println(originalBody);
                                 log.debug("route id {} uri {} response body size {}"
                                         , config.getRouteId()
                                         , exchange.getRequest().getURI()
@@ -107,7 +108,7 @@ public class ResponseBodyGatewayFilterFactory
 
         @Override
         public int getOrder() {
-            return Ordered.LOWEST_PRECEDENCE;
+            return  NettyWriteResponseFilter.WRITE_RESPONSE_FILTER_ORDER - 1;
         }
     }
 
