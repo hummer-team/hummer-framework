@@ -8,15 +8,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.cloud.gateway.route.Route;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.net.URI;
 import java.util.UUID;
 
-import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR;
+import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR;
 
 /**
  * @author edz
@@ -40,29 +40,26 @@ public class GlobalRequestFilter implements GlobalFilter, Ordered {
         MDC.put(SysConstant.REQUEST_ID, requestId);
         MDC.put(SysConstant.RestConstant.SERVER_IP, IpUtil.getLocalIp());
 
+        //modified request header
         exchange.getRequest().mutate().header(SysConstant.REQUEST_ID, requestId);
-
-        //
+        //per filter
         return chain.filter(exchange)
                 .then(Mono.fromRunnable(() -> {
+                    //this impl post filter
                     long startTime = (Long) exchange.getAttributes().get("globalRequestTime");
-                    log.debug("this request total cost {} millis,uri {} -> {} response status code {}"
-                            , System.currentTimeMillis() - startTime
-                            , exchange.getRequest().getURI()
-                            , (URI) exchange.getAttributes().get(GATEWAY_REQUEST_URL_ATTR)
-                            , exchange.getResponse().getStatusCode());
                     exchange.getApplicationContext()
                             .publishEvent(new GlobalRequestEvent(this
                                     , requestId
-                                    , null
-                                    , exchange));
+                                    , ((Route) exchange.getAttributes().get(GATEWAY_ROUTE_ATTR)).getId()
+                                    , exchange
+                                    , System.currentTimeMillis() - startTime));
                 }));
     }
 
     private String getRequestId(ServerWebExchange exchange) {
         return HttpServletRequestUtil.getHeaderFirstByKey(exchange.getRequest()
-                    , SysConstant.REQUEST_ID
-                    , () -> UUID.randomUUID().toString().replaceAll("-", "").toLowerCase());
+                , SysConstant.REQUEST_ID
+                , () -> UUID.randomUUID().toString().replaceAll("-", "").toLowerCase());
     }
 
     @Override

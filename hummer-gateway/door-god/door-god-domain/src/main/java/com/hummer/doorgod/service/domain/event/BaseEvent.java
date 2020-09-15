@@ -1,16 +1,39 @@
 package com.hummer.doorgod.service.domain.event;
 
 import org.springframework.context.ApplicationEvent;
+import org.springframework.web.server.ServerWebExchange;
 
 public class BaseEvent extends ApplicationEvent {
+
+    private String traceId;
+    private String routeId;
+    private ServerWebExchange exchange;
+
+    public BaseEvent(Object source, String traceId, String routeId, ServerWebExchange exchange) {
+        super(source);
+        this.traceId = traceId;
+        this.routeId = routeId;
+        this.exchange = exchange;
+    }
+
     public BaseEvent(Object source) {
         super(source);
     }
-    private String traceId;
 
-    public BaseEvent(Object source, String traceId) {
-        super(source);
-        this.traceId = traceId;
+    public String getRouteId() {
+        return routeId;
+    }
+
+    public void setRouteId(String routeId) {
+        this.routeId = routeId;
+    }
+
+    public ServerWebExchange getExchange() {
+        return exchange;
+    }
+
+    public void setExchange(ServerWebExchange exchange) {
+        this.exchange = exchange;
     }
 
     public String getTraceId() {
@@ -19,5 +42,14 @@ public class BaseEvent extends ApplicationEvent {
 
     public void setTraceId(String traceId) {
         this.traceId = traceId;
+    }
+
+    @Override
+    public String toString() {
+        return "BaseEvent{" +
+                "traceId='" + traceId + '\'' +
+                ", routeId='" + routeId + '\'' +
+                ", exchange=" + exchange +
+                '}';
     }
 }

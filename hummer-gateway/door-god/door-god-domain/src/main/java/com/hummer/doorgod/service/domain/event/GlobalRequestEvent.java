@@ -1,30 +1,50 @@
 package com.hummer.doorgod.service.domain.event;
 
+import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ServerWebExchange;
 
 public class GlobalRequestEvent extends BaseEvent {
-    public GlobalRequestEvent(Object source, String traceId, String routeId, ServerWebExchange exchange) {
-        super(source, traceId);
-        this.routeId = routeId;
-        this.exchange = exchange;
+    private HttpStatus responseStatus;
+    private int responseSize;
+    private long requestCostMillis;
+
+    public GlobalRequestEvent(Object source
+            , String traceId
+            , String routeId
+            , ServerWebExchange exchange
+            , long requestCostMillis) {
+        super(source, traceId, routeId, exchange);
+        setResponseStatus(exchange.getResponse().getStatusCode());
+        setResponseSize(NumberUtils.toInt(exchange.getResponse().getHeaders().getFirst("Content-Length")));
+        setRequestCostMillis(requestCostMillis);
     }
 
-    private String routeId;
-    private ServerWebExchange exchange;
-
-    public String getRouteId() {
-        return routeId;
+    public GlobalRequestEvent(Object source) {
+        super(source);
     }
 
-    public void setRouteId(String routeId) {
-        this.routeId = routeId;
+    public int getResponseSize() {
+        return responseSize;
     }
 
-    public ServerWebExchange getExchange() {
-        return exchange;
+    public void setResponseSize(int responseSize) {
+        this.responseSize = responseSize;
     }
 
-    public void setExchange(ServerWebExchange exchange) {
-        this.exchange = exchange;
+    public HttpStatus getResponseStatus() {
+        return responseStatus;
+    }
+
+    public void setResponseStatus(HttpStatus responseStatus) {
+        this.responseStatus = responseStatus;
+    }
+
+    public long getRequestCostMillis() {
+        return requestCostMillis;
+    }
+
+    public void setRequestCostMillis(long requestCostMillis) {
+        this.requestCostMillis = requestCostMillis;
     }
 }

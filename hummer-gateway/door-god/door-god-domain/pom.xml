@@ -23,10 +23,6 @@
         </dependency>
         <dependency>
             <groupId>com.hummer</groupId>
-            <artifactId>door-god-dao</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.hummer</groupId>
             <artifactId>door-god-facade</artifactId>
         </dependency>
         <dependency>

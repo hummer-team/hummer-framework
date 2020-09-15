@@ -68,11 +68,6 @@
             </dependency>
             <dependency>
                 <groupId>com.hummer</groupId>
-                <artifactId>door-god-dao</artifactId>
-                <version>${business.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.hummer</groupId>
                 <artifactId>door-god-facade</artifactId>
                 <version>${business.version}</version>
             </dependency>
@@ -89,12 +84,6 @@
             <!--hummer framework-->
             <dependency>
                 <groupId>com.hummer</groupId>
-                <artifactId>hummer-dao</artifactId>
-                <version>${hummer.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.hummer</groupId>
                 <artifactId>hummer-core</artifactId>
                 <version>${hummer.version}</version>
             </dependency>
@@ -104,17 +93,28 @@
                 <artifactId>hummer-common</artifactId>
                 <version>${hummer.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>io.projectreactor.netty</groupId>
+                <artifactId>reactor-netty</artifactId>
+                <version>0.9.12.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-gateway-dependencies</artifactId>
+                <version>2.2.6.BUILD-SNAPSHOT</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
 <modules>
     <module>door-god-api</module>
     <module>door-god-domain</module>
-    <module>door-god-dao</module>
     <module>door-god-facade</module>
     <module>door-god-support</module>
     <module>door-god-integration</module>
     <module>door-god-test</module>
+    <module>door-god-flow-cluster</module>
   </modules>
 </project>

@@ -4,12 +4,18 @@ import org.springframework.web.server.ServerWebExchange;
 
 public class GlobalExceptionEvent extends BaseEvent {
     private Throwable throwable;
-    private ServerWebExchange exchange;
 
-    public GlobalExceptionEvent(Object source, String traceId, Throwable throwable, ServerWebExchange exchange) {
-        super(source, traceId);
+    public GlobalExceptionEvent(Object source, String traceId
+            , String routeId
+            , ServerWebExchange exchange
+            , Throwable throwable) {
+        super(source, traceId, routeId, exchange);
         this.throwable = throwable;
-        this.exchange = exchange;
+    }
+
+    public GlobalExceptionEvent(Object source, Throwable throwable) {
+        super(source);
+        this.throwable = throwable;
     }
 
     public Throwable getThrowable() {
@@ -18,13 +24,5 @@ public class GlobalExceptionEvent extends BaseEvent {
 
     public void setThrowable(Throwable throwable) {
         this.throwable = throwable;
-    }
-
-    public ServerWebExchange getExchange() {
-        return exchange;
-    }
-
-    public void setExchange(ServerWebExchange exchange) {
-        this.exchange = exchange;
     }
 }
