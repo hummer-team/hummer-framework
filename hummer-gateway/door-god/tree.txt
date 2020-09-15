@@ -1,0 +1,1181 @@
+[INFO] Scanning for projects...
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-framework/1.0.0-SNAPSHOT/maven-metadata.xml
+Progress (1): 607 B                   Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-framework/1.0.0-SNAPSHOT/maven-metadata.xml (607 B at 4.2 kB/s)
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-framework/1.0.0-SNAPSHOT/hummer-framework-1.0.0-20200912.062858-229.pom
+Progress (1): 2.3/40 kBProgress (1): 5.0/40 kBProgress (1): 7.7/40 kBProgress (1): 10/40 kB Progress (1): 13/40 kBProgress (1): 16/40 kBProgress (1): 20/40 kBProgress (1): 24/40 kBProgress (1): 28/40 kBProgress (1): 32/40 kBProgress (1): 36/40 kBProgress (1): 40 kB                      Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-framework/1.0.0-SNAPSHOT/hummer-framework-1.0.0-20200912.062858-229.pom (40 kB at 549 kB/s)
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.hummer:door-god-flow-cluster:jar:1.0-SNAPSHOT
+[WARNING] 'dependencies.dependency.(groupId:artifactId:type:classifier)' must be unique: com.alibaba.csp:sentinel-core:jar -> duplicate declaration of version (?) @ line 25, column 21
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] door-god                                                           [pom]
+[INFO] door-god-support                                                   [jar]
+[INFO] door-god-dao                                                       [jar]
+[INFO] door-god-facade                                                    [jar]
+[INFO] door-god-integration                                               [jar]
+[INFO] door-god-domain                                                    [jar]
+[INFO] door-god-api                                                       [jar]
+[INFO] door-god-test                                                      [jar]
+[INFO] door-god-flow-cluster                                              [jar]
+[INFO] 
+[INFO] ------------------------< com.hummer:door-god >-------------------------
+[INFO] Building door-god 1.0-SNAPSHOT                                     [1/9]
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ door-god ---
+[INFO] com.hummer:door-god:pom:1.0-SNAPSHOT
+[INFO] 
+[INFO] --------------------< com.hummer:door-god-support >---------------------
+[INFO] Building door-god-support 1.0-SNAPSHOT                             [2/9]
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-common/1.0.0-SNAPSHOT/maven-metadata.xml
+Progress (1): 779 B                   Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-common/1.0.0-SNAPSHOT/maven-metadata.xml (779 B at 22 kB/s)
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-common/1.0.0-SNAPSHOT/hummer-common-1.0.0-20200912.062911-233.pom
+Progress (1): 3.6/3.8 kBProgress (1): 3.8 kB                        Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-common/1.0.0-SNAPSHOT/hummer-common-1.0.0-20200912.062911-233.pom (3.8 kB at 118 kB/s)
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-core/1.0.0-SNAPSHOT/maven-metadata.xml
+Progress (1): 777 B                   Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-core/1.0.0-SNAPSHOT/maven-metadata.xml (777 B at 18 kB/s)
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-core/1.0.0-SNAPSHOT/hummer-core-1.0.0-20200912.062903-226.pom
+Progress (1): 1.9 kB                    Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-core/1.0.0-SNAPSHOT/hummer-core-1.0.0-20200912.062903-226.pom (1.9 kB at 58 kB/s)
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ door-god-support ---
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-common/1.0.0-SNAPSHOT/hummer-common-1.0.0-20200912.062911-233.jar
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-core/1.0.0-SNAPSHOT/hummer-core-1.0.0-20200912.062903-226.jar
+Progress (1): 4.1/119 kBProgress (1): 8.2/119 kBProgress (1): 12/119 kB Progress (1): 16/119 kBProgress (1): 20/119 kBProgress (1): 23/119 kBProgress (1): 27/119 kBProgress (1): 29/119 kBProgress (1): 32/119 kBProgress (1): 35/119 kBProgress (1): 38/119 kBProgress (1): 41/119 kBProgress (1): 44/119 kBProgress (1): 48/119 kBProgress (1): 50/119 kBProgress (1): 53/119 kBProgress (1): 56/119 kBProgress (1): 59/119 kBProgress (1): 61/119 kBProgress (1): 64/119 kBProgress (1): 67/119 kBProgress (1): 70/119 kBProgress (1): 72/119 kBProgress (1): 75/119 kBProgress (1): 78/119 kBProgress (1): 82/119 kBProgress (2): 82/119 kB | 4.1/21 kBProgress (2): 82/119 kB | 7.7/21 kBProgress (2): 85/119 kB | 7.7/21 kBProgress (2): 87/119 kB | 7.7/21 kBProgress (2): 87/119 kB | 12/21 kB Progress (2): 91/119 kB | 12/21 kBProgress (2): 95/119 kB | 12/21 kBProgress (2): 100/119 kB | 12/21 kBProgress (2): 102/119 kB | 12/21 kBProgress (2): 107/119 kB | 12/21 kBProgress (2): 109/119 kB | 12/21 kBProgress (2): 112/119 kB | 12/21 kBProgress (2): 115/119 kB | 12/21 kBProgress (2): 117/119 kB | 12/21 kBProgress (2): 119 kB | 12/21 kB    Progress (2): 119 kB | 14/21 kBProgress (2): 119 kB | 17/21 kBProgress (2): 119 kB | 20/21 kBProgress (2): 119 kB | 21 kB                               Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-common/1.0.0-SNAPSHOT/hummer-common-1.0.0-20200912.062911-233.jar (119 kB at 942 kB/s)
+Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-core/1.0.0-SNAPSHOT/hummer-core-1.0.0-20200912.062903-226.jar (21 kB at 158 kB/s)
+[INFO] com.hummer:door-god-support:jar:1.0-SNAPSHOT
+[INFO] +- com.hummer:hummer-common:jar:1.0.0-SNAPSHOT:compile
+[INFO] |  +- org.apache.httpcomponents:httpasyncclient:jar:4.1.4:compile
+[INFO] |  |  +- org.apache.httpcomponents:httpcore:jar:4.4.13:compile
+[INFO] |  |  +- org.apache.httpcomponents:httpcore-nio:jar:4.4.13:compile
+[INFO] |  |  \- org.apache.httpcomponents:httpclient:jar:4.5.12:compile
+[INFO] |  +- cglib:cglib:jar:3.2.5:compile
+[INFO] |  |  +- org.ow2.asm:asm:jar:5.2:compile
+[INFO] |  |  \- org.apache.ant:ant:jar:1.9.6:compile
+[INFO] |  |     \- org.apache.ant:ant-launcher:jar:1.9.6:compile
+[INFO] |  +- com.alibaba:fastjson:jar:1.2.71:compile
+[INFO] |  +- commons-collections:commons-collections:jar:3.2.2:compile
+[INFO] |  +- org.springframework:spring-web:jar:5.2.8.RELEASE:compile
+[INFO] |  +- joda-time:joda-time:jar:2.9.9:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.10:compile
+[INFO] |  +- javax.servlet:javax.servlet-api:jar:4.0.1:compile
+[INFO] |  +- net.lingala.zip4j:zip4j:jar:1.3.2:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  +- org.springframework:spring-context:jar:5.2.8.RELEASE:compile
+[INFO] |  |  \- org.springframework:spring-expression:jar:5.2.8.RELEASE:compile
+[INFO] |  +- org.projectlombok:lombok:jar:1.18.8:compile
+[INFO] |  +- org.hibernate.validator:hibernate-validator:jar:6.0.13.Final:compile
+[INFO] |  |  +- javax.validation:validation-api:jar:2.0.1.Final:compile
+[INFO] |  |  +- org.jboss.logging:jboss-logging:jar:3.4.1.Final:compile
+[INFO] |  |  \- com.fasterxml:classmate:jar:1.5.1:compile
+[INFO] |  +- io.swagger:swagger-annotations:jar:1.5.13:compile
+[INFO] |  +- org.aspectj:aspectjweaver:jar:1.9.2:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-log4j2:jar:2.3.3.RELEASE:compile
+[INFO] |  |  +- org.apache.logging.log4j:log4j-slf4j-impl:jar:2.13.3:compile
+[INFO] |  |  |  \- org.apache.logging.log4j:log4j-api:jar:2.13.3:compile
+[INFO] |  |  +- org.apache.logging.log4j:log4j-core:jar:2.13.3:compile
+[INFO] |  |  +- org.apache.logging.log4j:log4j-jul:jar:2.13.3:compile
+[INFO] |  |  \- org.slf4j:jul-to-slf4j:jar:1.7.30:compile
+[INFO] |  +- org.springframework:spring-aop:jar:5.2.8.RELEASE:compile
+[INFO] |  \- org.latencyutils:LatencyUtils:jar:2.0.3:compile
+[INFO] |     \- org.hdrhistogram:HdrHistogram:jar:2.1.8:compile
+[INFO] +- org.mybatis:mybatis:jar:3.4.6:compile
+[INFO] +- org.springframework.cloud:spring-cloud-loadbalancer:jar:2.2.5.RELEASE:compile
+[INFO] |  +- org.springframework.cloud:spring-cloud-commons:jar:2.2.5.RELEASE:compile
+[INFO] |  |  \- org.springframework.security:spring-security-crypto:jar:5.3.4.RELEASE:compile
+[INFO] |  +- org.springframework.cloud:spring-cloud-context:jar:2.2.5.RELEASE:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-validation:jar:2.3.3.RELEASE:compile
+[INFO] |  |  \- org.glassfish:jakarta.el:jar:3.0.3:compile
+[INFO] |  +- io.projectreactor:reactor-core:jar:3.3.9.RELEASE:compile
+[INFO] |  |  \- org.reactivestreams:reactive-streams:jar:1.0.3:compile
+[INFO] |  \- io.projectreactor.addons:reactor-extra:jar:3.3.3.RELEASE:compile
+[INFO] +- org.springframework.cloud:spring-cloud-starter:jar:2.2.5.RELEASE:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter:jar:2.3.3.RELEASE:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-autoconfigure:jar:2.3.3.RELEASE:compile
+[INFO] |  |  \- jakarta.annotation:jakarta.annotation-api:jar:1.3.5:compile
+[INFO] |  \- org.springframework.security:spring-security-rsa:jar:1.0.9.RELEASE:compile
+[INFO] |     \- org.bouncycastle:bcpkix-jdk15on:jar:1.64:compile
+[INFO] |        \- org.bouncycastle:bcprov-jdk15on:jar:1.64:compile
+[INFO] +- org.springframework.boot:spring-boot-starter-webflux:jar:2.3.3.RELEASE:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-json:jar:2.3.3.RELEASE:compile
+[INFO] |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.11.2:compile
+[INFO] |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.11.2:compile
+[INFO] |  |  \- com.fasterxml.jackson.module:jackson-module-parameter-names:jar:2.11.2:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-reactor-netty:jar:2.3.3.RELEASE:compile
+[INFO] |  |  \- io.projectreactor.netty:reactor-netty:jar:0.9.11.RELEASE:compile
+[INFO] |  |     +- io.netty:netty-codec-http:jar:4.1.51.Final:compile
+[INFO] |  |     |  +- io.netty:netty-common:jar:4.1.51.Final:compile
+[INFO] |  |     |  +- io.netty:netty-buffer:jar:4.1.51.Final:compile
+[INFO] |  |     |  +- io.netty:netty-transport:jar:4.1.51.Final:compile
+[INFO] |  |     |  \- io.netty:netty-codec:jar:4.1.51.Final:compile
+[INFO] |  |     +- io.netty:netty-codec-http2:jar:4.1.51.Final:compile
+[INFO] |  |     +- io.netty:netty-handler:jar:4.1.51.Final:compile
+[INFO] |  |     |  \- io.netty:netty-resolver:jar:4.1.51.Final:compile
+[INFO] |  |     +- io.netty:netty-handler-proxy:jar:4.1.51.Final:compile
+[INFO] |  |     |  \- io.netty:netty-codec-socks:jar:4.1.51.Final:compile
+[INFO] |  |     \- io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.1.51.Final:compile
+[INFO] |  |        \- io.netty:netty-transport-native-unix-common:jar:4.1.51.Final:compile
+[INFO] |  +- org.springframework:spring-webflux:jar:5.2.8.RELEASE:compile
+[INFO] |  \- org.synchronoss.cloud:nio-multipart-parser:jar:1.1.0:compile
+[INFO] |     +- org.slf4j:slf4j-api:jar:1.7.30:compile
+[INFO] |     \- org.synchronoss.cloud:nio-stream-storage:jar:1.1.3:compile
+[INFO] +- org.springframework.cloud:spring-cloud-starter-gateway:jar:2.2.5.RELEASE:compile
+[INFO] |  \- org.springframework.cloud:spring-cloud-gateway-core:jar:2.2.5.RELEASE:compile
+[INFO] +- org.springframework:spring-beans:jar:5.2.8.RELEASE:compile
+[INFO] |  \- org.springframework:spring-core:jar:5.2.8.RELEASE:compile
+[INFO] |     \- org.springframework:spring-jcl:jar:5.2.8.RELEASE:compile
+[INFO] +- com.alibaba.nacos:nacos-client:jar:1.3.2:compile
+[INFO] |  +- com.alibaba.nacos:nacos-common:jar:1.3.2:compile
+[INFO] |  +- com.alibaba.nacos:nacos-api:jar:1.3.2:compile
+[INFO] |  +- com.google.guava:guava:jar:29.0-jre:compile
+[INFO] |  |  +- com.google.guava:failureaccess:jar:1.0.1:compile
+[INFO] |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO] |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |  |  \- com.google.j2objc:j2objc-annotations:jar:1.3:compile
+[INFO] |  +- commons-codec:commons-codec:jar:1.14:compile
+[INFO] |  +- com.fasterxml.jackson.core:jackson-core:jar:2.11.2:compile
+[INFO] |  +- com.fasterxml.jackson.core:jackson-databind:jar:2.11.2:compile
+[INFO] |  |  \- com.fasterxml.jackson.core:jackson-annotations:jar:2.11.2:compile
+[INFO] |  +- io.prometheus:simpleclient:jar:0.5.0:compile
+[INFO] |  \- org.yaml:snakeyaml:jar:1.26:compile
+[INFO] +- org.springframework.cloud:spring-cloud-starter-loadbalancer:jar:2.2.5.RELEASE:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-cache:jar:2.3.3.RELEASE:compile
+[INFO] |  |  \- org.springframework:spring-context-support:jar:5.2.8.RELEASE:compile
+[INFO] |  \- com.stoyanr:evictor:jar:1.0.0:compile
+[INFO] +- com.hummer:hummer-core:jar:1.0.0-SNAPSHOT:compile
+[INFO] |  \- org.springframework.boot:spring-boot:jar:2.3.3.RELEASE:compile
+[INFO] +- com.github.ben-manes.caffeine:caffeine:jar:2.8.5:compile
+[INFO] |  +- org.checkerframework:checker-qual:jar:3.4.1:compile
+[INFO] |  \- com.google.errorprone:error_prone_annotations:jar:2.4.0:compile
+[INFO] +- com.alibaba.csp:sentinel-core:jar:1.8.0:compile
+[INFO] +- com.alibaba.csp:sentinel-spring-cloud-gateway-adapter:jar:1.8.0:compile
+[INFO] |  +- com.alibaba.csp:sentinel-api-gateway-adapter-common:jar:1.8.0:compile
+[INFO] |  |  \- com.alibaba.csp:sentinel-parameter-flow-control:jar:1.8.0:compile
+[INFO] |  |     \- com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:jar:1.4.2:compile
+[INFO] |  \- com.alibaba.csp:sentinel-reactor-adapter:jar:1.8.0:compile
+[INFO] +- com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery:jar:2.2.1.RELEASE:compile
+[INFO] |  +- com.alibaba.spring:spring-context-support:jar:1.0.6:compile
+[INFO] |  \- org.springframework.cloud:spring-cloud-starter-netflix-ribbon:jar:2.2.5.RELEASE:compile
+[INFO] |     +- org.springframework.cloud:spring-cloud-netflix-ribbon:jar:2.2.5.RELEASE:compile
+[INFO] |     |  \- org.springframework.cloud:spring-cloud-netflix-archaius:jar:2.2.5.RELEASE:compile
+[INFO] |     +- org.springframework.cloud:spring-cloud-starter-netflix-archaius:jar:2.2.5.RELEASE:compile
+[INFO] |     |  +- com.netflix.archaius:archaius-core:jar:0.7.6:compile
+[INFO] |     |  \- commons-configuration:commons-configuration:jar:1.8:compile
+[INFO] |     +- com.netflix.ribbon:ribbon:jar:2.3.0:compile
+[INFO] |     |  +- com.netflix.ribbon:ribbon-transport:jar:2.3.0:runtime
+[INFO] |     |  |  +- io.reactivex:rxnetty-contexts:jar:0.4.9:runtime
+[INFO] |     |  |  \- io.reactivex:rxnetty-servo:jar:0.4.9:runtime
+[INFO] |     |  +- com.netflix.hystrix:hystrix-core:jar:1.5.18:runtime
+[INFO] |     |  +- javax.inject:javax.inject:jar:1:runtime
+[INFO] |     |  \- io.reactivex:rxnetty:jar:0.4.9:runtime
+[INFO] |     +- com.netflix.ribbon:ribbon-core:jar:2.3.0:compile
+[INFO] |     |  \- commons-lang:commons-lang:jar:2.6:compile
+[INFO] |     +- com.netflix.ribbon:ribbon-httpclient:jar:2.3.0:compile
+[INFO] |     |  +- com.sun.jersey:jersey-client:jar:1.19.1:runtime
+[INFO] |     |  |  \- com.sun.jersey:jersey-core:jar:1.19.1:runtime
+[INFO] |     |  |     \- javax.ws.rs:jsr311-api:jar:1.1.1:runtime
+[INFO] |     |  +- com.sun.jersey.contribs:jersey-apache-client4:jar:1.19.1:runtime
+[INFO] |     |  +- com.netflix.servo:servo-core:jar:0.12.21:runtime
+[INFO] |     |  \- com.netflix.netflix-commons:netflix-commons-util:jar:0.3.0:runtime
+[INFO] |     +- com.netflix.ribbon:ribbon-loadbalancer:jar:2.3.0:compile
+[INFO] |     |  \- com.netflix.netflix-commons:netflix-statistics:jar:0.1.1:runtime
+[INFO] |     \- io.reactivex:rxjava:jar:1.3.8:compile
+[INFO] \- io.projectreactor.addons:reactor-pool:jar:0.1.6.RELEASE:compile
+[INFO] 
+[INFO] ----------------------< com.hummer:door-god-dao >-----------------------
+[INFO] Building door-god-dao 1.0-SNAPSHOT                                 [3/9]
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/door-god-support/1.0-SNAPSHOT/maven-metadata.xml
+Progress (1): 773 B                   Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/door-god-support/1.0-SNAPSHOT/maven-metadata.xml (773 B at 1.5 kB/s)
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-dao/1.0.0-SNAPSHOT/maven-metadata.xml
+Progress (1): 776 B                   Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-dao/1.0.0-SNAPSHOT/maven-metadata.xml (776 B at 13 kB/s)
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-dao/1.0.0-SNAPSHOT/hummer-dao-1.0.0-20200912.062951-214.pom
+Progress (1): 3.1 kB                    Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-dao/1.0.0-SNAPSHOT/hummer-dao-1.0.0-20200912.062951-214.pom (3.1 kB at 89 kB/s)
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ door-god-dao ---
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/door-god-support/1.0-SNAPSHOT/door-god-support-1.0-20200912.063020-32.jar
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-dao/1.0.0-SNAPSHOT/hummer-dao-1.0.0-20200912.062951-214.jar
+Progress (1): 3.6/48 kBProgress (1): 6.3/48 kBProgress (1): 9.1/48 kBProgress (1): 12/48 kB Progress (1): 14/48 kBProgress (1): 17/48 kBProgress (1): 20/48 kBProgress (1): 23/48 kBProgress (1): 25/48 kBProgress (1): 28/48 kBProgress (1): 31/48 kBProgress (1): 34/48 kBProgress (1): 37/48 kBProgress (1): 40/48 kBProgress (1): 42/48 kBProgress (1): 45/48 kBProgress (1): 48/48 kBProgress (1): 48 kB                      Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-dao/1.0.0-SNAPSHOT/hummer-dao-1.0.0-20200912.062951-214.jar (48 kB at 869 kB/s)
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/door-god-support/1.0-SNAPSHOT/door-god-support-1.0-20200912.063020-32.jar (11 kB at 92 kB/s)
+[INFO] com.hummer:door-god-dao:jar:1.0-SNAPSHOT
+[INFO] +- com.hummer:door-god-support:jar:1.0-SNAPSHOT:compile
+[INFO] |  +- com.hummer:hummer-common:jar:1.0.0-SNAPSHOT:compile
+[INFO] |  |  +- org.apache.httpcomponents:httpasyncclient:jar:4.1.4:compile
+[INFO] |  |  |  +- org.apache.httpcomponents:httpcore:jar:4.4.13:compile
+[INFO] |  |  |  +- org.apache.httpcomponents:httpcore-nio:jar:4.4.13:compile
+[INFO] |  |  |  \- org.apache.httpcomponents:httpclient:jar:4.5.12:compile
+[INFO] |  |  +- cglib:cglib:jar:3.2.5:compile
+[INFO] |  |  |  +- org.ow2.asm:asm:jar:5.2:compile
+[INFO] |  |  |  \- org.apache.ant:ant:jar:1.9.6:compile
+[INFO] |  |  |     \- org.apache.ant:ant-launcher:jar:1.9.6:compile
+[INFO] |  |  +- com.alibaba:fastjson:jar:1.2.71:compile
+[INFO] |  |  +- commons-collections:commons-collections:jar:3.2.2:compile
+[INFO] |  |  +- org.springframework:spring-web:jar:5.2.8.RELEASE:compile
+[INFO] |  |  +- joda-time:joda-time:jar:2.9.9:compile
+[INFO] |  |  +- org.apache.commons:commons-lang3:jar:3.10:compile
+[INFO] |  |  +- javax.servlet:javax.servlet-api:jar:4.0.1:compile
+[INFO] |  |  +- net.lingala.zip4j:zip4j:jar:1.3.2:compile
+[INFO] |  |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  |  +- org.springframework:spring-context:jar:5.2.8.RELEASE:compile
+[INFO] |  |  |  \- org.springframework:spring-expression:jar:5.2.8.RELEASE:compile
+[INFO] |  |  +- org.projectlombok:lombok:jar:1.18.8:compile
+[INFO] |  |  +- org.hibernate.validator:hibernate-validator:jar:6.0.13.Final:compile
+[INFO] |  |  |  +- javax.validation:validation-api:jar:2.0.1.Final:compile
+[INFO] |  |  |  +- org.jboss.logging:jboss-logging:jar:3.4.1.Final:compile
+[INFO] |  |  |  \- com.fasterxml:classmate:jar:1.5.1:compile
+[INFO] |  |  +- io.swagger:swagger-annotations:jar:1.5.13:compile
+[INFO] |  |  +- org.aspectj:aspectjweaver:jar:1.9.2:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-log4j2:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  +- org.apache.logging.log4j:log4j-slf4j-impl:jar:2.13.3:compile
+[INFO] |  |  |  |  \- org.apache.logging.log4j:log4j-api:jar:2.13.3:compile
+[INFO] |  |  |  +- org.apache.logging.log4j:log4j-core:jar:2.13.3:compile
+[INFO] |  |  |  +- org.apache.logging.log4j:log4j-jul:jar:2.13.3:compile
+[INFO] |  |  |  \- org.slf4j:jul-to-slf4j:jar:1.7.30:compile
+[INFO] |  |  +- org.springframework:spring-aop:jar:5.2.8.RELEASE:compile
+[INFO] |  |  \- org.latencyutils:LatencyUtils:jar:2.0.3:compile
+[INFO] |  |     \- org.hdrhistogram:HdrHistogram:jar:2.1.8:compile
+[INFO] |  +- org.mybatis:mybatis:jar:3.4.6:compile
+[INFO] |  +- org.springframework.cloud:spring-cloud-loadbalancer:jar:2.2.5.RELEASE:compile
+[INFO] |  |  +- org.springframework.cloud:spring-cloud-commons:jar:2.2.5.RELEASE:compile
+[INFO] |  |  |  \- org.springframework.security:spring-security-crypto:jar:5.3.4.RELEASE:compile
+[INFO] |  |  +- org.springframework.cloud:spring-cloud-context:jar:2.2.5.RELEASE:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-validation:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  \- org.glassfish:jakarta.el:jar:3.0.3:compile
+[INFO] |  |  +- io.projectreactor:reactor-core:jar:3.3.9.RELEASE:compile
+[INFO] |  |  |  \- org.reactivestreams:reactive-streams:jar:1.0.3:compile
+[INFO] |  |  \- io.projectreactor.addons:reactor-extra:jar:3.3.3.RELEASE:compile
+[INFO] |  +- org.springframework.cloud:spring-cloud-starter:jar:2.2.5.RELEASE:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  \- jakarta.annotation:jakarta.annotation-api:jar:1.3.5:compile
+[INFO] |  |  \- org.springframework.security:spring-security-rsa:jar:1.0.9.RELEASE:compile
+[INFO] |  |     \- org.bouncycastle:bcpkix-jdk15on:jar:1.64:compile
+[INFO] |  |        \- org.bouncycastle:bcprov-jdk15on:jar:1.64:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-webflux:jar:2.3.3.RELEASE:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-json:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.11.2:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.11.2:compile
+[INFO] |  |  |  \- com.fasterxml.jackson.module:jackson-module-parameter-names:jar:2.11.2:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-reactor-netty:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  \- io.projectreactor.netty:reactor-netty:jar:0.9.11.RELEASE:compile
+[INFO] |  |  |     +- io.netty:netty-codec-http:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  +- io.netty:netty-common:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  +- io.netty:netty-buffer:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  +- io.netty:netty-transport:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  \- io.netty:netty-codec:jar:4.1.51.Final:compile
+[INFO] |  |  |     +- io.netty:netty-codec-http2:jar:4.1.51.Final:compile
+[INFO] |  |  |     +- io.netty:netty-handler:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  \- io.netty:netty-resolver:jar:4.1.51.Final:compile
+[INFO] |  |  |     +- io.netty:netty-handler-proxy:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  \- io.netty:netty-codec-socks:jar:4.1.51.Final:compile
+[INFO] |  |  |     \- io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.1.51.Final:compile
+[INFO] |  |  |        \- io.netty:netty-transport-native-unix-common:jar:4.1.51.Final:compile
+[INFO] |  |  +- org.springframework:spring-webflux:jar:5.2.8.RELEASE:compile
+[INFO] |  |  \- org.synchronoss.cloud:nio-multipart-parser:jar:1.1.0:compile
+[INFO] |  |     +- org.slf4j:slf4j-api:jar:1.7.30:compile
+[INFO] |  |     \- org.synchronoss.cloud:nio-stream-storage:jar:1.1.3:compile
+[INFO] |  +- org.springframework.cloud:spring-cloud-starter-gateway:jar:2.2.5.RELEASE:compile
+[INFO] |  |  \- org.springframework.cloud:spring-cloud-gateway-core:jar:2.2.5.RELEASE:compile
+[INFO] |  +- org.springframework:spring-beans:jar:5.2.8.RELEASE:compile
+[INFO] |  +- com.alibaba.nacos:nacos-client:jar:1.3.2:compile
+[INFO] |  |  +- com.alibaba.nacos:nacos-common:jar:1.3.2:compile
+[INFO] |  |  +- com.alibaba.nacos:nacos-api:jar:1.3.2:compile
+[INFO] |  |  +- com.google.guava:guava:jar:29.0-jre:compile
+[INFO] |  |  |  +- com.google.guava:failureaccess:jar:1.0.1:compile
+[INFO] |  |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO] |  |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |  |  |  \- com.google.j2objc:j2objc-annotations:jar:1.3:compile
+[INFO] |  |  +- commons-codec:commons-codec:jar:1.14:compile
+[INFO] |  |  +- com.fasterxml.jackson.core:jackson-core:jar:2.11.2:compile
+[INFO] |  |  +- com.fasterxml.jackson.core:jackson-databind:jar:2.11.2:compile
+[INFO] |  |  |  \- com.fasterxml.jackson.core:jackson-annotations:jar:2.11.2:compile
+[INFO] |  |  +- io.prometheus:simpleclient:jar:0.5.0:compile
+[INFO] |  |  \- org.yaml:snakeyaml:jar:1.26:compile
+[INFO] |  +- org.springframework.cloud:spring-cloud-starter-loadbalancer:jar:2.2.5.RELEASE:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-cache:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  \- org.springframework:spring-context-support:jar:5.2.8.RELEASE:compile
+[INFO] |  |  \- com.stoyanr:evictor:jar:1.0.0:compile
+[INFO] |  +- com.hummer:hummer-core:jar:1.0.0-SNAPSHOT:compile
+[INFO] |  |  \- org.springframework.boot:spring-boot:jar:2.3.3.RELEASE:compile
+[INFO] |  +- com.github.ben-manes.caffeine:caffeine:jar:2.8.5:compile
+[INFO] |  |  +- org.checkerframework:checker-qual:jar:3.4.1:compile
+[INFO] |  |  \- com.google.errorprone:error_prone_annotations:jar:2.4.0:compile
+[INFO] |  +- com.alibaba.csp:sentinel-core:jar:1.8.0:compile
+[INFO] |  +- com.alibaba.csp:sentinel-spring-cloud-gateway-adapter:jar:1.8.0:compile
+[INFO] |  |  +- com.alibaba.csp:sentinel-api-gateway-adapter-common:jar:1.8.0:compile
+[INFO] |  |  |  \- com.alibaba.csp:sentinel-parameter-flow-control:jar:1.8.0:compile
+[INFO] |  |  |     \- com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:jar:1.4.2:compile
+[INFO] |  |  \- com.alibaba.csp:sentinel-reactor-adapter:jar:1.8.0:compile
+[INFO] |  +- com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery:jar:2.2.1.RELEASE:compile
+[INFO] |  |  +- com.alibaba.spring:spring-context-support:jar:1.0.6:compile
+[INFO] |  |  \- org.springframework.cloud:spring-cloud-starter-netflix-ribbon:jar:2.2.5.RELEASE:compile
+[INFO] |  |     +- org.springframework.cloud:spring-cloud-netflix-ribbon:jar:2.2.5.RELEASE:compile
+[INFO] |  |     |  \- org.springframework.cloud:spring-cloud-netflix-archaius:jar:2.2.5.RELEASE:compile
+[INFO] |  |     +- org.springframework.cloud:spring-cloud-starter-netflix-archaius:jar:2.2.5.RELEASE:compile
+[INFO] |  |     |  +- com.netflix.archaius:archaius-core:jar:0.7.6:compile
+[INFO] |  |     |  \- commons-configuration:commons-configuration:jar:1.8:compile
+[INFO] |  |     +- com.netflix.ribbon:ribbon:jar:2.3.0:compile
+[INFO] |  |     |  +- com.netflix.ribbon:ribbon-transport:jar:2.3.0:runtime
+[INFO] |  |     |  |  +- io.reactivex:rxnetty-contexts:jar:0.4.9:runtime
+[INFO] |  |     |  |  \- io.reactivex:rxnetty-servo:jar:0.4.9:runtime
+[INFO] |  |     |  +- com.netflix.hystrix:hystrix-core:jar:1.5.18:runtime
+[INFO] |  |     |  +- javax.inject:javax.inject:jar:1:runtime
+[INFO] |  |     |  \- io.reactivex:rxnetty:jar:0.4.9:runtime
+[INFO] |  |     +- com.netflix.ribbon:ribbon-core:jar:2.3.0:compile
+[INFO] |  |     |  \- commons-lang:commons-lang:jar:2.6:compile
+[INFO] |  |     +- com.netflix.ribbon:ribbon-httpclient:jar:2.3.0:compile
+[INFO] |  |     |  +- com.sun.jersey:jersey-client:jar:1.19.1:runtime
+[INFO] |  |     |  |  \- com.sun.jersey:jersey-core:jar:1.19.1:runtime
+[INFO] |  |     |  |     \- javax.ws.rs:jsr311-api:jar:1.1.1:runtime
+[INFO] |  |     |  +- com.sun.jersey.contribs:jersey-apache-client4:jar:1.19.1:runtime
+[INFO] |  |     |  +- com.netflix.servo:servo-core:jar:0.12.21:runtime
+[INFO] |  |     |  \- com.netflix.netflix-commons:netflix-commons-util:jar:0.3.0:runtime
+[INFO] |  |     +- com.netflix.ribbon:ribbon-loadbalancer:jar:2.3.0:compile
+[INFO] |  |     |  \- com.netflix.netflix-commons:netflix-statistics:jar:0.1.1:runtime
+[INFO] |  |     \- io.reactivex:rxjava:jar:1.3.8:compile
+[INFO] |  \- io.projectreactor.addons:reactor-pool:jar:0.1.6.RELEASE:compile
+[INFO] \- com.hummer:hummer-dao:jar:1.0.0-SNAPSHOT:compile
+[INFO]    +- com.alibaba:druid:jar:1.1.23:compile
+[INFO]    +- org.mybatis:mybatis-spring:jar:2.0.1:compile
+[INFO]    +- org.springframework:spring-jdbc:jar:5.2.8.RELEASE:compile
+[INFO]    +- org.springframework:spring-tx:jar:5.2.8.RELEASE:compile
+[INFO]    +- org.springframework:spring-core:jar:5.2.8.RELEASE:compile
+[INFO]    |  \- org.springframework:spring-jcl:jar:5.2.8.RELEASE:compile
+[INFO]    +- mysql:mysql-connector-java:jar:8.0.21:compile
+[INFO]    +- com.github.pagehelper:pagehelper:jar:5.1.0:compile
+[INFO]    |  \- com.github.jsqlparser:jsqlparser:jar:1.0:compile
+[INFO]    +- org.springframework.boot:spring-boot-autoconfigure:jar:2.3.3.RELEASE:compile
+[INFO]    +- javax.annotation:javax.annotation-api:jar:1.3.2:compile
+[INFO]    +- com.microsoft.sqlserver:sqljdbc4:jar:4.0:compile
+[INFO]    \- org.springframework.boot:spring-boot-starter-data-jpa:jar:2.3.3.RELEASE:compile
+[INFO]       +- org.springframework.boot:spring-boot-starter-aop:jar:2.3.3.RELEASE:compile
+[INFO]       +- org.springframework.boot:spring-boot-starter-jdbc:jar:2.3.3.RELEASE:compile
+[INFO]       +- jakarta.transaction:jakarta.transaction-api:jar:1.3.3:compile
+[INFO]       +- jakarta.persistence:jakarta.persistence-api:jar:2.2.3:compile
+[INFO]       +- org.hibernate:hibernate-core:jar:5.4.20.Final:compile
+[INFO]       |  +- org.javassist:javassist:jar:3.24.0-GA:compile
+[INFO]       |  +- net.bytebuddy:byte-buddy:jar:1.10.14:compile
+[INFO]       |  +- antlr:antlr:jar:2.7.7:compile
+[INFO]       |  +- org.jboss:jandex:jar:2.1.3.Final:compile
+[INFO]       |  +- org.dom4j:dom4j:jar:2.1.3:compile
+[INFO]       |  +- org.hibernate.common:hibernate-commons-annotations:jar:5.1.0.Final:compile
+[INFO]       |  \- org.glassfish.jaxb:jaxb-runtime:jar:2.3.3:compile
+[INFO]       |     +- jakarta.xml.bind:jakarta.xml.bind-api:jar:2.3.3:compile
+[INFO]       |     +- org.glassfish.jaxb:txw2:jar:2.3.3:compile
+[INFO]       |     +- com.sun.istack:istack-commons-runtime:jar:3.0.11:compile
+[INFO]       |     \- com.sun.activation:jakarta.activation:jar:1.2.2:runtime
+[INFO]       +- org.springframework.data:spring-data-jpa:jar:2.3.3.RELEASE:compile
+[INFO]       |  +- org.springframework.data:spring-data-commons:jar:2.3.3.RELEASE:compile
+[INFO]       |  \- org.springframework:spring-orm:jar:5.2.8.RELEASE:compile
+[INFO]       \- org.springframework:spring-aspects:jar:5.2.8.RELEASE:compile
+[INFO] 
+[INFO] ---------------------< com.hummer:door-god-facade >---------------------
+[INFO] Building door-god-facade 1.0-SNAPSHOT                              [4/9]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ door-god-facade ---
+[INFO] com.hummer:door-god-facade:jar:1.0-SNAPSHOT
+[INFO] \- com.hummer:door-god-support:jar:1.0-SNAPSHOT:compile
+[INFO]    +- com.hummer:hummer-common:jar:1.0.0-SNAPSHOT:compile
+[INFO]    |  +- org.apache.httpcomponents:httpasyncclient:jar:4.1.4:compile
+[INFO]    |  |  +- org.apache.httpcomponents:httpcore:jar:4.4.13:compile
+[INFO]    |  |  +- org.apache.httpcomponents:httpcore-nio:jar:4.4.13:compile
+[INFO]    |  |  \- org.apache.httpcomponents:httpclient:jar:4.5.12:compile
+[INFO]    |  +- cglib:cglib:jar:3.2.5:compile
+[INFO]    |  |  +- org.ow2.asm:asm:jar:5.2:compile
+[INFO]    |  |  \- org.apache.ant:ant:jar:1.9.6:compile
+[INFO]    |  |     \- org.apache.ant:ant-launcher:jar:1.9.6:compile
+[INFO]    |  +- com.alibaba:fastjson:jar:1.2.71:compile
+[INFO]    |  +- commons-collections:commons-collections:jar:3.2.2:compile
+[INFO]    |  +- org.springframework:spring-web:jar:5.2.8.RELEASE:compile
+[INFO]    |  +- joda-time:joda-time:jar:2.9.9:compile
+[INFO]    |  +- org.apache.commons:commons-lang3:jar:3.10:compile
+[INFO]    |  +- javax.servlet:javax.servlet-api:jar:4.0.1:compile
+[INFO]    |  +- net.lingala.zip4j:zip4j:jar:1.3.2:compile
+[INFO]    |  +- commons-io:commons-io:jar:2.6:compile
+[INFO]    |  +- org.springframework:spring-context:jar:5.2.8.RELEASE:compile
+[INFO]    |  |  \- org.springframework:spring-expression:jar:5.2.8.RELEASE:compile
+[INFO]    |  +- org.projectlombok:lombok:jar:1.18.8:compile
+[INFO]    |  +- org.hibernate.validator:hibernate-validator:jar:6.0.13.Final:compile
+[INFO]    |  |  +- javax.validation:validation-api:jar:2.0.1.Final:compile
+[INFO]    |  |  +- org.jboss.logging:jboss-logging:jar:3.4.1.Final:compile
+[INFO]    |  |  \- com.fasterxml:classmate:jar:1.5.1:compile
+[INFO]    |  +- io.swagger:swagger-annotations:jar:1.5.13:compile
+[INFO]    |  +- org.aspectj:aspectjweaver:jar:1.9.2:compile
+[INFO]    |  +- org.springframework.boot:spring-boot-starter-log4j2:jar:2.3.3.RELEASE:compile
+[INFO]    |  |  +- org.apache.logging.log4j:log4j-slf4j-impl:jar:2.13.3:compile
+[INFO]    |  |  |  \- org.apache.logging.log4j:log4j-api:jar:2.13.3:compile
+[INFO]    |  |  +- org.apache.logging.log4j:log4j-core:jar:2.13.3:compile
+[INFO]    |  |  +- org.apache.logging.log4j:log4j-jul:jar:2.13.3:compile
+[INFO]    |  |  \- org.slf4j:jul-to-slf4j:jar:1.7.30:compile
+[INFO]    |  +- org.springframework:spring-aop:jar:5.2.8.RELEASE:compile
+[INFO]    |  \- org.latencyutils:LatencyUtils:jar:2.0.3:compile
+[INFO]    |     \- org.hdrhistogram:HdrHistogram:jar:2.1.8:compile
+[INFO]    +- org.mybatis:mybatis:jar:3.4.6:compile
+[INFO]    +- org.springframework.cloud:spring-cloud-loadbalancer:jar:2.2.5.RELEASE:compile
+[INFO]    |  +- org.springframework.cloud:spring-cloud-commons:jar:2.2.5.RELEASE:compile
+[INFO]    |  |  \- org.springframework.security:spring-security-crypto:jar:5.3.4.RELEASE:compile
+[INFO]    |  +- org.springframework.cloud:spring-cloud-context:jar:2.2.5.RELEASE:compile
+[INFO]    |  +- org.springframework.boot:spring-boot-starter-validation:jar:2.3.3.RELEASE:compile
+[INFO]    |  |  \- org.glassfish:jakarta.el:jar:3.0.3:compile
+[INFO]    |  +- io.projectreactor:reactor-core:jar:3.3.9.RELEASE:compile
+[INFO]    |  |  \- org.reactivestreams:reactive-streams:jar:1.0.3:compile
+[INFO]    |  \- io.projectreactor.addons:reactor-extra:jar:3.3.3.RELEASE:compile
+[INFO]    +- org.springframework.cloud:spring-cloud-starter:jar:2.2.5.RELEASE:compile
+[INFO]    |  +- org.springframework.boot:spring-boot-starter:jar:2.3.3.RELEASE:compile
+[INFO]    |  |  +- org.springframework.boot:spring-boot-autoconfigure:jar:2.3.3.RELEASE:compile
+[INFO]    |  |  \- jakarta.annotation:jakarta.annotation-api:jar:1.3.5:compile
+[INFO]    |  \- org.springframework.security:spring-security-rsa:jar:1.0.9.RELEASE:compile
+[INFO]    |     \- org.bouncycastle:bcpkix-jdk15on:jar:1.64:compile
+[INFO]    |        \- org.bouncycastle:bcprov-jdk15on:jar:1.64:compile
+[INFO]    +- org.springframework.boot:spring-boot-starter-webflux:jar:2.3.3.RELEASE:compile
+[INFO]    |  +- org.springframework.boot:spring-boot-starter-json:jar:2.3.3.RELEASE:compile
+[INFO]    |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.11.2:compile
+[INFO]    |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.11.2:compile
+[INFO]    |  |  \- com.fasterxml.jackson.module:jackson-module-parameter-names:jar:2.11.2:compile
+[INFO]    |  +- org.springframework.boot:spring-boot-starter-reactor-netty:jar:2.3.3.RELEASE:compile
+[INFO]    |  |  \- io.projectreactor.netty:reactor-netty:jar:0.9.11.RELEASE:compile
+[INFO]    |  |     +- io.netty:netty-codec-http:jar:4.1.51.Final:compile
+[INFO]    |  |     |  +- io.netty:netty-common:jar:4.1.51.Final:compile
+[INFO]    |  |     |  +- io.netty:netty-buffer:jar:4.1.51.Final:compile
+[INFO]    |  |     |  +- io.netty:netty-transport:jar:4.1.51.Final:compile
+[INFO]    |  |     |  \- io.netty:netty-codec:jar:4.1.51.Final:compile
+[INFO]    |  |     +- io.netty:netty-codec-http2:jar:4.1.51.Final:compile
+[INFO]    |  |     +- io.netty:netty-handler:jar:4.1.51.Final:compile
+[INFO]    |  |     |  \- io.netty:netty-resolver:jar:4.1.51.Final:compile
+[INFO]    |  |     +- io.netty:netty-handler-proxy:jar:4.1.51.Final:compile
+[INFO]    |  |     |  \- io.netty:netty-codec-socks:jar:4.1.51.Final:compile
+[INFO]    |  |     \- io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.1.51.Final:compile
+[INFO]    |  |        \- io.netty:netty-transport-native-unix-common:jar:4.1.51.Final:compile
+[INFO]    |  +- org.springframework:spring-webflux:jar:5.2.8.RELEASE:compile
+[INFO]    |  \- org.synchronoss.cloud:nio-multipart-parser:jar:1.1.0:compile
+[INFO]    |     +- org.slf4j:slf4j-api:jar:1.7.30:compile
+[INFO]    |     \- org.synchronoss.cloud:nio-stream-storage:jar:1.1.3:compile
+[INFO]    +- org.springframework.cloud:spring-cloud-starter-gateway:jar:2.2.5.RELEASE:compile
+[INFO]    |  \- org.springframework.cloud:spring-cloud-gateway-core:jar:2.2.5.RELEASE:compile
+[INFO]    +- org.springframework:spring-beans:jar:5.2.8.RELEASE:compile
+[INFO]    |  \- org.springframework:spring-core:jar:5.2.8.RELEASE:compile
+[INFO]    |     \- org.springframework:spring-jcl:jar:5.2.8.RELEASE:compile
+[INFO]    +- com.alibaba.nacos:nacos-client:jar:1.3.2:compile
+[INFO]    |  +- com.alibaba.nacos:nacos-common:jar:1.3.2:compile
+[INFO]    |  +- com.alibaba.nacos:nacos-api:jar:1.3.2:compile
+[INFO]    |  +- com.google.guava:guava:jar:29.0-jre:compile
+[INFO]    |  |  +- com.google.guava:failureaccess:jar:1.0.1:compile
+[INFO]    |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO]    |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO]    |  |  \- com.google.j2objc:j2objc-annotations:jar:1.3:compile
+[INFO]    |  +- commons-codec:commons-codec:jar:1.14:compile
+[INFO]    |  +- com.fasterxml.jackson.core:jackson-core:jar:2.11.2:compile
+[INFO]    |  +- com.fasterxml.jackson.core:jackson-databind:jar:2.11.2:compile
+[INFO]    |  |  \- com.fasterxml.jackson.core:jackson-annotations:jar:2.11.2:compile
+[INFO]    |  +- io.prometheus:simpleclient:jar:0.5.0:compile
+[INFO]    |  \- org.yaml:snakeyaml:jar:1.26:compile
+[INFO]    +- org.springframework.cloud:spring-cloud-starter-loadbalancer:jar:2.2.5.RELEASE:compile
+[INFO]    |  +- org.springframework.boot:spring-boot-starter-cache:jar:2.3.3.RELEASE:compile
+[INFO]    |  |  \- org.springframework:spring-context-support:jar:5.2.8.RELEASE:compile
+[INFO]    |  \- com.stoyanr:evictor:jar:1.0.0:compile
+[INFO]    +- com.hummer:hummer-core:jar:1.0.0-SNAPSHOT:compile
+[INFO]    |  \- org.springframework.boot:spring-boot:jar:2.3.3.RELEASE:compile
+[INFO]    +- com.github.ben-manes.caffeine:caffeine:jar:2.8.5:compile
+[INFO]    |  +- org.checkerframework:checker-qual:jar:3.4.1:compile
+[INFO]    |  \- com.google.errorprone:error_prone_annotations:jar:2.4.0:compile
+[INFO]    +- com.alibaba.csp:sentinel-core:jar:1.8.0:compile
+[INFO]    +- com.alibaba.csp:sentinel-spring-cloud-gateway-adapter:jar:1.8.0:compile
+[INFO]    |  +- com.alibaba.csp:sentinel-api-gateway-adapter-common:jar:1.8.0:compile
+[INFO]    |  |  \- com.alibaba.csp:sentinel-parameter-flow-control:jar:1.8.0:compile
+[INFO]    |  |     \- com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:jar:1.4.2:compile
+[INFO]    |  \- com.alibaba.csp:sentinel-reactor-adapter:jar:1.8.0:compile
+[INFO]    +- com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery:jar:2.2.1.RELEASE:compile
+[INFO]    |  +- com.alibaba.spring:spring-context-support:jar:1.0.6:compile
+[INFO]    |  \- org.springframework.cloud:spring-cloud-starter-netflix-ribbon:jar:2.2.5.RELEASE:compile
+[INFO]    |     +- org.springframework.cloud:spring-cloud-netflix-ribbon:jar:2.2.5.RELEASE:compile
+[INFO]    |     |  \- org.springframework.cloud:spring-cloud-netflix-archaius:jar:2.2.5.RELEASE:compile
+[INFO]    |     +- org.springframework.cloud:spring-cloud-starter-netflix-archaius:jar:2.2.5.RELEASE:compile
+[INFO]    |     |  +- com.netflix.archaius:archaius-core:jar:0.7.6:compile
+[INFO]    |     |  \- commons-configuration:commons-configuration:jar:1.8:compile
+[INFO]    |     +- com.netflix.ribbon:ribbon:jar:2.3.0:compile
+[INFO]    |     |  +- com.netflix.ribbon:ribbon-transport:jar:2.3.0:runtime
+[INFO]    |     |  |  +- io.reactivex:rxnetty-contexts:jar:0.4.9:runtime
+[INFO]    |     |  |  \- io.reactivex:rxnetty-servo:jar:0.4.9:runtime
+[INFO]    |     |  +- com.netflix.hystrix:hystrix-core:jar:1.5.18:runtime
+[INFO]    |     |  +- javax.inject:javax.inject:jar:1:runtime
+[INFO]    |     |  \- io.reactivex:rxnetty:jar:0.4.9:runtime
+[INFO]    |     +- com.netflix.ribbon:ribbon-core:jar:2.3.0:compile
+[INFO]    |     |  \- commons-lang:commons-lang:jar:2.6:compile
+[INFO]    |     +- com.netflix.ribbon:ribbon-httpclient:jar:2.3.0:compile
+[INFO]    |     |  +- com.sun.jersey:jersey-client:jar:1.19.1:runtime
+[INFO]    |     |  |  \- com.sun.jersey:jersey-core:jar:1.19.1:runtime
+[INFO]    |     |  |     \- javax.ws.rs:jsr311-api:jar:1.1.1:runtime
+[INFO]    |     |  +- com.sun.jersey.contribs:jersey-apache-client4:jar:1.19.1:runtime
+[INFO]    |     |  +- com.netflix.servo:servo-core:jar:0.12.21:runtime
+[INFO]    |     |  \- com.netflix.netflix-commons:netflix-commons-util:jar:0.3.0:runtime
+[INFO]    |     +- com.netflix.ribbon:ribbon-loadbalancer:jar:2.3.0:compile
+[INFO]    |     |  \- com.netflix.netflix-commons:netflix-statistics:jar:0.1.1:runtime
+[INFO]    |     \- io.reactivex:rxjava:jar:1.3.8:compile
+[INFO]    \- io.projectreactor.addons:reactor-pool:jar:0.1.6.RELEASE:compile
+[INFO] 
+[INFO] ------------------< com.hummer:door-god-integration >-------------------
+[INFO] Building door-god-integration 1.0-SNAPSHOT                         [5/9]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ door-god-integration ---
+[INFO] com.hummer:door-god-integration:jar:1.0-SNAPSHOT
+[INFO] 
+[INFO] ---------------------< com.hummer:door-god-domain >---------------------
+[INFO] Building door-god-domain 1.0-SNAPSHOT                              [6/9]
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/door-god-dao/1.0-SNAPSHOT/maven-metadata.xml
+Progress (1): 769 B                   Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/door-god-dao/1.0-SNAPSHOT/maven-metadata.xml (769 B at 2.3 kB/s)
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/door-god-facade/1.0-SNAPSHOT/maven-metadata.xml
+Progress (1): 772 B                   Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/door-god-facade/1.0-SNAPSHOT/maven-metadata.xml (772 B at 1.4 kB/s)
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/door-god-integration/1.0-SNAPSHOT/maven-metadata.xml
+Progress (1): 777 B                   Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/door-god-integration/1.0-SNAPSHOT/maven-metadata.xml (777 B at 1.5 kB/s)
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ door-god-domain ---
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/door-god-dao/1.0-SNAPSHOT/door-god-dao-1.0-20200912.063021-32.jar
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/door-god-integration/1.0-SNAPSHOT/door-god-integration-1.0-20200912.063024-32.jar
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/door-god-facade/1.0-SNAPSHOT/door-god-facade-1.0-20200912.063023-32.jar
+Progress (1): 1.5 kBProgress (2): 1.5 kB | 3.4 kBProgress (3): 1.5 kB | 3.4 kB | 2.3/8.2 kBProgress (3): 1.5 kB | 3.4 kB | 5.0/8.2 kBProgress (3): 1.5 kB | 3.4 kB | 7.7/8.2 kBProgress (3): 1.5 kB | 3.4 kB | 8.2 kB                                          Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/door-god-dao/1.0-SNAPSHOT/door-god-dao-1.0-20200912.063021-32.jar (3.4 kB at 31 kB/s)
+Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/door-god-integration/1.0-SNAPSHOT/door-god-integration-1.0-20200912.063024-32.jar (1.5 kB at 14 kB/s)
+Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/door-god-facade/1.0-SNAPSHOT/door-god-facade-1.0-20200912.063023-32.jar (8.2 kB at 57 kB/s)
+[INFO] com.hummer:door-god-domain:jar:1.0-SNAPSHOT
+[INFO] +- com.hummer:door-god-support:jar:1.0-SNAPSHOT:compile
+[INFO] |  +- com.hummer:hummer-common:jar:1.0.0-SNAPSHOT:compile
+[INFO] |  |  +- org.apache.httpcomponents:httpasyncclient:jar:4.1.4:compile
+[INFO] |  |  |  +- org.apache.httpcomponents:httpcore:jar:4.4.13:compile
+[INFO] |  |  |  +- org.apache.httpcomponents:httpcore-nio:jar:4.4.13:compile
+[INFO] |  |  |  \- org.apache.httpcomponents:httpclient:jar:4.5.12:compile
+[INFO] |  |  +- cglib:cglib:jar:3.2.5:compile
+[INFO] |  |  |  +- org.ow2.asm:asm:jar:5.2:compile
+[INFO] |  |  |  \- org.apache.ant:ant:jar:1.9.6:compile
+[INFO] |  |  |     \- org.apache.ant:ant-launcher:jar:1.9.6:compile
+[INFO] |  |  +- com.alibaba:fastjson:jar:1.2.71:compile
+[INFO] |  |  +- commons-collections:commons-collections:jar:3.2.2:compile
+[INFO] |  |  +- org.springframework:spring-web:jar:5.2.8.RELEASE:compile
+[INFO] |  |  +- joda-time:joda-time:jar:2.9.9:compile
+[INFO] |  |  +- org.apache.commons:commons-lang3:jar:3.10:compile
+[INFO] |  |  +- javax.servlet:javax.servlet-api:jar:4.0.1:compile
+[INFO] |  |  +- net.lingala.zip4j:zip4j:jar:1.3.2:compile
+[INFO] |  |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  |  +- org.springframework:spring-context:jar:5.2.8.RELEASE:compile
+[INFO] |  |  |  \- org.springframework:spring-expression:jar:5.2.8.RELEASE:compile
+[INFO] |  |  +- org.projectlombok:lombok:jar:1.18.8:compile
+[INFO] |  |  +- org.hibernate.validator:hibernate-validator:jar:6.0.13.Final:compile
+[INFO] |  |  |  +- javax.validation:validation-api:jar:2.0.1.Final:compile
+[INFO] |  |  |  +- org.jboss.logging:jboss-logging:jar:3.4.1.Final:compile
+[INFO] |  |  |  \- com.fasterxml:classmate:jar:1.5.1:compile
+[INFO] |  |  +- io.swagger:swagger-annotations:jar:1.5.13:compile
+[INFO] |  |  +- org.aspectj:aspectjweaver:jar:1.9.2:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-log4j2:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  +- org.apache.logging.log4j:log4j-slf4j-impl:jar:2.13.3:compile
+[INFO] |  |  |  |  \- org.apache.logging.log4j:log4j-api:jar:2.13.3:compile
+[INFO] |  |  |  +- org.apache.logging.log4j:log4j-core:jar:2.13.3:compile
+[INFO] |  |  |  +- org.apache.logging.log4j:log4j-jul:jar:2.13.3:compile
+[INFO] |  |  |  \- org.slf4j:jul-to-slf4j:jar:1.7.30:compile
+[INFO] |  |  +- org.springframework:spring-aop:jar:5.2.8.RELEASE:compile
+[INFO] |  |  \- org.latencyutils:LatencyUtils:jar:2.0.3:compile
+[INFO] |  |     \- org.hdrhistogram:HdrHistogram:jar:2.1.8:compile
+[INFO] |  +- org.mybatis:mybatis:jar:3.4.6:compile
+[INFO] |  +- org.springframework.cloud:spring-cloud-loadbalancer:jar:2.2.5.RELEASE:compile
+[INFO] |  |  +- org.springframework.cloud:spring-cloud-commons:jar:2.2.5.RELEASE:compile
+[INFO] |  |  |  \- org.springframework.security:spring-security-crypto:jar:5.3.4.RELEASE:compile
+[INFO] |  |  +- org.springframework.cloud:spring-cloud-context:jar:2.2.5.RELEASE:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-validation:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  \- org.glassfish:jakarta.el:jar:3.0.3:compile
+[INFO] |  |  +- io.projectreactor:reactor-core:jar:3.3.9.RELEASE:compile
+[INFO] |  |  |  \- org.reactivestreams:reactive-streams:jar:1.0.3:compile
+[INFO] |  |  \- io.projectreactor.addons:reactor-extra:jar:3.3.3.RELEASE:compile
+[INFO] |  +- org.springframework.cloud:spring-cloud-starter:jar:2.2.5.RELEASE:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  \- jakarta.annotation:jakarta.annotation-api:jar:1.3.5:compile
+[INFO] |  |  \- org.springframework.security:spring-security-rsa:jar:1.0.9.RELEASE:compile
+[INFO] |  |     \- org.bouncycastle:bcpkix-jdk15on:jar:1.64:compile
+[INFO] |  |        \- org.bouncycastle:bcprov-jdk15on:jar:1.64:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-webflux:jar:2.3.3.RELEASE:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-json:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.11.2:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.11.2:compile
+[INFO] |  |  |  \- com.fasterxml.jackson.module:jackson-module-parameter-names:jar:2.11.2:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-reactor-netty:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  \- io.projectreactor.netty:reactor-netty:jar:0.9.11.RELEASE:compile
+[INFO] |  |  |     +- io.netty:netty-codec-http:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  +- io.netty:netty-common:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  +- io.netty:netty-buffer:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  +- io.netty:netty-transport:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  \- io.netty:netty-codec:jar:4.1.51.Final:compile
+[INFO] |  |  |     +- io.netty:netty-codec-http2:jar:4.1.51.Final:compile
+[INFO] |  |  |     +- io.netty:netty-handler:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  \- io.netty:netty-resolver:jar:4.1.51.Final:compile
+[INFO] |  |  |     +- io.netty:netty-handler-proxy:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  \- io.netty:netty-codec-socks:jar:4.1.51.Final:compile
+[INFO] |  |  |     \- io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.1.51.Final:compile
+[INFO] |  |  |        \- io.netty:netty-transport-native-unix-common:jar:4.1.51.Final:compile
+[INFO] |  |  +- org.springframework:spring-webflux:jar:5.2.8.RELEASE:compile
+[INFO] |  |  \- org.synchronoss.cloud:nio-multipart-parser:jar:1.1.0:compile
+[INFO] |  |     +- org.slf4j:slf4j-api:jar:1.7.30:compile
+[INFO] |  |     \- org.synchronoss.cloud:nio-stream-storage:jar:1.1.3:compile
+[INFO] |  +- org.springframework.cloud:spring-cloud-starter-gateway:jar:2.2.5.RELEASE:compile
+[INFO] |  |  \- org.springframework.cloud:spring-cloud-gateway-core:jar:2.2.5.RELEASE:compile
+[INFO] |  +- org.springframework:spring-beans:jar:5.2.8.RELEASE:compile
+[INFO] |  |  \- org.springframework:spring-core:jar:5.2.8.RELEASE:compile
+[INFO] |  |     \- org.springframework:spring-jcl:jar:5.2.8.RELEASE:compile
+[INFO] |  +- com.alibaba.nacos:nacos-client:jar:1.3.2:compile
+[INFO] |  |  +- com.alibaba.nacos:nacos-common:jar:1.3.2:compile
+[INFO] |  |  +- com.alibaba.nacos:nacos-api:jar:1.3.2:compile
+[INFO] |  |  +- com.google.guava:guava:jar:29.0-jre:compile
+[INFO] |  |  |  +- com.google.guava:failureaccess:jar:1.0.1:compile
+[INFO] |  |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO] |  |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |  |  |  \- com.google.j2objc:j2objc-annotations:jar:1.3:compile
+[INFO] |  |  +- commons-codec:commons-codec:jar:1.14:compile
+[INFO] |  |  +- com.fasterxml.jackson.core:jackson-core:jar:2.11.2:compile
+[INFO] |  |  +- com.fasterxml.jackson.core:jackson-databind:jar:2.11.2:compile
+[INFO] |  |  |  \- com.fasterxml.jackson.core:jackson-annotations:jar:2.11.2:compile
+[INFO] |  |  +- io.prometheus:simpleclient:jar:0.5.0:compile
+[INFO] |  |  \- org.yaml:snakeyaml:jar:1.26:compile
+[INFO] |  +- org.springframework.cloud:spring-cloud-starter-loadbalancer:jar:2.2.5.RELEASE:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-cache:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  \- org.springframework:spring-context-support:jar:5.2.8.RELEASE:compile
+[INFO] |  |  \- com.stoyanr:evictor:jar:1.0.0:compile
+[INFO] |  +- com.hummer:hummer-core:jar:1.0.0-SNAPSHOT:compile
+[INFO] |  |  \- org.springframework.boot:spring-boot:jar:2.3.3.RELEASE:compile
+[INFO] |  +- com.github.ben-manes.caffeine:caffeine:jar:2.8.5:compile
+[INFO] |  |  +- org.checkerframework:checker-qual:jar:3.4.1:compile
+[INFO] |  |  \- com.google.errorprone:error_prone_annotations:jar:2.4.0:compile
+[INFO] |  +- com.alibaba.csp:sentinel-core:jar:1.8.0:compile
+[INFO] |  +- com.alibaba.csp:sentinel-spring-cloud-gateway-adapter:jar:1.8.0:compile
+[INFO] |  |  +- com.alibaba.csp:sentinel-api-gateway-adapter-common:jar:1.8.0:compile
+[INFO] |  |  |  \- com.alibaba.csp:sentinel-parameter-flow-control:jar:1.8.0:compile
+[INFO] |  |  |     \- com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:jar:1.4.2:compile
+[INFO] |  |  \- com.alibaba.csp:sentinel-reactor-adapter:jar:1.8.0:compile
+[INFO] |  +- com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery:jar:2.2.1.RELEASE:compile
+[INFO] |  |  +- com.alibaba.spring:spring-context-support:jar:1.0.6:compile
+[INFO] |  |  \- org.springframework.cloud:spring-cloud-starter-netflix-ribbon:jar:2.2.5.RELEASE:compile
+[INFO] |  |     +- org.springframework.cloud:spring-cloud-netflix-ribbon:jar:2.2.5.RELEASE:compile
+[INFO] |  |     |  \- org.springframework.cloud:spring-cloud-netflix-archaius:jar:2.2.5.RELEASE:compile
+[INFO] |  |     +- org.springframework.cloud:spring-cloud-starter-netflix-archaius:jar:2.2.5.RELEASE:compile
+[INFO] |  |     |  +- com.netflix.archaius:archaius-core:jar:0.7.6:compile
+[INFO] |  |     |  \- commons-configuration:commons-configuration:jar:1.8:compile
+[INFO] |  |     +- com.netflix.ribbon:ribbon:jar:2.3.0:compile
+[INFO] |  |     |  +- com.netflix.ribbon:ribbon-transport:jar:2.3.0:runtime
+[INFO] |  |     |  |  +- io.reactivex:rxnetty-contexts:jar:0.4.9:runtime
+[INFO] |  |     |  |  \- io.reactivex:rxnetty-servo:jar:0.4.9:runtime
+[INFO] |  |     |  +- com.netflix.hystrix:hystrix-core:jar:1.5.18:runtime
+[INFO] |  |     |  +- javax.inject:javax.inject:jar:1:runtime
+[INFO] |  |     |  \- io.reactivex:rxnetty:jar:0.4.9:runtime
+[INFO] |  |     +- com.netflix.ribbon:ribbon-core:jar:2.3.0:compile
+[INFO] |  |     |  \- commons-lang:commons-lang:jar:2.6:compile
+[INFO] |  |     +- com.netflix.ribbon:ribbon-httpclient:jar:2.3.0:compile
+[INFO] |  |     |  +- com.sun.jersey:jersey-client:jar:1.19.1:runtime
+[INFO] |  |     |  |  \- com.sun.jersey:jersey-core:jar:1.19.1:runtime
+[INFO] |  |     |  |     \- javax.ws.rs:jsr311-api:jar:1.1.1:runtime
+[INFO] |  |     |  +- com.sun.jersey.contribs:jersey-apache-client4:jar:1.19.1:runtime
+[INFO] |  |     |  +- com.netflix.servo:servo-core:jar:0.12.21:runtime
+[INFO] |  |     |  \- com.netflix.netflix-commons:netflix-commons-util:jar:0.3.0:runtime
+[INFO] |  |     +- com.netflix.ribbon:ribbon-loadbalancer:jar:2.3.0:compile
+[INFO] |  |     |  \- com.netflix.netflix-commons:netflix-statistics:jar:0.1.1:runtime
+[INFO] |  |     \- io.reactivex:rxjava:jar:1.3.8:compile
+[INFO] |  \- io.projectreactor.addons:reactor-pool:jar:0.1.6.RELEASE:compile
+[INFO] +- com.hummer:door-god-dao:jar:1.0-SNAPSHOT:compile
+[INFO] |  \- com.hummer:hummer-dao:jar:1.0.0-SNAPSHOT:compile
+[INFO] |     +- com.alibaba:druid:jar:1.1.23:compile
+[INFO] |     +- org.mybatis:mybatis-spring:jar:2.0.1:compile
+[INFO] |     +- org.springframework:spring-jdbc:jar:5.2.8.RELEASE:compile
+[INFO] |     +- org.springframework:spring-tx:jar:5.2.8.RELEASE:compile
+[INFO] |     +- mysql:mysql-connector-java:jar:8.0.21:compile
+[INFO] |     +- com.github.pagehelper:pagehelper:jar:5.1.0:compile
+[INFO] |     |  \- com.github.jsqlparser:jsqlparser:jar:1.0:compile
+[INFO] |     +- org.springframework.boot:spring-boot-autoconfigure:jar:2.3.3.RELEASE:compile
+[INFO] |     +- javax.annotation:javax.annotation-api:jar:1.3.2:compile
+[INFO] |     +- com.microsoft.sqlserver:sqljdbc4:jar:4.0:compile
+[INFO] |     \- org.springframework.boot:spring-boot-starter-data-jpa:jar:2.3.3.RELEASE:compile
+[INFO] |        +- org.springframework.boot:spring-boot-starter-aop:jar:2.3.3.RELEASE:compile
+[INFO] |        +- org.springframework.boot:spring-boot-starter-jdbc:jar:2.3.3.RELEASE:compile
+[INFO] |        +- jakarta.transaction:jakarta.transaction-api:jar:1.3.3:compile
+[INFO] |        +- jakarta.persistence:jakarta.persistence-api:jar:2.2.3:compile
+[INFO] |        +- org.hibernate:hibernate-core:jar:5.4.20.Final:compile
+[INFO] |        |  +- org.javassist:javassist:jar:3.24.0-GA:compile
+[INFO] |        |  +- net.bytebuddy:byte-buddy:jar:1.10.14:compile
+[INFO] |        |  +- antlr:antlr:jar:2.7.7:compile
+[INFO] |        |  +- org.jboss:jandex:jar:2.1.3.Final:compile
+[INFO] |        |  +- org.dom4j:dom4j:jar:2.1.3:compile
+[INFO] |        |  +- org.hibernate.common:hibernate-commons-annotations:jar:5.1.0.Final:compile
+[INFO] |        |  \- org.glassfish.jaxb:jaxb-runtime:jar:2.3.3:compile
+[INFO] |        |     +- jakarta.xml.bind:jakarta.xml.bind-api:jar:2.3.3:compile
+[INFO] |        |     +- org.glassfish.jaxb:txw2:jar:2.3.3:compile
+[INFO] |        |     +- com.sun.istack:istack-commons-runtime:jar:3.0.11:compile
+[INFO] |        |     \- com.sun.activation:jakarta.activation:jar:1.2.2:runtime
+[INFO] |        +- org.springframework.data:spring-data-jpa:jar:2.3.3.RELEASE:compile
+[INFO] |        |  +- org.springframework.data:spring-data-commons:jar:2.3.3.RELEASE:compile
+[INFO] |        |  \- org.springframework:spring-orm:jar:5.2.8.RELEASE:compile
+[INFO] |        \- org.springframework:spring-aspects:jar:5.2.8.RELEASE:compile
+[INFO] +- com.hummer:door-god-facade:jar:1.0-SNAPSHOT:compile
+[INFO] \- com.hummer:door-god-integration:jar:1.0-SNAPSHOT:compile
+[INFO] 
+[INFO] ----------------------< com.hummer:door-god-api >-----------------------
+[INFO] Building door-god-api 1.0-SNAPSHOT                                 [7/9]
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/door-god-domain/1.0-SNAPSHOT/maven-metadata.xml
+Progress (1): 772 B                   Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/door-god-domain/1.0-SNAPSHOT/maven-metadata.xml (772 B at 1.8 kB/s)
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ door-god-api ---
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/door-god-domain/1.0-SNAPSHOT/door-god-domain-1.0-20200912.063029-32.jar
+Progress (1): 2.3/65 kBProgress (1): 5.0/65 kBProgress (1): 7.7/65 kBProgress (1): 10/65 kB Progress (1): 13/65 kBProgress (1): 16/65 kBProgress (1): 19/65 kBProgress (1): 21/65 kBProgress (1): 24/65 kBProgress (1): 27/65 kBProgress (1): 29/65 kBProgress (1): 32/65 kBProgress (1): 35/65 kBProgress (1): 38/65 kBProgress (1): 40/65 kBProgress (1): 43/65 kBProgress (1): 46/65 kBProgress (1): 48/65 kBProgress (1): 51/65 kBProgress (1): 54/65 kBProgress (1): 57/65 kBProgress (1): 60/65 kBProgress (1): 63/65 kBProgress (1): 65 kB                      Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/door-god-domain/1.0-SNAPSHOT/door-god-domain-1.0-20200912.063029-32.jar (65 kB at 413 kB/s)
+[INFO] com.hummer:door-god-api:jar:1.0-SNAPSHOT
+[INFO] +- com.hummer:door-god-support:jar:1.0-SNAPSHOT:compile
+[INFO] |  +- com.hummer:hummer-common:jar:1.0.0-SNAPSHOT:compile
+[INFO] |  |  +- org.apache.httpcomponents:httpasyncclient:jar:4.1.4:compile
+[INFO] |  |  |  +- org.apache.httpcomponents:httpcore:jar:4.4.13:compile
+[INFO] |  |  |  +- org.apache.httpcomponents:httpcore-nio:jar:4.4.13:compile
+[INFO] |  |  |  \- org.apache.httpcomponents:httpclient:jar:4.5.12:compile
+[INFO] |  |  +- cglib:cglib:jar:3.2.5:compile
+[INFO] |  |  |  +- org.ow2.asm:asm:jar:5.2:compile
+[INFO] |  |  |  \- org.apache.ant:ant:jar:1.9.6:compile
+[INFO] |  |  |     \- org.apache.ant:ant-launcher:jar:1.9.6:compile
+[INFO] |  |  +- com.alibaba:fastjson:jar:1.2.71:compile
+[INFO] |  |  +- commons-collections:commons-collections:jar:3.2.2:compile
+[INFO] |  |  +- org.springframework:spring-web:jar:5.2.8.RELEASE:compile
+[INFO] |  |  +- joda-time:joda-time:jar:2.9.9:compile
+[INFO] |  |  +- javax.servlet:javax.servlet-api:jar:4.0.1:compile
+[INFO] |  |  +- net.lingala.zip4j:zip4j:jar:1.3.2:compile
+[INFO] |  |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  |  +- org.hibernate.validator:hibernate-validator:jar:6.0.13.Final:compile
+[INFO] |  |  |  +- javax.validation:validation-api:jar:2.0.1.Final:compile
+[INFO] |  |  |  +- org.jboss.logging:jboss-logging:jar:3.4.1.Final:compile
+[INFO] |  |  |  \- com.fasterxml:classmate:jar:1.5.1:compile
+[INFO] |  |  +- io.swagger:swagger-annotations:jar:1.5.13:compile
+[INFO] |  |  +- org.aspectj:aspectjweaver:jar:1.9.2:compile
+[INFO] |  |  +- org.springframework:spring-aop:jar:5.2.8.RELEASE:compile
+[INFO] |  |  \- org.latencyutils:LatencyUtils:jar:2.0.3:compile
+[INFO] |  |     \- org.hdrhistogram:HdrHistogram:jar:2.1.8:compile
+[INFO] |  +- org.mybatis:mybatis:jar:3.4.6:compile
+[INFO] |  +- org.springframework.cloud:spring-cloud-loadbalancer:jar:2.2.5.RELEASE:compile
+[INFO] |  |  +- org.springframework.cloud:spring-cloud-commons:jar:2.2.5.RELEASE:compile
+[INFO] |  |  |  \- org.springframework.security:spring-security-crypto:jar:5.3.4.RELEASE:compile
+[INFO] |  |  +- org.springframework.cloud:spring-cloud-context:jar:2.2.5.RELEASE:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-validation:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  \- org.glassfish:jakarta.el:jar:3.0.3:compile
+[INFO] |  |  +- io.projectreactor:reactor-core:jar:3.3.9.RELEASE:compile
+[INFO] |  |  |  \- org.reactivestreams:reactive-streams:jar:1.0.3:compile
+[INFO] |  |  \- io.projectreactor.addons:reactor-extra:jar:3.3.3.RELEASE:compile
+[INFO] |  +- org.springframework.cloud:spring-cloud-starter:jar:2.2.5.RELEASE:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  \- jakarta.annotation:jakarta.annotation-api:jar:1.3.5:compile
+[INFO] |  |  \- org.springframework.security:spring-security-rsa:jar:1.0.9.RELEASE:compile
+[INFO] |  |     \- org.bouncycastle:bcpkix-jdk15on:jar:1.64:compile
+[INFO] |  |        \- org.bouncycastle:bcprov-jdk15on:jar:1.64:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-webflux:jar:2.3.3.RELEASE:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-json:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.11.2:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.11.2:compile
+[INFO] |  |  |  \- com.fasterxml.jackson.module:jackson-module-parameter-names:jar:2.11.2:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-reactor-netty:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  \- io.projectreactor.netty:reactor-netty:jar:0.9.11.RELEASE:compile
+[INFO] |  |  |     +- io.netty:netty-codec-http:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  +- io.netty:netty-common:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  +- io.netty:netty-buffer:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  +- io.netty:netty-transport:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  \- io.netty:netty-codec:jar:4.1.51.Final:compile
+[INFO] |  |  |     +- io.netty:netty-codec-http2:jar:4.1.51.Final:compile
+[INFO] |  |  |     +- io.netty:netty-handler:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  \- io.netty:netty-resolver:jar:4.1.51.Final:compile
+[INFO] |  |  |     +- io.netty:netty-handler-proxy:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  \- io.netty:netty-codec-socks:jar:4.1.51.Final:compile
+[INFO] |  |  |     \- io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.1.51.Final:compile
+[INFO] |  |  |        \- io.netty:netty-transport-native-unix-common:jar:4.1.51.Final:compile
+[INFO] |  |  +- org.springframework:spring-webflux:jar:5.2.8.RELEASE:compile
+[INFO] |  |  \- org.synchronoss.cloud:nio-multipart-parser:jar:1.1.0:compile
+[INFO] |  |     +- org.slf4j:slf4j-api:jar:1.7.30:compile
+[INFO] |  |     \- org.synchronoss.cloud:nio-stream-storage:jar:1.1.3:compile
+[INFO] |  +- org.springframework.cloud:spring-cloud-starter-gateway:jar:2.2.5.RELEASE:compile
+[INFO] |  |  \- org.springframework.cloud:spring-cloud-gateway-core:jar:2.2.5.RELEASE:compile
+[INFO] |  +- org.springframework:spring-beans:jar:5.2.8.RELEASE:compile
+[INFO] |  +- com.alibaba.nacos:nacos-client:jar:1.3.2:compile
+[INFO] |  |  +- com.alibaba.nacos:nacos-common:jar:1.3.2:compile
+[INFO] |  |  +- com.alibaba.nacos:nacos-api:jar:1.3.2:compile
+[INFO] |  |  +- commons-codec:commons-codec:jar:1.14:compile
+[INFO] |  |  +- com.fasterxml.jackson.core:jackson-core:jar:2.11.2:compile
+[INFO] |  |  +- com.fasterxml.jackson.core:jackson-databind:jar:2.11.2:compile
+[INFO] |  |  |  \- com.fasterxml.jackson.core:jackson-annotations:jar:2.11.2:compile
+[INFO] |  |  +- io.prometheus:simpleclient:jar:0.5.0:compile
+[INFO] |  |  \- org.yaml:snakeyaml:jar:1.26:compile
+[INFO] |  +- org.springframework.cloud:spring-cloud-starter-loadbalancer:jar:2.2.5.RELEASE:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-cache:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  \- org.springframework:spring-context-support:jar:5.2.8.RELEASE:compile
+[INFO] |  |  \- com.stoyanr:evictor:jar:1.0.0:compile
+[INFO] |  +- com.github.ben-manes.caffeine:caffeine:jar:2.8.5:compile
+[INFO] |  |  +- org.checkerframework:checker-qual:jar:3.4.1:compile
+[INFO] |  |  \- com.google.errorprone:error_prone_annotations:jar:2.4.0:compile
+[INFO] |  +- com.alibaba.csp:sentinel-core:jar:1.8.0:compile
+[INFO] |  +- com.alibaba.csp:sentinel-spring-cloud-gateway-adapter:jar:1.8.0:compile
+[INFO] |  |  +- com.alibaba.csp:sentinel-api-gateway-adapter-common:jar:1.8.0:compile
+[INFO] |  |  |  \- com.alibaba.csp:sentinel-parameter-flow-control:jar:1.8.0:compile
+[INFO] |  |  |     \- com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:jar:1.4.2:compile
+[INFO] |  |  \- com.alibaba.csp:sentinel-reactor-adapter:jar:1.8.0:compile
+[INFO] |  +- com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery:jar:2.2.1.RELEASE:compile
+[INFO] |  |  +- com.alibaba.spring:spring-context-support:jar:1.0.6:compile
+[INFO] |  |  \- org.springframework.cloud:spring-cloud-starter-netflix-ribbon:jar:2.2.5.RELEASE:compile
+[INFO] |  |     +- org.springframework.cloud:spring-cloud-netflix-ribbon:jar:2.2.5.RELEASE:compile
+[INFO] |  |     |  \- org.springframework.cloud:spring-cloud-netflix-archaius:jar:2.2.5.RELEASE:compile
+[INFO] |  |     +- org.springframework.cloud:spring-cloud-starter-netflix-archaius:jar:2.2.5.RELEASE:compile
+[INFO] |  |     |  +- com.netflix.archaius:archaius-core:jar:0.7.6:compile
+[INFO] |  |     |  \- commons-configuration:commons-configuration:jar:1.8:compile
+[INFO] |  |     +- com.netflix.ribbon:ribbon:jar:2.3.0:compile
+[INFO] |  |     |  +- com.netflix.ribbon:ribbon-transport:jar:2.3.0:runtime
+[INFO] |  |     |  |  +- io.reactivex:rxnetty-contexts:jar:0.4.9:runtime
+[INFO] |  |     |  |  \- io.reactivex:rxnetty-servo:jar:0.4.9:runtime
+[INFO] |  |     |  +- com.netflix.hystrix:hystrix-core:jar:1.5.18:runtime
+[INFO] |  |     |  +- javax.inject:javax.inject:jar:1:runtime
+[INFO] |  |     |  \- io.reactivex:rxnetty:jar:0.4.9:runtime
+[INFO] |  |     +- com.netflix.ribbon:ribbon-core:jar:2.3.0:compile
+[INFO] |  |     |  \- commons-lang:commons-lang:jar:2.6:compile
+[INFO] |  |     +- com.netflix.ribbon:ribbon-httpclient:jar:2.3.0:compile
+[INFO] |  |     |  +- com.sun.jersey:jersey-client:jar:1.19.1:runtime
+[INFO] |  |     |  |  \- com.sun.jersey:jersey-core:jar:1.19.1:runtime
+[INFO] |  |     |  |     \- javax.ws.rs:jsr311-api:jar:1.1.1:runtime
+[INFO] |  |     |  +- com.sun.jersey.contribs:jersey-apache-client4:jar:1.19.1:runtime
+[INFO] |  |     |  +- com.netflix.servo:servo-core:jar:0.12.21:runtime
+[INFO] |  |     |  \- com.netflix.netflix-commons:netflix-commons-util:jar:0.3.0:runtime
+[INFO] |  |     +- com.netflix.ribbon:ribbon-loadbalancer:jar:2.3.0:compile
+[INFO] |  |     |  \- com.netflix.netflix-commons:netflix-statistics:jar:0.1.1:runtime
+[INFO] |  |     \- io.reactivex:rxjava:jar:1.3.8:compile
+[INFO] |  \- io.projectreactor.addons:reactor-pool:jar:0.1.6.RELEASE:compile
+[INFO] +- com.hummer:door-god-dao:jar:1.0-SNAPSHOT:compile
+[INFO] |  \- com.hummer:hummer-dao:jar:1.0.0-SNAPSHOT:compile
+[INFO] |     +- com.alibaba:druid:jar:1.1.23:compile
+[INFO] |     +- org.mybatis:mybatis-spring:jar:2.0.1:compile
+[INFO] |     +- org.springframework:spring-jdbc:jar:5.2.8.RELEASE:compile
+[INFO] |     +- org.springframework:spring-tx:jar:5.2.8.RELEASE:compile
+[INFO] |     +- mysql:mysql-connector-java:jar:8.0.21:compile
+[INFO] |     +- com.github.pagehelper:pagehelper:jar:5.1.0:compile
+[INFO] |     |  \- com.github.jsqlparser:jsqlparser:jar:1.0:compile
+[INFO] |     +- org.springframework.boot:spring-boot-autoconfigure:jar:2.3.3.RELEASE:compile
+[INFO] |     +- javax.annotation:javax.annotation-api:jar:1.3.2:compile
+[INFO] |     +- com.microsoft.sqlserver:sqljdbc4:jar:4.0:compile
+[INFO] |     \- org.springframework.boot:spring-boot-starter-data-jpa:jar:2.3.3.RELEASE:compile
+[INFO] |        +- org.springframework.boot:spring-boot-starter-aop:jar:2.3.3.RELEASE:compile
+[INFO] |        +- org.springframework.boot:spring-boot-starter-jdbc:jar:2.3.3.RELEASE:compile
+[INFO] |        +- jakarta.transaction:jakarta.transaction-api:jar:1.3.3:compile
+[INFO] |        +- jakarta.persistence:jakarta.persistence-api:jar:2.2.3:compile
+[INFO] |        +- org.hibernate:hibernate-core:jar:5.4.20.Final:compile
+[INFO] |        |  +- org.javassist:javassist:jar:3.24.0-GA:compile
+[INFO] |        |  +- net.bytebuddy:byte-buddy:jar:1.10.14:compile
+[INFO] |        |  +- antlr:antlr:jar:2.7.7:compile
+[INFO] |        |  +- org.jboss:jandex:jar:2.1.3.Final:compile
+[INFO] |        |  +- org.dom4j:dom4j:jar:2.1.3:compile
+[INFO] |        |  +- org.hibernate.common:hibernate-commons-annotations:jar:5.1.0.Final:compile
+[INFO] |        |  \- org.glassfish.jaxb:jaxb-runtime:jar:2.3.3:compile
+[INFO] |        |     +- jakarta.xml.bind:jakarta.xml.bind-api:jar:2.3.3:compile
+[INFO] |        |     +- org.glassfish.jaxb:txw2:jar:2.3.3:compile
+[INFO] |        |     +- com.sun.istack:istack-commons-runtime:jar:3.0.11:compile
+[INFO] |        |     \- com.sun.activation:jakarta.activation:jar:1.2.2:runtime
+[INFO] |        +- org.springframework.data:spring-data-jpa:jar:2.3.3.RELEASE:compile
+[INFO] |        |  +- org.springframework.data:spring-data-commons:jar:2.3.3.RELEASE:compile
+[INFO] |        |  \- org.springframework:spring-orm:jar:5.2.8.RELEASE:compile
+[INFO] |        \- org.springframework:spring-aspects:jar:5.2.8.RELEASE:compile
+[INFO] +- com.hummer:door-god-facade:jar:1.0-SNAPSHOT:compile
+[INFO] +- com.hummer:door-god-domain:jar:1.0-SNAPSHOT:compile
+[INFO] +- com.hummer:door-god-integration:jar:1.0-SNAPSHOT:compile
+[INFO] \- com.hummer:hummer-core:jar:1.0.0-SNAPSHOT:compile
+[INFO]    +- org.springframework:spring-core:jar:5.2.8.RELEASE:compile
+[INFO]    |  \- org.springframework:spring-jcl:jar:5.2.8.RELEASE:compile
+[INFO]    +- org.springframework:spring-context:jar:5.2.8.RELEASE:compile
+[INFO]    |  \- org.springframework:spring-expression:jar:5.2.8.RELEASE:compile
+[INFO]    +- com.google.guava:guava:jar:29.0-jre:compile
+[INFO]    |  +- com.google.guava:failureaccess:jar:1.0.1:compile
+[INFO]    |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO]    |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO]    |  \- com.google.j2objc:j2objc-annotations:jar:1.3:compile
+[INFO]    +- org.springframework.boot:spring-boot:jar:2.3.3.RELEASE:compile
+[INFO]    +- org.projectlombok:lombok:jar:1.18.8:compile
+[INFO]    +- org.apache.commons:commons-lang3:jar:3.10:compile
+[INFO]    \- org.springframework.boot:spring-boot-starter-log4j2:jar:2.3.3.RELEASE:compile
+[INFO]       +- org.apache.logging.log4j:log4j-slf4j-impl:jar:2.13.3:compile
+[INFO]       |  \- org.apache.logging.log4j:log4j-api:jar:2.13.3:compile
+[INFO]       +- org.apache.logging.log4j:log4j-core:jar:2.13.3:compile
+[INFO]       +- org.apache.logging.log4j:log4j-jul:jar:2.13.3:compile
+[INFO]       \- org.slf4j:jul-to-slf4j:jar:1.7.30:compile
+[INFO] 
+[INFO] ----------------------< com.hummer:door-god-test >----------------------
+[INFO] Building door-god-test 1.0-SNAPSHOT                                [8/9]
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-rest/1.0.0-SNAPSHOT/maven-metadata.xml
+Progress (1): 777 B                   Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-rest/1.0.0-SNAPSHOT/maven-metadata.xml (777 B at 24 kB/s)
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-rest/1.0.0-SNAPSHOT/hummer-rest-1.0.0-20200912.062915-228.pom
+Progress (1): 2.2 kB                    Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-rest/1.0.0-SNAPSHOT/hummer-rest-1.0.0-20200912.062915-228.pom (2.2 kB at 65 kB/s)
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ door-god-test ---
+Downloading from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-rest/1.0.0-SNAPSHOT/hummer-rest-1.0.0-20200912.062915-228.jar
+Progress (1): 4.1/50 kBProgress (1): 8.2/50 kBProgress (1): 10/50 kB Progress (1): 14/50 kBProgress (1): 17/50 kBProgress (1): 20/50 kBProgress (1): 23/50 kBProgress (1): 25/50 kBProgress (1): 28/50 kBProgress (1): 31/50 kBProgress (1): 34/50 kBProgress (1): 36/50 kBProgress (1): 39/50 kBProgress (1): 42/50 kBProgress (1): 44/50 kBProgress (1): 48/50 kBProgress (1): 50 kB                      Downloaded from ygfmaven: http://10.10.10.250:8081/repository/maven-public/com/hummer/hummer-rest/1.0.0-SNAPSHOT/hummer-rest-1.0.0-20200912.062915-228.jar (50 kB at 798 kB/s)
+[INFO] com.hummer:door-god-test:jar:1.0-SNAPSHOT
+[INFO] +- com.hummer:door-god-domain:jar:1.0-SNAPSHOT:compile
+[INFO] |  \- com.hummer:door-god-facade:jar:1.0-SNAPSHOT:compile
+[INFO] +- com.hummer:door-god-integration:jar:1.0-SNAPSHOT:compile
+[INFO] +- com.hummer:door-god-support:jar:1.0-SNAPSHOT:compile
+[INFO] |  +- com.hummer:hummer-common:jar:1.0.0-SNAPSHOT:compile
+[INFO] |  |  +- org.apache.httpcomponents:httpasyncclient:jar:4.1.4:compile
+[INFO] |  |  |  +- org.apache.httpcomponents:httpcore:jar:4.4.13:compile
+[INFO] |  |  |  +- org.apache.httpcomponents:httpcore-nio:jar:4.4.13:compile
+[INFO] |  |  |  \- org.apache.httpcomponents:httpclient:jar:4.5.12:compile
+[INFO] |  |  +- cglib:cglib:jar:3.2.5:compile
+[INFO] |  |  |  +- org.ow2.asm:asm:jar:5.2:compile
+[INFO] |  |  |  \- org.apache.ant:ant:jar:1.9.6:compile
+[INFO] |  |  |     \- org.apache.ant:ant-launcher:jar:1.9.6:compile
+[INFO] |  |  +- com.alibaba:fastjson:jar:1.2.71:compile
+[INFO] |  |  +- commons-collections:commons-collections:jar:3.2.2:compile
+[INFO] |  |  +- joda-time:joda-time:jar:2.9.9:compile
+[INFO] |  |  +- net.lingala.zip4j:zip4j:jar:1.3.2:compile
+[INFO] |  |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  |  +- org.hibernate.validator:hibernate-validator:jar:6.0.13.Final:compile
+[INFO] |  |  |  +- javax.validation:validation-api:jar:2.0.1.Final:compile
+[INFO] |  |  |  +- org.jboss.logging:jboss-logging:jar:3.4.1.Final:compile
+[INFO] |  |  |  \- com.fasterxml:classmate:jar:1.5.1:compile
+[INFO] |  |  +- io.swagger:swagger-annotations:jar:1.5.13:compile
+[INFO] |  |  +- org.aspectj:aspectjweaver:jar:1.9.2:compile
+[INFO] |  |  +- org.springframework:spring-aop:jar:5.2.8.RELEASE:compile
+[INFO] |  |  \- org.latencyutils:LatencyUtils:jar:2.0.3:compile
+[INFO] |  |     \- org.hdrhistogram:HdrHistogram:jar:2.1.8:compile
+[INFO] |  +- org.mybatis:mybatis:jar:3.4.6:compile
+[INFO] |  +- org.springframework.cloud:spring-cloud-loadbalancer:jar:2.2.5.RELEASE:compile
+[INFO] |  |  +- org.springframework.cloud:spring-cloud-commons:jar:2.2.5.RELEASE:compile
+[INFO] |  |  |  \- org.springframework.security:spring-security-crypto:jar:5.3.4.RELEASE:compile
+[INFO] |  |  +- org.springframework.cloud:spring-cloud-context:jar:2.2.5.RELEASE:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-validation:jar:2.3.3.RELEASE:compile
+[INFO] |  |  +- io.projectreactor:reactor-core:jar:3.3.9.RELEASE:compile
+[INFO] |  |  |  \- org.reactivestreams:reactive-streams:jar:1.0.3:compile
+[INFO] |  |  \- io.projectreactor.addons:reactor-extra:jar:3.3.3.RELEASE:compile
+[INFO] |  +- org.springframework.cloud:spring-cloud-starter:jar:2.2.5.RELEASE:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  \- jakarta.annotation:jakarta.annotation-api:jar:1.3.5:compile
+[INFO] |  |  \- org.springframework.security:spring-security-rsa:jar:1.0.9.RELEASE:compile
+[INFO] |  |     \- org.bouncycastle:bcpkix-jdk15on:jar:1.64:compile
+[INFO] |  |        \- org.bouncycastle:bcprov-jdk15on:jar:1.64:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-webflux:jar:2.3.3.RELEASE:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-json:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.11.2:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.11.2:compile
+[INFO] |  |  |  \- com.fasterxml.jackson.module:jackson-module-parameter-names:jar:2.11.2:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-reactor-netty:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  \- io.projectreactor.netty:reactor-netty:jar:0.9.11.RELEASE:compile
+[INFO] |  |  |     +- io.netty:netty-codec-http:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  +- io.netty:netty-common:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  +- io.netty:netty-buffer:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  +- io.netty:netty-transport:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  \- io.netty:netty-codec:jar:4.1.51.Final:compile
+[INFO] |  |  |     +- io.netty:netty-codec-http2:jar:4.1.51.Final:compile
+[INFO] |  |  |     +- io.netty:netty-handler:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  \- io.netty:netty-resolver:jar:4.1.51.Final:compile
+[INFO] |  |  |     +- io.netty:netty-handler-proxy:jar:4.1.51.Final:compile
+[INFO] |  |  |     |  \- io.netty:netty-codec-socks:jar:4.1.51.Final:compile
+[INFO] |  |  |     \- io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.1.51.Final:compile
+[INFO] |  |  |        \- io.netty:netty-transport-native-unix-common:jar:4.1.51.Final:compile
+[INFO] |  |  +- org.springframework:spring-webflux:jar:5.2.8.RELEASE:compile
+[INFO] |  |  \- org.synchronoss.cloud:nio-multipart-parser:jar:1.1.0:compile
+[INFO] |  |     +- org.slf4j:slf4j-api:jar:1.7.30:compile
+[INFO] |  |     \- org.synchronoss.cloud:nio-stream-storage:jar:1.1.3:compile
+[INFO] |  +- org.springframework.cloud:spring-cloud-starter-gateway:jar:2.2.5.RELEASE:compile
+[INFO] |  |  \- org.springframework.cloud:spring-cloud-gateway-core:jar:2.2.5.RELEASE:compile
+[INFO] |  +- org.springframework:spring-beans:jar:5.2.8.RELEASE:compile
+[INFO] |  +- com.alibaba.nacos:nacos-client:jar:1.3.2:compile
+[INFO] |  |  +- com.alibaba.nacos:nacos-common:jar:1.3.2:compile
+[INFO] |  |  +- com.alibaba.nacos:nacos-api:jar:1.3.2:compile
+[INFO] |  |  +- commons-codec:commons-codec:jar:1.14:compile
+[INFO] |  |  +- com.fasterxml.jackson.core:jackson-core:jar:2.11.2:compile
+[INFO] |  |  +- com.fasterxml.jackson.core:jackson-databind:jar:2.11.2:compile
+[INFO] |  |  |  \- com.fasterxml.jackson.core:jackson-annotations:jar:2.11.2:compile
+[INFO] |  |  +- io.prometheus:simpleclient:jar:0.5.0:compile
+[INFO] |  |  \- org.yaml:snakeyaml:jar:1.26:compile
+[INFO] |  +- org.springframework.cloud:spring-cloud-starter-loadbalancer:jar:2.2.5.RELEASE:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-cache:jar:2.3.3.RELEASE:compile
+[INFO] |  |  |  \- org.springframework:spring-context-support:jar:5.2.8.RELEASE:compile
+[INFO] |  |  \- com.stoyanr:evictor:jar:1.0.0:compile
+[INFO] |  +- com.github.ben-manes.caffeine:caffeine:jar:2.8.5:compile
+[INFO] |  |  +- org.checkerframework:checker-qual:jar:3.4.1:compile
+[INFO] |  |  \- com.google.errorprone:error_prone_annotations:jar:2.4.0:compile
+[INFO] |  +- com.alibaba.csp:sentinel-core:jar:1.8.0:compile
+[INFO] |  +- com.alibaba.csp:sentinel-spring-cloud-gateway-adapter:jar:1.8.0:compile
+[INFO] |  |  +- com.alibaba.csp:sentinel-api-gateway-adapter-common:jar:1.8.0:compile
+[INFO] |  |  |  \- com.alibaba.csp:sentinel-parameter-flow-control:jar:1.8.0:compile
+[INFO] |  |  |     \- com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:jar:1.4.2:compile
+[INFO] |  |  \- com.alibaba.csp:sentinel-reactor-adapter:jar:1.8.0:compile
+[INFO] |  +- com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery:jar:2.2.1.RELEASE:compile
+[INFO] |  |  +- com.alibaba.spring:spring-context-support:jar:1.0.6:compile
+[INFO] |  |  \- org.springframework.cloud:spring-cloud-starter-netflix-ribbon:jar:2.2.5.RELEASE:compile
+[INFO] |  |     +- org.springframework.cloud:spring-cloud-netflix-ribbon:jar:2.2.5.RELEASE:compile
+[INFO] |  |     |  \- org.springframework.cloud:spring-cloud-netflix-archaius:jar:2.2.5.RELEASE:compile
+[INFO] |  |     +- org.springframework.cloud:spring-cloud-starter-netflix-archaius:jar:2.2.5.RELEASE:compile
+[INFO] |  |     |  +- com.netflix.archaius:archaius-core:jar:0.7.6:compile
+[INFO] |  |     |  \- commons-configuration:commons-configuration:jar:1.8:compile
+[INFO] |  |     +- com.netflix.ribbon:ribbon:jar:2.3.0:compile
+[INFO] |  |     |  +- com.netflix.ribbon:ribbon-transport:jar:2.3.0:runtime
+[INFO] |  |     |  |  +- io.reactivex:rxnetty-contexts:jar:0.4.9:runtime
+[INFO] |  |     |  |  \- io.reactivex:rxnetty-servo:jar:0.4.9:runtime
+[INFO] |  |     |  +- com.netflix.hystrix:hystrix-core:jar:1.5.18:runtime
+[INFO] |  |     |  +- javax.inject:javax.inject:jar:1:runtime
+[INFO] |  |     |  \- io.reactivex:rxnetty:jar:0.4.9:runtime
+[INFO] |  |     +- com.netflix.ribbon:ribbon-core:jar:2.3.0:compile
+[INFO] |  |     |  \- commons-lang:commons-lang:jar:2.6:compile
+[INFO] |  |     +- com.netflix.ribbon:ribbon-httpclient:jar:2.3.0:compile
+[INFO] |  |     |  +- com.sun.jersey:jersey-client:jar:1.19.1:runtime
+[INFO] |  |     |  |  \- com.sun.jersey:jersey-core:jar:1.19.1:runtime
+[INFO] |  |     |  |     \- javax.ws.rs:jsr311-api:jar:1.1.1:runtime
+[INFO] |  |     |  +- com.sun.jersey.contribs:jersey-apache-client4:jar:1.19.1:runtime
+[INFO] |  |     |  +- com.netflix.servo:servo-core:jar:0.12.21:runtime
+[INFO] |  |     |  \- com.netflix.netflix-commons:netflix-commons-util:jar:0.3.0:runtime
+[INFO] |  |     +- com.netflix.ribbon:ribbon-loadbalancer:jar:2.3.0:compile
+[INFO] |  |     |  \- com.netflix.netflix-commons:netflix-statistics:jar:0.1.1:runtime
+[INFO] |  |     \- io.reactivex:rxjava:jar:1.3.8:compile
+[INFO] |  \- io.projectreactor.addons:reactor-pool:jar:0.1.6.RELEASE:compile
+[INFO] +- com.hummer:door-god-dao:jar:1.0-SNAPSHOT:compile
+[INFO] +- com.hummer:hummer-core:jar:1.0.0-SNAPSHOT:compile
+[INFO] |  +- org.springframework:spring-core:jar:5.2.8.RELEASE:compile
+[INFO] |  |  \- org.springframework:spring-jcl:jar:5.2.8.RELEASE:compile
+[INFO] |  +- org.springframework:spring-context:jar:5.2.8.RELEASE:compile
+[INFO] |  |  \- org.springframework:spring-expression:jar:5.2.8.RELEASE:compile
+[INFO] |  +- com.google.guava:guava:jar:29.0-jre:compile
+[INFO] |  |  +- com.google.guava:failureaccess:jar:1.0.1:compile
+[INFO] |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO] |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |  |  \- com.google.j2objc:j2objc-annotations:jar:1.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot:jar:2.3.3.RELEASE:compile
+[INFO] |  +- org.projectlombok:lombok:jar:1.18.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.10:compile
+[INFO] |  \- org.springframework.boot:spring-boot-starter-log4j2:jar:2.3.3.RELEASE:compile
+[INFO] |     +- org.apache.logging.log4j:log4j-slf4j-impl:jar:2.13.3:compile
+[INFO] |     |  \- org.apache.logging.log4j:log4j-api:jar:2.13.3:compile
+[INFO] |     +- org.apache.logging.log4j:log4j-core:jar:2.13.3:compile
+[INFO] |     +- org.apache.logging.log4j:log4j-jul:jar:2.13.3:compile
+[INFO] |     \- org.slf4j:jul-to-slf4j:jar:1.7.30:compile
+[INFO] +- com.hummer:hummer-rest:jar:1.0.0-SNAPSHOT:compile
+[INFO] |  +- javax.servlet:javax.servlet-api:jar:4.0.1:compile
+[INFO] |  +- org.springframework:spring-web:jar:5.2.8.RELEASE:compile
+[INFO] |  +- org.springframework.boot:spring-boot-autoconfigure:jar:2.3.3.RELEASE:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-undertow:jar:2.3.3.RELEASE:compile
+[INFO] |  |  +- io.undertow:undertow-core:jar:2.1.3.Final:compile
+[INFO] |  |  |  +- org.jboss.xnio:xnio-api:jar:3.8.0.Final:compile
+[INFO] |  |  |  |  +- org.wildfly.common:wildfly-common:jar:1.5.2.Final:compile
+[INFO] |  |  |  |  \- org.wildfly.client:wildfly-client-config:jar:1.0.1.Final:compile
+[INFO] |  |  |  +- org.jboss.xnio:xnio-nio:jar:3.8.0.Final:runtime
+[INFO] |  |  |  \- org.jboss.threads:jboss-threads:jar:3.1.0.Final:compile
+[INFO] |  |  +- io.undertow:undertow-servlet:jar:2.1.3.Final:compile
+[INFO] |  |  |  \- org.jboss.spec.javax.annotation:jboss-annotations-api_1.3_spec:jar:2.0.1.Final:compile
+[INFO] |  |  +- io.undertow:undertow-websockets-jsr:jar:2.1.3.Final:compile
+[INFO] |  |  |  \- org.jboss.spec.javax.websocket:jboss-websocket-api_1.1_spec:jar:2.0.0.Final:compile
+[INFO] |  |  +- jakarta.servlet:jakarta.servlet-api:jar:4.0.4:compile
+[INFO] |  |  \- org.glassfish:jakarta.el:jar:3.0.3:compile
+[INFO] |  \- org.springframework.boot:spring-boot-starter-web:jar:2.3.3.RELEASE:compile
+[INFO] |     \- org.springframework:spring-webmvc:jar:5.2.8.RELEASE:compile
+[INFO] +- com.hummer:hummer-dao:jar:1.0.0-SNAPSHOT:compile
+[INFO] |  +- com.alibaba:druid:jar:1.1.23:compile
+[INFO] |  +- org.mybatis:mybatis-spring:jar:2.0.1:compile
+[INFO] |  +- org.springframework:spring-jdbc:jar:5.2.8.RELEASE:compile
+[INFO] |  +- org.springframework:spring-tx:jar:5.2.8.RELEASE:compile
+[INFO] |  +- mysql:mysql-connector-java:jar:8.0.21:compile
+[INFO] |  +- com.github.pagehelper:pagehelper:jar:5.1.0:compile
+[INFO] |  |  \- com.github.jsqlparser:jsqlparser:jar:1.0:compile
+[INFO] |  +- javax.annotation:javax.annotation-api:jar:1.3.2:compile
+[INFO] |  +- com.microsoft.sqlserver:sqljdbc4:jar:4.0:compile
+[INFO] |  \- org.springframework.boot:spring-boot-starter-data-jpa:jar:2.3.3.RELEASE:compile
+[INFO] |     +- org.springframework.boot:spring-boot-starter-aop:jar:2.3.3.RELEASE:compile
+[INFO] |     +- org.springframework.boot:spring-boot-starter-jdbc:jar:2.3.3.RELEASE:compile
+[INFO] |     +- jakarta.transaction:jakarta.transaction-api:jar:1.3.3:compile
+[INFO] |     +- jakarta.persistence:jakarta.persistence-api:jar:2.2.3:compile
+[INFO] |     +- org.hibernate:hibernate-core:jar:5.4.20.Final:compile
+[INFO] |     |  +- org.javassist:javassist:jar:3.24.0-GA:compile
+[INFO] |     |  +- net.bytebuddy:byte-buddy:jar:1.10.14:compile
+[INFO] |     |  +- antlr:antlr:jar:2.7.7:compile
+[INFO] |     |  +- org.jboss:jandex:jar:2.1.3.Final:compile
+[INFO] |     |  +- org.dom4j:dom4j:jar:2.1.3:compile
+[INFO] |     |  +- org.hibernate.common:hibernate-commons-annotations:jar:5.1.0.Final:compile
+[INFO] |     |  \- org.glassfish.jaxb:jaxb-runtime:jar:2.3.3:compile
+[INFO] |     |     +- jakarta.xml.bind:jakarta.xml.bind-api:jar:2.3.3:compile
+[INFO] |     |     +- org.glassfish.jaxb:txw2:jar:2.3.3:compile
+[INFO] |     |     +- com.sun.istack:istack-commons-runtime:jar:3.0.11:compile
+[INFO] |     |     \- com.sun.activation:jakarta.activation:jar:1.2.2:runtime
+[INFO] |     +- org.springframework.data:spring-data-jpa:jar:2.3.3.RELEASE:compile
+[INFO] |     |  +- org.springframework.data:spring-data-commons:jar:2.3.3.RELEASE:compile
+[INFO] |     |  \- org.springframework:spring-orm:jar:5.2.8.RELEASE:compile
+[INFO] |     \- org.springframework:spring-aspects:jar:5.2.8.RELEASE:compile
+[INFO] +- org.junit.jupiter:junit-jupiter-api:jar:5.3.2:test
+[INFO] |  +- org.apiguardian:apiguardian-api:jar:1.0.0:test
+[INFO] |  +- org.opentest4j:opentest4j:jar:1.1.1:test
+[INFO] |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO] +- org.springframework:spring-test:jar:5.2.8.RELEASE:test
+[INFO] +- junit:junit:jar:4.12:test
+[INFO] |  \- org.hamcrest:hamcrest-core:jar:2.2:test
+[INFO] |     \- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] \- org.springframework.boot:spring-boot-test:jar:2.3.3.RELEASE:test
+[INFO] 
+[INFO] ------------------< com.hummer:door-god-flow-cluster >------------------
+[INFO] Building door-god-flow-cluster 1.0-SNAPSHOT                        [9/9]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ door-god-flow-cluster ---
+[INFO] com.hummer:door-god-flow-cluster:jar:1.0-SNAPSHOT
+[INFO] +- com.alibaba.csp:sentinel-core:jar:1.8.0:compile
+[INFO] +- com.alibaba.csp:sentinel-transport-simple-http:jar:1.8.0:compile
+[INFO] |  \- com.alibaba.csp:sentinel-transport-common:jar:1.8.0:compile
+[INFO] |     \- com.alibaba:fastjson:jar:1.2.71:compile
+[INFO] +- com.alibaba.csp:sentinel-parameter-flow-control:jar:1.8.0:compile
+[INFO] |  \- com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:jar:1.4.2:compile
+[INFO] +- com.alibaba.csp:sentinel-cluster-server-default:jar:1.8.0:compile
+[INFO] |  +- com.alibaba.csp:sentinel-cluster-common-default:jar:1.8.0:compile
+[INFO] |  \- io.netty:netty-handler:jar:4.1.51.Final:compile
+[INFO] |     +- io.netty:netty-common:jar:4.1.51.Final:compile
+[INFO] |     +- io.netty:netty-resolver:jar:4.1.51.Final:compile
+[INFO] |     +- io.netty:netty-buffer:jar:4.1.51.Final:compile
+[INFO] |     +- io.netty:netty-transport:jar:4.1.51.Final:compile
+[INFO] |     \- io.netty:netty-codec:jar:4.1.51.Final:compile
+[INFO] +- com.alibaba.csp:sentinel-datasource-nacos:jar:1.8.0:compile
+[INFO] |  +- com.alibaba.csp:sentinel-datasource-extension:jar:1.8.0:compile
+[INFO] |  \- com.alibaba.nacos:nacos-client:jar:1.3.2:compile
+[INFO] |     +- com.alibaba.nacos:nacos-common:jar:1.3.2:compile
+[INFO] |     |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |     |  \- org.apache.httpcomponents:httpasyncclient:jar:4.1.4:compile
+[INFO] |     |     +- org.apache.httpcomponents:httpcore:jar:4.4.13:compile
+[INFO] |     |     +- org.apache.httpcomponents:httpcore-nio:jar:4.4.13:compile
+[INFO] |     |     \- org.apache.httpcomponents:httpclient:jar:4.5.12:compile
+[INFO] |     +- com.alibaba.nacos:nacos-api:jar:1.3.2:compile
+[INFO] |     |  \- org.apache.commons:commons-lang3:jar:3.10:compile
+[INFO] |     +- com.google.guava:guava:jar:29.0-jre:compile
+[INFO] |     |  +- com.google.guava:failureaccess:jar:1.0.1:compile
+[INFO] |     |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO] |     |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |     |  +- org.checkerframework:checker-qual:jar:2.11.1:compile
+[INFO] |     |  +- com.google.errorprone:error_prone_annotations:jar:2.3.4:compile
+[INFO] |     |  \- com.google.j2objc:j2objc-annotations:jar:1.3:compile
+[INFO] |     +- commons-codec:commons-codec:jar:1.14:compile
+[INFO] |     +- com.fasterxml.jackson.core:jackson-core:jar:2.11.2:compile
+[INFO] |     +- com.fasterxml.jackson.core:jackson-databind:jar:2.11.2:compile
+[INFO] |     |  \- com.fasterxml.jackson.core:jackson-annotations:jar:2.11.2:compile
+[INFO] |     +- io.prometheus:simpleclient:jar:0.5.0:compile
+[INFO] |     \- org.yaml:snakeyaml:jar:1.26:compile
+[INFO] \- org.springframework.boot:spring-boot-starter-log4j2:jar:2.3.3.RELEASE:compile
+[INFO]    +- org.apache.logging.log4j:log4j-slf4j-impl:jar:2.13.3:compile
+[INFO]    |  +- org.slf4j:slf4j-api:jar:1.7.30:compile
+[INFO]    |  \- org.apache.logging.log4j:log4j-api:jar:2.13.3:compile
+[INFO]    +- org.apache.logging.log4j:log4j-core:jar:2.13.3:compile
+[INFO]    +- org.apache.logging.log4j:log4j-jul:jar:2.13.3:compile
+[INFO]    \- org.slf4j:jul-to-slf4j:jar:1.7.30:compile
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for door-god 1.0-SNAPSHOT:
+[INFO] 
+[INFO] door-god ........................................... SUCCESS [  0.947 s]
+[INFO] door-god-support ................................... SUCCESS [  1.161 s]
+[INFO] door-god-dao ....................................... SUCCESS [  0.974 s]
+[INFO] door-god-facade .................................... SUCCESS [  0.068 s]
+[INFO] door-god-integration ............................... SUCCESS [  0.005 s]
+[INFO] door-god-domain .................................... SUCCESS [  1.633 s]
+[INFO] door-god-api ....................................... SUCCESS [  0.719 s]
+[INFO] door-god-test ...................................... SUCCESS [  0.312 s]
+[INFO] door-god-flow-cluster .............................. SUCCESS [  0.060 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  7.403 s
+[INFO] Finished at: 2020-09-13T23:25:40+08:00
+[INFO] ------------------------------------------------------------------------
