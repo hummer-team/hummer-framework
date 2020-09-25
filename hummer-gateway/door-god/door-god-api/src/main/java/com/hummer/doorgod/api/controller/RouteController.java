@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/v1")
+@RequestMapping(value = "/v1/config")
 public class RouteController {
     @Autowired
     private RouteFacade routeFacade;
@@ -19,5 +20,10 @@ public class RouteController {
     @GetMapping("/all-routes")
     public Mono<List<RouteDefinition>> queryAllRoutes(){
         return routeFacade.getAllRoute();
+    }
+
+    @GetMapping("/all-sentinel")
+    public Mono<Map<String,Object>> queryAllSentinel(){
+        return routeFacade.getAllSentinelConfig();
     }
 }

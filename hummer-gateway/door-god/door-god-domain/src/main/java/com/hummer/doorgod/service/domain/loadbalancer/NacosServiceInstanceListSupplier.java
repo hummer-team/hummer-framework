@@ -1,7 +1,7 @@
 package com.hummer.doorgod.service.domain.loadbalancer;
 
+import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
 import com.alibaba.nacos.api.exception.NacosException;
-import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.pojo.Instance;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class NacosServiceInstanceListSupplier implements ServiceInstanceListSupplier {
     private final String serviceId;
-    private final NamingService namingService;
+    private final NacosDiscoveryProperties nacosDiscoveryProperties;
 
-    public NacosServiceInstanceListSupplier(String serviceId, NamingService namingService) {
+    public NacosServiceInstanceListSupplier(String serviceId, NacosDiscoveryProperties nacosDiscoveryProperties) {
         this.serviceId = serviceId;
-        this.namingService = namingService;
+        this.nacosDiscoveryProperties = nacosDiscoveryProperties;
     }
 
     @Override
@@ -37,7 +37,8 @@ public class NacosServiceInstanceListSupplier implements ServiceInstanceListSupp
     public Flux<List<ServiceInstance>> get() {
         List<Instance> instanceList = null;
         try {
-            instanceList = namingService.selectInstances(serviceId, true);
+
+            instanceList = nacosDiscoveryProperties.namingServiceInstance().selectInstances(serviceId, true);
         } catch (NacosException e) {
             log.error("no active service instance for {}", serviceId);
         }
@@ -48,13 +49,13 @@ public class NacosServiceInstanceListSupplier implements ServiceInstanceListSupp
         List<ServiceInstance> list =
                 instanceList.stream()
                         .filter(f -> f.getWeight() > 0.0)
-                        .map(i -> {
-                            return new DefaultServiceInstance(i.getServiceName()
-                                    , i.getServiceName()
-                                    , i.getIp()
-                                    , i.getPort()
-                                    , false);
-                        }).collect(Collectors.toList());
+                        .map(i -> new DefaultServiceInstance(i.getInstanceId()
+                                , i.getServiceName()
+                                , i.getIp()
+                                , i.getPort()
+                                , false
+                                , i.getMetadata()))
+                        .collect(Collectors.toList());
         return Flux.just(list);
     }
 }
