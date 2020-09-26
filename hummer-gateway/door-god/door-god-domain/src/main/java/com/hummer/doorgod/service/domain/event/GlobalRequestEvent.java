@@ -1,5 +1,6 @@
 package com.hummer.doorgod.service.domain.event;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ServerWebExchange;
 
 public class GlobalRequestEvent extends BaseEvent {
@@ -11,9 +12,9 @@ public class GlobalRequestEvent extends BaseEvent {
         super(source);
     }
 
-    public int getResponseSize() {
-        return responseSize;
-    }
+    private HttpStatus responseStatus;
+    private int responseSize;
+    private long requestCostMillis;
 
     public void setResponseSize(int responseSize) {
         this.responseSize = responseSize;
