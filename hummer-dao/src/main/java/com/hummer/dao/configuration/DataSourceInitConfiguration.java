@@ -1,6 +1,5 @@
 package com.hummer.dao.configuration;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Collections2;
@@ -14,7 +13,7 @@ import com.hummer.core.PropertiesContainer;
 import com.hummer.core.SpringApplicationContext;
 import com.hummer.dao.annotation.DaoAnnotation;
 import com.hummer.dao.condition.DaoLoadCondition;
-import com.hummer.dao.druiddatasource.DruidDataSourceBuilder;
+import com.hummer.dao.datasource.DataSourceFactory;
 import com.hummer.dao.mybatis.MybatisDynamicBean;
 import com.hummer.dao.mybatis.context.MultipleDataSourceMap;
 import org.apache.commons.collections.MapUtils;
@@ -44,7 +43,7 @@ import java.util.stream.Collectors;
 public class DataSourceInitConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataSourceInitConfiguration.class);
 
-    private final Map<String, DruidDataSource> allDataSources = Maps.newConcurrentMap();
+    private final Map<String, DataSource> allDataSources = Maps.newConcurrentMap();
     private DataSource defaultTargetDataSource;
 
     @Bean
@@ -53,7 +52,7 @@ public class DataSourceInitConfiguration {
         return new NamedParameterJdbcTemplate(defaultTargetDataSource);
     }
 
-    public final ImmutableMap<String, DruidDataSource> dataSourceMap() {
+    public final ImmutableMap<String,DataSource> dataSourceMap() {
         return ImmutableMap.copyOf(allDataSources);
     }
 
@@ -108,7 +107,7 @@ public class DataSourceInitConfiguration {
             String keyPrefix = entry.getKey();
             //builder druid pool instance
             try {
-                DruidDataSource dataSource = DruidDataSourceBuilder.buildDataSource(entry.getValue());
+                DataSource dataSource = DataSourceFactory.factory(entry.getValue());
                 //register jdbc transaction bean
                 MybatisDynamicBean.registerTransaction(newKey(keyPrefix, "_TM")
                         , dataSource);

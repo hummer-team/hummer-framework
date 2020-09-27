@@ -1,4 +1,4 @@
-package com.hummer.dao.druiddatasource;
+package com.hummer.dao.datasource;
 
 import com.alibaba.druid.filter.Filter;
 import com.alibaba.druid.filter.stat.StatFilter;

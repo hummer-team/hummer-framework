@@ -440,4 +440,12 @@ public class CompletedFutureTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void split(){
+        String[] a="a".split(",");
+        for(String s : a){
+            System.out.println(s);
+        }
+    }
 }

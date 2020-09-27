@@ -139,6 +139,7 @@
         <spring-cloud-sleuth-stream.version>1.3.6.RELEASE</spring-cloud-sleuth-stream.version>
         <sentinel.version>1.8.0</sentinel.version>
         <micrometer.version>1.5.4</micrometer.version>
+        <HikariCP.version>3.4.5</HikariCP.version>
     </properties>
 
     <dependencyManagement>
@@ -255,6 +256,11 @@
                 <version>${hummer.version}</version>
             </dependency>
             <!--framework plugin-->
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${HikariCP.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.alibaba.csp</groupId>
                 <artifactId>sentinel-core</artifactId>
@@ -553,13 +559,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-jpa</artifactId>
                 <version>${spring-boot.version}</version>
-                <!-- fix cpnfict between spring cloud config server and spring boot JPA-->
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.zaxxer</groupId>
-                        <artifactId>HikariCP</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.h2database</groupId>

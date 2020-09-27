@@ -1,6 +1,6 @@
 package com.hummer.api.web;
 
-//import com.hummer.api.dao.BizLogTableConfigDao;
+
 import com.hummer.api.dao.CoursewareDaoMapper;
 import com.hummer.api.dao.hjclass.EvaluationTasksDao;
 import com.hummer.api.po.CoursewarePo;
@@ -25,8 +25,6 @@ import java.util.Map;
 @RequestMapping(value = "/v1")
 public class DataSourceController {
 
-    //@Autowired
-    //private BizLogTableConfigDao configDao;
     @Autowired(required = false)
     private EvaluationTasksDao tasksDao;
     @Autowired(required = false)
