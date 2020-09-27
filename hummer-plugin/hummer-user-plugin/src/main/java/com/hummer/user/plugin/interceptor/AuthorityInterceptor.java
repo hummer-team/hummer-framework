@@ -5,9 +5,11 @@ import com.hummer.core.PropertiesContainer;
 import com.hummer.user.plugin.agent.AuthorityServiceAgent;
 import com.hummer.user.plugin.annotation.AuthorityConditionEnum;
 import com.hummer.user.plugin.annotation.NeedAuthority;
+import com.hummer.user.plugin.annotation.member.MemberNeedAuthority;
 import com.hummer.user.plugin.holder.RequestContextHolder;
 import com.hummer.user.plugin.holder.UserHolder;
 import com.hummer.user.plugin.user.UserContext;
+import com.hummer.user.plugin.user.member.MemberUserContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -54,12 +56,47 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         if (!(handler instanceof HandlerMethod)) {
             return true;
         }
+        HandlerMethod handlerMethod = (HandlerMethod) handler;
+        //  管理用户校验
+        verifyManageUserAuthority(request, handlerMethod);
+        //  会员用户校验
+        verifyMemberUserAuthority(request, handlerMethod);
+        return true;
+    }
 
-        NeedAuthority login = ((HandlerMethod) handler).getMethod().getAnnotation(NeedAuthority.class);
+    private void verifyMemberUserAuthority(HttpServletRequest request, HandlerMethod handler) {
+        MemberNeedAuthority login = handler.getMethod().getAnnotation(MemberNeedAuthority.class);
+        if (login == null) {
+            login = handler.getClass().getAnnotation(MemberNeedAuthority.class);
+            if (login == null) {
+                return;
+            }
+        }
+        String tokenKey = PropertiesContainer.valueOfString("ticket.request.key", "token");
+        String token = RequestContextHolder.get(tokenKey);
+        if (StringUtils.isEmpty(token)) {
+            throw new AppException(41001, "this request ticket not exists.");
+        }
+        MemberUserContext userContext = AuthorityServiceAgent.getMemberUserContext(token);
+        if (userContext == null) {
+            log.debug("this request url {} ,controller method is {},ticket invalid"
+                    , request.getRequestURI()
+                    , ((HandlerMethod) handler).getMethod().getName());
+            throw new AppException(41001, "this request ticket invalid.");
+        }
+        UserHolder.setMember(userContext);
+        log.info("method {} by userInfo userId=={}",
+                ((HandlerMethod) handler).getMethod().getName(), userContext.getUserId());
+
+    }
+
+
+    private void verifyManageUserAuthority(HttpServletRequest request, HandlerMethod handler) {
+        NeedAuthority login = handler.getMethod().getAnnotation(NeedAuthority.class);
         if (login == null) {
             login = handler.getClass().getAnnotation(NeedAuthority.class);
             if (login == null) {
-                return true;
+                return;
             }
         }
 
@@ -89,18 +126,18 @@ public class AuthorityInterceptor implements HandlerInterceptor {
 
         boolean disableAuthority = PropertiesContainer.valueOf("disable.authority", Boolean.class, Boolean.FALSE);
         if (disableAuthority) {
-            return true;
+            return;
         }
 
         //if this user is supper admin then allow all operation
         if (Boolean.TRUE.equals(userContext.getIsSuperAdmin())) {
             UserHolder.set(userContext);
-            return true;
+            return;
         }
 
         if (ArrayUtils.isEmpty(login.authorityCode())) {
             UserHolder.set(userContext);
-            return true;
+            return;
         }
 
         if (login.authorityCondition() == AuthorityConditionEnum.ANY_OF) {
@@ -110,7 +147,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
                         .map(m -> m.getAuthorityCode())
                         .anyMatch(f -> f.equalsIgnoreCase(op))) {
                     UserHolder.set(userContext);
-                    return true;
+                    return;
                 }
             }
         } else {
@@ -122,7 +159,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
                             .anyMatch(f -> f.equalsIgnoreCase(a)));
             if (allMatch) {
                 UserHolder.set(userContext);
-                return true;
+                return;
             }
         }
 

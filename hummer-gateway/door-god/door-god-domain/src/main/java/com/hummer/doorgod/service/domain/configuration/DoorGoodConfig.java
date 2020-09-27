@@ -8,5 +8,6 @@ import java.util.List;
 @Data
 public class DoorGoodConfig {
     private List<RouteDefinition> routeDefinition;
+    private List<LoadBalancerConfig> loadBalancerConfig;
     private SentinelConfig sentinelConfig;
 }

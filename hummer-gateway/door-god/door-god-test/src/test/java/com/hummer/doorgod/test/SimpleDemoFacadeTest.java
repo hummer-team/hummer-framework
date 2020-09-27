@@ -8,7 +8,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,11 +29,6 @@ public class SimpleDemoFacadeTest /**extends BaseTest**/
 
     @Test
     public void configJson() {
-        Config config = new Config();
-        Map<String, List<String>> map=new HashMap<>();
-        map.put("a", Lists.newArrayList("a","b"));
-        map.put("b", Lists.newArrayList("a","b"));
-        config.setBlackHead(map);
         System.out.println(JSON.toJSONString(Config.builder()
                 .order(12)
                 .routeId("assss")
@@ -45,7 +39,17 @@ public class SimpleDemoFacadeTest /**extends BaseTest**/
     public void hashSet() {
         HashSet<Config> hashSet = new HashSet<>();
 
-        System.out.println(JSON.toJSONString(config));
+        hashSet.add(Config.builder()
+                .order(12)
+                .routeId("assss")
+                .build());
+
+        hashSet.add(Config.builder()
+                .order(345)
+                .routeId("assss")
+                .build());
+
+        System.out.println(hashSet);
     }
 
     @Test

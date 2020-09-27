@@ -76,7 +76,7 @@ public class RequestBlacklistGatewayFilterFactory
                                         , exchange
                                         , throwable));
                         //
-                        throw new AppException(50008, "request forbid");
+                        throw new AppException(50008, "request forbid -> " + throwable.getMessage());
                     })
                     .then(chain.filter(exchange));
         }
@@ -90,7 +90,7 @@ public class RequestBlacklistGatewayFilterFactory
                     : config.getBlackHead()) {
                 Iterable<String> iterables = Splitter.on("=").split(entry);
                 String v = headers.getFirst(Iterables.get(iterables, 0));
-                if (Strings.isEmpty(v)) {
+                if (Strings.isEmpty(v) || !entry.equals(v)) {
                     throw new AppException(40000, String.format("%s not find", Iterables.get(iterables, 0)));
                 }
             }

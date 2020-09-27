@@ -1,6 +1,9 @@
 package com.hummer.doorgod.service.domain.filter.factory;
 
+import com.hummer.common.SysConstant;
+import com.hummer.doorgod.service.domain.event.ProvideServiceTimeEvent;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -78,19 +81,24 @@ public class ProvideServiceTimeGatewayFilterFactory
         @Override
         public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
             exchange.getAttributes().put(REQUEST_TIME_KEY, System.currentTimeMillis());
+            String traceId = MDC.get(SysConstant.REQUEST_ID);
             //aop
             return chain.filter(exchange).then(Mono.fromRunnable(() -> {
                 Long startTime = (Long) exchange.getAttributes().get(REQUEST_TIME_KEY);
-                log.debug("this route id {} url {} cost {} millis"
-                        , config.getRouteId()
-                        , exchange.getRequest().getURI()
-                        , System.currentTimeMillis() - startTime);
+                exchange.getApplicationContext()
+                        .publishEvent(new ProvideServiceTimeEvent(
+                                this
+                                , traceId
+                                , config.getRouteId()
+                                , exchange
+                                , System.currentTimeMillis() - startTime
+                        ));
             }));
         }
 
         @Override
         public int getOrder() {
-            return config.getOrder() == null ? 1 : config.getOrder();
+            return config.getOrder() == null ? Ordered.LOWEST_PRECEDENCE - 1 : config.getOrder();
         }
     }
 }

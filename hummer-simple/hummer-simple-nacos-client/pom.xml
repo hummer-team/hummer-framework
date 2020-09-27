@@ -31,6 +31,16 @@
         <dependency>
             <groupId>com.hummer</groupId>
             <artifactId>hummer-config</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba.boot</groupId>
+                    <artifactId>nacos-config-spring-boot-starter</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-client</artifactId>
         </dependency>
         <dependency>
             <groupId>com.hummer</groupId>
@@ -43,6 +53,10 @@
         <dependency>
             <groupId>com.hummer</groupId>
             <artifactId>hummer-user-plugin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.hummer</groupId>
+            <artifactId>hummer-soa-plugin</artifactId>
         </dependency>
     </dependencies>
 

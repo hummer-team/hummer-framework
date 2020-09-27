@@ -43,4 +43,13 @@ public class BaseEvent extends ApplicationEvent {
     public void setTraceId(String traceId) {
         this.traceId = traceId;
     }
+
+    @Override
+    public String toString() {
+        return "BaseEvent{" +
+                "traceId='" + traceId + '\'' +
+                ", routeId='" + routeId + '\'' +
+                ", exchange=" + exchange +
+                '}';
+    }
 }
