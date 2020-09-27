@@ -25,4 +25,9 @@ public class RequestBlacklistEvent extends BaseEvent {
     public void setThrowable(Throwable throwable) {
         this.throwable = throwable;
     }
+
+    @Override
+    public String toString() {
+        return "{" + "throwable=" + throwable + '}';
+    }
 }

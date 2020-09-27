@@ -47,4 +47,13 @@ public class GlobalRequestEvent extends BaseEvent {
     public void setRequestCostMillis(long requestCostMillis) {
         this.requestCostMillis = requestCostMillis;
     }
+
+    @Override
+    public String toString() {
+        return "GlobalRequestEvent{" +
+                "responseStatus=" + responseStatus +
+                ", responseSize=" + responseSize +
+                ", requestCostMillis=" + requestCostMillis +
+                '}';
+    }
 }
