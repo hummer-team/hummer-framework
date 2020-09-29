@@ -30,6 +30,8 @@ public class SysConstant {
         public static final String EXCLUSIONS_URL_PATTEER = "/do_not_delete/*,/warmup*,*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*";
         public static final String SERVER_IP = "serverIp";
         public static final String CLIENT_IP = "clientIp";
+        public static final String PARENT_SPAN_ID = "pSpanId";
+        public static final String SPAN_ID = "spanId";
         public static final String REQUEST_COST_TIME = "costTime";
         public static final String MVC_SERIALIZERFEATURE = "mvc.serializerFeature";
         public static final String SYSTEM_REMOTE_IP_SPLIT_CHAR = "system.remote.ip.split.char";

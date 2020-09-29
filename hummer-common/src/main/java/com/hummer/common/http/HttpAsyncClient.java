@@ -3,12 +3,10 @@ package com.hummer.common.http;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.google.common.base.Strings;
-
-import com.hummer.common.exceptions.SysException;
-import com.hummer.common.http.context.RequestContextWrapper;
-import com.hummer.core.PropertiesContainer;
 import com.hummer.common.SysConstant;
+import com.hummer.common.exceptions.SysException;
 import com.hummer.common.utils.DateUtil;
+import com.hummer.core.PropertiesContainer;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -81,7 +79,7 @@ public final class HttpAsyncClient extends BaseHttpClient {
      * @date 2019/6/20 15:00
      * @version 1.0.0
      **/
-    public static  HttpAsyncClient create() {
+    public static HttpAsyncClient create() {
         return create(null);
     }
 
@@ -511,13 +509,13 @@ public final class HttpAsyncClient extends BaseHttpClient {
             } catch (TimeoutException e) {
                 future.cancel(true);
                 //
-                throwHandle(requestBase,e);
+                throwHandle(requestBase, e);
             } catch (Throwable e) {
                 hasException = true;
                 logRequestFail(customConfig
                         , i
                         , e);
-                throwHandle(requestBase,e);
+                throwHandle(requestBase, e);
             }
             if (hasException) {
                 sleep(hasException, customConfig.getRetrySleepMillisecond());
@@ -554,7 +552,6 @@ public final class HttpAsyncClient extends BaseHttpClient {
             }
         }
     }
-
 
 
     private <INPUT> String parseResponse(RequestCustomConfig<INPUT> customConfig
@@ -638,7 +635,7 @@ public final class HttpAsyncClient extends BaseHttpClient {
                 //release conn
                 requestBase.releaseConnection();
                 //
-                afterHandle(requestBase,result);
+                afterHandle(requestBase, result);
                 //
                 int statusCode = result.getStatusLine().getStatusCode();
                 if (statusCode != SUCCESS
@@ -696,7 +693,7 @@ public final class HttpAsyncClient extends BaseHttpClient {
                             , System.currentTimeMillis() - parseStartTime
                             , customConfig
                             , respString);
-                    throwHandle(requestBase,e);
+                    throwHandle(requestBase, e);
                 }
                 long parseConstTime = System.currentTimeMillis() - parseStartTime;
                 //
@@ -737,7 +734,7 @@ public final class HttpAsyncClient extends BaseHttpClient {
                 //
                 handle.fail(customConfig.getRequestBody(), ex);
                 //
-                throwHandle(requestBase,ex);
+                throwHandle(requestBase, ex);
             }
 
             @Override
@@ -871,6 +868,7 @@ public final class HttpAsyncClient extends BaseHttpClient {
     private static void setRequestHead(HttpMessage httpMessage) {
         httpMessage.addHeader(SysConstant.REQUEST_ID, MDC.get(SysConstant.REQUEST_ID));
         httpMessage.addHeader(SysConstant.HEADER_REQ_TIME, String.valueOf(DateUtil.getTimestampInMillis()));
+        httpMessage.addHeader(SysConstant.RestConstant.PARENT_SPAN_ID, MDC.get(SysConstant.RestConstant.PARENT_SPAN_ID));
     }
 
     private <INPUT> void logRequestFail(RequestCustomConfig<INPUT> customConfig

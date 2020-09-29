@@ -3,6 +3,7 @@ package com.hummer.rest.filter;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.hummer.common.SysConstant;
+import com.hummer.common.utils.CommonUtil;
 import com.hummer.common.utils.HttpServletRequestUtil;
 import com.hummer.common.utils.IpUtil;
 import com.hummer.core.PropertiesContainer;
@@ -187,6 +188,9 @@ public class RequestFilter implements Filter {
         MDC.put(SysConstant.RestConstant.SERVER_IP, IpUtil.getLocalIp());
         MDC.put(SysConstant.RestConstant.CLIENT_IP, getRemoteAddr(httpRequest));
 
+        String pSpanId = httpRequest.getHeader(SysConstant.RestConstant.SPAN_ID);
+        MDC.put(SysConstant.RestConstant.PARENT_SPAN_ID, StringUtils.isNotEmpty(pSpanId)
+                ? pSpanId : CommonUtil.getUuidShort());
         return requestId;
     }
 
