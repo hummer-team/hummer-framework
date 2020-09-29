@@ -1,12 +1,13 @@
 package com.hummer.doorgod.test;
 
 import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,7 +36,7 @@ public class SimpleDemoFacadeTest /**extends BaseTest**/
     }
 
     @Test
-    public void hashSet(){
+    public void hashSet() {
         HashSet<Config> hashSet = new HashSet<>();
 
         hashSet.add(Config.builder()
@@ -49,5 +50,17 @@ public class SimpleDemoFacadeTest /**extends BaseTest**/
                 .build());
 
         System.out.println(hashSet);
+    }
+
+    @Test
+    public void localHost() throws UnknownHostException {
+        System.out.println(InetAddress.getLocalHost().getHostName());
+        System.out.println(InetAddress.getLocalHost().getCanonicalHostName());
+    }
+
+    @Test
+    public void isNoeBlack() {
+      boolean isNoeBlack =  StringUtils.isNoneBlank("a", "") && 787 != -1;
+      System.out.println(isNoeBlack);
     }
 }

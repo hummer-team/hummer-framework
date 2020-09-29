@@ -1,4 +1,4 @@
-package com.hummer.dao.druiddatasource;
+package com.hummer.dao.datasource;
 
 import com.alibaba.druid.filter.Filter;
 import com.alibaba.druid.filter.stat.StatFilter;
@@ -44,7 +44,7 @@ public class DruidDataSourceBuilder {
      * @date 2019/6/26 17:36
      * @version 1.0.0
      **/
-    public static DruidDataSource buildDataSource(Map<String, Object> ds) {
+    public static DruidDataSource buildDataSource(final Map<String, Object> ds) {
         long start = System.currentTimeMillis();
         try {
             DruidDataSource druidDataSource = new DruidDataSource();
@@ -133,8 +133,21 @@ public class DruidDataSourceBuilder {
             String queryTimeOutVal = (String) ds.get("queryTimeout");
             if (!Strings.isNullOrEmpty(queryTimeOutVal)) {
                 druidDataSource.setQueryTimeout(Integer.parseInt(queryTimeOutVal));
+            } else {
+                if (!Strings.isNullOrEmpty(connectionProperties)) {
+                    Map<String, String> connMap =
+                            Splitter.on(";").withKeyValueSeparator("=").split(connectionProperties);
+                    String timeOutMs = connMap.get("socketTimeout");
+                    if (Strings.isNullOrEmpty(timeOutMs)) {
+                        druidDataSource.setQueryTimeout(Integer.parseInt(timeOutMs) / 1000);
+                    }
+                }
             }
-            druidDataSource.setValidationQuery("select 1");
+
+            String connectionTestEnable = (String) ds.getOrDefault("connectionTestEnable","true");
+            if ("true".equalsIgnoreCase(connectionTestEnable)) {
+                druidDataSource.setValidationQuery("select 1");
+            }
 
             //validationQueryTimeout
             String validationQueryTimeoutCfg = (String) ds.get("validationQueryTimeout");

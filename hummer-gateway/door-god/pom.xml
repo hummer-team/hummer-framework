@@ -8,7 +8,7 @@
     <url>http://maven.apache.org</url>
 
     <parent>
-        <artifactId>hummer-gateway</artifactId>
+        <artifactId>hummer-framework</artifactId>
         <groupId>com.hummer</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>

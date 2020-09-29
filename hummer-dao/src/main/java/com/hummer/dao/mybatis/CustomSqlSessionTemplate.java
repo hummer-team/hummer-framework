@@ -1,6 +1,7 @@
 package com.hummer.dao.mybatis;
 
 import com.hummer.common.exceptions.SysException;
+import com.hummer.dao.datasource.HikariDataSourceBuilder;
 import com.hummer.dao.mybatis.context.DataSourceMetadata;
 import com.hummer.dao.mybatis.context.MultipleDataSourceMap;
 import org.apache.ibatis.exceptions.PersistenceException;
@@ -17,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.support.PersistenceExceptionTranslator;
 
+import javax.sql.DataSource;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.sql.Connection;
@@ -46,15 +48,6 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
     private Map<String, SqlSessionFactory> targetSqlSessionFactoryMap;
     private SqlSessionFactory defaultTargetSqlSessionFactory;
 
-    /**
-     * set target sql session factory
-     *
-     * @param targetSqlSessionFactoryMap target session
-     */
-    public void setTargetSqlSessionFactoryMap(Map<String, SqlSessionFactory> targetSqlSessionFactoryMap) {
-        this.targetSqlSessionFactoryMap = targetSqlSessionFactoryMap;
-    }
-
     public CustomSqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
         this(sqlSessionFactory, sqlSessionFactory.getConfiguration().getDefaultExecutorType());
     }
@@ -79,6 +72,15 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
     }
 
     /**
+     * set target sql session factory
+     *
+     * @param targetSqlSessionFactoryMap target session
+     */
+    public void setTargetSqlSessionFactoryMap(Map<String, SqlSessionFactory> targetSqlSessionFactoryMap) {
+        this.targetSqlSessionFactoryMap = targetSqlSessionFactoryMap;
+    }
+
+    /**
      * implement switch data source,if target sql session null then get default target session
      * if is null then throw {@link SysException}
      *
@@ -93,7 +95,7 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
                 .get(metadata.getDbName());
         LOGGER.debug("targetSqlSessionFactory is null ? {}, if null then use default data source"
                 , targetSqlSessionFactory == null);
-        //notice : get current thread data source , if is null then default data source
+        //notice : get current thread data source , if is null then use default data source
         if (targetSqlSessionFactory != null) {
             return targetSqlSessionFactory;
         } else if (defaultTargetSqlSessionFactory != null) {
@@ -343,6 +345,7 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
                     , CustomSqlSessionTemplate.this.executorType
                     , CustomSqlSessionTemplate.this.exceptionTranslator);
             try {
+                setExecuteTimeOut(sqlSession);
                 Object result = method.invoke(sqlSession, args);
                 if (!isSqlSessionTransactional(sqlSession, CustomSqlSessionTemplate.this.getSqlSessionFactory())) {
                     // force commit even on non-dirty sessions because some databases require
@@ -366,7 +369,21 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
                 closeSqlSession(sqlSession, CustomSqlSessionTemplate.this.getSqlSessionFactory());
             }
         }
-    }
 
+        private void setExecuteTimeOut(SqlSession sqlSession) {
+            if (sqlSession.getConfiguration().getDefaultStatementTimeout() != null) {
+                return;
+            }
+
+            DataSource ds = sqlSession.getConfiguration().getEnvironment().getDataSource();
+            if (ds instanceof HikariDataSourceBuilder.HikariDataSourceV2) {
+                int timeoutSeconds = ((HikariDataSourceBuilder.HikariDataSourceV2) ds).getSqlExecuteTimeoutSecond();
+                if (timeoutSeconds > 0) {
+                    sqlSession.getConfiguration().setDefaultStatementTimeout(timeoutSeconds);
+                    LOGGER.debug("set data source sql execute timeout {} second", timeoutSeconds);
+                }
+            }
+        }
+    }
 }
 

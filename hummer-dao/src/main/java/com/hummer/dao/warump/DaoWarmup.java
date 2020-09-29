@@ -6,11 +6,13 @@ import com.google.common.collect.Lists;
 import com.hummer.common.warmup.Warmup;
 import com.hummer.common.warmup.WarmupResponse;
 import com.hummer.dao.configuration.DataSourceInitConfiguration;
+import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -25,13 +27,25 @@ public class DaoWarmup implements Warmup {
     @Override
     public List<WarmupResponse> execute() {
         long totalStart = System.currentTimeMillis();
-        ImmutableMap<String, DruidDataSource> dataSourceMap = configuration.dataSourceMap();
+        ImmutableMap<String, DataSource> dataSourceMap = configuration.dataSourceMap();
         log.info("begin execute warmup data source item {}", dataSourceMap.keySet());
         List<WarmupResponse> responses = Lists.newArrayListWithCapacity(dataSourceMap.size());
-        for (Map.Entry<String, DruidDataSource> entry : dataSourceMap.entrySet()) {
+        for (Map.Entry<String, DataSource> entry : dataSourceMap.entrySet()) {
             long start = System.currentTimeMillis();
             try {
-                entry.getValue().init();
+                if (entry.getValue() instanceof DruidDataSource) {
+                    ((DruidDataSource) entry.getValue()).init();
+                } else if (entry.getValue() instanceof HikariDataSource) {
+                    entry.getValue().getConnection().prepareStatement("select 1").execute();
+                } else {
+                    responses.add(WarmupResponse.builder()
+                            .costMillis(System.currentTimeMillis() - start)
+                            .message("failed db pool driver invalid")
+                            .key(entry.getKey())
+                            .success(true)
+                            .build());
+                    continue;
+                }
                 responses.add(WarmupResponse.builder()
                         .costMillis(System.currentTimeMillis() - start)
                         .message("ok")
