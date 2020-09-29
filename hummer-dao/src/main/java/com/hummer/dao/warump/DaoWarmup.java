@@ -36,7 +36,7 @@ public class DaoWarmup implements Warmup {
                 if (entry.getValue() instanceof DruidDataSource) {
                     ((DruidDataSource) entry.getValue()).init();
                 } else if (entry.getValue() instanceof HikariDataSource) {
-                    entry.getValue().getConnection().prepareStatement("select 1");
+                    entry.getValue().getConnection().prepareStatement("select 1").execute();
                 } else {
                     responses.add(WarmupResponse.builder()
                             .costMillis(System.currentTimeMillis() - start)

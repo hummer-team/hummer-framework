@@ -146,7 +146,7 @@ public class DataSourceInitConfiguration {
         //        , sqlSessionFactoryMap.entrySet().iterator().next().getValue());
         //ensure exists default data source.
         if (defaultTargetDataSource == null) {
-            defaultTargetDataSource = (DataSource) Iterables.get(allDataSources.values(), 0);
+            defaultTargetDataSource = Iterables.get(allDataSources.values(), 0);
             LOGGER.warn("no specific default dataSource,use first data {} as default data source"
                     , defaultTargetDataSource);
         }

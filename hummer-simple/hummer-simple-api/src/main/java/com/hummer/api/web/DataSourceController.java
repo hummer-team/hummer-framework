@@ -2,8 +2,10 @@ package com.hummer.api.web;
 
 
 import com.hummer.api.dao.CoursewareDaoMapper;
+import com.hummer.api.dao.UserBasicDao;
 import com.hummer.api.dao.hjclass.EvaluationTasksDao;
 import com.hummer.api.po.CoursewarePo;
+import com.hummer.api.po.UserBasicPo;
 import com.hummer.api.po.hjclass.EvaluationTasksPo;
 import com.hummer.dao.annotation.TargetDataSourceTM;
 import com.hummer.rest.model.ResourceResponse;
@@ -11,6 +13,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -29,6 +33,14 @@ public class DataSourceController {
     private EvaluationTasksDao tasksDao;
     @Autowired(required = false)
     private CoursewareDaoMapper coursewareDaoMapper;
+    @Autowired
+    private UserBasicDao userBasicDao;
+
+    @GetMapping("/user-info/{userId}")
+    public ResourceResponse<List<UserBasicPo>> getUser(@PathVariable("userId") Integer userId) {
+        return ResourceResponse.ok(userBasicDao.querySingleUserBasicInfoByUserId(userId));
+    }
+
 
     @GetMapping(value = "/course")
     @ResponseBody

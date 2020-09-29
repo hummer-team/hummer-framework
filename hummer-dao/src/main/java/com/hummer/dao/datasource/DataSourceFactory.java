@@ -13,7 +13,7 @@ public class DataSourceFactory {
         if ("druid".equalsIgnoreCase(driverName)) {
             return DruidDataSourceBuilder.buildDataSource(dsMap);
         }
-        if ("Hikari".equalsIgnoreCase(driverName)) {
+        if ("hikari".equalsIgnoreCase(driverName)) {
             return HikariDataSourceBuilder.builderHikariDataSource(dsMap);
         }
 
