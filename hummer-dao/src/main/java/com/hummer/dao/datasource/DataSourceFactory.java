@@ -9,14 +9,14 @@ public class DataSourceFactory {
     }
 
     public static DataSource factory(final Map<String, Object> dsMap) {
-        String driverName = (String) dsMap.getOrDefault("poolDriver", "druid");
-        if ("druid".equalsIgnoreCase(driverName)) {
+        String driverTypeName = (String) dsMap.getOrDefault("poolDriverType", "druid");
+        if ("druid".equalsIgnoreCase(driverTypeName)) {
             return DruidDataSourceBuilder.buildDataSource(dsMap);
         }
-        if ("hikari".equalsIgnoreCase(driverName)) {
+        if ("hikari".equalsIgnoreCase(driverTypeName)) {
             return HikariDataSourceBuilder.builderHikariDataSource(dsMap);
         }
 
-        throw new IllegalArgumentException("pool driver name invalid");
+        throw new IllegalArgumentException("pool driver name " + driverTypeName + " invalid");
     }
 }
