@@ -10,6 +10,8 @@ import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Plugin;
 import org.apache.ibatis.plugin.Signature;
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +23,17 @@ import java.util.Properties;
  * @author bingy
  * @since 1.0.0
  */
-@Intercepts({@Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})})
+@Intercepts({
+        @Signature(type = Executor.class, method = "update", args = {
+                MappedStatement.class
+                , Object.class
+        }),
+        @Signature(type = Executor.class, method = "query", args = {
+                MappedStatement.class
+                , Object.class
+                , RowBounds.class
+                , ResultHandler.class})
+})
 public class MybatisSlowSqlLogInterceptor implements Interceptor {
     private static final Logger LOGGER = LoggerFactory.getLogger(MybatisSlowSqlLogInterceptor.class);
     private Boolean isShowSql;

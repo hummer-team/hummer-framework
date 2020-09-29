@@ -44,7 +44,7 @@ public class SysConstant {
 
         }
 
-        public static final String SHOW_SQL = "show.sql";
+        public static final String SHOW_SQL = "sql.slow.show.sql";
         public static final String SHOW_TIMEOUT = "sql.slow.time.millis";
         public static final String SQL_SESSION_TEMPLATE_NAME = "jdbcTemplate";
         public static final String MYBATIS_BASE_PACKAGE = "mybatis.base.package";
