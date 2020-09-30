@@ -43,7 +43,7 @@ public class HikariDataSourceBuilder {
             if (!Strings.isNullOrEmpty(connectionProperties)) {
                 Map<String, String> connMap = Splitter.on(";").withKeyValueSeparator("=").split(connectionProperties);
                 ds.setSqlExecuteTimeoutSecond(
-                        Integer.parseInt(connMap.getOrDefault("socketTimeout", "3000")));
+                        Integer.parseInt(connMap.getOrDefault("socketTimeout", "3000")) / 1000);
             }
         }
     }
@@ -62,7 +62,7 @@ public class HikariDataSourceBuilder {
         if (!Strings.isNullOrEmpty(initTimeOutMs)) {
             config.setInitializationFailTimeout(Long.parseLong(initTimeOutMs));
         }
-        String connectionTestEnable = (String) map.getOrDefault("connectionTestEnable","true");
+        String connectionTestEnable = (String) map.getOrDefault("connectionTestEnable", "true");
         if ("true".equalsIgnoreCase(connectionTestEnable)) {
             config.setConnectionTestQuery("select 1");
         }
