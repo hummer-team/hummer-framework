@@ -32,4 +32,10 @@ public class ConfigPropertiesChangeInfoBo {
     private Object currentValue;
 
     private ConfigEnums.ConfigActions action;
+
+    @Override
+    public String toString() {
+        return String.format("ConfigPropertiesChangeInfoBo=[propertiesKey:%s,originValue:%s" +
+                ",currentValue:%s,action:%s]",propertiesKey,originValue,currentValue,action);
+    }
 }

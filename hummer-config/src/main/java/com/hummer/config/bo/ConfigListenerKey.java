@@ -43,4 +43,10 @@ public class ConfigListenerKey {
     public int hashCode() {
         return Objects.hash(dataId, groupId, propertiesKey);
     }
+
+    @Override
+    public String toString() {
+        return String.format("ConfigListenerKey=[dataId:%s,groupId:%s,propertiesKey:%s]"
+                , dataId, groupId, propertiesKey);
+    }
 }

@@ -32,19 +32,19 @@ public class ConfigSubscriptionManagerImpl implements ConfigSubscriptionManager 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigSubscriptionManagerImpl.class);
 
-    final static Map<ConfigListenerKey, List<AbstractConfigListener>> subscriptions = new ConcurrentHashMap<>();
+    private final static Map<ConfigListenerKey, List<AbstractConfigListener>> SUBSCRIPTIONS = new ConcurrentHashMap<>();
 
     @Override
     public int addListener(ConfigListenerKey key, AbstractConfigListener listener) {
 
         assertConfigListener(key, listener);
-        List<AbstractConfigListener> list = subscriptions.getOrDefault(key, new LinkedList<>());
+        List<AbstractConfigListener> list = SUBSCRIPTIONS.getOrDefault(key, new LinkedList<>());
         // 避免重复添加
         if (confirmListenerRepeat(listener, list)) {
             return 0;
         }
         list.add(listener);
-        subscriptions.putIfAbsent(key, list);
+        SUBSCRIPTIONS.putIfAbsent(key, list);
         return 1;
     }
 
@@ -59,13 +59,13 @@ public class ConfigSubscriptionManagerImpl implements ConfigSubscriptionManager 
     @Override
     public void removeListener(ConfigListenerKey key) {
         assertConfigListenerKey(key);
-        subscriptions.remove(key);
+        SUBSCRIPTIONS.remove(key);
     }
 
     @Override
     public void removeListener(ConfigListenerKey key, AbstractConfigListener listener) {
         assertConfigListener(listener);
-        List<AbstractConfigListener> list = subscriptions.get(key);
+        List<AbstractConfigListener> list = SUBSCRIPTIONS.get(key);
         if (CollectionUtils.isEmpty(list)) {
             return;
         }
@@ -83,14 +83,14 @@ public class ConfigSubscriptionManagerImpl implements ConfigSubscriptionManager 
 
     @Override
     public void doDispatch(ConfigDataInfoBo dataInfoBo, final List<ConfigPropertiesChangeInfoBo> changeInfoBos) {
-        if (dataInfoBo == null || CollectionUtils.isEmpty(changeInfoBos) || CollectionUtils.isEmpty(subscriptions)) {
+        if (dataInfoBo == null || CollectionUtils.isEmpty(changeInfoBos) || CollectionUtils.isEmpty(SUBSCRIPTIONS)) {
             return;
         }
         // 判断dataId全配置订阅
         // 判断需要执行的listener
         Map<ConfigListenerKey, List<ConfigPropertiesChangeInfoBo>> map = new HashMap<>(16);
         for (ConfigPropertiesChangeInfoBo changeInfoBo : changeInfoBos) {
-            for (Map.Entry<ConfigListenerKey, List<AbstractConfigListener>> entry : subscriptions.entrySet()) {
+            for (Map.Entry<ConfigListenerKey, List<AbstractConfigListener>> entry : SUBSCRIPTIONS.entrySet()) {
                 if (matchConfigListenerKey(dataInfoBo, entry.getKey())) {
                     map.put(entry.getKey(),
                             Collections.singletonList(ConfigPropertiesChangeInfoBo.builder()
@@ -115,7 +115,7 @@ public class ConfigSubscriptionManagerImpl implements ConfigSubscriptionManager 
 
     private void disPatch(Map<ConfigListenerKey, List<ConfigPropertiesChangeInfoBo>> changedSubscriptions) {
         for (Map.Entry<ConfigListenerKey, List<ConfigPropertiesChangeInfoBo>> entry : changedSubscriptions.entrySet()) {
-            List<AbstractConfigListener> listeners = subscriptions.get(entry.getKey());
+            List<AbstractConfigListener> listeners = SUBSCRIPTIONS.get(entry.getKey());
             if (CollectionUtils.isEmpty(listeners)) {
                 continue;
             }
