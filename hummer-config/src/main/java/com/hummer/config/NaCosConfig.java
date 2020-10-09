@@ -116,8 +116,8 @@ public class NaCosConfig implements DisposableBean {
                         , dataId
                         , value
                         , params.getProperties().getProperty("dataType"));
-
-                System.out.println(1);
+                //
+                handleConfigChange(groupId, dataId, value, params);
             }
         }
         // 客户端配置上传至服务端

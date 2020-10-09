@@ -19,6 +19,7 @@ import com.hummer.rest.model.ResourceResponse;
 import com.hummer.rest.utils.ParameterAssertUtil;
 import com.sun.management.OperatingSystemMXBean;
 import io.swagger.annotations.Api;
+import org.apache.logging.log4j.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -190,5 +192,22 @@ public class ApplicationController {
         @RequestParam(value = "name") @HummerSimpleObjectCacheKey String name
         , @RequestParam(value = "arg") @HummerSimpleObjectCacheKey String arg) {
         return ResourceResponse.ok(name + ":" + arg);
+    }
+
+    @GetMapping(value = "/log/{level}")
+    public ResourceResponse<String> write(@PathVariable("level") String level) {
+        if (Level.valueOf(level) == Level.INFO) {
+            log.info("ssssssddddddddd" + level);
+        }
+
+        if (Level.valueOf(level) == Level.WARN) {
+            log.warn("ssssssddddddddd" + level);
+        }
+
+        if (Level.valueOf(level) == Level.ERROR) {
+            log.error("ssssssddddddddd" + level);
+        }
+
+        return ResourceResponse.ok();
     }
 }
