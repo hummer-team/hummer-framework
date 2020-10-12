@@ -16,4 +16,17 @@ public class ConfigEnums {
         ;
 
     }
+
+    public enum ConfigType {
+        JSON("json"), PROPERTIES("properties");
+        private String value;
+
+        ConfigType(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
 }

@@ -71,7 +71,9 @@ public class ConfigCacheManager {
                 .dataId(dataId)
                 .groupId(groupId)
                 .currentValue(configMap)
-                .originValue(originMap).build();
+                .originValue(originMap)
+                .dataType(dataType)
+                .build();
     }
 
     @SuppressWarnings("unchecked")

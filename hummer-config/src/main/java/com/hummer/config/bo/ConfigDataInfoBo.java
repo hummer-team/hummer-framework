@@ -27,4 +27,6 @@ public class ConfigDataInfoBo {
     private Map<String, Object> currentValue;
 
     private ConfigEnums.ConfigActions action;
+
+    private String dataType;
 }

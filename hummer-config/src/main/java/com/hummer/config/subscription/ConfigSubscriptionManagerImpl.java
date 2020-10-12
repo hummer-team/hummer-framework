@@ -6,7 +6,9 @@ import com.hummer.common.exceptions.AppException;
 import com.hummer.config.bo.ConfigDataInfoBo;
 import com.hummer.config.bo.ConfigListenerKey;
 import com.hummer.config.bo.ConfigPropertiesChangeInfoBo;
+import com.hummer.config.enums.ConfigEnums;
 import com.hummer.config.listener.AbstractConfigListener;
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -89,28 +91,55 @@ public class ConfigSubscriptionManagerImpl implements ConfigSubscriptionManager 
         // 判断dataId全配置订阅
         // 判断需要执行的listener
         Map<ConfigListenerKey, List<ConfigPropertiesChangeInfoBo>> map = new HashMap<>(16);
-        for (ConfigPropertiesChangeInfoBo changeInfoBo : changeInfoBos) {
+
+        if (ConfigEnums.ConfigType.JSON.getValue().equalsIgnoreCase(dataInfoBo.getDataType())) {
+            for (ConfigPropertiesChangeInfoBo changeInfoBo : changeInfoBos) {
+                for (Map.Entry<ConfigListenerKey, List<AbstractConfigListener>> entry : SUBSCRIPTIONS.entrySet()) {
+                    if (matchConfigListenerKey(dataInfoBo, entry.getKey())) {
+                        map.put(entry.getKey(),
+                                Collections.singletonList(ConfigPropertiesChangeInfoBo.builder()
+                                        .originValue(JSONObject.toJSONString(dataInfoBo.getOriginValue()))
+                                        .currentValue(JSONObject.toJSONString(dataInfoBo.getCurrentValue()))
+                                        .action(dataInfoBo.getAction()).build())
+                        );
+                        continue;
+                    }
+                    if (matchConfigPropertiesListenerKey(dataInfoBo, changeInfoBo.getPropertiesKey(), entry.getKey())) {
+
+                        map.put(entry.getKey(), composeConfigPropertiesChanges(map.get(entry.getKey()), changeInfoBo));
+                    }
+                }
+            }
+        } else {
+
             for (Map.Entry<ConfigListenerKey, List<AbstractConfigListener>> entry : SUBSCRIPTIONS.entrySet()) {
                 if (matchConfigListenerKey(dataInfoBo, entry.getKey())) {
-                    map.put(entry.getKey(),
-                            Collections.singletonList(ConfigPropertiesChangeInfoBo.builder()
-                                    .originValue(JSONObject.toJSONString(dataInfoBo.getOriginValue()))
-                                    .currentValue(JSONObject.toJSONString(dataInfoBo.getCurrentValue()))
-                                    .action(dataInfoBo.getAction()).build())
-                    );
+                    map.put(entry.getKey(), changeInfoBos);
                     continue;
                 }
-                if (matchConfigPropertiesListenerKey(dataInfoBo, changeInfoBo.getPropertiesKey(), entry.getKey())) {
+                for (ConfigPropertiesChangeInfoBo changeInfoBo : changeInfoBos) {
 
-                    map.put(entry.getKey(), composeConfigPropertiesChanges(map.get(entry.getKey()), changeInfoBo));
+                    if (matchConfigPropertiesListenerKey(dataInfoBo, changeInfoBo.getPropertiesKey(), entry.getKey())) {
+
+                        map.put(entry.getKey(), composeConfigPropertiesChanges(map.get(entry.getKey()), changeInfoBo));
+                    }
                 }
             }
         }
+
+
         if (map.isEmpty()) {
             return;
         }
         disPatch(map);
+    }
 
+    private Object parsingValueByDataType(Map<String, Object> value, String dataType) {
+        if (MapUtils.isEmpty(value) || dataType == null) {
+            return null;
+        }
+        return ConfigEnums.ConfigType.JSON.getValue().equalsIgnoreCase(dataType) ? JSONObject.toJSONString(value)
+                : value;
     }
 
     private void disPatch(Map<ConfigListenerKey, List<ConfigPropertiesChangeInfoBo>> changedSubscriptions) {

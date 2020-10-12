@@ -23,6 +23,6 @@ public class LoggerConfigListener extends AbstractConfigListener {
             LoggerLevelContext.changeLoggerLevel((String) changeInfoBo.getCurrentValue()
                     , changeInfoBo.getPropertiesKey());
         }
-        log.info("logger level change listener handle done,key: {} config: {}",key,changeInfoBos);
+        log.info("logger level change listener handle done,key: {} config: {}", key, changeInfoBos);
     }
 }
