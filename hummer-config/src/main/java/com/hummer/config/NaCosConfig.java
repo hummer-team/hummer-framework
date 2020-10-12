@@ -15,8 +15,10 @@ import com.hummer.config.bo.ConfigListenerKey;
 import com.hummer.config.bo.ConfigPropertiesChangeInfoBo;
 import com.hummer.config.bo.NacosConfigParams;
 import com.hummer.config.dto.ClientConfigUploadReqDto;
+import com.hummer.config.enums.ConfigEnums;
 import com.hummer.config.listener.AbstractConfigListener;
 import com.hummer.config.subscription.ConfigCacheManager;
+import com.hummer.config.subscription.ConfigLoadSubscriptionManagerImpl;
 import com.hummer.config.subscription.ConfigSubscriptionManager;
 import com.hummer.core.PropertiesContainer;
 import org.apache.commons.lang3.StringUtils;
@@ -36,10 +38,14 @@ public class NaCosConfig implements DisposableBean {
 
     private ConfigSubscriptionManager configSubscriptionManager;
 
+    private ConfigLoadSubscriptionManagerImpl configLoadSubscriptionManager;
+
     private final ConfigCacheManager configCacheManager;
 
-    public NaCosConfig(ConfigSubscriptionManager configSubscriptionManager) {
+    public NaCosConfig(ConfigSubscriptionManager configSubscriptionManager
+            , ConfigLoadSubscriptionManagerImpl configLoadSubscriptionManager) {
         this.configSubscriptionManager = configSubscriptionManager;
+        this.configLoadSubscriptionManager = configLoadSubscriptionManager;
     }
 
     {
@@ -112,26 +118,39 @@ public class NaCosConfig implements DisposableBean {
             }
             String value = configService.getConfig(dataId, groupId, 3000);
             if (!Strings.isNullOrEmpty(value)) {
-                ConfigDataInfoBo dataInfoBo = configCacheManager.putConfigToContainer(groupId
-                        , dataId
-                        , value
-                        , params.getProperties().getProperty("dataType"));
-                //
-                handleConfigChange(groupId, dataId, value, params);
+                handleConfigLoad(groupId, dataId, value, params);
             }
         }
         // 客户端配置上传至服务端
         uploadConfig();
     }
 
+    private void handleConfigLoad(String groupId, String dataId, String configInfo, NacosConfigParams params) {
+        // 更新项目配置本地缓存
+        ConfigDataInfoBo dataInfoBo = configCacheManager.putConfigToContainer(groupId, dataId, configInfo
+                , params.getProperties().getProperty("dataType"), ConfigEnums.ConfigChangeScene.ON_LOAD);
+        // 配置变更订阅处理
+        configLoadDispatch(dataInfoBo);
+    }
+
     private void handleConfigChange(String groupId, String dataId, String configInfo, NacosConfigParams params) {
         // 更新项目配置本地缓存
         ConfigDataInfoBo dataInfoBo = configCacheManager.putConfigToContainer(groupId, dataId, configInfo
-                , params.getProperties().getProperty("dataType"));
+                , params.getProperties().getProperty("dataType"), ConfigEnums.ConfigChangeScene.ON_EDITOR);
         // 客户端配置上传至服务端
         uploadConfig();
         // 配置变更订阅处理
         configChangeDispatch(dataInfoBo);
+    }
+
+    private void configLoadDispatch(ConfigDataInfoBo dataInfoBo) {
+        if (configLoadSubscriptionManager == null) {
+            return;
+        }
+        // 比对新旧配置，获得变化的属性信息
+        List<ConfigPropertiesChangeInfoBo> changeInfoBos
+                = configCacheManager.parsingConfigPropertiesChanges(dataInfoBo);
+        configLoadSubscriptionManager.doDispatch(dataInfoBo, changeInfoBos);
     }
 
 
@@ -235,5 +254,20 @@ public class NaCosConfig implements DisposableBean {
     public void removeListener(ConfigListenerKey key, AbstractConfigListener listener) {
 
         this.configSubscriptionManager.removeListener(key, listener);
+    }
+
+    public int addLoadListener(ConfigListenerKey key, AbstractConfigListener listener) {
+
+        return this.configLoadSubscriptionManager.addListener(key, listener);
+    }
+
+    public void removeLoadListener(ConfigListenerKey key) {
+
+        this.configLoadSubscriptionManager.removeListener(key);
+    }
+
+    public void removeLoadListener(ConfigListenerKey key, AbstractConfigListener listener) {
+
+        this.configLoadSubscriptionManager.removeListener(key, listener);
     }
 }

@@ -2,7 +2,7 @@ package com.hummer.config.bo;
 
 import com.hummer.config.enums.ConfigEnums;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
 /**
  * ConfigPropertiesChangeInfoBo
@@ -12,7 +12,7 @@ import lombok.Data;
  * <p>Copyright: Copyright (c) 2020</p>
  * @date 2020/8/31 14:04
  */
-@Data
+@Getter
 @Builder
 public class ConfigPropertiesChangeInfoBo {
 
@@ -31,11 +31,19 @@ public class ConfigPropertiesChangeInfoBo {
      */
     private Object currentValue;
 
+    /**
+     * 变更动作类型
+     */
     private ConfigEnums.ConfigActions action;
+
+    /**
+     * 变更来源场景
+     */
+    private ConfigEnums.ConfigChangeScene scene;
 
     @Override
     public String toString() {
         return String.format("ConfigPropertiesChangeInfoBo=[propertiesKey:%s,originValue:%s" +
-                ",currentValue:%s,action:%s]",propertiesKey,originValue,currentValue,action);
+                ",currentValue:%s,action:%s]", propertiesKey, originValue, currentValue, action);
     }
 }

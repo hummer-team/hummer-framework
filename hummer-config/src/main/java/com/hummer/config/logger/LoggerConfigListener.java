@@ -20,6 +20,7 @@ public class LoggerConfigListener extends AbstractConfigListener {
     @Override
     public void handleChange(ConfigListenerKey key, List<ConfigPropertiesChangeInfoBo> changeInfoBos) {
         for (ConfigPropertiesChangeInfoBo changeInfoBo : changeInfoBos) {
+
             LoggerLevelContext.changeLoggerLevel((String) changeInfoBo.getCurrentValue()
                     , changeInfoBo.getPropertiesKey());
         }

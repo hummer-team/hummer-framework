@@ -1,7 +1,7 @@
 package com.hummer.config.bo;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.Objects;
  * @date 2020/8/28 14:39
  */
 @Builder
-@Data
+@Getter
 public class ConfigListenerKey {
 
     @NotEmpty
@@ -25,6 +25,9 @@ public class ConfigListenerKey {
     @NotEmpty
     private String groupId;
 
+    /**
+     * 订阅的配置属性key
+     */
     @NotEmpty
     private List<String> propertiesKey;
 

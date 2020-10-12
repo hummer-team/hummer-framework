@@ -16,8 +16,8 @@ public class LoggerConfigSubscriptionConfig {
     private LoggerConfigListener loggerConfigListener;
 
     @Bean
-//    @ConditionalOnBean(value = NaCosConfig.class)
     public void registerLoggerLevelListener() {
+        // 添加config change监听
         naCosConfig.addListener(ConfigListenerKey
                 .builder()
                 .dataId("application-logger.properties")

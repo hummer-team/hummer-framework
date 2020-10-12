@@ -59,6 +59,7 @@ public class ConfigCacheManager {
             , String dataId
             , String value
             , String dataType
+            , ConfigEnums.ConfigChangeScene scene
     ) {
         ConfigListenerKey listenerKey = ConfigListenerKey.builder().dataId(dataId).groupId(groupId).build();
         // 获取原配置
@@ -73,6 +74,7 @@ public class ConfigCacheManager {
                 .currentValue(configMap)
                 .originValue(originMap)
                 .dataType(dataType)
+                .scene(scene)
                 .build();
     }
 
@@ -142,18 +144,22 @@ public class ConfigCacheManager {
                         .action(action)
                         .currentValue(null)
                         .originValue(entry.getValue())
-                        .propertiesKey(entry.getKey()).build());
+                        .propertiesKey(entry.getKey())
+                        .scene(dataInfoBo.getScene()).build());
             }
+            return list;
         }
         if (MapUtils.isEmpty(dataInfoBo.getOriginValue())) {
             action = ConfigEnums.ConfigActions.ADD;
             for (Map.Entry<String, Object> entry : dataInfoBo.getCurrentValue().entrySet()) {
                 list.add(ConfigPropertiesChangeInfoBo.builder()
                         .action(action)
-                        .currentValue(null)
-                        .originValue(entry.getValue())
-                        .propertiesKey(entry.getKey()).build());
+                        .currentValue(entry.getValue())
+                        .originValue(null)
+                        .propertiesKey(entry.getKey())
+                        .scene(dataInfoBo.getScene()).build());
             }
+            return list;
         }
         // 记录处理本次新增属性
         for (Map.Entry<String, Object> entry : dataInfoBo.getCurrentValue().entrySet()) {
@@ -162,7 +168,8 @@ public class ConfigCacheManager {
                         .action(ConfigEnums.ConfigActions.ADD)
                         .currentValue(entry.getValue())
                         .originValue(dataInfoBo.getOriginValue().get(entry.getKey()))
-                        .propertiesKey(entry.getKey()).build());
+                        .propertiesKey(entry.getKey())
+                        .scene(dataInfoBo.getScene()).build());
             }
         }
         // 更新属性
@@ -184,7 +191,8 @@ public class ConfigCacheManager {
                     .action(action)
                     .currentValue(currentValue)
                     .originValue(entry.getValue())
-                    .propertiesKey(entry.getKey()).build());
+                    .propertiesKey(entry.getKey())
+                    .scene(dataInfoBo.getScene()).build());
 
         }
         return list;

@@ -29,4 +29,12 @@ public class ConfigEnums {
             return value;
         }
     }
+
+    public enum ConfigChangeScene {
+        ON_LOAD, ON_EDITOR,
+        ;
+
+        ConfigChangeScene() {
+        }
+    }
 }

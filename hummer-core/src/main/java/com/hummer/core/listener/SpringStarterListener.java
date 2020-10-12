@@ -41,7 +41,6 @@ public class SpringStarterListener implements ApplicationListener<ApplicationPre
     }
 
     private void executeCustomizeContextInit(ConfigurableApplicationContext context) {
-        //
         ServiceLoader<CustomizeContextInit> loaders =
                 ServiceLoader.load(CustomizeContextInit.class);
 

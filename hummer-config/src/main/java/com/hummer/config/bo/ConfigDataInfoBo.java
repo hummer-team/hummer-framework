@@ -29,4 +29,6 @@ public class ConfigDataInfoBo {
     private ConfigEnums.ConfigActions action;
 
     private String dataType;
+
+    private ConfigEnums.ConfigChangeScene scene;
 }

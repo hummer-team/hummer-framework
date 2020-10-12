@@ -8,7 +8,6 @@ import com.hummer.config.bo.ConfigListenerKey;
 import com.hummer.config.bo.ConfigPropertiesChangeInfoBo;
 import com.hummer.config.enums.ConfigEnums;
 import com.hummer.config.listener.AbstractConfigListener;
-import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -132,14 +131,6 @@ public class ConfigSubscriptionManagerImpl implements ConfigSubscriptionManager 
             return;
         }
         disPatch(map);
-    }
-
-    private Object parsingValueByDataType(Map<String, Object> value, String dataType) {
-        if (MapUtils.isEmpty(value) || dataType == null) {
-            return null;
-        }
-        return ConfigEnums.ConfigType.JSON.getValue().equalsIgnoreCase(dataType) ? JSONObject.toJSONString(value)
-                : value;
     }
 
     private void disPatch(Map<ConfigListenerKey, List<ConfigPropertiesChangeInfoBo>> changedSubscriptions) {
