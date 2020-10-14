@@ -58,10 +58,6 @@
             <groupId>com.hummer</groupId>
             <artifactId>hummer-soa-plugin</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.hummer</groupId>
-            <artifactId>hummer-data-sync-plugin</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
