@@ -1,4 +1,4 @@
-package com.hummer.data.sync.plugin.handle;
+package com.hummer.data.sync.plugin.handler;
 
 import com.hummer.data.sync.plugin.annotation.OrderDataSync;
 import com.hummer.data.sync.plugin.context.OrderSyncContext;
