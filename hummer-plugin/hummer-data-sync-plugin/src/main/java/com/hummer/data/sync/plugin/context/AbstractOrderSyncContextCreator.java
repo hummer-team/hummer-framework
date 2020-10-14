@@ -11,12 +11,12 @@ import com.hummer.data.sync.plugin.model.OrderSyncMessage;
  * <p>Copyright: Copyright (c) 2020</p>
  * @date 2020/10/14 17:54
  */
-public abstract class AbstractOrderSyncContextCreator<R> {
+public abstract class AbstractOrderSyncContextCreator<T> {
 
 
-    public abstract OrderSyncMessage compose(R input);
+    public abstract OrderSyncMessage compose(T input);
 
-    public void create(R input) {
+    public void create(T input) {
 
         fillContext(compose(input));
     }
