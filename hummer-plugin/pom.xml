@@ -30,5 +30,6 @@
         <module>hummer-cache-plugin</module>
         <module>hummer-warmup-plugin</module>
         <module>hummer-soa-plugin</module>
+        <module>hummer-data-sync-plugin</module>
     </modules>
 </project>
