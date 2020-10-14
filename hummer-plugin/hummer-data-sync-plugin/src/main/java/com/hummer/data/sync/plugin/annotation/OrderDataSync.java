@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Inherited
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OrderDataSync {
 

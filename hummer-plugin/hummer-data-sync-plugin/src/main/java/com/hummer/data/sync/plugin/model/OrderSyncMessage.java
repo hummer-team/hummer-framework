@@ -1,6 +1,7 @@
 package com.hummer.data.sync.plugin.model;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 
 /**
  * OrderSyncMessage
@@ -10,10 +11,13 @@ import lombok.Data;
  * <p>Copyright: Copyright (c) 2020</p>
  * @date 2020/10/14 10:41
  */
-@Data
+@Builder
+@Getter
 public class OrderSyncMessage<T> {
 
     private String batchId;
+
+    private String businessId;
 
     private String businessType;
 

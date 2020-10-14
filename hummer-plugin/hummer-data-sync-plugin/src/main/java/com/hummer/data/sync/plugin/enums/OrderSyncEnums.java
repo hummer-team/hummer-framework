@@ -22,12 +22,42 @@ public class OrderSyncEnums {
             this.value = value;
             this.remark = remark;
         }
+
+        public String getValue() {
+            return value;
+        }
+
+        public String getRemark() {
+            return remark;
+        }
+    }
+
+
+    public enum ActionType {
+        CREATED("created", "创建"),
+        CANCELED("canceled", "取消"),
+        DELETED("deleted", "删除"),
+        ;
+        private String value;
+        private String remark;
+
+        ActionType(String value, String remark) {
+            this.value = value;
+            this.remark = remark;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public String getRemark() {
+            return remark;
+        }
     }
 
     public enum OperatorType {
-        USER(1, "会员"), CUSTOMER_SERVICE(2, "客服"), PAN_LI(3, "Panli")
-        , PURCHASER(4, "采购"),QUALITY_INSPECTION(5, "质检")
-        , WAREHOUSE_MANAGEMENT(6, "仓管"),;
+        USER(1, "会员"), CUSTOMER_SERVICE(2, "客服"), PAN_LI(3, "Panli"), PURCHASER(4, "采购"), QUALITY_INSPECTION(5, "质检"), WAREHOUSE_MANAGEMENT(6, "仓管"),
+        ;
 
         private Integer value;
         private String remark;
@@ -36,9 +66,14 @@ public class OrderSyncEnums {
             this.value = value;
             this.remark = remark;
         }
+
+        public Integer getValue() {
+            return value;
+        }
+
+        public String getRemark() {
+            return remark;
+        }
     }
-
-
-
 
 }
