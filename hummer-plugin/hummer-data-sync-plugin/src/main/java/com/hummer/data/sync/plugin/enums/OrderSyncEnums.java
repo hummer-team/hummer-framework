@@ -37,6 +37,11 @@ public class OrderSyncEnums {
         CREATED("created", "创建"),
         CANCELED("canceled", "取消"),
         DELETED("deleted", "删除"),
+        FILL_DELIVERY("fill-delivery", "转运填充物流"),
+        RECEIPTED("receipted", "确认收货"),
+        PROPERTIES_MODIFIED("properties-modified", "属性修改"),
+        STATUS_MODIFIED("status-modified", "状态修改"),
+        CHECK_IN("checkIn", "商品登记"),
         ;
         private String value;
         private String remark;
