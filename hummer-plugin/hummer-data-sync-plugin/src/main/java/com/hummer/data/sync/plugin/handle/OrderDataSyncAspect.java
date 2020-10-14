@@ -1,6 +1,5 @@
 package com.hummer.data.sync.plugin.handle;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hummer.data.sync.plugin.annotation.OrderDataSync;
 import com.hummer.data.sync.plugin.context.OrderSyncContext;
 import com.hummer.data.sync.plugin.pipeline.MqMessageProducer;
@@ -10,6 +9,10 @@ import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * description     java类作用描述
@@ -22,25 +25,27 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @Slf4j
-public class OrderDataSyncHandler {
+public class OrderDataSyncAspect {
 
     @Autowired
     private MqMessageProducer mqMessageProducer;
 
     @After(" @annotation(ds)")
-    public void orderDataSync(JoinPoint point, OrderDataSync ds) {
+    public void orderDataSync(JoinPoint point, OrderDataSync ds) throws Throwable {
         log.debug("orderDataSync : >>>> {}", point.getSignature());
         OrderSyncContext context = OrderSyncContextHolder.get();
         if (context == null) {
             log.debug("orderDataSync context not exist");
             return;
         }
-        Boolean flag = mqMessageProducer.push(context.getSyncMessage());
-        log.debug("order sync push mq,context=={}, result=={}", JSONObject.toJSONString(context), flag);
-        clean();
+        List<String> list = new ArrayList<>();
+        list.stream().map(this::clean).collect(Collectors.toList());
+        mqMessageProducer.asyncPush(context.getSyncMessage(), this::clean);
     }
 
-    private void clean() {
+    public boolean clean(Object o) {
+
         OrderSyncContextHolder.clean();
+        return true;
     }
 }
