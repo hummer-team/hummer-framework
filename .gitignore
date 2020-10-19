@@ -19,3 +19,4 @@ a.txt
 
 !/hummer-simple/hummer-simple-api/src/main/resources/logback-test.xml
 hummer-test*
+*/db.mv.db
