@@ -4,7 +4,7 @@ import com.hummer.data.sync.plugin.annotation.OrderDataSync;
 import com.hummer.data.sync.plugin.context.OrderSyncContext;
 import com.hummer.data.sync.plugin.pipeline.MqMessageProducer;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class OrderDataSyncAspect {
     private MqMessageProducer mqMessageProducer;
 
     @After(" @annotation(ds)")
-    public void orderDataSync(JoinPoint point, OrderDataSync ds) throws Throwable {
+    public void orderDataSync(ProceedingJoinPoint point, OrderDataSync ds) throws Throwable {
         log.debug("orderDataSync : >>>> {}", point.getSignature());
         OrderSyncContext context = OrderSyncContextHolder.get();
         if (context == null) {
