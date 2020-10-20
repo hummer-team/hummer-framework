@@ -1,7 +1,6 @@
 package com.hummer.data.sync.plugin.model;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
 /**
  * OrderStatusChangeData
@@ -11,8 +10,7 @@ import lombok.Getter;
  * <p>Copyright: Copyright (c) 2020</p>
  * @date 2020/10/14 10:36
  */
-@Builder
-@Getter
+@Data
 public class OrderStatusChangeData {
 
     private Integer targetStatus;

@@ -1,7 +1,6 @@
 package com.hummer.data.sync.plugin.model;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
 import java.util.Date;
 
@@ -13,8 +12,7 @@ import java.util.Date;
  * <p>Copyright: Copyright (c) 2020</p>
  * @date 2020/10/14 10:39
  */
-@Builder
-@Getter
+@Data
 public class OrderSyncData<T> {
 
     private String businessId;
