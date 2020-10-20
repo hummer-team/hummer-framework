@@ -34,14 +34,14 @@ public class OrderSyncEnums {
 
 
     public enum ActionType {
-        CREATED("created", "创建"),
-        CANCELED("canceled", "取消"),
-        DELETED("deleted", "删除"),
-        FILL_DELIVERY("fill-delivery", "转运填充物流"),
-        RECEIPTED("receipted", "确认收货"),
-        PROPERTIES_MODIFIED("properties-modified", "属性修改"),
-        STATUS_MODIFIED("status-modified", "状态修改"),
-        CHECK_IN("checkIn", "商品登记"),
+        MEMBER_CREATED("member-created", "创建"),
+        MEMBER_CANCELED("member-canceled", "取消"),
+        MEMBER_DELETED("member-deleted", "删除"),
+        MEMBER_FILL_DELIVERY("member-fill-delivery", "转运填充物流"),
+        MEMBER_RECEIPTED("member-receipted", "确认收货"),
+        MANAGER_PROPERTIES_MODIFIED("manager-properties-modified", "属性修改"),
+        MANAGER_STATUS_MODIFIED("manager-status-modified", "状态修改"),
+        MANAGER_CHECK_IN("manager-checkIn", "商品登记"),
         ;
         private String value;
         private String remark;
