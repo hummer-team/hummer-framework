@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -35,6 +36,6 @@ public class ResourceMqConsumerReqDto<T> {
 
     public T getBodys(TypeReference<T> reference) {
 
-        return JSON.parseObject(new String(bodys), reference);
+        return JSON.parseObject(new String(bodys, StandardCharsets.UTF_8), reference);
     }
 }
