@@ -1,6 +1,7 @@
 package com.hummer.user.plugin.agent;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.hummer.common.exceptions.AppException;
 import com.hummer.common.http.HttpSyncClient;
@@ -16,6 +17,8 @@ import com.hummer.user.plugin.user.UserContext;
 import com.hummer.user.plugin.user.member.MemberTicketVerifyReqDto;
 import com.hummer.user.plugin.user.member.MemberTicketVerifyRespDto;
 import com.hummer.user.plugin.user.member.MemberUserContext;
+import com.hummer.user.plugin.user.member.NetCoreResponse;
+import com.hummer.user.plugin.user.member.NetCoreResponseParseUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -101,7 +104,7 @@ public class AuthorityServiceAgent {
     }
 
 
-    public static MemberUserContext getMemberUserContext(final String ticket) {
+    public static String getMemberUserContext(final String ticket) {
         String applicationName = "user-auth.host.name";
         String host = PropertiesContainer.valueOfStringWithAssertNotNull(applicationName);
         String url = String.format("%s/api/Auth4Service", host);
@@ -118,6 +121,24 @@ public class AuthorityServiceAgent {
         if (respDto.getCode() != 200 || respDto.getData() == null || StringUtils.isEmpty(respDto.getData().getUserId())) {
             return null;
         }
-        return MemberUserContext.builder().userId(respDto.getData().getUserId()).build();
+        return respDto.getData().getUserId();
     }
+
+    public static MemberUserContext queryUserNameByMemberId(final String userId) {
+        String applicationName = "user.service.host";
+        String host = PropertiesContainer.valueOfString(applicationName, "http://userService.api.panli.com");
+        String url = String.format("%s/api/user4service/GetUserInfoById?userId=%s", host, userId);
+
+        String response = HttpSyncClient.sendHttpsGetByRetry(url
+                , PropertiesContainer.valueOf(String.format("%s.timeout.millis", applicationName)
+                        , Long.class, 5000L)
+                , TimeUnit.MILLISECONDS
+                , 2);
+        NetCoreResponse<MemberUserContext> respDto = NetCoreResponseParseUtil.parsingNetResponseByAssert(response
+                , new TypeReference<NetCoreResponse<MemberUserContext>>() {
+                });
+        return respDto.getData();
+    }
+
+
 }

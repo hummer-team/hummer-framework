@@ -1,6 +1,7 @@
 package com.hummer.user.plugin.interceptor;
 
 import com.hummer.common.exceptions.AppException;
+import com.hummer.common.utils.AppBusinessAssert;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.user.plugin.agent.AuthorityServiceAgent;
 import com.hummer.user.plugin.annotation.AuthorityConditionEnum;
@@ -77,16 +78,18 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         if (StringUtils.isEmpty(token)) {
             throw new AppException(41001, "this request ticket not exists.");
         }
-        MemberUserContext userContext = AuthorityServiceAgent.getMemberUserContext(token);
-        if (userContext == null) {
+        String userId = AuthorityServiceAgent.getMemberUserContext(token);
+        if (StringUtils.isEmpty(userId)) {
             log.debug("this request url {} ,controller method is {},ticket invalid"
                     , request.getRequestURI()
                     , ((HandlerMethod) handler).getMethod().getName());
             throw new AppException(41001, "this request ticket invalid.");
         }
+        MemberUserContext userContext = AuthorityServiceAgent.queryUserNameByMemberId(userId);
+        AppBusinessAssert.isTrue(userContext != null, 41001, "user not exist");
+        userContext.setUserId(userId);
         UserHolder.setMember(userContext);
-        log.info("method {} by userInfo userId=={}",
-                ((HandlerMethod) handler).getMethod().getName(), userContext.getUserId());
+        log.info("method {} by userInfo userId=={}", handler.getMethod().getName(), userContext.getUserId());
 
     }
 
