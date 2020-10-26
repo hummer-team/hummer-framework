@@ -34,7 +34,7 @@ public class OrderDataSyncAspect {
     public void orderDataSync(JoinPoint point, OrderDataSync syncData) throws Throwable {
         log.debug("orderDataSync : >>>> {}", point.getSignature());
         OrderSyncContext context = OrderSyncContextHolder.get();
-        if (context == null) {
+        if (context == null || context.getSyncMessage() == null) {
             log.debug("orderDataSync context not exist");
             return;
         }

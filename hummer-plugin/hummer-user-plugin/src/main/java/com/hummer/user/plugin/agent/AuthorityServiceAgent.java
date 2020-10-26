@@ -1,7 +1,6 @@
 package com.hummer.user.plugin.agent;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.hummer.common.exceptions.AppException;
 import com.hummer.common.http.HttpSyncClient;

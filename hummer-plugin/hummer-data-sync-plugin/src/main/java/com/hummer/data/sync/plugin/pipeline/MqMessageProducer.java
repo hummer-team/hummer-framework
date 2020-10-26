@@ -1,7 +1,6 @@
 package com.hummer.data.sync.plugin.pipeline;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hummer.common.utils.AppBusinessAssert;
 import com.hummer.data.sync.plugin.model.OrderSyncMessage;
 import com.panli.spaceship.mq.producer.client.MQSendCallBack;
 import com.panli.spaceship.mq.producer.client.MQSendUtil;
@@ -25,12 +24,17 @@ import java.util.function.Function;
 public class MqMessageProducer {
 
     public Boolean push(OrderSyncMessage data) {
-        AppBusinessAssert.isTrue(data != null, 500, "order data  sync sending is null");
+        if (data == null) {
+            log.debug("order data  sync sending is null");
+            return false;
+        }
         return MQSendUtil.send(composeMQMessage(data));
     }
 
     public void asyncPush(OrderSyncMessage data, Function<Object, Boolean> function) {
-        AppBusinessAssert.isTrue(data != null, 500, "order data async sending is null");
+        if (data == null) {
+            log.debug("order data  sync sending is null");
+        }
         MQSendUtil.asyncSend(composeMQMessage(data), new MQSendCallBack() {
             @Override
             public void complete(MQMessageExt message) {
