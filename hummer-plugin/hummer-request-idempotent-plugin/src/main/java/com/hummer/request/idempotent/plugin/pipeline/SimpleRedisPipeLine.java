@@ -46,9 +46,9 @@ public class SimpleRedisPipeLine {
         return redisOp.set().exist(key);
     }
 
-    public void keyStation(String key) {
+    public void keyStation(String key, int expireSeconds) {
 
-        redisOp.set().set(key, "REQUEST_IDEMPOTENT_STATION");
+        redisOp.set().set(key, "REQUEST_IDEMPOTENT_STATION", expireSeconds);
     }
 
     public void removeKey(String key) {

@@ -50,7 +50,7 @@ public class RequestIdempotentAspect {
             return null;
         }
         // 站位
-        pipeLine.keyStation(key);
+        pipeLine.keyStation(key, requestIdempotent.expireSeconds());
         try {
             return point.proceed(point.getArgs());
         } catch (Exception e) {
