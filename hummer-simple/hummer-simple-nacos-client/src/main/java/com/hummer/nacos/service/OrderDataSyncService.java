@@ -12,4 +12,5 @@ public interface OrderDataSyncService {
 
 
     void orderStatusUpdate(String businessCode, Integer originStatus, Integer targetStatus);
+
 }

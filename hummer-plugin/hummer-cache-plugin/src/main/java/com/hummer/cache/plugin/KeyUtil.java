@@ -71,6 +71,6 @@ public class KeyUtil {
     }
 
     public static String formatKey(String applicationName, String businessCode, Map<String, Object> parameterMap) {
-        return CacheKeyFormatUtil.formatKey(applicationName,businessCode,parameterMap);
+        return CacheKeyFormatUtil.formatKey(applicationName, businessCode, parameterMap);
     }
 }

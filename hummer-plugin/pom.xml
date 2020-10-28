@@ -31,5 +31,6 @@
         <module>hummer-warmup-plugin</module>
         <module>hummer-soa-plugin</module>
         <module>hummer-data-sync-plugin</module>
+        <module>hummer-request-idempotent-plugin</module>
     </modules>
 </project>

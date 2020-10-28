@@ -1,6 +1,7 @@
 package com.hummer.nacos.rest;
 
 import com.hummer.nacos.service.OrderDataSyncService;
+import com.hummer.request.idempotent.plugin.annotation.RequestIdempotentAnnotation;
 import com.hummer.rest.model.ResourceResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,6 +37,16 @@ public class DataSyncController {
     ) {
 
         orderDataSyncService.orderStatusUpdate(businessCode, originStatus, targetStatus);
+        return ResourceResponse.ok();
+    }
+
+    @ApiOperation(value = "order-change", notes = "order-change")
+    @PostMapping("order/change/consumer")
+    @RequestIdempotentAnnotation(businessCode = "order:change-consumer")
+    public ResourceResponse<Void> orderChangeConsumer(
+            @RequestParam("businessCode") String businessCode
+    ) {
+
         return ResourceResponse.ok();
     }
 }

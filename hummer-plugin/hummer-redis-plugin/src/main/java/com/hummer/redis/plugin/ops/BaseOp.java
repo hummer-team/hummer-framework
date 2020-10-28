@@ -69,6 +69,15 @@ public abstract class BaseOp<T extends BaseOp<T>> {
         return redis(REDIS_DB_GROUP_NAME).doExecute(jedis -> jedis.del(keys.toArray(new String[]{})));
     }
 
+    public boolean exist(final String key) {
+        return redis(REDIS_DB_GROUP_NAME).doExecute(jedis -> jedis.exists(key));
+    }
+
+    public boolean exist(final byte[] key) {
+
+        return redis(REDIS_DB_GROUP_NAME).doExecute(jedis -> jedis.exists(key));
+    }
+
     public void doAction(Consumer<Jedis> consumer) {
         redis(REDIS_DB_GROUP_NAME).doExecute(jedis -> {
             consumer.accept(jedis);
