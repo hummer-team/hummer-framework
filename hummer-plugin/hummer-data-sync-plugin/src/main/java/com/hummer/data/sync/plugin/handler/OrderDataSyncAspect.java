@@ -44,7 +44,7 @@ public class OrderDataSyncAspect {
     }
 
     public boolean clean(Object o) {
-
+        log.info("data sync msg req produce result=={}", o);
         OrderSyncContextHolder.clean();
         return true;
     }

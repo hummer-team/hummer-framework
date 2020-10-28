@@ -38,12 +38,12 @@ public class MqMessageProducer {
         MQSendUtil.asyncSend(composeMQMessage(data), new MQSendCallBack() {
             @Override
             public void complete(MQMessageExt message) {
-                function.apply(null);
+                function.apply(true);
             }
 
             @Override
             public void fail(MQMessageExt message, Exception e) {
-                function.apply(null);
+                function.apply(false);
             }
         });
     }
