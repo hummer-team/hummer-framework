@@ -66,6 +66,11 @@ public class SimpleRedisCache {
         });
     }
 
+    public String get(final String key) {
+
+        return redisOp.set().getKey(key);
+    }
+
     public String formatKey(final String nameSpace
             , final String businessCode
             , final Map<String, Object> parameterMap) {
