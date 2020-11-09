@@ -93,6 +93,11 @@ public class SimpleGuavaCache implements InitializingBean, DisposableBean {
         log.debug("guava cache data item count:{}", cache.size());
     }
 
+    public Object get(final String key) {
+
+        return cache.getIfPresent(key);
+    }
+
     public void clean() {
         long size = cache.size();
         cache.cleanUp();
