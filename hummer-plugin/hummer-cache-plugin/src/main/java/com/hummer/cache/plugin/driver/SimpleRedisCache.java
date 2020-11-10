@@ -66,6 +66,11 @@ public class SimpleRedisCache {
         });
     }
 
+    public void set(final String key, final String value, final int timeoutSeconds) {
+        
+        redisOp.set().set(key, value, timeoutSeconds);
+    }
+
     public String get(final String key) {
 
         return redisOp.set().getKey(key);
