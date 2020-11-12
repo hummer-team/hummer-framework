@@ -21,4 +21,6 @@ public class NacosConfigParams {
     private List<String> groupIdList;
 
     private List<String> dataIdList;
+
+    private List<String> configTypes;
 }

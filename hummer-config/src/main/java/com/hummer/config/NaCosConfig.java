@@ -97,6 +97,7 @@ public class NaCosConfig implements DisposableBean {
         for (int i = 0; i < params.getGroupIdList().size(); i++) {
             String groupId = params.getGroupIdList().get(i);
             String dataId = i <= params.getDataIdList().size() ? params.getDataIdList().get(i) : null;
+            String configType = params.getConfigTypes().get(i);
             if (Strings.isNullOrEmpty(groupId) || Strings.isNullOrEmpty(dataId)) {
                 continue;
             }
@@ -111,32 +112,34 @@ public class NaCosConfig implements DisposableBean {
                     @Override
                     public void receiveConfigInfo(String configInfo) {
 
-                        handleConfigChange(groupId, dataId, configInfo, params);
+                        handleConfigChange(groupId, dataId, configType, configInfo);
                     }
                 });
 
             }
             String value = configService.getConfig(dataId, groupId, 3000);
             if (!Strings.isNullOrEmpty(value)) {
-                handleConfigLoad(groupId, dataId, value, params);
+                handleConfigLoad(groupId, dataId, configType, value);
             }
         }
         // 客户端配置上传至服务端
         uploadConfig();
     }
 
-    private void handleConfigLoad(String groupId, String dataId, String configInfo, NacosConfigParams params) {
+    private void handleConfigLoad(String groupId, String dataId, String dataType
+            , String configInfo) {
         // 更新项目配置本地缓存
         ConfigDataInfoBo dataInfoBo = configCacheManager.putConfigToContainer(groupId, dataId, configInfo
-                , params.getProperties().getProperty("dataType"), ConfigEnums.ConfigChangeScene.ON_LOAD);
+                , dataType, ConfigEnums.ConfigChangeScene.ON_LOAD);
         // 配置变更订阅处理
         configLoadDispatch(dataInfoBo);
     }
 
-    private void handleConfigChange(String groupId, String dataId, String configInfo, NacosConfigParams params) {
+    private void handleConfigChange(String groupId, String dataId, String dataType
+            , String configInfo) {
         // 更新项目配置本地缓存
         ConfigDataInfoBo dataInfoBo = configCacheManager.putConfigToContainer(groupId, dataId, configInfo
-                , params.getProperties().getProperty("dataType"), ConfigEnums.ConfigChangeScene.ON_EDITOR);
+                , dataType, ConfigEnums.ConfigChangeScene.ON_EDITOR);
         // 客户端配置上传至服务端
         uploadConfig();
         // 配置变更订阅处理
@@ -176,6 +179,8 @@ public class NaCosConfig implements DisposableBean {
             LOGGER.warn("no setting nacos group id,PropertiesContainer nacos config will is empty.");
             return null;
         }
+        String configType = PropertiesContainer.valueOfString("nacos.config.type", "properties");
+
         String namespace = PropertiesContainer.valueOfString("nacos.config.namespace");
         NacosConfigParams configParams = new NacosConfigParams();
         String service = PropertiesContainer.valueOfStringWithAssertNotNull("nacos.config.server-addr");
@@ -185,11 +190,13 @@ public class NaCosConfig implements DisposableBean {
         if (StringUtils.isNotBlank(namespace)) {
             properties.put("namespace", namespace);
         }
-        properties.put("dataType", PropertiesContainer.valueOfString("nacos.config.type", "properties"));
+        List<String> configTypes = Splitter.on(",").splitToList(configType);
+
         List<String> groupIdList = Splitter.on(",").splitToList(groupIds);
         List<String> dataIdList = Splitter.on(",").splitToList(dataIds);
         configParams.setDataIdList(dataIdList);
         configParams.setGroupIdList(groupIdList);
+        configParams.setConfigTypes(configTypes);
         configParams.setProperties(properties);
         return configParams;
     }
