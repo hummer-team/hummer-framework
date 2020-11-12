@@ -1,6 +1,5 @@
 package com.hummer.api.web;
 
-import com.alibaba.nacos.api.config.annotation.NacosConfigListener;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.rest.model.ResourceResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +22,7 @@ public class ConfigController2 {
     //warning ：use @Value annotation config value no flush
     private String testConfig;
 
-    @NacosConfigListener(dataId = "mytest_01", groupId = "test_01")
+    //@NacosConfigListener(dataId = "mytest_01", groupId = "test_01")
     public void notice(Properties config) {
         log.info("config changed notice {}", config);
     }

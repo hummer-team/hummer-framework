@@ -13,10 +13,10 @@ public class HealthController {
         return "ok";
     }
 
-    @GetMapping("/warmup-time")
+    @GetMapping("/up-time")
     public String getUpTime() {
         String startTime = DateFormatUtils.format(START, "yyyy-MM-dd'T'HH:mm:ss");
         String upTime = String.valueOf((System.currentTimeMillis() - START) / 1000);
-        return String.format("startAt:%s,upTime:%s", startTime, upTime);
+        return String.format("startAt:%s,upTime:%s(s)", startTime, upTime);
     }
 }

@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
-@SpringBootApplication(scanBasePackages = "com.hummer.nacos",exclude = {DataSourceAutoConfiguration.class})
+@SpringBootApplication(scanBasePackages = "com.hummer.nacos", exclude = {DataSourceAutoConfiguration.class})
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @UndertowServer
 public class ApplicationNacos {

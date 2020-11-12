@@ -6,6 +6,7 @@ import com.hummer.common.exceptions.AppException;
 import com.hummer.config.bo.ConfigDataInfoBo;
 import com.hummer.config.bo.ConfigListenerKey;
 import com.hummer.config.bo.ConfigPropertiesChangeInfoBo;
+import com.hummer.config.enums.ConfigEnums;
 import com.hummer.config.listener.AbstractConfigListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,19 +33,19 @@ public class ConfigSubscriptionManagerImpl implements ConfigSubscriptionManager 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigSubscriptionManagerImpl.class);
 
-    final static Map<ConfigListenerKey, List<AbstractConfigListener>> subscriptions = new ConcurrentHashMap<>();
+    private final static Map<ConfigListenerKey, List<AbstractConfigListener>> SUBSCRIPTIONS = new ConcurrentHashMap<>();
 
     @Override
     public int addListener(ConfigListenerKey key, AbstractConfigListener listener) {
 
         assertConfigListener(key, listener);
-        List<AbstractConfigListener> list = subscriptions.getOrDefault(key, new LinkedList<>());
+        List<AbstractConfigListener> list = SUBSCRIPTIONS.getOrDefault(key, new LinkedList<>());
         // 避免重复添加
         if (confirmListenerRepeat(listener, list)) {
             return 0;
         }
         list.add(listener);
-        subscriptions.putIfAbsent(key, list);
+        SUBSCRIPTIONS.putIfAbsent(key, list);
         return 1;
     }
 
@@ -59,13 +60,13 @@ public class ConfigSubscriptionManagerImpl implements ConfigSubscriptionManager 
     @Override
     public void removeListener(ConfigListenerKey key) {
         assertConfigListenerKey(key);
-        subscriptions.remove(key);
+        SUBSCRIPTIONS.remove(key);
     }
 
     @Override
     public void removeListener(ConfigListenerKey key, AbstractConfigListener listener) {
         assertConfigListener(listener);
-        List<AbstractConfigListener> list = subscriptions.get(key);
+        List<AbstractConfigListener> list = SUBSCRIPTIONS.get(key);
         if (CollectionUtils.isEmpty(list)) {
             return;
         }
@@ -83,39 +84,58 @@ public class ConfigSubscriptionManagerImpl implements ConfigSubscriptionManager 
 
     @Override
     public void doDispatch(ConfigDataInfoBo dataInfoBo, final List<ConfigPropertiesChangeInfoBo> changeInfoBos) {
-        if (dataInfoBo == null || CollectionUtils.isEmpty(changeInfoBos) || CollectionUtils.isEmpty(subscriptions)) {
+        if (dataInfoBo == null || CollectionUtils.isEmpty(changeInfoBos) || CollectionUtils.isEmpty(SUBSCRIPTIONS)) {
             return;
         }
         // 判断dataId全配置订阅
         // 判断需要执行的listener
         Map<ConfigListenerKey, List<ConfigPropertiesChangeInfoBo>> map = new HashMap<>(16);
-        for (ConfigPropertiesChangeInfoBo changeInfoBo : changeInfoBos) {
-            for (Map.Entry<ConfigListenerKey, List<AbstractConfigListener>> entry : subscriptions.entrySet()) {
+
+        if (ConfigEnums.ConfigType.JSON.getValue().equalsIgnoreCase(dataInfoBo.getDataType())) {
+            for (ConfigPropertiesChangeInfoBo changeInfoBo : changeInfoBos) {
+                for (Map.Entry<ConfigListenerKey, List<AbstractConfigListener>> entry : SUBSCRIPTIONS.entrySet()) {
+                    if (matchConfigListenerKey(dataInfoBo, entry.getKey())) {
+                        map.put(entry.getKey(),
+                                Collections.singletonList(ConfigPropertiesChangeInfoBo.builder()
+                                        .originValue(JSONObject.toJSONString(dataInfoBo.getOriginValue()))
+                                        .currentValue(JSONObject.toJSONString(dataInfoBo.getCurrentValue()))
+                                        .action(dataInfoBo.getAction()).build())
+                        );
+                        continue;
+                    }
+                    if (matchConfigPropertiesListenerKey(dataInfoBo, changeInfoBo.getPropertiesKey(), entry.getKey())) {
+
+                        map.put(entry.getKey(), composeConfigPropertiesChanges(map.get(entry.getKey()), changeInfoBo));
+                    }
+                }
+            }
+        } else {
+
+            for (Map.Entry<ConfigListenerKey, List<AbstractConfigListener>> entry : SUBSCRIPTIONS.entrySet()) {
                 if (matchConfigListenerKey(dataInfoBo, entry.getKey())) {
-                    map.put(entry.getKey(),
-                            Collections.singletonList(ConfigPropertiesChangeInfoBo.builder()
-                                    .originValue(JSONObject.toJSONString(dataInfoBo.getOriginValue()))
-                                    .currentValue(JSONObject.toJSONString(dataInfoBo.getCurrentValue()))
-                                    .action(dataInfoBo.getAction()).build())
-                    );
+                    map.put(entry.getKey(), changeInfoBos);
                     continue;
                 }
-                if (matchConfigPropertiesListenerKey(dataInfoBo, changeInfoBo.getPropertiesKey(), entry.getKey())) {
+                for (ConfigPropertiesChangeInfoBo changeInfoBo : changeInfoBos) {
 
-                    map.put(entry.getKey(), composeConfigPropertiesChanges(map.get(entry.getKey()), changeInfoBo));
+                    if (matchConfigPropertiesListenerKey(dataInfoBo, changeInfoBo.getPropertiesKey(), entry.getKey())) {
+
+                        map.put(entry.getKey(), composeConfigPropertiesChanges(map.get(entry.getKey()), changeInfoBo));
+                    }
                 }
             }
         }
+
+
         if (map.isEmpty()) {
             return;
         }
         disPatch(map);
-
     }
 
     private void disPatch(Map<ConfigListenerKey, List<ConfigPropertiesChangeInfoBo>> changedSubscriptions) {
         for (Map.Entry<ConfigListenerKey, List<ConfigPropertiesChangeInfoBo>> entry : changedSubscriptions.entrySet()) {
-            List<AbstractConfigListener> listeners = subscriptions.get(entry.getKey());
+            List<AbstractConfigListener> listeners = SUBSCRIPTIONS.get(entry.getKey());
             if (CollectionUtils.isEmpty(listeners)) {
                 continue;
             }
