@@ -7,6 +7,7 @@ import com.alibaba.nacos.api.config.listener.Listener;
 import com.alibaba.nacos.api.exception.NacosException;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
+import com.hummer.common.utils.AppBusinessAssert;
 import com.hummer.common.utils.DateUtil;
 import com.hummer.common.utils.IpUtil;
 import com.hummer.config.agent.ClientConfigAgent;
@@ -179,8 +180,13 @@ public class NaCosConfig implements DisposableBean {
             LOGGER.warn("no setting nacos group id,PropertiesContainer nacos config will is empty.");
             return null;
         }
-        String configType = PropertiesContainer.valueOfString("nacos.config.type", "properties");
-
+        String configType = PropertiesContainer.valueOfString("nacos.config.type");
+        if (StringUtils.isEmpty(configType)) {
+            configType = PropertiesContainer.valueOfString("nacos.config.types");
+        }
+        if (StringUtils.isNotBlank(configType)) {
+            return null;
+        }
         String namespace = PropertiesContainer.valueOfString("nacos.config.namespace");
         NacosConfigParams configParams = new NacosConfigParams();
         String service = PropertiesContainer.valueOfStringWithAssertNotNull("nacos.config.server-addr");
@@ -190,10 +196,16 @@ public class NaCosConfig implements DisposableBean {
         if (StringUtils.isNotBlank(namespace)) {
             properties.put("namespace", namespace);
         }
+
+
         List<String> configTypes = Splitter.on(",").splitToList(configType);
 
         List<String> groupIdList = Splitter.on(",").splitToList(groupIds);
         List<String> dataIdList = Splitter.on(",").splitToList(dataIds);
+
+        AppBusinessAssert.isTrue(dataIdList.size() == groupIdList.size()
+                        && (dataIdList.size() == configTypes.size() || configTypes.size() == 1), 400
+                , "nocos config params error0 ,dataIds , groupIds ,configTypes size not match");
         configParams.setDataIdList(dataIdList);
         configParams.setGroupIdList(groupIdList);
         configParams.setConfigTypes(configTypes);
