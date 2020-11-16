@@ -184,7 +184,7 @@ public class NaCosConfig implements DisposableBean {
         if (StringUtils.isEmpty(configType)) {
             configType = PropertiesContainer.valueOfString("nacos.config.types");
         }
-        if (StringUtils.isNotBlank(configType)) {
+        if (StringUtils.isEmpty(configType)) {
             return null;
         }
         String namespace = PropertiesContainer.valueOfString("nacos.config.namespace");
