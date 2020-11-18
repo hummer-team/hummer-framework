@@ -10,6 +10,28 @@ package com.hummer.data.sync.plugin.enums;
  */
 public class OrderSyncEnums {
 
+    public enum MqTopics {
+        TRANSACTION("transaction", "交易"),
+        ACTIVITY("activity", "运营活动"),
+        COMMON("common", "通用"),
+        ;
+        private String value;
+        private String remark;
+
+        MqTopics(String value, String remark) {
+            this.value = value;
+            this.remark = remark;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public String getRemark() {
+            return remark;
+        }
+    }
+
     public enum BusinessType {
         SHOPPING_ORDER("shopping-order", "代购订单"),
         SELF_ORDER("transport-order", "自助购订单"),

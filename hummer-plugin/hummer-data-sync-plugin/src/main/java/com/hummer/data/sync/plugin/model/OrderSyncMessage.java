@@ -1,5 +1,6 @@
 package com.hummer.data.sync.plugin.model;
 
+import com.hummer.data.sync.plugin.enums.OrderSyncEnums;
 import lombok.Data;
 
 /**
@@ -30,4 +31,6 @@ public class OrderSyncMessage<T> {
     private String operatorName;
 
     private String operatorIp;
+
+    private OrderSyncEnums.MqTopics topics;
 }

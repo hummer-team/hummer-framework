@@ -10,10 +10,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * description     java类作用描述
  *
@@ -31,15 +27,13 @@ public class OrderDataSyncAspect {
     private MqMessageProducer mqMessageProducer;
 
     @After(" @annotation(syncData)")
-    public void orderDataSync(JoinPoint point, OrderDataSync syncData) throws Throwable {
+    public void orderDataSync(JoinPoint point, OrderDataSync syncData) {
         log.debug("orderDataSync : >>>> {}", point.getSignature());
         OrderSyncContext context = OrderSyncContextHolder.get();
         if (context == null || context.getSyncMessage() == null) {
             log.debug("orderDataSync context not exist");
             return;
         }
-        List<String> list = new ArrayList<>();
-        list.stream().map(this::clean).collect(Collectors.toList());
         mqMessageProducer.asyncPush(context.getSyncMessage(), this::clean);
     }
 

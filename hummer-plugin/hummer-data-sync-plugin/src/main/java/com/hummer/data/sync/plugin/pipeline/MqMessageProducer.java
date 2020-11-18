@@ -1,7 +1,9 @@
 package com.hummer.data.sync.plugin.pipeline;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hummer.core.PropertiesContainer;
 import com.hummer.data.sync.plugin.model.OrderSyncMessage;
+import com.hummer.data.sync.plugin.util.Util;
 import com.panli.spaceship.mq.producer.client.MQSendCallBack;
 import com.panli.spaceship.mq.producer.client.MQSendUtil;
 import com.panli.spaceship.mq.producer.client.model.MQMessage;
@@ -50,8 +52,9 @@ public class MqMessageProducer {
 
     private MQMessage composeMQMessage(OrderSyncMessage data) {
         MQMessage message = new MQMessage();
-        message.setBusinessCode(data.getBusinessType());
-        message.setOperationCode(data.getAction());
+        message.setBusinessCode(data.getTopics().getValue());
+        message.setOperationCode(Util.composeTopicTag(PropertiesContainer.valueOfStringWithAssertNotNull("spring.application.name")
+                , data.getBusinessType(), data.getAction()));
         message.setBodys(JSONObject.toJSONBytes(data));
         message.setSendMQTimeout(3000);
         message.setBusinessId(data.getBusinessId());
