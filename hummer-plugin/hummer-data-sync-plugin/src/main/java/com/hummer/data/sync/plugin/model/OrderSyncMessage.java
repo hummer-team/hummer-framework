@@ -32,5 +32,5 @@ public class OrderSyncMessage<T> {
 
     private String operatorIp;
 
-    private OrderSyncEnums.MqTopics topics;
+    private OrderSyncEnums.MqTopics topic;
 }

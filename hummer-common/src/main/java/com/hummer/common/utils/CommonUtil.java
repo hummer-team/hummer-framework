@@ -86,4 +86,14 @@ public class CommonUtil {
     public static String getUuidShort() {
         return getUuid().replace("-", "");
     }
+
+    public static String subStringLength(String s, int len){
+        if(StringUtils.isEmpty(s)){
+            return s;
+        }
+        if(len <=0 || s.length() <= len){
+            return s;
+        }
+        return s.substring(0,len-1);
+    }
 }
