@@ -54,7 +54,8 @@ public class MqMessageProducer {
 
     private MQMessage composeMQMessage(OrderSyncMessage data) {
         MQMessage message = new MQMessage();
-        message.setBusinessCode(CommonUtil.ifNullDefault(data.getTopic(), OrderSyncEnums.MqTopics.TRANSACTION).getValue());
+        message.setBusinessCode(CommonUtil.ifNullDefault(data.getTopic(), OrderSyncEnums.MqTopics.TRANSACTION.getValue()));
+        data.setTopic(message.getBusinessCode());
         message.setOperationCode(Util.composeTopicTag(PropertiesContainer.valueOfStringWithAssertNotNull("spring.application.name")
                 , data.getBusinessType(), data.getAction()));
         message.setBodys(JSONObject.toJSONBytes(data));
