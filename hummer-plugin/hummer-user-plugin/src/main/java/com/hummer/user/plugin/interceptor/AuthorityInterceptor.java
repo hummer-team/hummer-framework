@@ -73,12 +73,17 @@ public class AuthorityInterceptor implements HandlerInterceptor {
                 return;
             }
         }
-        String tokenKey = PropertiesContainer.valueOfString("ticket.request.key", "token");
-        String token = RequestContextHolder.get(tokenKey);
-        if (StringUtils.isEmpty(token)) {
-            throw new AppException(41001, "this request ticket not exists.");
+        String userId = RequestContextHolder.get(
+                PropertiesContainer.valueOfString("member.id.request.key", "memberId"));
+        if (StringUtils.isEmpty(userId)) {
+
+            String tokenKey = PropertiesContainer.valueOfString("ticket.request.key", "token");
+            String token = RequestContextHolder.get(tokenKey);
+            if (StringUtils.isEmpty(token)) {
+                throw new AppException(41001, "this request ticket not exists.");
+            }
+            userId = AuthorityServiceAgent.getMemberUserContext(token);
         }
-        String userId = AuthorityServiceAgent.getMemberUserContext(token);
         if (StringUtils.isEmpty(userId)) {
             log.debug("this request url {} ,controller method is {},ticket invalid"
                     , request.getRequestURI()
