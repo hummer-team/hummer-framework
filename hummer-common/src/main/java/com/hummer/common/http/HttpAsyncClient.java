@@ -247,7 +247,8 @@ public final class HttpAsyncClient extends BaseHttpClient {
         HttpResponse response = retryExecute(() ->
                         httpClient.execute(requestBase,
                                 new FutureCallbackHandle<>(customConfig
-                                        , requestBase))
+                                        , requestBase
+                                        , MDC.get(SysConstant.REQUEST_ID)))
                 , customConfig
                 , requestBase);
         long requestCostTime2 = System.currentTimeMillis() - requestStartTime2;
@@ -313,7 +314,7 @@ public final class HttpAsyncClient extends BaseHttpClient {
 
         HttpResponse response = retryExecute(() ->
                         httpClient.execute(requestBase,
-                                new FutureCallbackHandle<>(customConfig, requestBase))
+                                new FutureCallbackHandle<>(customConfig, requestBase,MDC.get(SysConstant.REQUEST_ID)))
                 , customConfig
                 , requestBase);
         long requestCostTime = System.currentTimeMillis() - requestStartTime;
@@ -361,7 +362,7 @@ public final class HttpAsyncClient extends BaseHttpClient {
 
         HttpResponse response = retryExecute(() ->
                         httpClient.execute(requestBase,
-                                new FutureCallbackHandle<>(customConfig, requestBase))
+                                new FutureCallbackHandle<>(customConfig, requestBase,MDC.get(SysConstant.REQUEST_ID)))
                 , customConfig
                 , requestBase);
         long requestCostTime = System.currentTimeMillis() - requestStartTime;
@@ -404,7 +405,7 @@ public final class HttpAsyncClient extends BaseHttpClient {
         long requestStartTime = System.currentTimeMillis();
         HttpResponse response = retryExecute(() ->
                         httpClient.execute(requestBase
-                                , new FutureCallbackHandle<>(customConfig, requestBase))
+                                , new FutureCallbackHandle<>(customConfig, requestBase,MDC.get(SysConstant.REQUEST_ID)))
                 , customConfig
                 , requestBase);
         long requestCostTime = System.currentTimeMillis() - requestStartTime;
@@ -627,10 +628,11 @@ public final class HttpAsyncClient extends BaseHttpClient {
         long toJsonCostTime = initRequest(requestBase, customConfig);
 
         long start = System.currentTimeMillis();
-
+        String requestId = MDC.get(SysConstant.REQUEST_ID);
         httpClient.execute(requestBase, new FutureCallback<HttpResponse>() {
             @Override
             public void completed(HttpResponse result) {
+                MDC.put(SysConstant.REQUEST_ID, requestId);
                 long completedConstTime = System.currentTimeMillis() - start;
                 //release conn
                 requestBase.releaseConnection();
@@ -722,6 +724,7 @@ public final class HttpAsyncClient extends BaseHttpClient {
 
             @Override
             public void failed(Exception ex) {
+                MDC.put(SysConstant.REQUEST_ID, requestId);
                 long callFailCostTime = System.currentTimeMillis() - start;
                 requestBase.releaseConnection();
                 LOGGER.error("#=>call service api failed,total cost time {} ms,request body toJson Cost {} ms" +
@@ -739,6 +742,7 @@ public final class HttpAsyncClient extends BaseHttpClient {
 
             @Override
             public void cancelled() {
+                MDC.put(SysConstant.REQUEST_ID, requestId);
                 long cancelledCostTime = System.currentTimeMillis() - start;
                 requestBase.releaseConnection();
                 LOGGER.warn("#=>call service api cancelled,total cost time {} ms,request body toJson Cost {} ms" +
@@ -901,9 +905,11 @@ public final class HttpAsyncClient extends BaseHttpClient {
         private HttpRequestBase requestBase;
 
         public FutureCallbackHandle(final RequestCustomConfig config
-                , final HttpRequestBase requestBase) {
+                , final HttpRequestBase requestBase
+                , final String requestId) {
             this.config = config;
             this.requestBase = requestBase;
+            MDC.put(SysConstant.REQUEST_ID,requestId);
         }
 
         @Override
