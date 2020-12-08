@@ -46,7 +46,7 @@ public class DataSyncController {
     public ResourceResponse<Void> orderChangeConsumer(
             @RequestParam("businessCode") String businessCode
     ) {
-
+        orderDataSyncService.orderChange();
         return ResourceResponse.ok();
     }
 }

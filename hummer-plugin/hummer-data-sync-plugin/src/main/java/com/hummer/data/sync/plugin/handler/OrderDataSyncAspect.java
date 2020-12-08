@@ -31,17 +31,24 @@ public class OrderDataSyncAspect {
         log.debug("orderDataSync : >>>> {}", point.getSignature());
         Object result = point.proceed(point.getArgs());
         OrderSyncContext context = OrderSyncContextHolder.get();
+        clean();
         if (context == null || context.getSyncMessage() == null) {
             log.debug("orderDataSync context not exist");
             return result;
         }
-        mqMessageProducer.asyncPush(context.getSyncMessage(), this::clean);
+        mqMessageProducer.asyncPush(context.getSyncMessage(), this::after);
         return result;
     }
 
-    public boolean clean(Object o) {
-        log.info("data sync msg req produce result=={}", o);
+    public boolean clean() {
         OrderSyncContextHolder.clean();
         return true;
     }
+
+    public boolean after(Object o) {
+        log.info("data sync msg req produce result=={}", o);
+        return true;
+    }
+
+
 }

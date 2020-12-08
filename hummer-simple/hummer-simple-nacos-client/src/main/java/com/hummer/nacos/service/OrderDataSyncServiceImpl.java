@@ -1,5 +1,6 @@
 package com.hummer.nacos.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hummer.dao.annotation.TargetDataSourceTM;
 import com.hummer.data.sync.plugin.annotation.OrderDataSync;
 import com.hummer.data.sync.plugin.handler.OrderSyncContextHolder;
@@ -31,12 +32,17 @@ public class OrderDataSyncServiceImpl implements OrderDataSyncService {
                 businessCode, originStatus, targetStatus);
         OrderSyncContextHolder.get().setSyncMessage(composeOrderSyncMessage(businessCode
                 , originStatus, targetStatus));
-
-        int a = 1 / 0;
     }
 
     private OrderSyncMessage<ProductWeightChangeData> composeOrderSyncMessage(String businessCode
             , Integer originStatus, Integer targetStatus) {
+
         return new OrderSyncMessage<>();
+    }
+
+    @Override
+    @OrderDataSync
+    public void orderChange() {
+        log.debug("data sync context == {}", JSONObject.toJSONString(OrderSyncContextHolder.get()));
     }
 }
