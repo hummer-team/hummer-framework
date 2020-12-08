@@ -70,6 +70,61 @@ public final class HttpAsyncClient extends BaseHttpClient {
     private CloseableHttpAsyncClient httpClient;
     private DefaultConnectingIOReactor ioReactor;
 
+    private HttpAsyncClient() {
+        this(HTTP_CONN_TIMEOUT
+                , HTTP_CONN_SOCKET_TIMEOUT
+                , Runtime.getRuntime().availableProcessors()
+                , HTTP_MAX_TOTAL
+                , HTTP_PER_MAX_TOTAL
+                , DEFAULT_GROUP_HTTP_ASYNC);
+    }
+
+    private HttpAsyncClient(int connectTimeOut
+            , int socketTimeOut
+            , int ioThreadCount
+            , int maxTotal
+            , int maxPerRoute
+            , String groupName) {
+
+        this.groupName = groupName;
+        int localIoThreadCount = ioThreadCount <= 0 ? Runtime.getRuntime().availableProcessors() : ioThreadCount;
+        int localConnTimeOut = connectTimeOut <= 0 ? HTTP_CONN_TIMEOUT : connectTimeOut;
+        int localSocketTimeOut = socketTimeOut <= 0 ? HTTP_CONN_SOCKET_TIMEOUT : socketTimeOut;
+        int localMaxTotal = maxTotal <= 0 ? HTTP_MAX_TOTAL : maxTotal;
+        int localMaxPerRoute = maxPerRoute <= 0 ? HTTP_PER_MAX_TOTAL : maxPerRoute;
+        IOReactorConfig ioReactorCfg = IOReactorConfig.custom()
+                .setTcpNoDelay(true)
+                .setConnectTimeout(localConnTimeOut)
+                .setSoKeepAlive(true)
+                .setSoTimeout(localSocketTimeOut)
+                .setIoThreadCount(localIoThreadCount)
+                .build();
+
+        try {
+
+            ioReactor = new DefaultConnectingIOReactor(ioReactorCfg);
+            ioReactor.setExceptionHandler(new IOExceptionHandler());
+
+            PoolingNHttpClientConnectionManager cm = new PoolingNHttpClientConnectionManager(ioReactor);
+            cm.setDefaultMaxPerRoute(localMaxPerRoute);
+            cm.setMaxTotal(localMaxTotal);
+            httpClient = HttpAsyncClients.custom().setConnectionManager(cm).build();
+            httpClient.start();
+        } catch (IOReactorException e) {
+            LOGGER.error("HttpAsyncClient http util start fail,", e);
+        }
+
+        LOGGER.info("http async init done,connTimeOut-{},socketTimeOut-{}" +
+                        ",ioThreadCount-{},maxTotal-{},maxPerRoute-{}"
+                , localConnTimeOut
+                , localSocketTimeOut
+                , localIoThreadCount
+                , localMaxTotal
+                , localMaxPerRoute);
+
+        assert httpClient != null;
+    }
+
     /**
      * return http async instance
      *
@@ -87,7 +142,7 @@ public final class HttpAsyncClient extends BaseHttpClient {
      * return http async instance
      *
      * @param groupName instance group name,same group http async instance shard.
-     * @return com.hummer.support.http.HttpAsyncClient
+     * @return {@link com.hummer.common.http.HttpAsyncClient}
      * @author liguo
      * @date 2019/6/20 15:00
      * @version 1.0.0
@@ -137,7 +192,6 @@ public final class HttpAsyncClient extends BaseHttpClient {
         }
         return asyncClient;
     }
-
 
     /**
      * new http async instance
@@ -190,6 +244,12 @@ public final class HttpAsyncClient extends BaseHttpClient {
                         , Integer.class
                         , HTTP_PER_MAX_TOTAL)
                 , groupName);
+    }
+
+    private static void setRequestHead(HttpMessage httpMessage) {
+        httpMessage.addHeader(SysConstant.REQUEST_ID, MDC.get(SysConstant.REQUEST_ID));
+        httpMessage.addHeader(SysConstant.HEADER_REQ_TIME, String.valueOf(DateUtil.getTimestampInMillis()));
+        httpMessage.addHeader(SysConstant.RestConstant.PARENT_SPAN_ID, MDC.get(SysConstant.RestConstant.PARENT_SPAN_ID));
     }
 
     /**
@@ -287,7 +347,6 @@ public final class HttpAsyncClient extends BaseHttpClient {
         retryExecute(requestBase, customConfig, null, handle);
     }
 
-
     /**
      * send request to service
      * <pre>
@@ -330,7 +389,6 @@ public final class HttpAsyncClient extends BaseHttpClient {
                 , System.currentTimeMillis() - parseResultTime);
         return out;
     }
-
 
     /**
      * send http get request to service,  ignore RequestCustomConfig.RequestMethod
@@ -525,7 +583,6 @@ public final class HttpAsyncClient extends BaseHttpClient {
         return null;
     }
 
-
     private <INPUT, OUT> void retryExecute(
             final HttpRequestBase httpRequestBase
             , final RequestCustomConfig<INPUT> customConfig
@@ -553,7 +610,6 @@ public final class HttpAsyncClient extends BaseHttpClient {
             }
         }
     }
-
 
     private <INPUT> String parseResponse(RequestCustomConfig<INPUT> customConfig
             , HttpResponse response) {
@@ -587,7 +643,6 @@ public final class HttpAsyncClient extends BaseHttpClient {
             return null;
         }
     }
-
 
     private <INPUT, OUT> OUT parseResponse(RequestCustomConfig<INPUT> customConfig
             , TypeReference<OUT> typeReference
@@ -811,68 +866,6 @@ public final class HttpAsyncClient extends BaseHttpClient {
         }
 
         return System.currentTimeMillis() - startTime;
-    }
-
-    private HttpAsyncClient() {
-        this(HTTP_CONN_TIMEOUT
-                , HTTP_CONN_SOCKET_TIMEOUT
-                , Runtime.getRuntime().availableProcessors()
-                , HTTP_MAX_TOTAL
-                , HTTP_PER_MAX_TOTAL
-                , DEFAULT_GROUP_HTTP_ASYNC);
-    }
-
-    private HttpAsyncClient(int connectTimeOut
-            , int socketTimeOut
-            , int ioThreadCount
-            , int maxTotal
-            , int maxPerRoute
-            , String groupName) {
-
-        this.groupName = groupName;
-        int localIoThreadCount = ioThreadCount <= 0 ? Runtime.getRuntime().availableProcessors() : ioThreadCount;
-        int localConnTimeOut = connectTimeOut <= 0 ? HTTP_CONN_TIMEOUT : connectTimeOut;
-        int localSocketTimeOut = socketTimeOut <= 0 ? HTTP_CONN_SOCKET_TIMEOUT : socketTimeOut;
-        int localMaxTotal = maxTotal <= 0 ? HTTP_MAX_TOTAL : maxTotal;
-        int localMaxPerRoute = maxPerRoute <= 0 ? HTTP_PER_MAX_TOTAL : maxPerRoute;
-        IOReactorConfig ioReactorCfg = IOReactorConfig.custom()
-                .setTcpNoDelay(true)
-                .setConnectTimeout(localConnTimeOut)
-                .setSoKeepAlive(true)
-                .setSoTimeout(localSocketTimeOut)
-                .setIoThreadCount(localIoThreadCount)
-                .build();
-
-        try {
-
-            ioReactor = new DefaultConnectingIOReactor(ioReactorCfg);
-            ioReactor.setExceptionHandler(new IOExceptionHandler());
-
-            PoolingNHttpClientConnectionManager cm = new PoolingNHttpClientConnectionManager(ioReactor);
-            cm.setDefaultMaxPerRoute(localMaxPerRoute);
-            cm.setMaxTotal(localMaxTotal);
-            httpClient = HttpAsyncClients.custom().setConnectionManager(cm).build();
-            httpClient.start();
-        } catch (IOReactorException e) {
-            LOGGER.error("HttpAsyncClient http util start fail,", e);
-        }
-
-        LOGGER.info("http async init done,connTimeOut-{},socketTimeOut-{}" +
-                        ",ioThreadCount-{},maxTotal-{},maxPerRoute-{}"
-                , localConnTimeOut
-                , localSocketTimeOut
-                , localIoThreadCount
-                , localMaxTotal
-                , localMaxPerRoute);
-
-        assert httpClient != null;
-    }
-
-
-    private static void setRequestHead(HttpMessage httpMessage) {
-        httpMessage.addHeader(SysConstant.REQUEST_ID, MDC.get(SysConstant.REQUEST_ID));
-        httpMessage.addHeader(SysConstant.HEADER_REQ_TIME, String.valueOf(DateUtil.getTimestampInMillis()));
-        httpMessage.addHeader(SysConstant.RestConstant.PARENT_SPAN_ID, MDC.get(SysConstant.RestConstant.PARENT_SPAN_ID));
     }
 
     private <INPUT> void logRequestFail(RequestCustomConfig<INPUT> customConfig
