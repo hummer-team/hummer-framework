@@ -33,7 +33,7 @@ public class OrderDataSyncAspect {
         OrderSyncContext context = OrderSyncContextHolder.get();
         clean();
         if (context == null || context.getSyncMessage() == null) {
-            log.debug("orderDataSync context not exist");
+            log.warn("orderDataSync context not exist, method=={}", point.getSignature());
             return result;
         }
         mqMessageProducer.asyncPush(context.getSyncMessage(), this::after);
