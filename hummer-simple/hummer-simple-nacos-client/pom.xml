@@ -80,6 +80,7 @@
 
         <!--<finalName>${project.artifact.name}-${project.version}-${build.number}</finalName>-->
         <plugins>
+
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <configuration>

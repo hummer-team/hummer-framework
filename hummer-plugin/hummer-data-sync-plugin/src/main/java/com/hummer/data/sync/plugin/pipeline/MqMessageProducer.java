@@ -59,7 +59,7 @@ public class MqMessageProducer {
         message.setOperationCode(Util.composeTopicTag(PropertiesContainer.valueOfStringWithAssertNotNull("spring.application.name")
                 , data.getBusinessType(), data.getAction()));
         message.setBodys(JSONObject.toJSONBytes(data));
-        message.setSendMQTimeout(3000);
+        message.setSendMQTimeout(PropertiesContainer.valueOfInteger("sync.mq.consumer.send.timeout", 10000));
         message.setBusinessId(data.getBusinessId());
         return message;
     }
