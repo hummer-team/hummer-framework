@@ -31,19 +31,19 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
-            <version>3.6.0</version>
+            <version>3.3.1</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.maven.plugin-tools</groupId>
-            <artifactId>maven-plugin-annotations</artifactId>
-            <version>3.6.0</version>
-            <scope>provided </scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.maven.plugin-tools</groupId>-->
+<!--            <artifactId>maven-plugin-annotations</artifactId>-->
+<!--            <version>3.3</version>-->
+<!--            <scope>provided </scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-log4j2</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-log4j2</artifactId>-->
+<!--        </dependency>-->
 
     </dependencies>
 </project>

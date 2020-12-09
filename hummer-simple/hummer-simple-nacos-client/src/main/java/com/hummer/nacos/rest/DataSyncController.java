@@ -1,5 +1,6 @@
 package com.hummer.nacos.rest;
 
+import com.hummer.data.sync.plugin.annotation.OrderDataSync;
 import com.hummer.nacos.service.OrderDataSyncService;
 import com.hummer.request.idempotent.plugin.annotation.RequestIdempotentAnnotation;
 import com.hummer.rest.model.ResourceResponse;
@@ -30,6 +31,7 @@ public class DataSyncController {
 
     @ApiOperation(value = "order-change", notes = "order-change")
     @PostMapping("order/change")
+    @OrderDataSync
     public ResourceResponse<Void> orderChangeTest(
             @RequestParam("businessCode") String businessCode,
             @RequestParam("originStatus") Integer originStatus,
@@ -43,6 +45,7 @@ public class DataSyncController {
     @ApiOperation(value = "order-change", notes = "order-change")
     @PostMapping("order/change/consumer")
     @RequestIdempotentAnnotation(businessCode = "order:change-consumer")
+    @OrderDataSync
     public ResourceResponse<Void> orderChangeConsumer(
             @RequestParam("businessCode") String businessCode
     ) {
