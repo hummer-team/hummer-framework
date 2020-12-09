@@ -2,7 +2,6 @@ package com.hummer.nacos.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hummer.dao.annotation.TargetDataSourceTM;
-import com.hummer.data.sync.plugin.annotation.OrderDataSync;
 import com.hummer.data.sync.plugin.handler.OrderSyncContextHolder;
 import com.hummer.data.sync.plugin.model.OrderSyncMessage;
 import com.hummer.nacos.model.ProductWeightChangeData;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 public class OrderDataSyncServiceImpl implements OrderDataSyncService {
 
     @Override
-    @OrderDataSync
     @TargetDataSourceTM(dbName = "order_w"
             , transactionManager = "order_w_TM"
             , rollbackFor = Exception.class
@@ -41,7 +39,6 @@ public class OrderDataSyncServiceImpl implements OrderDataSyncService {
     }
 
     @Override
-    @OrderDataSync
     public void orderChange() {
         log.debug("data sync context == {}", JSONObject.toJSONString(OrderSyncContextHolder.get()));
     }
