@@ -3,6 +3,7 @@ package com.hummer.rest.monitor;
 import com.google.common.base.Strings;
 import com.hummer.common.SysConstant;
 import com.hummer.common.exceptions.AppException;
+import com.hummer.common.exceptions.BusinessIdempotentException;
 import com.hummer.common.exceptions.ErrorRequestException;
 import com.hummer.rest.model.ResourceResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -38,6 +39,7 @@ import javax.validation.ConstraintViolationException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,6 +84,7 @@ public class GlobalExceptionHandler {
         EXCEPTIONS.put(IllegalArgumentException.class, HttpServletResponse.SC_BAD_REQUEST);
         EXCEPTIONS.put(MethodArgumentTypeMismatchException.class, HttpServletResponse.SC_BAD_REQUEST);
         EXCEPTIONS.put(ErrorRequestException.class, HttpServletResponse.SC_BAD_REQUEST);
+        EXCEPTIONS.put(SQLIntegrityConstraintViolationException.class, SysConstant.BUSINESS_IDEMPOTENT_ERROR_CODE);
     }
 
     @ExceptionHandler(value = Throwable.class)
@@ -117,6 +120,12 @@ public class GlobalExceptionHandler {
             status = EXCEPTIONS.get(e.getClass());
             rep.setCode(status == null ? sysExceptionCode * codeRatio : status * codeRatio);
             rep.setMessage(e.getMessage());
+
+            
+        } else if (e instanceof BusinessIdempotentException) {
+            // ignore business idempotent exception
+            rep.setMessage(e.getMessage());
+            rep.setData(((AppException) e).getReturnObj());
         } else {
             //output
             rep.setCode(((AppException) e).getCode());

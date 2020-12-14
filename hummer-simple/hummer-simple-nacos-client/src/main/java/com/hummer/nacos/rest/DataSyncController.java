@@ -2,6 +2,7 @@ package com.hummer.nacos.rest;
 
 import com.hummer.data.sync.plugin.annotation.OrderDataSync;
 import com.hummer.nacos.service.OrderDataSyncService;
+import com.hummer.request.idempotent.plugin.annotation.BusinessIdempotentAnnotation;
 import com.hummer.request.idempotent.plugin.annotation.RequestIdempotentAnnotation;
 import com.hummer.rest.model.ResourceResponse;
 import io.swagger.annotations.Api;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
  * DataSyncController
@@ -32,11 +34,12 @@ public class DataSyncController {
     @ApiOperation(value = "order-change", notes = "order-change")
     @PostMapping("order/change")
     @OrderDataSync
+    @BusinessIdempotentAnnotation
     public ResourceResponse<Void> orderChangeTest(
             @RequestParam("businessCode") String businessCode,
             @RequestParam("originStatus") Integer originStatus,
             @RequestParam("targetStatus") Integer targetStatus
-    ) {
+    ) throws SQLIntegrityConstraintViolationException {
 
         orderDataSyncService.orderStatusUpdate(businessCode, originStatus, targetStatus);
         return ResourceResponse.ok();
@@ -46,6 +49,7 @@ public class DataSyncController {
     @PostMapping("order/change/consumer")
     @RequestIdempotentAnnotation(businessCode = "order:change-consumer")
     @OrderDataSync
+    @BusinessIdempotentAnnotation
     public ResourceResponse<Void> orderChangeConsumer(
             @RequestParam("businessCode") String businessCode
     ) {

@@ -8,6 +8,8 @@ import com.hummer.nacos.model.ProductWeightChangeData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 /**
  * OrderDataSyncServiceImpl
  *
@@ -25,11 +27,16 @@ public class OrderDataSyncServiceImpl implements OrderDataSyncService {
             , transactionManager = "order_w_TM"
             , rollbackFor = Exception.class
             , timeout = 30)
-    public void orderStatusUpdate(String businessCode, Integer originStatus, Integer targetStatus) {
+    public void orderStatusUpdate(String businessCode, Integer originStatus, Integer targetStatus) throws SQLIntegrityConstraintViolationException {
         log.debug("order status update params,businessCode=={},originStatus=={},targetStatus=={}",
                 businessCode, originStatus, targetStatus);
+
+
         OrderSyncContextHolder.get().setSyncMessage(composeOrderSyncMessage(businessCode
                 , originStatus, targetStatus));
+
+
+        throw new SQLIntegrityConstraintViolationException("Duplicate entry");
     }
 
     private OrderSyncMessage<ProductWeightChangeData> composeOrderSyncMessage(String businessCode

@@ -1,5 +1,7 @@
 package com.hummer.nacos.service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 /**
  * OrderDataSyncService
  *
@@ -11,7 +13,7 @@ package com.hummer.nacos.service;
 public interface OrderDataSyncService {
 
 
-    void orderStatusUpdate(String businessCode, Integer originStatus, Integer targetStatus);
+    void orderStatusUpdate(String businessCode, Integer originStatus, Integer targetStatus) throws SQLIntegrityConstraintViolationException;
 
     void orderChange();
 }
