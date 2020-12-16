@@ -85,6 +85,7 @@ public class GlobalExceptionHandler {
         EXCEPTIONS.put(MethodArgumentTypeMismatchException.class, HttpServletResponse.SC_BAD_REQUEST);
         EXCEPTIONS.put(ErrorRequestException.class, HttpServletResponse.SC_BAD_REQUEST);
         EXCEPTIONS.put(SQLIntegrityConstraintViolationException.class, SysConstant.BUSINESS_IDEMPOTENT_ERROR_CODE);
+        EXCEPTIONS.put(org.springframework.dao.DuplicateKeyException.class, SysConstant.BUSINESS_IDEMPOTENT_ERROR_CODE);
     }
 
     @ExceptionHandler(value = Throwable.class)

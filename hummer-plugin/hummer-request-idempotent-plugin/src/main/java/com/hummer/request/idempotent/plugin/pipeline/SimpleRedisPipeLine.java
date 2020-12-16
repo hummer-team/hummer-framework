@@ -51,8 +51,20 @@ public class SimpleRedisPipeLine {
         redisOp.set().set(key, "REQUEST_IDEMPOTENT_STATION", expireSeconds);
     }
 
-    public void removeKey(String key) {
-
-        redisOp.set().del(key);
+    public Long removeKey(String key) {
+        return redisOp.set().del(key);
     }
+
+    public void removeRedisKeyRetry(String key) {
+        try {
+            Long result = removeKey(key);
+            if (result == null) {
+                removeKey(key);
+            }
+        } catch (Exception e) {
+            LOGGER.warn("redis key == {},remove fail", key);
+            removeKey(key);
+        }
+    }
+
 }

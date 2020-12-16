@@ -50,10 +50,9 @@ public class DataSyncController {
     @RequestIdempotentAnnotation(businessCode = "order:change-consumer")
     @OrderDataSync
     @BusinessIdempotentAnnotation
-    public ResourceResponse<Void> orderChangeConsumer(
+    public void orderChangeConsumer(
             @RequestParam("businessCode") String businessCode
     ) {
         orderDataSyncService.orderChange();
-        return ResourceResponse.ok();
     }
 }
