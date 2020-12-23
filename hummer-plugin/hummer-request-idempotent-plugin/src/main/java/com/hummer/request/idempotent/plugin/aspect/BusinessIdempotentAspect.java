@@ -9,6 +9,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -34,7 +35,7 @@ public class BusinessIdempotentAspect {
         if (ex instanceof BusinessIdempotentException) {
             throw (BusinessIdempotentException) ex;
         }
-        if (ex instanceof SQLIntegrityConstraintViolationException) {
+        if (ex instanceof SQLIntegrityConstraintViolationException || ex instanceof DuplicateKeyException) {
             LOGGER.warn("sql Duplicate entry exception,", ex);
             throw new BusinessIdempotentException(businessIdempotent.code(), ex.getMessage());
         } else if (ex instanceof AppException) {
@@ -44,7 +45,7 @@ public class BusinessIdempotentAspect {
 
                 throw new BusinessIdempotentException(businessIdempotent.code(), ex.getMessage());
             }
+            throw exception;
         }
-
     }
 }
