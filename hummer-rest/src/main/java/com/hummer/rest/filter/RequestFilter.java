@@ -147,10 +147,12 @@ public class RequestFilter implements Filter {
         if (response.getStatus() != successCode
                 || costTime >= PropertiesContainer.valueOf("request.cost.time.slow.value"
                 , Integer.class, defaultSlowCostTimeMills)) {
-            LOGGER.warn("request {} handle done,response status {},total cost {} millis,user-agent {}"
+            LOGGER.warn(">> {} - {} - {} ms - {} bytes - ua: {}"
                     , HttpServletRequestUtil.getCurrentUrl(httpRequest)
                     , response.getStatus()
-                    , costTime, HttpServletRequestUtil.getUserAgent(httpRequest)
+                    , costTime
+                    , response.getHeader("Content-Length")
+                    , HttpServletRequestUtil.getUserAgent(httpRequest)
             );
         }
 

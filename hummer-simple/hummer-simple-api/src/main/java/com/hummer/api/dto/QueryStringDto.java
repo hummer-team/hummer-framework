@@ -1,11 +1,13 @@
 package com.hummer.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 
 @Data
 public class QueryStringDto implements Serializable {
@@ -16,4 +18,6 @@ public class QueryStringDto implements Serializable {
     @NotNull(message = "class id can't null")
     private Integer classId;
     private Collection<String> users;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date atTime;
 }

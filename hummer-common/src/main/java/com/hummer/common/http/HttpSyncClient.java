@@ -1,6 +1,8 @@
 package com.hummer.common.http;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
+import com.hummer.common.coder.CoderEnum;
 import com.hummer.common.exceptions.AppException;
 import com.hummer.common.exceptions.SysException;
 import com.hummer.common.http.context.RequestContext;
@@ -31,6 +33,7 @@ import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.DefaultConnectionReuseStrategy;
@@ -71,13 +74,8 @@ public class HttpSyncClient {
 
     private static final String USER_AGENT = "user_agent";
     private static final String PANLI_IBJ = "panli";
-    private static final String TIMER_PREFIX = "timer.http.client";
 
     private static volatile CloseableHttpClient httpClient;
-
-    private static volatile boolean isMetricsEnable = true;
-
-    private static volatile LatencyStatsRegistry latencyStatsRegistry;
 
     private static List<HttpClientHandler> httpClientHandlers = new ArrayList<>();
     private static List<HttpClientInterceptor> HttpClientInterceptors = new ArrayList<>();
@@ -250,6 +248,23 @@ public class HttpSyncClient {
     public static String sendHttpPost(String httpUrl, String jsonStr, long timeout, TimeUnit timeUnit,
                                       Header... header) {
         return sendHttpPostByRetry(httpUrl, jsonStr, timeout, timeUnit, 0, header);
+    }
+
+    public static <T> void sendHttpPostByRetry(String httpUrl
+            , T obj
+            , CoderEnum coder
+            , long timeout
+            , TimeUnit timeUnit
+            , int retryCount
+            , Header... header) throws JsonProcessingException {
+        HttpPost httpPost = new HttpPost(httpUrl);
+        ByteArrayEntity arrayEntity = new ByteArrayEntity(coder.encodeWithBinary(obj));
+        arrayEntity.setContentType(coder.getMediaType().toString());
+        httpPost.setEntity(arrayEntity);
+        if (header != null) {
+            httpPost.setHeaders(header);
+        }
+        sendHttpPostByRetry(httpPost, timeout, timeUnit, retryCount);
     }
 
     /**
