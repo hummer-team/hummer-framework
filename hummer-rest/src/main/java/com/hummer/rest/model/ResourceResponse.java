@@ -12,10 +12,10 @@ import java.util.Date;
  * @Author: lee
  * @version:1.0.0
  * @Date: 2019/6/20 18:00
- *
  **/
 public class ResourceResponse<T> {
     private int code;
+    private int subCode;
     private String message;
     private T data;
     private String trackId;
@@ -26,6 +26,18 @@ public class ResourceResponse<T> {
             , final String trackId
             , final Date time) {
         this.code = code;
+        this.message = message;
+        this.data = data;
+        this.trackId = trackId;
+        this.time = time;
+    }
+
+    public ResourceResponse(final int code, final int subCode, final String message
+            , final T data
+            , final String trackId
+            , final Date time) {
+        this.code = code;
+        this.subCode = subCode;
         this.message = message;
         this.data = data;
         this.trackId = trackId;
@@ -57,6 +69,14 @@ public class ResourceResponse<T> {
         return result;
     }
 
+    public static <V> ResourceResponse<V> fail(final int status, final int subCode, final String message) {
+        ResourceResponse<V> result = new ResourceResponse<>();
+        result.setCode(status);
+        result.setSubCode(subCode);
+        result.setMessage(message);
+        return result;
+    }
+
     public static <V> ResourceResponse<V> ok() {
         ResourceResponse<V> result = new ResourceResponse<>();
         result.setMessage("success");
@@ -73,6 +93,22 @@ public class ResourceResponse<T> {
 
     public static <V> ResourceResponse<V> ok(final String message, final V data) {
         ResourceResponse<V> result = new ResourceResponse<>();
+        result.setMessage(message);
+        result.setData(data);
+        return result;
+    }
+
+    public static <V> ResourceResponse<V> ok(final int subCode, final String message) {
+        ResourceResponse<V> result = new ResourceResponse<>();
+        result.setSubCode(subCode);
+        result.setMessage(message);
+        return result;
+    }
+
+    public static <V> ResourceResponse<V> ok(final int status, final int subCode, final String message, final V data) {
+        ResourceResponse<V> result = new ResourceResponse<>();
+        result.setCode(status);
+        result.setSubCode(subCode);
         result.setMessage(message);
         result.setData(data);
         return result;
@@ -130,6 +166,14 @@ public class ResourceResponse<T> {
     public ResourceResponse<T> setTrackId(final String trackId) {
         this.trackId = trackId;
         return this;
+    }
+
+    public int getSubCode() {
+        return subCode;
+    }
+
+    public void setSubCode(int subCode) {
+        this.subCode = subCode;
     }
 
     public ResourceResponse<T> build() {

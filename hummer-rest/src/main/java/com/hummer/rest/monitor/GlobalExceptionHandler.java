@@ -122,9 +122,10 @@ public class GlobalExceptionHandler {
             rep.setCode(status == null ? sysExceptionCode * codeRatio : status * codeRatio);
             rep.setMessage(e.getMessage());
 
-            
+
         } else if (e instanceof BusinessIdempotentException) {
             // ignore business idempotent exception
+            rep.setSubCode(SysConstant.BUSINESS_IDEMPOTENT_SUB_CODE);
             rep.setMessage(e.getMessage());
             rep.setData(((AppException) e).getReturnObj());
         } else {

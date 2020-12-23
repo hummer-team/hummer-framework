@@ -1,7 +1,7 @@
 package com.hummer.rest.controller;
 
 import com.hummer.common.logger.LoggerLevelContext;
-import com.hummer.common.resource.ResourceResponse;
+import com.hummer.rest.model.ResourceResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;

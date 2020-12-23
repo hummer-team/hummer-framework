@@ -20,8 +20,11 @@ public class SysConstant {
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     public static final String DEFAULT_CHARSET_NAME = "UTF-8";
 
-    /**业务幂等错误码，对应java.sql.SQLIntegrityConstraintViolationException*/
+    /**
+     * 业务幂等错误码，对应java.sql.SQLIntegrityConstraintViolationException
+     */
     public static final int BUSINESS_IDEMPOTENT_ERROR_CODE = 430;
+    public static final int BUSINESS_IDEMPOTENT_SUB_CODE = 460;
 
     public static class RestConstant {
         private RestConstant() {

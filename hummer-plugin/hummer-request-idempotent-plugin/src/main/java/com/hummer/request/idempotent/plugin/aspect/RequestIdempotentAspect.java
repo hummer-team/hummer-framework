@@ -1,5 +1,6 @@
 package com.hummer.request.idempotent.plugin.aspect;
 
+import com.hummer.common.SysConstant;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.core.SpringApplicationContext;
 import com.hummer.request.idempotent.plugin.KeyUtil;
@@ -37,8 +38,6 @@ public class RequestIdempotentAspect {
                 || !PropertiesContainer.valueOf("request.idempotent.verify.enable", Boolean.class, true)) {
             return point.proceed(point.getArgs());
         }
-        MethodSignature signature = (MethodSignature) point.getSignature();
-        signature.getMethod().getGenericReturnType();
         String keyName = requestIdempotent.key();
         // 判断是否重复请求
         String keyValue = PropertiesContainer.valueOfString(keyName, MDC.get(keyName));
@@ -72,8 +71,8 @@ public class RequestIdempotentAspect {
 
     private ResourceResponse<Void> getDefaultReturn(ProceedingJoinPoint point, String message) {
         Class returnClass = getMethodReturnClass(point);
-        if (ResourceResponse.class == returnClass || com.hummer.common.resource.ResourceResponse.class == returnClass) {
-            return ResourceResponse.ok(message, null);
+        if (ResourceResponse.class == returnClass) {
+            return ResourceResponse.ok(SysConstant.BUSINESS_IDEMPOTENT_SUB_CODE, message);
         }
         return null;
     }
