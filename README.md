@@ -1,6 +1,6 @@
 # The Hummer Project
 
-## About
+## About this project
 
 glue spring boot,mybatis,kafka,rabbitmq,redis,mongodb...framework,Make business development easy
 
@@ -33,3 +33,6 @@ glue spring boot,mybatis,kafka,rabbitmq,redis,mongodb...framework,Make business 
 - hummer-rest
     - glue fast json serial deserialization http request response message
     - customer simple binding module,convert http query string parameter to business entity...      
+
+## about release
+So the snapshot version is used ，because it is convenient for the company project team to enjoy the new features of the framework without upgrading
