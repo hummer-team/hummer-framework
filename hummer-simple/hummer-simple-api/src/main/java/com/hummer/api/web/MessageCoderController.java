@@ -1,13 +1,12 @@
 package com.hummer.api.web;
 
-import com.google.common.collect.Lists;
-import com.hummer.api.dto.QueryStringDto;
 import com.hummer.common.utils.ObjectCopyUtils;
 import com.hummer.rest.annotations.BindRestParameterSimpleModel;
 import com.hummer.rest.model.ResourceResponse;
 import com.hummer.rest.model.request.ResourcePageReqDto;
 import com.hummer.rest.model.response.ResourcePageRespDto;
 import com.hummer.rest.utils.ParameterAssertUtil;
+import comm.hummer.simple.common.module.QueryStringDto;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +22,7 @@ import java.util.Collections;
 public class MessageCoderController {
     @GetMapping(value = "/message-coder")
     public ResourceResponse<QueryStringDto> getMessageCoder(@BindRestParameterSimpleModel @Valid
-                                                                 QueryStringDto queryStringDto
+                                                                QueryStringDto queryStringDto
         , Errors errors) {
         ParameterAssertUtil.assertRequestFirstValidated(errors);
         queryStringDto.setUuId("456");
@@ -33,7 +32,7 @@ public class MessageCoderController {
 
     @PostMapping(value = "/message-coder2")
     public ResourceResponse<QueryStringDto> postMessageCoder(@RequestBody @Valid
-                                                             QueryStringDto queryStringDto
+                                                                 QueryStringDto queryStringDto
         , Errors errors) {
         ParameterAssertUtil.assertRequestFirstValidated(errors);
         queryStringDto.setUuId("456dddffff");
@@ -46,7 +45,7 @@ public class MessageCoderController {
         , Errors errors) {
         ParameterAssertUtil.assertRequestFirstValidated(errors);
         queryStringDto.getQueryObject().setUuId("456dddffff");
-        return ResourceResponse.ok(ResourcePageRespDto.builderPage(1,10,100,
+        return ResourceResponse.ok(ResourcePageRespDto.builderPage(1, 10, 100,
             Collections.singletonList(queryStringDto.getQueryObject())));
     }
 }

@@ -1,4 +1,4 @@
-package com.hummer.api.dto;
+package comm.hummer.simple.common.module;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

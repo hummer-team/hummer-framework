@@ -2,9 +2,11 @@ package com.hummer.common.coder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.msgpack.jackson.dataformat.MessagePackFactory;
@@ -36,7 +38,6 @@ public class MsgPackCoder {
     private MsgPackCoder() {
 
     }
-
 
 
     public static <T> T decodeWithBinary(byte[] bytes, Class<T> target) throws IOException {
@@ -77,6 +78,22 @@ public class MsgPackCoder {
         return javaType;
     }
 
+    public static SerializationConfig getSerializationConfigForJson() {
+        return OBJECT_MAPPER_JSON.getSerializationConfig();
+    }
+
+    public static SerializationConfig getSerializationConfigForBinary() {
+        return OBJECT_MAPPER_BINARY.getSerializationConfig();
+    }
+
+    public static DeserializationConfig getDeserializationConfigForJson() {
+        return OBJECT_MAPPER_JSON.getDeserializationConfig();
+    }
+
+    public static DeserializationConfig getDeserializationConfigForBinary() {
+        return OBJECT_MAPPER_BINARY.getDeserializationConfig();
+    }
+
     public static Object readJavaTypeWithJson(JavaType javaType, HttpInputMessage inputMessage) throws IOException {
         Charset charset = StandardCharsets.UTF_8;
         try {
@@ -96,6 +113,16 @@ public class MsgPackCoder {
             throw new HttpMessageConversionException("Type definition error: " + ex.getType(), ex);
         } catch (JsonProcessingException ex) {
             throw new HttpMessageNotReadableException("JSON parse error: " + ex.getOriginalMessage(), ex, inputMessage);
+        }
+    }
+
+    public static Object readJavaTypeWithBinary(JavaType javaType, byte[] bytes) throws IOException {
+        try {
+            return OBJECT_MAPPER_BINARY.readValue(bytes, javaType);
+        } catch (InvalidDefinitionException ex) {
+            throw new HttpMessageConversionException("Type definition error: " + ex.getType(), ex);
+        } catch (JsonProcessingException ex) {
+            throw new HttpMessageNotReadableException("JSON parse error: " + ex.getOriginalMessage(), ex);
         }
     }
 

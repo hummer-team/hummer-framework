@@ -18,5 +18,5 @@ a.txt
 !/hummer-simple/hummer-simple-api/src/main/resources/logback.xml
 
 !/hummer-simple/hummer-simple-api/src/main/resources/logback-test.xml
-hummer-test*
+!hummer-test*
 */db.mv.db

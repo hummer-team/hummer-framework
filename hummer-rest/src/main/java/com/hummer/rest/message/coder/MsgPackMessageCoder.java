@@ -147,10 +147,12 @@ public class MsgPackMessageCoder extends AbstractHttpMessageConverter<Object>
         byte[] bytes = ByteStreams.toByteArray(inputMessage.getBody());
         MediaType mediaType = inputMessage.getHeaders().getContentType();
         Object o = mediaType == null || mediaType.getSubtype().equalsIgnoreCase(MSGPACKJSON.getSubtype())
-                ? ArrayUtils.isNotEmpty(((ParameterizedType) type).getActualTypeArguments())
+                ? (ArrayUtils.isNotEmpty(((ParameterizedType) type).getActualTypeArguments())
                 ? MsgPackCoder.readJavaTypeWithJson(javaType, bytes)
-                : MsgPackCoder.decodeWithJson(bytes, javaType.getRawClass())
-                : MsgPackCoder.decodeWithBinary(bytes, javaType.getRawClass());
+                : MsgPackCoder.decodeWithJson(bytes, javaType.getRawClass()))
+                : (ArrayUtils.isNotEmpty(((ParameterizedType) type).getActualTypeArguments())
+                ? MsgPackCoder.readJavaTypeWithBinary(javaType, bytes)
+                : MsgPackCoder.decodeWithBinary(bytes, javaType.getRawClass()));
 
         LOGGER.debug("msgpack decoder req body cost {} ms,{} bytes,mediaType {}"
                 , System.currentTimeMillis() - start

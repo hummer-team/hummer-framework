@@ -1,10 +1,13 @@
 package com.hummer.common.http;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.alibaba.fastjson.JSON;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import com.google.common.io.ByteStreams;
 import com.hummer.common.coder.CoderEnum;
 import com.hummer.common.exceptions.AppException;
 import com.hummer.common.exceptions.SysException;
+import com.hummer.common.http.context.MessageTypeContext;
 import com.hummer.common.http.context.RequestContext;
 import com.hummer.common.http.context.RequestContextWrapper;
 import com.hummer.common.http.context.ResponseContext;
@@ -19,6 +22,7 @@ import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -48,12 +52,18 @@ import org.apache.http.impl.io.DefaultHttpRequestWriterFactory;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.MDC;
+import org.springframework.http.HttpMethod;
+import org.springframework.util.Assert;
 
+import javax.validation.constraints.NotNull;
+import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -71,7 +81,6 @@ import static com.hummer.common.http.HttpConstant.HTTP_CONN_TIMEOUT;
  */
 @Slf4j
 public class HttpSyncClient {
-
     private static final String USER_AGENT = "user_agent";
     private static final String PANLI_IBJ = "panli";
 
@@ -250,21 +259,143 @@ public class HttpSyncClient {
         return sendHttpPostByRetry(httpUrl, jsonStr, timeout, timeUnit, 0, header);
     }
 
-    public static <T> void sendHttpPostByRetry(String httpUrl
-            , T obj
-            , CoderEnum coder
-            , long timeout
-            , TimeUnit timeUnit
-            , int retryCount
-            , Header... header) throws JsonProcessingException {
-        HttpPost httpPost = new HttpPost(httpUrl);
-        ByteArrayEntity arrayEntity = new ByteArrayEntity(coder.encodeWithBinary(obj));
-        arrayEntity.setContentType(coder.getMediaType().toString());
-        httpPost.setEntity(arrayEntity);
-        if (header != null) {
-            httpPost.setHeaders(header);
+    public static <T> void sendByRetry(@NotNull String httpUrl
+            , @NotNull HttpMethod method
+            , @NotNull long timeoutMs
+            , @NotNull int retryCount
+            , Header... header) {
+        sendByRetryOf(httpUrl, null, null, method, timeoutMs, retryCount, header);
+    }
+
+    public static <T> void sendByRetry(@NotNull String httpUrl
+            , @NotNull T body
+            , @NotNull HttpMethod method
+            , @NotNull long timeoutMs
+            , @NotNull int retryCount
+            , Header... header) {
+        sendByRetryOf(httpUrl, body, null, method, timeoutMs, retryCount, header);
+    }
+
+    public static <T, R> R sendByRetry(@NotNull String httpUrl
+            , @NotNull T body
+            , @NotNull MessageTypeContext<R> type
+            , @NotNull HttpMethod method
+            , @NotNull long timeoutMs
+            , @NotNull int retryCount
+            , Header... header) {
+
+        return sendByRetryOf(httpUrl, body, type, method, timeoutMs, retryCount, header);
+    }
+
+    private static <T, R> R sendByRetryOf(@NotNull String httpUrl
+            , T body
+            , MessageTypeContext<R> type
+            , @NotNull HttpMethod method
+            , @NotNull long timeoutMs
+            , @NotNull int retryCount
+            , Header... header) {
+        CoderEnum coder = CoderEnum.getCoderByName(PropertiesContainer.valueOfString("hummer.http.message.coder"
+                , "fast_json"));
+        HttpRequestBase httpReqAction = HttpMethodFactory.get(method);
+        Assert.notNull(httpReqAction, "ony support " + HttpMethodFactory.allKeys());
+        httpReqAction.setURI(URI.create(httpUrl));
+        if (body != null) {
+            try {
+                switch (coder) {
+                    case FAST_JSON:
+                        StringEntity fastJsonEntry = new StringEntity(JSON.toJSONString(body));
+                        ((HttpEntityEnclosingRequestBase) httpReqAction).setEntity(fastJsonEntry);
+                        fastJsonEntry.setContentType(coder.getMediaType().toString());
+                        break;
+                    case MSG_PACK_BINARY:
+                        ByteArrayEntity packBinaryEntity = new ByteArrayEntity(coder.encodeWithBinary(body));
+                        ((HttpEntityEnclosingRequestBase) httpReqAction).setEntity(packBinaryEntity);
+                        packBinaryEntity.setContentType(coder.getMediaType().toString());
+                        break;
+                    case MSG_PACK_JSON:
+                        ByteArrayEntity packJsonEntity = new ByteArrayEntity(coder.encodeWithJson(body));
+                        ((HttpEntityEnclosingRequestBase) httpReqAction).setEntity(packJsonEntity);
+                        packJsonEntity.setContentType(coder.getMediaType().toString());
+                        break;
+                    case PROTOSTUFF_BINARY:
+                        ByteArrayEntity protostuffBinaryEntity = new ByteArrayEntity(coder.encodeWithBinary(body));
+                        ((HttpEntityEnclosingRequestBase) httpReqAction).setEntity(protostuffBinaryEntity);
+                        protostuffBinaryEntity.setContentType(coder.getMediaType().toString());
+                        break;
+                    case PROTOSTUFF_JSON:
+                        ByteArrayEntity protostuffJsonEntity = new ByteArrayEntity(coder.encodeWithJson(body));
+                        ((HttpEntityEnclosingRequestBase) httpReqAction).setEntity(protostuffJsonEntity);
+                        protostuffJsonEntity.setContentType(coder.getMediaType().toString());
+                        break;
+                    default:
+                        throw new SysException(SYS_ERROR_CODE, "not support " + coder);
+
+                }
+            } catch (IOException e) {
+                throw new SysException(SYS_ERROR_CODE, "encode req body error", e);
+            }
         }
-        sendHttpPostByRetry(httpPost, timeout, timeUnit, retryCount);
+        if (header != null) {
+            httpReqAction.setHeaders(header);
+        }
+        httpReqAction.setHeader("Accept", coder.getMediaType().toString());
+        HttpResult result = execute2ResultByRetry(httpReqAction
+                , timeoutMs
+                , TimeUnit.MILLISECONDS
+                , retryCount
+                , true);
+        if (type == null) {
+            closeResources(null, httpReqAction);
+            return null;
+        }
+        R r = parseResp(httpUrl, type, coder, result);
+        closeResources(null, httpReqAction);
+        return r;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <R> R parseResp(String httpUrl
+            , MessageTypeContext<R> type
+            , CoderEnum coder
+            , HttpResult result) {
+        if (result == null || result.getHttpResponse() == null) {
+            throw new SysException("no http response.");
+        }
+        try {
+            switch (coder) {
+                case FAST_JSON:
+                    return JSON.parseObject(result.getHttpResponse().getEntity().getContent()
+                            , type.getType());
+                case MSG_PACK_BINARY:
+                    return (R)coder.decodeWithBinary(
+                            ByteStreams.toByteArray(result.getHttpResponse().getEntity().getContent())
+                            , type.getClassType());
+                case MSG_PACK_JSON:
+                    return (R)coder.decodeWithJson(ByteStreams.toByteArray(
+                            result.getHttpResponse().getEntity().getContent())
+                            , type.getClassType());
+                case PROTOSTUFF_BINARY:
+                    return (R) coder.decodeWithBinary(ByteStreams.toByteArray(
+                            result.getHttpResponse().getEntity().getContent())
+                            , type.getClassType());
+                case PROTOSTUFF_JSON:
+                    return (R) coder.decodeWithJson(ByteStreams.toByteArray(
+                            result.getHttpResponse().getEntity().getContent())
+                            , type.getClassType());
+                default:
+                    throw new IllegalArgumentException("invalid coder " + coder);
+            }
+        } catch (IOException e) {
+            String msg = String.format("read %s resp body stream error ", httpUrl);
+            log.warn(msg, e);
+            throw new SysException(SYS_ERROR_CODE, msg, e);
+        } finally {
+            try {
+                result.getHttpResponse().getEntity().getContent().close();
+            } catch (IOException e) {
+                //ignore
+            }
+        }
     }
 
     /**
@@ -699,8 +830,11 @@ public class HttpSyncClient {
         return null;
     }
 
-    public static HttpResult execute2ResultByRetry(HttpRequestBase httpRequestBase, long timeout, TimeUnit timeUnit,
-                                                   final int retryCount, boolean isReturnHttpResponse) {
+    public static HttpResult execute2ResultByRetry(HttpRequestBase httpRequestBase
+            , long timeout
+            , TimeUnit timeUnit
+            , int retryCount
+            , boolean isReturnHttpResponse) {
         int i = 0;
         if (httpRequestBase == null) {
             throw new SysException(SYS_ERROR_CODE, "HttpRequestBase is null!");
@@ -729,9 +863,7 @@ public class HttpSyncClient {
                 }
             }
             i++;
-            log.debug("HttpClient retrycount:{},target url {}"
-                    , i
-                    , httpRequestBase.getURI());
+            log.warn("HttpClient retry count:{},target url {}", i, httpRequestBase.getURI());
         }
         return null;
     }
@@ -758,9 +890,10 @@ public class HttpSyncClient {
     }
 
 
-    public static HttpResult execute2Result(HttpRequestBase httpRequestBase, long timeout, TimeUnit timeUnit,
-                                            boolean isRturnHttpResponse) throws Exception {
-
+    public static HttpResult execute2Result(HttpRequestBase httpRequestBase
+            , long timeout
+            , TimeUnit timeUnit
+            , boolean isReturnHttpResponse) throws Exception {
         if (httpRequestBase == null) {
             throw new SysException(SYS_ERROR_CODE, "HttpRequestBase is null!");
         }
@@ -778,27 +911,26 @@ public class HttpSyncClient {
 
             long startTime = System.currentTimeMillis();
             response = getHttpClient().execute(httpRequestBase);
-            log.info(">>request {},cost {} millis", httpRequestBase.getURI(), System.currentTimeMillis() - startTime);
+            log.info(">>request {}, cost {} ms {} bytes"
+                    , httpRequestBase.getURI()
+                    , System.currentTimeMillis() - startTime
+                    , response.getFirstHeader("Content-Length"));
 
             afterLog(httpRequest, response);
-            if (isRturnHttpResponse) {
+            if (isReturnHttpResponse) {
                 result = new HttpResult(response);
             } else {
-                if (response != null) {
-                    HttpEntity entity = response.getEntity();
-                    responseContent = EntityUtils.toString(entity);
-                    int statusCode = response.getStatusLine().getStatusCode();
-                    result = new HttpResult(statusCode, responseContent);
-                }
+                HttpEntity entity = response.getEntity();
+                responseContent = EntityUtils.toString(entity);
+                int statusCode = response.getStatusLine().getStatusCode();
+                result = new HttpResult(statusCode, responseContent);
             }
 
-            if (response != null) {
-                afterCompletion(response.getAllHeaders());
-            }
+            afterCompletion(response.getAllHeaders());
 
             assertResponseStatusCode(httpRequestBase
                     , result
-                    , response == null || response.getStatusLine() == null
+                    , response.getStatusLine() == null
                             ? 500
                             : response.getStatusLine().getStatusCode());
 
@@ -806,11 +938,13 @@ public class HttpSyncClient {
         } catch (Exception e) {
             afterThrowingLog(httpRequest, e);
             throwException(e);
-            throw new SysException(SYS_ERROR_CODE, String.format("%s -> %s"
-                    , e.getMessage(), httpRequestBase.getURI())
+            throw new SysException(SYS_ERROR_CODE
+                    , String.format("%s -> %s"
+                    , e.getMessage()
+                    , httpRequestBase.getURI())
                     , e);
         } finally {
-            if (!isRturnHttpResponse) {
+            if (!isReturnHttpResponse) {
                 closeResources(response, httpRequestBase);
             }
             /**tryMetricsMark(httpRequestBase.getMethod().toLowerCase()
@@ -936,7 +1070,9 @@ public class HttpSyncClient {
     }
 
     private static void addGlobalHeader(HttpMessage httpMessage) {
-        httpMessage.addHeader(REQUEST_ID, MDC.get(REQUEST_ID));
+        httpMessage.addHeader(REQUEST_ID, Strings.isNullOrEmpty(MDC.get(REQUEST_ID))
+                ? UUID.randomUUID().toString().replaceAll("-", "").toLowerCase()
+                : MDC.get(REQUEST_ID));
         httpMessage.addHeader(USER_AGENT, PANLI_IBJ);
         httpMessage.addHeader(HEADER_REQ_TIME, String.valueOf(System.currentTimeMillis()));
     }

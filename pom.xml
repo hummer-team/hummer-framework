@@ -652,7 +652,12 @@
                         <groupId>ch.qos.logback</groupId>
                         <artifactId>logback-classic</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <artifactId>spring-boot-starter-logging</artifactId>
+                        <groupId>org.springframework.boot</groupId>
+                    </exclusion>
                 </exclusions>
+
             </dependency>
             <dependency>
                 <groupId>com.alibaba.nacos</groupId>

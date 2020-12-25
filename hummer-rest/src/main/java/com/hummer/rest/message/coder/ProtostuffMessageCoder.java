@@ -1,7 +1,9 @@
 package com.hummer.rest.message.coder;
 
+import com.fasterxml.jackson.databind.JavaType;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
+import com.hummer.common.coder.MsgPackCoder;
 import com.hummer.common.coder.ProtostuffCoder;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
@@ -45,7 +47,7 @@ public class ProtostuffMessageCoder extends AbstractHttpMessageConverter<Object>
 
 
     public ProtostuffMessageCoder() {
-        super(PROTOBUFF_JSON);
+        super(PROTOBUFF_JSON,PROTOBUFF_BINARY);
     }
 
     /**
@@ -128,10 +130,10 @@ public class ProtostuffMessageCoder extends AbstractHttpMessageConverter<Object>
         long start = System.currentTimeMillis();
         byte[] bytes = ByteStreams.toByteArray(inputMessage.getBody());
         MediaType mediaType = inputMessage.getHeaders().getContentType();
-
+        JavaType javaType = MsgPackCoder.getJavaType(type, contextClass);
         Object o = mediaType == null || mediaType.getSubtype().equalsIgnoreCase(PROTOBUFF_JSON.getSubtype())
-                ? ProtostuffCoder.decodeWithJson(bytes, Class.forName(type.getTypeName()))
-                : ProtostuffCoder.decode(bytes, Class.forName(type.getTypeName()));
+                ? ProtostuffCoder.decodeWithJson(bytes,  javaType.getRawClass())
+                : ProtostuffCoder.decode(bytes, javaType.getRawClass());
         LOGGER.debug("protostuff decoder req body cost {} ms,{} bytes"
                 , System.currentTimeMillis() - start
                 , bytes.length);
