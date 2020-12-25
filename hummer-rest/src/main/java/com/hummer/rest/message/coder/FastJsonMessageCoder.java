@@ -1,4 +1,4 @@
-package com.hummer.rest.message.service;
+package com.hummer.rest.message.coder;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeConfig;
@@ -41,8 +41,8 @@ import java.util.zip.GZIPInputStream;
  * @version:1.0.0
  * @Date: 2019/6/24 13:39
  **/
-public class FastJsonHttpMessageConverterService extends FastJsonHttpMessageConverter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(FastJsonHttpMessageConverterService.class);
+public class FastJsonMessageCoder extends FastJsonHttpMessageConverter {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FastJsonMessageCoder.class);
     private static final String HEADER_GZIP_STR = "gzip";
     private static final String HEADER_CONTENT_ENCODING = "Content-Encoding";
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
@@ -50,7 +50,7 @@ public class FastJsonHttpMessageConverterService extends FastJsonHttpMessageConv
     private final ResponseBodyHandle responseBodyHandle;
     private FastJsonConfig fastJsonConfig;
 
-    public FastJsonHttpMessageConverterService(FastJsonConfig fastJsonConfig
+    public FastJsonMessageCoder(FastJsonConfig fastJsonConfig
             , RequestBodyHandle requestBodyHandle
             , ResponseBodyHandle responseBodyHandle) {
         super();
@@ -109,8 +109,6 @@ public class FastJsonHttpMessageConverterService extends FastJsonHttpMessageConv
 
     private void write(Object obj, HttpOutputMessage outputMessage) throws IOException {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            long start = System.currentTimeMillis();
-
             HttpHeaders httpHeaders = outputMessage.getHeaders();
             long serialStart = System.currentTimeMillis();
             //implement business logic return result serial
@@ -142,9 +140,7 @@ public class FastJsonHttpMessageConverterService extends FastJsonHttpMessageConv
             outputStream.write(content);
             OutputStream out = outputMessage.getBody();
             outputStream.writeTo(out);
-            LOGGER.debug("business logic execute done , serial total cost {} millis" +
-                            ", return result serial cost {} millis,serial result {} bytes"
-                    , System.currentTimeMillis() - start
+            LOGGER.debug("fastjson encoder resp body cost {} ms,{} bytes"
                     , serialCostTime
                     , content.length);
         }
@@ -201,7 +197,8 @@ public class FastJsonHttpMessageConverterService extends FastJsonHttpMessageConv
             throws UnsupportedEncodingException {
         //split to map
         Map<String, String> bodyMap = Splitter
-                .on("&").withKeyValueSeparator("=")
+                .on("&")
+                .withKeyValueSeparator("=")
                 .split(body);
         if (MapUtils.isEmpty(bodyMap)) {
             return "{}";
