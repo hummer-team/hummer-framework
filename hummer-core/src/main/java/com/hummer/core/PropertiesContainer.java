@@ -2,6 +2,7 @@ package com.hummer.core;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.hummer.core.exceptions.KeyNotExistsException;
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +19,7 @@ import org.springframework.core.env.PropertySource;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,7 +36,8 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
     private static final AtomicBoolean LOAD_FLAG = new AtomicBoolean(true);
     private static final String ENV = "spring.profiles.active";
     private static final String CLASS_RESOURCE = "applicationConfig";
-    private static final String CLASS_PATH_RESOURCE_APPLICATION = "class path resource [application";
+    private static final List<String> CLASS_PATH_USER_RESOURCE_APPLICATION =
+            Lists.newArrayList("class path resource [application", "Config resource 'class path resource [application");
     private static ConfigurableConversionService conversionService = new DefaultConversionService();
 
     /**
@@ -287,9 +290,13 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
         if (LOAD_FLAG.get()) {
             ConfigurableEnvironment environment = (ConfigurableEnvironment) event;
             Iterator<PropertySource<?>> iter = environment.getPropertySources().iterator();
+            StringBuilder propertyNames = new StringBuilder();
             while (iter.hasNext()) {
-                String name = parseApplicationPropertiesName(iter.next());
+                String name = matchUserApplicationPropertiesName(iter.next());
                 setPropertySource(environment, name);
+                if (!Strings.isNullOrEmpty(name)) {
+                    propertyNames.append(name).append(" ,");
+                }
             }
 
             String env = event.getProperty(ENV);
@@ -297,8 +304,9 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
                 PROPERTY_MAP.put(ENV, env);
             }
             LOAD_FLAG.set(false);
-            LOGGER.info("load properties done by loadPropertyData method,item count {}"
-                    , PROPERTY_MAP.size());
+            LOGGER.info("load properties done by loadPropertyData method,item count {},property name {}"
+                    , PROPERTY_MAP.size()
+                    , propertyNames);
         }
     }
 
@@ -312,7 +320,7 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
     }
 
     /**
-     * parse user defined configuration name.
+     * match user defined configuration name.if no match then return null else return name
      *
      * @param ps property source
      * @return java.lang.String
@@ -320,11 +328,12 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
      * @date 2019/6/19 16:45
      * @version 1.0.0
      **/
-    private static String parseApplicationPropertiesName(PropertySource<?> ps) {
+    private static String matchUserApplicationPropertiesName(PropertySource<?> ps) {
         String name = ps.getName();
         if (StringUtils.isNoneEmpty(name) &&
                 (name.startsWith(CLASS_RESOURCE)
-                        || name.startsWith(CLASS_PATH_RESOURCE_APPLICATION))) {
+                        || CLASS_PATH_USER_RESOURCE_APPLICATION.stream()
+                        .anyMatch(p -> StringUtils.startsWithIgnoreCase(name, p)))) {
             return name;
         }
         return null;

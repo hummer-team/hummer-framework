@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.ServiceLoader;
+import java.util.TimeZone;
 
 /**
  * listener spring boot link {#ApplicationPreparedEvent} event,this event express spring boot context load done,but bean
@@ -43,7 +44,7 @@ public class SpringStarterListener implements ApplicationListener<ApplicationPre
     private void executeCustomizeContextInit(ConfigurableApplicationContext context) {
         ServiceLoader<CustomizeContextInit> loaders =
                 ServiceLoader.load(CustomizeContextInit.class);
-
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT+08"));
         for (CustomizeContextInit init : loaders) {
             init.init(context);
         }

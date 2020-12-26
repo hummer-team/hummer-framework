@@ -6,8 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import java.util.TimeZone;
-
 /**
  * @Author: lee
  * @since:1.0.0
@@ -15,11 +13,6 @@ import java.util.TimeZone;
  **/
 public class HummerApplicationContextInit implements ApplicationContextInitializer<ConfigurableApplicationContext> {
     private static final Logger LOGGER = LoggerFactory.getLogger(HummerApplicationContextInit.class);
-
-    static {
-        // 指定时区为北京时区，东八区
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT+08"));
-    }
 
     /**
      * Initialize the given application context.

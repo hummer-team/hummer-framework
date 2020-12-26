@@ -140,9 +140,10 @@ public class FastJsonMessageCoder extends FastJsonHttpMessageConverter {
             outputStream.write(content);
             OutputStream out = outputMessage.getBody();
             outputStream.writeTo(out);
-            LOGGER.debug("fastjson encoder resp body cost {} ms,{} bytes"
+            LOGGER.debug("fastjson encoder resp body cost {} ms,{} bytes,mediaType {}"
                     , serialCostTime
-                    , content.length);
+                    , content.length
+                    , httpHeaders.getFirst("Accept"));
         }
     }
 
@@ -182,11 +183,16 @@ public class FastJsonMessageCoder extends FastJsonHttpMessageConverter {
             }
         }
 
-        LOGGER.info("request body content size {} byte,info {}"
-                , contentStr.getBytes(DEFAULT_CHARSET).length, contentStr);
+        long start = System.currentTimeMillis();
         //parse content to domain entity
         try {
-            return JSON.parseObject(contentStr, type, fastJsonConfig.getParserConfig());
+            Object obj = JSON.parseObject(contentStr, type, fastJsonConfig.getParserConfig());
+            LOGGER.debug("fastjson decoder req body cost {} ms, {} bytes,mediaType {},info {}"
+                    , System.currentTimeMillis() - start
+                    , contentStr.getBytes(DEFAULT_CHARSET).length
+                    , inputMessage.getHeaders().getFirst("Content-Type")
+                    , contentStr);
+            return obj;
         } catch (Exception e) {
             LOGGER.error("request body parse json failed,content string {},exception ", contentStr, e);
             throw new ErrorRequestException(e.getMessage(), contentStr);

@@ -12,4 +12,4 @@
 |  | ,'   :  ,      .-.|   ;/         |   ;/       |   :    |---'
 `--''      `--`----'   '---'          '---'         \   \  /
                                                      `----'
-                                                                    hummer for spring boot last version: 1.0.0-SNAPSHOT
+                                                                    hummer for spring boot v2.4.1 last version: 1.0.0-SNAPSHOT
