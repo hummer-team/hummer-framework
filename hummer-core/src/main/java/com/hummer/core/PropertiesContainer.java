@@ -36,8 +36,11 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
     private static final AtomicBoolean LOAD_FLAG = new AtomicBoolean(true);
     private static final String ENV = "spring.profiles.active";
     private static final String CLASS_RESOURCE = "applicationConfig";
+    private static final String USER_PROPERTIES_FILE_PREFIX = "application";
     private static final List<String> CLASS_PATH_USER_RESOURCE_APPLICATION =
-            Lists.newArrayList("class path resource [application", "Config resource 'class path resource [application");
+            Lists.newArrayList("class path resource [application"
+                    , "Config resource 'class path resource [application"
+                    , "Config resource 'file [resources\\application");
     private static ConfigurableConversionService conversionService = new DefaultConversionService();
 
     /**
@@ -333,7 +336,8 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
         if (StringUtils.isNoneEmpty(name) &&
                 (name.startsWith(CLASS_RESOURCE)
                         || CLASS_PATH_USER_RESOURCE_APPLICATION.stream()
-                        .anyMatch(p -> StringUtils.startsWithIgnoreCase(name, p)))) {
+                        .anyMatch(p -> StringUtils.startsWithIgnoreCase(name, p))
+                        || name.contains(USER_PROPERTIES_FILE_PREFIX))) {
             return name;
         }
         return null;

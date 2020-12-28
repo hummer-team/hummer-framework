@@ -49,7 +49,7 @@ public class MsgPackCoder {
     }
 
     public static <T> byte[] encodeWithBinary(T t) throws JsonProcessingException {
-        return OBJECT_MAPPER_BINARY.writeValueAsBytes(t);
+        return OBJECT_MAPPER_BINARY.writer().writeValueAsBytes(t);
     }
 
     public static <T> T decodeWithJson(byte[] bytes, Class<T> target) throws IOException {
@@ -61,7 +61,7 @@ public class MsgPackCoder {
     }
 
     public static <T> byte[] encodeWithJson(T t) throws JsonProcessingException {
-        return OBJECT_MAPPER_JSON.writeValueAsBytes(t);
+        return OBJECT_MAPPER_JSON.writer().writeValueAsBytes(t);
     }
 
     public static JavaType getJavaType(Type type, @Nullable Class<?> contextClass) {
@@ -84,6 +84,10 @@ public class MsgPackCoder {
 
     public static SerializationConfig getSerializationConfigForBinary() {
         return OBJECT_MAPPER_BINARY.getSerializationConfig();
+    }
+
+    public static void setSerializationConfigOfJson(SerializationConfig config){
+        OBJECT_MAPPER_JSON.setConfig(config);
     }
 
     public static DeserializationConfig getDeserializationConfigForJson() {
