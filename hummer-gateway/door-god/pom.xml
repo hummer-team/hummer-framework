@@ -104,11 +104,6 @@
                 <artifactId>hummer-common</artifactId>
                 <version>${hummer.version}</version>
             </dependency>
-            <dependency>
-                <groupId>io.projectreactor.netty</groupId>
-                <artifactId>reactor-netty</artifactId>
-                <version>0.9.12.RELEASE</version>
-            </dependency>
 <!--            <dependency>-->
 <!--                <groupId>org.springframework.cloud</groupId>-->
 <!--                <artifactId>spring-cloud-gateway-dependencies</artifactId>-->

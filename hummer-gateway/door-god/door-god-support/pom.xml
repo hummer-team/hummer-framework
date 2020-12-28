@@ -113,10 +113,5 @@
             <artifactId>reactor-netty-core</artifactId>
             <version>1.0.0-M2</version>
         </dependency>-->
-
-        <dependency>
-            <groupId>io.projectreactor.netty</groupId>
-            <artifactId>reactor-netty</artifactId>
-        </dependency>
     </dependencies>
 </project>
