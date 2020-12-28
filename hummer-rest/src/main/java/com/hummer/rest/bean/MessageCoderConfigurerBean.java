@@ -3,8 +3,10 @@ package com.hummer.rest.bean;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.JSONPResponseBodyAdvice;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.hummer.common.coder.MsgPackCoder;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.rest.message.coder.FastJsonMessageCoder;
 import com.hummer.rest.message.coder.MsgPackMessageCoder;
@@ -22,9 +24,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import javax.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import static com.hummer.common.SysConstant.RestConstant.MVC_SERIALIZERFEATURE;
 
@@ -34,7 +38,7 @@ import static com.hummer.common.SysConstant.RestConstant.MVC_SERIALIZERFEATURE;
  * @version:1.0.0
  * @Date: 2019/6/24 13:33
  **/
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class MessageCoderConfigurerBean extends WebMvcConfigurerAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageCoderConfigurerBean.class);
@@ -55,6 +59,23 @@ public class MessageCoderConfigurerBean extends WebMvcConfigurerAdapter {
         converters.add(0, getMsgPackMessageCoder());
         converters.add(1, getProtostuffMessageConverterCoder());
         converters.add(2, getFastJsonMessageConverterCoder());
+    }
+
+    @PostConstruct()
+    private void init() {
+        MsgPackCoder.getSerializationConfigForJson()
+                .getDefaultPropertyInclusion()
+                .withContentInclusion(JsonInclude.Include.NON_NULL)
+                .withContentInclusion(JsonInclude.Include.NON_EMPTY);
+        MsgPackCoder.getSerializationConfigForJson().getDateFormat().setTimeZone(TimeZone.getTimeZone("GMT+08"));
+
+
+        MsgPackCoder.getSerializationConfigForBinary().getDefaultPropertyInclusion()
+                .withValueInclusion(JsonInclude.Include.NON_NULL)
+                .withContentInclusion(JsonInclude.Include.NON_EMPTY);
+        MsgPackCoder.getSerializationConfigForBinary().getDateFormat().setTimeZone(TimeZone.getTimeZone("GMT+08"));
+
+        LOGGER.debug("msgpack coder serialization config init done.");
     }
 
     private HttpMessageConverter getProtostuffMessageConverterCoder() {
