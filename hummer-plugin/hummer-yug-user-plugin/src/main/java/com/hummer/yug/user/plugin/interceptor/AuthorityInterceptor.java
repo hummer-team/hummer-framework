@@ -5,6 +5,7 @@ import com.hummer.core.PropertiesContainer;
 import com.hummer.yug.user.plugin.agent.AuthorityServiceAgent;
 import com.hummer.yug.user.plugin.annotation.member.MemberNeedAuthority;
 import com.hummer.yug.user.plugin.annotation.member.ShopManagerNeedAuthority;
+import com.hummer.yug.user.plugin.dto.response.ShopInfoRespDto;
 import com.hummer.yug.user.plugin.holder.RequestContextHolder;
 import com.hummer.yug.user.plugin.holder.UserHolder;
 import com.hummer.yug.user.plugin.user.UserContext;
@@ -117,6 +118,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         String shopCode = RequestContextHolder.get(shopCodeKey);
         AppBusinessAssert.isTrue(!StringUtils.isEmpty(shopCode), 41001, "this request ticket shopCode not exists.");
 
-        AuthorityServiceAgent.queryShopByManagerAssert(UserHolder.getUserId(), shopCode);
+        ShopInfoRespDto shopInfo = AuthorityServiceAgent.queryShopByManagerAssert(UserHolder.getUserId(), shopCode);
+        UserHolder.setShop(shopInfo);
     }
 }
