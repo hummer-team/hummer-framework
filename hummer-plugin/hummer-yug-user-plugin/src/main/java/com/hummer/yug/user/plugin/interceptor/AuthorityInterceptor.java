@@ -5,19 +5,16 @@ import com.hummer.core.PropertiesContainer;
 import com.hummer.yug.user.plugin.agent.AuthorityServiceAgent;
 import com.hummer.yug.user.plugin.annotation.member.MemberNeedAuthority;
 import com.hummer.yug.user.plugin.annotation.member.ShopManagerNeedAuthority;
-import com.hummer.yug.user.plugin.dto.response.ShopInfoRespDto;
 import com.hummer.yug.user.plugin.holder.RequestContextHolder;
 import com.hummer.yug.user.plugin.holder.UserHolder;
 import com.hummer.yug.user.plugin.user.UserContext;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * this class verify current user for  ticket , set user context info
@@ -120,11 +117,6 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         String shopCode = RequestContextHolder.get(shopCodeKey);
         AppBusinessAssert.isTrue(!StringUtils.isEmpty(shopCode), 41001, "this request ticket shopCode not exists.");
 
-        List<ShopInfoRespDto> shopInfos = AuthorityServiceAgent.queryShopInfoByManager(UserHolder.getUserId(), shopCode);
-        AppBusinessAssert.isTrue(CollectionUtils.isNotEmpty(shopInfos), 40101, "店铺不存在或该账户没有店铺管理权限");
-
-        ShopInfoRespDto shopInfo = shopInfos.get(0);
-        AppBusinessAssert.isTrue(shopInfo.getIsEnable(), 40102, "店铺已被禁用");
+        AuthorityServiceAgent.queryShopByManagerAssert(UserHolder.getUserId(), shopCode);
     }
-
 }

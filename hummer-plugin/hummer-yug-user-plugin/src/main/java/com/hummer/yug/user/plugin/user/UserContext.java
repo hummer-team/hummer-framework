@@ -45,4 +45,8 @@ public class UserContext {
 
     //系统默认分组   1、PC ，2、安卓 ，3、IOS，4、H5，5、微信
     private Integer defaultGroup;
+
+    private String ygfUserCode;
+
+    private String userToken;
 }
