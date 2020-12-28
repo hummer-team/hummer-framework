@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.hummer.yug.user.plugin.configuration.UserInterceptorConfiguration

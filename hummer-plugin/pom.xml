@@ -32,5 +32,6 @@
         <module>hummer-soa-plugin</module>
         <module>hummer-data-sync-plugin</module>
         <module>hummer-request-idempotent-plugin</module>
+        <module>hummer-yug-user-plugin</module>
     </modules>
 </project>
