@@ -98,7 +98,7 @@ public class MsgPackMessageCoder extends AbstractHttpMessageConverter<Object>
 
             byte[] content = mediaType == null || mediaType.getSubtype().equalsIgnoreCase(MSGPACKJSON.getSubtype())
                     ? MsgPackCoder.encodeWithJson(o, configForJson)
-                    : MsgPackCoder.encodeWithBinary(o);
+                    : MsgPackCoder.encodeWithBinary(o, configForBinary);
             httpHeaders.setContentLength(content.length);
 
             outputStream.write(content);

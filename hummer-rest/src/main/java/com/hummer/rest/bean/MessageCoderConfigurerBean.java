@@ -64,18 +64,8 @@ public class MessageCoderConfigurerBean extends WebMvcConfigurerAdapter {
         converters.add(2, getFastJsonMessageConverterCoder());
     }
 
-    @Bean(name = "msgPackConfigForJson")
-    public SerializationConfig msgPackEncoderConfigForJson() {
-        return msgPackCoderConfig(MsgPackCoder.getSerializationConfigForJson(), "for json");
-    }
-
-    @Bean(name = "msgPackConfigForBinary")
-    public SerializationConfig msgPackEncoderConfigForBinary() {
-        return msgPackCoderConfig(MsgPackCoder.getSerializationConfigForBinary(), "for binary");
-    }
-
     private SerializationConfig msgPackCoderConfig(SerializationConfig config, @Null String desc) {
-        config.with(new SimpleDateFormat(PropertiesContainer.valueOfString("message.encoder.datetime.formate"
+        config = config.with(new SimpleDateFormat(PropertiesContainer.valueOfString("message.encoder.datetime.format"
                 , "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")))
                 .withPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_NULL,
                         JsonInclude.Include.NON_EMPTY))

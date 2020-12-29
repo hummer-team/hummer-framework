@@ -52,6 +52,10 @@ public class MsgPackCoder {
         return OBJECT_MAPPER_BINARY.writer().writeValueAsBytes(t);
     }
 
+    public static <T> byte[] encodeWithBinary(T t, SerializationConfig config) throws JsonProcessingException {
+        return OBJECT_MAPPER_BINARY.setConfig(config).writeValueAsBytes(t);
+    }
+
     public static <T> T decodeWithJson(byte[] bytes, Class<T> target) throws IOException {
         return OBJECT_MAPPER_JSON.readValue(bytes, target);
     }
