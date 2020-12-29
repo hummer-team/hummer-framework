@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 public class GoodsUtil {
 
     public static List<GoodsSpuInfoBo> composeGroupGoodsInfoBo(List<GoodsSpuPo> goodsPos
-            , List<GoodsSkuPo> skuPos, SysEnums.ClientResourceEnum resourceEnum) {
+            , List<GoodsSkuPo> skuPos, SysEnums.ClientResourceEnum resourceEnum, Class<? extends GoodsSkuInfoBo> cla) {
         if (CollectionUtils.isEmpty(skuPos)) {
             return Collections.emptyList();
         }
@@ -40,7 +40,7 @@ public class GoodsUtil {
             List<GoodsSkuInfoBo> skuInfoBos = new ArrayList<>();
             skuPos.forEach(sku -> {
                 if (sku.getYgfGoodsSpuId().equals(goods.getYgfGoodsSpuId())) {
-                    skuInfoBos.add(composeGoodsSkuInfoBo(sku, resourceEnum));
+                    skuInfoBos.add(composeGoodsSkuInfoBo(sku, resourceEnum, cla));
                 }
             });
             // 商品规格处理
@@ -52,15 +52,16 @@ public class GoodsUtil {
     }
 
     public static List<GoodsSkuInfoBo> composeGoodsSkuInfoBos(List<GoodsSkuPo> skuPos
-            , SysEnums.ClientResourceEnum resourceEnum) {
+            , SysEnums.ClientResourceEnum resourceEnum, Class<? extends GoodsSkuInfoBo> cla) {
         if (CollectionUtils.isEmpty(skuPos)) {
             return Collections.emptyList();
         }
-        return skuPos.stream().map(item -> composeGoodsSkuInfoBo(item, resourceEnum)).collect(Collectors.toList());
+        return skuPos.stream().map(item -> composeGoodsSkuInfoBo(item, resourceEnum, cla)).collect(Collectors.toList());
     }
 
-    public static GoodsSkuInfoBo composeGoodsSkuInfoBo(GoodsSkuPo skuPo, SysEnums.ClientResourceEnum resourceEnum) {
-        GoodsSkuInfoBo skuInfoBo = ObjectCopyUtils.copy(skuPo, GoodsSkuInfoBo.class);
+    public static GoodsSkuInfoBo composeGoodsSkuInfoBo(GoodsSkuPo skuPo
+            , SysEnums.ClientResourceEnum resourceEnum, Class<? extends GoodsSkuInfoBo> cla) {
+        GoodsSkuInfoBo skuInfoBo = ObjectCopyUtils.copy(skuPo, cla);
         skuInfoBo.setSoldOut(skuInfoBo.getStoreNum() == null || skuInfoBo.getStoreNum() <= 0);
         skuInfoBo.setGoodsSellPrice(getGoodsClientSellPrice(skuPo.getGoodsSellPrice(), skuPo.getGoodsWxPrice()
                 , skuPo.getGoodsAppPrice(), resourceEnum));
