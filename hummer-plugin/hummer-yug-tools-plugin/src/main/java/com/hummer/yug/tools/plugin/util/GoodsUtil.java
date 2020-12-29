@@ -29,18 +29,21 @@ import java.util.stream.Collectors;
  */
 public class GoodsUtil {
 
-    public static List<GoodsSpuInfoBo> composeGroupGoodsInfoBo(List<GoodsSpuPo> goodsPos
-            , List<GoodsSkuPo> skuPos, SysEnums.ClientResourceEnum resourceEnum) {
-        if (CollectionUtils.isEmpty(skuPos)) {
+    public static List<GoodsSpuInfoBo> composeGroupGoodsInfoBo(List<? extends GoodsSpuPo> goodsPos
+            , List<? extends GoodsSkuPo> skuPos, SysEnums.ClientResourceEnum resourceEnum
+            , Class<? extends GoodsSkuInfoBo> skuInfoClass, Class<? extends GoodsSpuInfoBo> spuInfoClass) {
+        if (CollectionUtils.isEmpty(skuPos) || CollectionUtils.isEmpty(goodsPos)) {
             return Collections.emptyList();
         }
-        List<GoodsSpuInfoBo> goodsBos = ObjectCopyUtils.copyByList(goodsPos, GoodsSpuInfoBo.class);
+        List<GoodsSpuInfoBo> goodsBos = goodsPos.stream()
+                .map(item -> ObjectCopyUtils.copy(item, spuInfoClass)).collect(Collectors.toList());
+
         goodsBos.forEach(goods -> {
             goods.setSoldOut(goods.getStoreNum() != null && goods.getStoreNum() <= 0);
             List<GoodsSkuInfoBo> skuInfoBos = new ArrayList<>();
             skuPos.forEach(sku -> {
                 if (sku.getYgfGoodsSpuId().equals(goods.getYgfGoodsSpuId())) {
-                    skuInfoBos.add(composeGoodsSkuInfoBo(sku, resourceEnum));
+                    skuInfoBos.add(composeGoodsSkuInfoBo(sku, resourceEnum, skuInfoClass));
                 }
             });
             // 商品规格处理
@@ -48,19 +51,22 @@ public class GoodsUtil {
             // 商品SKU
             goods.setSkuList(ObjectCopyUtils.copyByList(skuInfoBos, GoodsSkuInfoBo.class));
         });
-        return goodsBos.stream().filter(item -> !CollectionUtils.isEmpty(item.getSkuList())).collect(Collectors.toList());
+        return goodsBos.stream().filter(item -> !CollectionUtils.isEmpty(item.getSkuList()))
+                .collect(Collectors.toList());
     }
 
-    public static List<GoodsSkuInfoBo> composeGoodsSkuInfoBos(List<GoodsSkuPo> skuPos
-            , SysEnums.ClientResourceEnum resourceEnum) {
+    public static List<GoodsSkuInfoBo> composeGoodsSkuInfoBos(List<? extends GoodsSkuPo> skuPos
+            , SysEnums.ClientResourceEnum resourceEnum, Class<? extends GoodsSkuInfoBo> cla) {
         if (CollectionUtils.isEmpty(skuPos)) {
             return Collections.emptyList();
         }
-        return skuPos.stream().map(item -> composeGoodsSkuInfoBo(item, resourceEnum)).collect(Collectors.toList());
+        return skuPos.stream().map(item -> composeGoodsSkuInfoBo(item, resourceEnum, cla))
+                .collect(Collectors.toList());
     }
 
-    public static GoodsSkuInfoBo composeGoodsSkuInfoBo(GoodsSkuPo skuPo, SysEnums.ClientResourceEnum resourceEnum) {
-        GoodsSkuInfoBo skuInfoBo = ObjectCopyUtils.copy(skuPo, GoodsSkuInfoBo.class);
+    public static GoodsSkuInfoBo composeGoodsSkuInfoBo(GoodsSkuPo skuPo
+            , SysEnums.ClientResourceEnum resourceEnum, Class<? extends GoodsSkuInfoBo> cla) {
+        GoodsSkuInfoBo skuInfoBo = ObjectCopyUtils.copy(skuPo, cla);
         skuInfoBo.setSoldOut(skuInfoBo.getStoreNum() == null || skuInfoBo.getStoreNum() <= 0);
         skuInfoBo.setGoodsSellPrice(getGoodsClientSellPrice(skuPo.getGoodsSellPrice(), skuPo.getGoodsWxPrice()
                 , skuPo.getGoodsAppPrice(), resourceEnum));
