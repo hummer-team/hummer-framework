@@ -1,5 +1,6 @@
 package com.hummer.api.web;
 
+import com.hummer.common.utils.DateUtil;
 import com.hummer.common.utils.ObjectCopyUtils;
 import com.hummer.rest.annotations.BindRestParameterSimpleModel;
 import com.hummer.rest.model.ResourceResponse;
@@ -45,6 +46,7 @@ public class MessageCoderController {
         , Errors errors) {
         ParameterAssertUtil.assertRequestFirstValidated(errors);
         queryStringDto.getQueryObject().setUuId("456dddffff");
+        queryStringDto.getQueryObject().setAtTime(DateUtil.now());
         return ResourceResponse.ok(ResourcePageRespDto.builderPage(1, 10, 100,
             Collections.singletonList(queryStringDto.getQueryObject())));
     }
