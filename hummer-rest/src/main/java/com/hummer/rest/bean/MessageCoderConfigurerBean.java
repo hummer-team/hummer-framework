@@ -4,6 +4,8 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.JSONPResponseBodyAdvice;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.SerializationConfig;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.hummer.common.coder.MsgPackCoder;
@@ -24,8 +26,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import javax.annotation.PostConstruct;
+import javax.validation.constraints.Null;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
@@ -61,21 +64,15 @@ public class MessageCoderConfigurerBean extends WebMvcConfigurerAdapter {
         converters.add(2, getFastJsonMessageConverterCoder());
     }
 
-    @PostConstruct()
-    private void init() {
-        MsgPackCoder.getSerializationConfigForJson()
-                .getDefaultPropertyInclusion()
-                .withContentInclusion(JsonInclude.Include.NON_NULL)
-                .withContentInclusion(JsonInclude.Include.NON_EMPTY);
-        MsgPackCoder.getSerializationConfigForJson().getDateFormat().setTimeZone(TimeZone.getTimeZone("GMT+08"));
-
-
-        MsgPackCoder.getSerializationConfigForBinary().getDefaultPropertyInclusion()
-                .withValueInclusion(JsonInclude.Include.NON_NULL)
-                .withContentInclusion(JsonInclude.Include.NON_EMPTY);
-        MsgPackCoder.getSerializationConfigForBinary().getDateFormat().setTimeZone(TimeZone.getTimeZone("GMT+08"));
-
-        LOGGER.debug("msgpack coder serialization config init done.");
+    private SerializationConfig msgPackCoderConfig(SerializationConfig config, @Null String desc) {
+        config = config.with(new SimpleDateFormat(PropertiesContainer.valueOfString("message.encoder.datetime.format"
+                , "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")))
+                .withPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_NULL,
+                        JsonInclude.Include.NON_EMPTY))
+                .without(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        config.getDateFormat().setTimeZone(TimeZone.getTimeZone("GMT+08"));
+        LOGGER.debug("msgpack coder serialization config init done,{}", desc);
+        return config;
     }
 
     private HttpMessageConverter getProtostuffMessageConverterCoder() {
@@ -83,7 +80,8 @@ public class MessageCoderConfigurerBean extends WebMvcConfigurerAdapter {
     }
 
     private HttpMessageConverter getMsgPackMessageCoder() {
-        return new MsgPackMessageCoder();
+        return new MsgPackMessageCoder(msgPackCoderConfig(MsgPackCoder.getSerializationConfigForJson(), "for json")
+                , msgPackCoderConfig(MsgPackCoder.getSerializationConfigForBinary(), "for binary"));
     }
 
     private HttpMessageConverter getFastJsonMessageConverterCoder() {

@@ -1,6 +1,7 @@
 package com.hummer.rest.message.coder;
 
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.SerializationConfig;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
 import com.hummer.common.coder.MsgPackCoder;
@@ -44,8 +45,13 @@ public class MsgPackMessageCoder extends AbstractHttpMessageConverter<Object>
         MSGPACKJSON_BINARY = new MediaType("application", "x-msgpack-binary", MAP);
     }
 
-    public MsgPackMessageCoder() {
+    private final SerializationConfig configForJson;
+    private final SerializationConfig configForBinary;
+
+    public MsgPackMessageCoder(SerializationConfig configForJson, SerializationConfig configForBinary) {
         super(MSGPACKJSON, MSGPACKJSON_BINARY);
+        this.configForJson = configForJson;
+        this.configForBinary = configForBinary;
     }
 
     /**
@@ -91,8 +97,8 @@ public class MsgPackMessageCoder extends AbstractHttpMessageConverter<Object>
             MediaType mediaType = httpHeaders.getContentType();
 
             byte[] content = mediaType == null || mediaType.getSubtype().equalsIgnoreCase(MSGPACKJSON.getSubtype())
-                    ? MsgPackCoder.encodeWithJson(o)
-                    : MsgPackCoder.encodeWithBinary(o);
+                    ? MsgPackCoder.encodeWithJson(o, configForJson)
+                    : MsgPackCoder.encodeWithBinary(o, configForBinary);
             httpHeaders.setContentLength(content.length);
 
             outputStream.write(content);
