@@ -22,6 +22,7 @@ public class SysEnums {
         H5("h5", "微信端"),
         ANDROID("android", "Android端"),
         IOS("ios", "ios端"),
+        SHOP_KEEPER("shopkeeper", "收银台端"),
         ;
         private String value;
         private String remark;
