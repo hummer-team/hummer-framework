@@ -4,6 +4,7 @@ import com.hummer.common.exceptions.AppException;
 import com.hummer.common.utils.AppBusinessAssert;
 import com.hummer.common.utils.CommonUtil;
 import com.hummer.yug.tools.plugin.constants.Constants;
+import com.hummer.yug.tools.plugin.util.MemberUtil;
 import com.hummer.yug.tools.plugin.util.SysEnums;
 import com.hummer.yug.user.plugin.dto.response.ShopInfoRespDto;
 import com.hummer.yug.user.plugin.user.UserContext;
@@ -33,6 +34,11 @@ public class UserHolder {
     }
 
 
+    public static String getCustomerIdNotNull() {
+        
+        return MemberUtil.composeCustomerId(get().getYgfUserCode());
+    }
+
     public static void set(@NotNull UserContext userContext) {
         LOCAL.set(userContext);
     }
@@ -60,7 +66,6 @@ public class UserHolder {
 
         return CommonUtil.typeChange(RequestContextHolder.get(Constants.HeadersKey.OPERATOR_ID), Long.class);
     }
-
 
     public static Long getOperatorIdAssertNull() {
 
