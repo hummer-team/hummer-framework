@@ -8,7 +8,7 @@ glue spring boot,mybatis,kafka,rabbitmq,redis,mongodb...framework,Make business 
 
 - Java 1.8+
 - Maven 3.5+
-- Spring boot 2.1.0.RELEASE+
+- Spring boot 2.4.X
 - Lombok abstraction
 - Swagger 2 API documentation
 - REST API model validation
