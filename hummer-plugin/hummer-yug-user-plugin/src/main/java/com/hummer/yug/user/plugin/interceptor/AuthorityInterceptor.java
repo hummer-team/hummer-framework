@@ -72,7 +72,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             if (StringUtils.isEmpty(key)) {
                 continue;
             }
-            AppBusinessAssert.isTrue(!StringUtils.isEmpty(PropertiesContainer.valueOfString(key))
+            AppBusinessAssert.isTrue(!StringUtils.isEmpty(RequestContextHolder.get(key))
                     , 41001, String.format("this request ticket %s not exists.", key));
         }
     }
