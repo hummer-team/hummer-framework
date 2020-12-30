@@ -51,7 +51,7 @@ public class HikariDataSourceBuilder {
     private static HikariConfig builderConfig(Map<String, Object> map) {
 
         HikariConfig config = new HikariConfig();
-        if (map.get("driverClassName") != null) {
+        if (map.containsKey("driverClassName")) {
             config.setJdbcUrl((String) map.get("url"));
             config.setDriverClassName((String) map.get("driverClassName"));
             config.setUsername((String) map.get("username"));
