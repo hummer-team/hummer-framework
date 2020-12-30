@@ -51,10 +51,21 @@ public class HikariDataSourceBuilder {
     private static HikariConfig builderConfig(Map<String, Object> map) {
 
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl((String) map.get("url"));
-        config.setDriverClassName((String) map.get("driverClassName"));
-        config.setUsername((String) map.get("username"));
-        config.setPassword((String) map.get("password"));
+        if (map.get("driverClassName") != null) {
+            config.setJdbcUrl((String) map.get("url"));
+            config.setDriverClassName((String) map.get("driverClassName"));
+            config.setUsername((String) map.get("username"));
+            config.setPassword((String) map.get("password"));
+        }
+        if (map.get("dataSourceClassName") != null) {
+            config.setDataSourceClassName((String) map.get("dataSourceClassName"));
+            //config.addDataSourceProperty("url", map.get("url"));
+            config.addDataSourceProperty("user", map.get("username"));
+            config.addDataSourceProperty("password", map.get("password"));
+            config.addDataSourceProperty("databaseName", map.get("databaseName"));
+            config.addDataSourceProperty("serverName",map.get("serverName"));
+            config.addDataSourceProperty("portNumber",map.get("portNumber"));
+        }
         config.setMinimumIdle(Integer.parseInt((String) map.get("initialSize")));
         config.setMaximumPoolSize(Integer.parseInt(Optional.ofNullable((String) map.get("maxActive"))
                 .orElse("3")));
@@ -88,7 +99,6 @@ public class HikariDataSourceBuilder {
         }
 
         config.setMetricsTrackerFactory(new PrometheusMetricsTrackerFactory());
-
         return config;
     }
 
