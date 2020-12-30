@@ -57,7 +57,7 @@ public class HikariDataSourceBuilder {
             config.setUsername((String) map.get("username"));
             config.setPassword((String) map.get("password"));
         }
-        if (map.get("dataSourceClassName") != null) {
+        if (map.containsKey("dataSourceClassName")) {
             config.setDataSourceClassName((String) map.get("dataSourceClassName"));
             //config.addDataSourceProperty("url", map.get("url"));
             config.addDataSourceProperty("user", map.get("username"));
