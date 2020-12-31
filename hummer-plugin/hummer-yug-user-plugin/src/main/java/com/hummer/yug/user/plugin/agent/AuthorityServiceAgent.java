@@ -7,6 +7,8 @@ import com.hummer.common.utils.AppBusinessAssert;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.rest.model.ResourceResponse;
 import com.hummer.rest.utils.ResponseUtil;
+import com.hummer.yug.tools.plugin.util.DistributionResponseUtil;
+import com.hummer.yug.tools.plugin.util.DistributionWebResult;
 import com.hummer.yug.user.plugin.dto.request.MemberValidReqDto;
 import com.hummer.yug.user.plugin.dto.request.ShopInfoReqDto;
 import com.hummer.yug.user.plugin.dto.response.ShopInfoRespDto;
@@ -34,8 +36,8 @@ public class AuthorityServiceAgent {
                         , Long.class, 5000L)
                 , TimeUnit.MILLISECONDS
                 , 1);
-        return ResponseUtil.parseResponseV2WithStatus(response
-                , new TypeReference<ResourceResponse<UserContext>>() {
+        return DistributionResponseUtil.parseResponseV2WithStatus(response
+                , new TypeReference<DistributionWebResult<UserContext>>() {
                 });
     }
 

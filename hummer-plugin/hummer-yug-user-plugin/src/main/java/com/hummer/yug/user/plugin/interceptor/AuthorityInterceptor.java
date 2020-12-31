@@ -2,9 +2,9 @@ package com.hummer.yug.user.plugin.interceptor;
 
 import com.hummer.common.utils.AppBusinessAssert;
 import com.hummer.core.PropertiesContainer;
+import com.hummer.yug.tools.plugin.enums.UserEnums;
 import com.hummer.yug.user.plugin.agent.AuthorityServiceAgent;
 import com.hummer.yug.user.plugin.annotation.member.MemberNeedAuthority;
-import com.hummer.yug.user.plugin.annotation.member.ShopManagerNeedAuthority;
 import com.hummer.yug.user.plugin.dto.response.ShopInfoRespDto;
 import com.hummer.yug.user.plugin.holder.RequestContextHolder;
 import com.hummer.yug.user.plugin.holder.UserHolder;
@@ -16,6 +16,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.annotation.Annotation;
 
 /**
  * this class verify current user for  ticket , set user context info
@@ -54,7 +55,6 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             return true;
         }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
-        verifyShopClientHeaders();
         //  会员用户校验
         verifyMemberAuthority(handlerMethod);
         //  管理用户校验
@@ -82,15 +82,26 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         return RequestContextHolder.get(clientCodeKey);
     }
 
+    private <T extends Annotation> T getAnnotation(HandlerMethod handler, Class<T> tClass) {
+
+        T t = handler.getMethod().getAnnotation(tClass);
+        if (t == null) {
+            t = handler.getBeanType().getAnnotation(tClass);
+        }
+        return t;
+    }
+
 
     private void verifyMemberAuthority(HandlerMethod handler) {
-        MemberNeedAuthority login = handler.getMethod().getAnnotation(MemberNeedAuthority.class);
+        MemberNeedAuthority login = getAnnotation(handler, MemberNeedAuthority.class);
         if (login == null) {
-            login = handler.getClass().getAnnotation(MemberNeedAuthority.class);
-            if (login == null) {
-                return;
-            }
+            return;
         }
+        verifyShopClientHeaders();
+        if (login.userType() != UserEnums.UserType.MEMBER && login.userType() != UserEnums.UserType.SHOP_MANAGER) {
+            return;
+        }
+
         String sidKey = PropertiesContainer.valueOfString("ticket.request.member.code", "sid");
         String userTokenKey = PropertiesContainer.valueOfString("ticket.request.member.token", "userToken");
         String sid = RequestContextHolder.get(sidKey);
@@ -106,12 +117,12 @@ public class AuthorityInterceptor implements HandlerInterceptor {
     }
 
     private void verifyShopManagerAuthority(HandlerMethod handler) {
-        ShopManagerNeedAuthority login = handler.getMethod().getAnnotation(ShopManagerNeedAuthority.class);
+        MemberNeedAuthority login = getAnnotation(handler, MemberNeedAuthority.class);
         if (login == null) {
-            login = handler.getClass().getAnnotation(ShopManagerNeedAuthority.class);
-            if (login == null) {
-                return;
-            }
+            return;
+        }
+        if (login.userType() != UserEnums.UserType.SHOP_MANAGER) {
+            return;
         }
 
         String shopCodeKey = PropertiesContainer.valueOfString("ticket.request.shop.code", "shopCode");
