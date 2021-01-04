@@ -23,7 +23,7 @@ public class UserHolder {
 
         UserContext context = LOCAL.get();
         if (context == null) {
-            throw new AppException(50005, "this current user is null,please login");
+            throw new AppException(40101, "this current user is null,please login");
         }
         return context;
     }
