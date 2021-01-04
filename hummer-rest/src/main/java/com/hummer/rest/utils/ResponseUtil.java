@@ -58,25 +58,14 @@ public class ResponseUtil {
     public static <T> T parseResponseWithStatusV2(final String jsonValue) {
         ResourceResponse<T> response = JSON.parseObject(jsonValue, new TypeReference<ResourceResponse<T>>() {
         });
-        if (response != null && response.getCode() != 0) {
-            throw new AppException(response.getCode(), response.getMessage());
-        }
-        return response == null ? null : response.getData();
+        return assertRespWithStatus(response);
     }
-
 
     public static <T> T parseResponseV2WithStatus(final String jsonValue
             , TypeReference<ResourceResponse<T>> typeReference) {
         ResourceResponse<T> response = JSON.parseObject(jsonValue, typeReference);
 
-        if (response == null) {
-            throw new AppException(50000, "call service failed.");
-        }
-
-        if (response.getCode() != 0) {
-            throw new AppException(response.getCode(), response.getMessage());
-        }
-        return response.getData();
+        return assertRespWithStatus(response);
     }
 
     public static <T> T parseResponseV3WithStatus(final String jsonValue
@@ -84,9 +73,24 @@ public class ResponseUtil {
         T response = JSON.parseObject(jsonValue, typeReference);
 
         if (response == null) {
-            throw new AppException(50000, "call service failed.");
+            throw new AppException(50000, "call service failed,response instance is null.");
         }
         return response;
     }
 
+    public static <T> T assertRespWithStatus(ResourceResponse<T> response) {
+        return assertRespWithStatus(response, "call service failed,response instance is null.");
+    }
+
+    public static <T> T assertRespWithStatus(ResourceResponse<T> response, String errorMessage) {
+        if (response == null) {
+            throw new AppException(50000, errorMessage);
+        }
+
+        if(response.getCode() != 0){
+            throw new AppException(response.getCode(), response.getMessage());
+        }
+
+        return response.getData();
+    }
 }
