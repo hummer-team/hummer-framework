@@ -12,7 +12,6 @@ import com.hummer.yug.tools.plugin.util.DistributionWebResult;
 import com.hummer.yug.user.plugin.dto.request.MemberValidReqDto;
 import com.hummer.yug.user.plugin.dto.request.ShopInfoReqDto;
 import com.hummer.yug.user.plugin.dto.response.ShopInfoRespDto;
-import com.hummer.yug.user.plugin.holder.UserHolder;
 import com.hummer.yug.user.plugin.user.UserContext;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -24,15 +23,16 @@ public class AuthorityServiceAgent {
     }
 
     public static UserContext queryUserContext(final String sid, final String userToken) {
+        String hostName = "app.yugyg.host";
         MemberValidReqDto reqDto = new MemberValidReqDto();
         reqDto.setSid(sid);
         reqDto.setUserToken(userToken);
-        String host = PropertiesContainer.valueOfStringWithAssertNotNull("app.yugyg.host");
-        String url = String.format("%s/v1/member/validation", host);
+        String url = String.format("%s/v1/member/validation"
+                , PropertiesContainer.valueOfStringWithAssertNotNull(hostName));
 
         String response = HttpSyncClient.sendHttpPostByRetry(url
                 , JSON.toJSONString(reqDto)
-                , PropertiesContainer.valueOf(String.format("%s.timeout.millis", host)
+                , PropertiesContainer.valueOf(String.format("%s.timeout.millis", hostName)
                         , Long.class, 5000L)
                 , TimeUnit.MILLISECONDS
                 , 1);
@@ -42,7 +42,7 @@ public class AuthorityServiceAgent {
     }
 
     public static ShopInfoRespDto queryShopByManagerAssert(Long operatorId, String shopCode) {
-        List<ShopInfoRespDto> shopInfos = AuthorityServiceAgent.queryShopInfoByManager(UserHolder.getUserId(), shopCode);
+        List<ShopInfoRespDto> shopInfos = AuthorityServiceAgent.queryShopInfoByManager(operatorId, shopCode);
         AppBusinessAssert.isTrue(CollectionUtils.isNotEmpty(shopInfos), 40101, "店铺不存在或该账户没有店铺管理权限");
 
         ShopInfoRespDto shopInfo = shopInfos.get(0);
