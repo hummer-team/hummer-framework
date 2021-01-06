@@ -3,6 +3,7 @@ package com.hummer.common.coder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationConfig;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -41,11 +42,27 @@ public class MsgPackCoder {
 
 
     public static <T> T decodeWithBinary(byte[] bytes, Class<T> target) throws IOException {
-        return OBJECT_MAPPER_BINARY.readValue(bytes, target);
+        return OBJECT_MAPPER_BINARY
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .readValue(bytes, target);
     }
 
     public static <T> T decodeWithBinary(byte[] bytes, TypeReference<T> reference) throws IOException {
-        return OBJECT_MAPPER_BINARY.readValue(bytes, reference);
+        return OBJECT_MAPPER_BINARY
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .readValue(bytes, reference);
+    }
+
+    public static <T> T decodeWithBinary(byte[] bytes
+            , Class<T> target
+            , DeserializationConfig config) throws IOException {
+        return OBJECT_MAPPER_BINARY.setConfig(config).readValue(bytes, target);
+    }
+
+    public static <T> T decodeWithBinary(byte[] bytes
+            , TypeReference<T> reference
+            , DeserializationConfig config) throws IOException {
+        return OBJECT_MAPPER_BINARY.setConfig(config).readValue(bytes, reference);
     }
 
     public static <T> byte[] encodeWithBinary(T t) throws JsonProcessingException {
@@ -57,11 +74,25 @@ public class MsgPackCoder {
     }
 
     public static <T> T decodeWithJson(byte[] bytes, Class<T> target) throws IOException {
-        return OBJECT_MAPPER_JSON.readValue(bytes, target);
+        return OBJECT_MAPPER_JSON
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .readValue(bytes, target);
     }
 
     public static <T> T decodeWithJson(byte[] bytes, TypeReference<T> reference) throws IOException {
-        return OBJECT_MAPPER_JSON.readValue(bytes, reference);
+        return OBJECT_MAPPER_JSON
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .readValue(bytes, reference);
+    }
+
+    public static <T> T decodeWithJson(byte[] bytes, Class<T> target
+            , DeserializationConfig config) throws IOException {
+        return OBJECT_MAPPER_JSON.setConfig(config).readValue(bytes, target);
+    }
+
+    public static <T> T decodeWithJson(byte[] bytes, TypeReference<T> reference
+            , DeserializationConfig config) throws IOException {
+        return OBJECT_MAPPER_JSON.setConfig(config).readValue(bytes, reference);
     }
 
     public static <T> byte[] encodeWithJson(T t) throws JsonProcessingException {
@@ -108,20 +139,27 @@ public class MsgPackCoder {
         return OBJECT_MAPPER_BINARY.getDeserializationConfig();
     }
 
-    public static Object readJavaTypeWithJson(JavaType javaType, HttpInputMessage inputMessage) throws IOException {
+    public static Object readJavaTypeWithJson(JavaType javaType
+            , HttpInputMessage inputMessage
+            , DeserializationConfig config) throws IOException {
         Charset charset = StandardCharsets.UTF_8;
         try {
             if (inputMessage instanceof MappingJacksonInputMessage) {
                 Class<?> deserializationView = ((MappingJacksonInputMessage) inputMessage).getDeserializationView();
                 if (deserializationView != null) {
-                    ObjectReader objectReader = OBJECT_MAPPER_JSON.readerWithView(deserializationView).forType(javaType);
+                    ObjectReader objectReader =
+                            OBJECT_MAPPER_JSON
+                                    .setConfig(config)
+                                    .readerWithView(deserializationView).forType(javaType);
 
                     Reader reader = new InputStreamReader(inputMessage.getBody(), charset);
                     return objectReader.readValue(reader);
                 }
             }
             Reader reader = new InputStreamReader(inputMessage.getBody(), charset);
-            return OBJECT_MAPPER_JSON.readValue(reader, javaType);
+            return OBJECT_MAPPER_JSON
+                    .setConfig(config)
+                    .readValue(reader, javaType);
 
         } catch (InvalidDefinitionException ex) {
             throw new HttpMessageConversionException("Type definition error: " + ex.getType(), ex);
@@ -130,9 +168,12 @@ public class MsgPackCoder {
         }
     }
 
-    public static Object readJavaTypeWithBinary(JavaType javaType, byte[] bytes) throws IOException {
+    public static Object readJavaTypeWithBinary(JavaType javaType
+            , byte[] bytes
+            , DeserializationConfig config) throws IOException {
         try {
-            return OBJECT_MAPPER_BINARY.readValue(bytes, javaType);
+            return OBJECT_MAPPER_BINARY.setConfig(config)
+                    .readValue(bytes, javaType);
         } catch (InvalidDefinitionException ex) {
             throw new HttpMessageConversionException("Type definition error: " + ex.getType(), ex);
         } catch (JsonProcessingException ex) {
@@ -140,9 +181,11 @@ public class MsgPackCoder {
         }
     }
 
-    public static Object readJavaTypeWithJson(JavaType javaType, byte[] bytes) throws IOException {
+    public static Object readJavaTypeWithJson(JavaType javaType
+            , byte[] bytes
+            , DeserializationConfig config) throws IOException {
         try {
-            return OBJECT_MAPPER_JSON.readValue(bytes, javaType);
+            return OBJECT_MAPPER_JSON.setConfig(config).readValue(bytes, javaType);
         } catch (InvalidDefinitionException ex) {
             throw new HttpMessageConversionException("Type definition error: " + ex.getType(), ex);
         } catch (JsonProcessingException ex) {
@@ -150,8 +193,11 @@ public class MsgPackCoder {
         }
     }
 
-    private Object readJavaTypeWithJson(Type type, @Nullable Class<?> contextClass, HttpInputMessage inputMessage)
+    private Object readJavaTypeWithJson(Type type
+            , @Nullable Class<?> contextClass
+            , HttpInputMessage inputMessage
+            , DeserializationConfig config)
             throws IOException {
-        return readJavaTypeWithJson(getJavaType(type, contextClass), inputMessage);
+        return readJavaTypeWithJson(getJavaType(type, contextClass), inputMessage, config);
     }
 }

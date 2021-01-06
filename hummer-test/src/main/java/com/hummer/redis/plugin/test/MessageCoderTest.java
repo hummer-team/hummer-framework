@@ -2,6 +2,7 @@ package com.hummer.redis.plugin.test;
 
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.collect.Lists;
 import com.hummer.common.coder.ProtostuffCoder;
 import com.hummer.common.http.HttpSyncClient;
 import com.hummer.common.http.context.MessageTypeContext;
@@ -12,6 +13,7 @@ import com.hummer.core.starter.BootStarterBean;
 import com.hummer.rest.model.ResourceResponse;
 import com.hummer.rest.model.request.ResourcePageReqDto;
 import com.hummer.rest.model.response.ResourcePageRespDto;
+import comm.hummer.simple.common.module.DifferQueryStringDto;
 import comm.hummer.simple.common.module.QueryStringDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +26,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RunWith(value = SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ConfigFileApplicationContextInitializer.class
@@ -55,6 +59,30 @@ public class MessageCoderTest {
     }
 
     @Test
+    public void postMessageByCoderForDiffer() {
+        ResourcePageReqDto<QueryStringDto> req = new ResourcePageReqDto<>();
+        req.setPageNumber(1);
+        req.setPageSize(10);
+        QueryStringDto dto = new QueryStringDto();
+        dto.setAtTime(DateUtil.now());
+        dto.setClassId(124);
+        dto.setUuId("sd");
+        dto.setUsers(Collections.singletonList("sdsddss"));
+        req.setQueryObject(dto);
+        ResourceResponse<ResourcePageRespDto<DifferQueryStringDto>> resp =
+                HttpSyncClient.sendByRetry("http://localhost:8089/v1/message-coder3"
+                        , req
+                        , new MessageTypeContext<>(
+                                new TypeReference<ResourceResponse<ResourcePageRespDto<DifferQueryStringDto>>>() {
+                                }, new ResourceResponse<ResourcePageRespDto<DifferQueryStringDto>>().getClass())
+                        , HttpMethod.POST
+                        , 30000
+                        , 0);
+
+        System.out.println(JSON.toJSON(resp));
+    }
+
+    @Test
     public void protostuffCoder() throws IOException {
         ResourcePageReqDto<QueryStringDto> req2 = new ResourcePageReqDto<>();
         req2.setPageNumber(1);
@@ -75,5 +103,11 @@ public class MessageCoderTest {
         ResourcePageReqDto<QueryStringDto> re4 = ProtostuffCoder.decode(bytes2, req2.getClass());
         System.out.println(JSON.toJSONString(re4));
 
+    }
+
+    @Test
+    public void list() {
+        List<Integer> list = Lists.newArrayList(1, 2, 3);
+        List<Integer> result = list.stream().filter(p -> p == 4).collect(Collectors.toList());
     }
 }

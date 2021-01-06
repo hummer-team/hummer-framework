@@ -1,5 +1,6 @@
 package com.hummer.rest.message.coder;
 
+import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.SerializationConfig;
 import com.google.common.collect.Maps;
@@ -47,11 +48,18 @@ public class MsgPackMessageCoder extends AbstractHttpMessageConverter<Object>
 
     private final SerializationConfig configForJson;
     private final SerializationConfig configForBinary;
+    private final DeserializationConfig decoderConfigForJson;
+    private final DeserializationConfig decodeConfigForBinary;
 
-    public MsgPackMessageCoder(SerializationConfig configForJson, SerializationConfig configForBinary) {
+    public MsgPackMessageCoder(SerializationConfig configForJson
+            , SerializationConfig configForBinary
+            , DeserializationConfig decoderConfigForJson
+            , DeserializationConfig decodeConfigForBinary) {
         super(MSGPACKJSON, MSGPACKJSON_BINARY);
         this.configForJson = configForJson;
         this.configForBinary = configForBinary;
+        this.decodeConfigForBinary = decodeConfigForBinary;
+        this.decoderConfigForJson = decoderConfigForJson;
     }
 
     /**
@@ -155,12 +163,12 @@ public class MsgPackMessageCoder extends AbstractHttpMessageConverter<Object>
         Object o = mediaType == null || mediaType.getSubtype().equalsIgnoreCase(MSGPACKJSON.getSubtype())
                 ? (type instanceof ParameterizedType && ArrayUtils.isNotEmpty(((ParameterizedType) type)
                 .getActualTypeArguments())
-                ? MsgPackCoder.readJavaTypeWithJson(javaType, bytes)
-                : MsgPackCoder.decodeWithJson(bytes, javaType.getRawClass()))
+                ? MsgPackCoder.readJavaTypeWithJson(javaType, bytes, decoderConfigForJson)
+                : MsgPackCoder.decodeWithJson(bytes, javaType.getRawClass(), decoderConfigForJson))
                 : (type instanceof ParameterizedType && ArrayUtils.isNotEmpty(((ParameterizedType) type)
                 .getActualTypeArguments())
-                ? MsgPackCoder.readJavaTypeWithBinary(javaType, bytes)
-                : MsgPackCoder.decodeWithBinary(bytes, javaType.getRawClass()));
+                ? MsgPackCoder.readJavaTypeWithBinary(javaType, bytes, decodeConfigForBinary)
+                : MsgPackCoder.decodeWithBinary(bytes, javaType.getRawClass(), decodeConfigForBinary));
 
         LOGGER.debug("msgpack decoder req body cost {} ms,{} bytes,mediaType {}"
                 , System.currentTimeMillis() - start
