@@ -52,10 +52,6 @@
         </dependency>
         <dependency>
             <groupId>com.hummer</groupId>
-            <artifactId>hummer-user-plugin</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.hummer</groupId>
             <artifactId>hummer-soa-plugin</artifactId>
         </dependency>
         <dependency>
@@ -72,11 +68,6 @@
         <dependency>
             <groupId>com.hummer</groupId>
             <artifactId>hummer-yug-user-plugin</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.hummer</groupId>
-            <artifactId>hummer-yug-tools-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

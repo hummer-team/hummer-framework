@@ -5,9 +5,7 @@ import com.hummer.config.bo.ConfigListenerKey;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.nacos.model.CustomListener;
 import com.hummer.rest.model.ResourceResponse;
-import com.hummer.user.plugin.annotation.member.MemberNeedAuthority;
-import com.hummer.user.plugin.holder.UserHolder;
-import com.hummer.user.plugin.user.member.MemberUserContext;
+import com.hummer.yug.user.plugin.annotation.member.MemberNeedAuthority;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +43,6 @@ public class NacosConfigController {
     public ResourceResponse<Map<String, Object>> getAll(
             @RequestHeader(value = "token") String userToken
     ) {
-        MemberUserContext userContext = UserHolder.getMemberByAssertNull();
         Map<String, Object> map = new HashMap<>(16);
         PropertiesContainer.allKey().forEach(key -> map.put(key, PropertiesContainer.get(key, Object.class)));
         return ResourceResponse.ok(map);

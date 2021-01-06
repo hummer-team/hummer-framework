@@ -2,6 +2,7 @@ package com.hummer.common.http.context;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
@@ -23,6 +24,10 @@ public class MessageTypeContext<R> {
 
     public Type getType() {
         return typeRef.getType();
+    }
+
+    public boolean isParameterizedType() {
+        return getType() instanceof ParameterizedType;
     }
 
     public Class<?> getClassType() {

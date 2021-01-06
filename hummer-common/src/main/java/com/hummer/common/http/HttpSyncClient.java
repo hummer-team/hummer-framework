@@ -369,11 +369,11 @@ public class HttpSyncClient {
                 case MSG_PACK_BINARY:
                     return (R)coder.decodeWithBinary(
                             ByteStreams.toByteArray(result.getHttpResponse().getEntity().getContent())
-                            , type.getClassType());
+                            , type.getTypeRef());
                 case MSG_PACK_JSON:
                     return (R)coder.decodeWithJson(ByteStreams.toByteArray(
                             result.getHttpResponse().getEntity().getContent())
-                            , type.getClassType());
+                            , type.getTypeRef());
                 case PROTOSTUFF_BINARY:
                     return (R) coder.decodeWithBinary(ByteStreams.toByteArray(
                             result.getHttpResponse().getEntity().getContent())

@@ -9,4 +9,6 @@ package com.hummer.yug.tools.plugin.enums;
  * @date 2020/12/29 11:09
  */
 public class GoodsEnums {
+
+
 }
