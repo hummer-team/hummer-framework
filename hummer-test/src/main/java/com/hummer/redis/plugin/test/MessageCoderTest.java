@@ -11,6 +11,7 @@ import com.hummer.core.init.HummerApplicationContextInit;
 import com.hummer.core.starter.BootStarterBean;
 import com.hummer.rest.model.ResourceResponse;
 import com.hummer.rest.model.request.ResourcePageReqDto;
+import com.hummer.rest.model.response.ResourcePageRespDto;
 import comm.hummer.simple.common.module.QueryStringDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,11 +42,11 @@ public class MessageCoderTest {
         dto.setUuId("sd");
         dto.setUsers(Collections.singletonList("sdsddss"));
         req.setQueryObject(dto);
-        ResourceResponse<ResourcePageReqDto<QueryStringDto>> resp =
+        ResourceResponse<ResourcePageRespDto<QueryStringDto>> resp =
                 HttpSyncClient.sendByRetry("http://localhost:8089/v1/message-coder3"
                         , req
-                        , new MessageTypeContext<>(new TypeReference<ResourceResponse<ResourcePageReqDto<QueryStringDto>>>() {
-                        }, new ResourceResponse<ResourcePageReqDto<QueryStringDto>>().getClass())
+                        , new MessageTypeContext<>(new TypeReference<ResourceResponse<ResourcePageRespDto<QueryStringDto>>>() {
+                        }, new ResourceResponse<ResourcePageRespDto<QueryStringDto>>().getClass())
                         , HttpMethod.POST
                         , 3000
                         , 0);
