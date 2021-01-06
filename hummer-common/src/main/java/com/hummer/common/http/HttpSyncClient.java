@@ -13,6 +13,7 @@ import com.hummer.common.http.context.RequestContextWrapper;
 import com.hummer.common.http.context.ResponseContext;
 import com.hummer.common.http.context.ResponseContextWrapper;
 import com.hummer.core.PropertiesContainer;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -287,6 +288,7 @@ public class HttpSyncClient {
         return sendByRetryOf(httpUrl, body, type, method, timeoutMs, retryCount, header);
     }
 
+    @SneakyThrows
     private static <T, R> R sendByRetryOf(@NotNull String httpUrl
             , T body
             , MessageTypeContext<R> type
@@ -299,40 +301,35 @@ public class HttpSyncClient {
         HttpRequestBase httpReqAction = HttpMethodFactory.get(method);
         Assert.notNull(httpReqAction, "ony support " + HttpMethodFactory.allKeys());
         httpReqAction.setURI(URI.create(httpUrl));
-        if (body != null) {
-            try {
-                switch (coder) {
-                    case FAST_JSON:
-                        StringEntity fastJsonEntry = new StringEntity(JSON.toJSONString(body));
-                        ((HttpEntityEnclosingRequestBase) httpReqAction).setEntity(fastJsonEntry);
-                        fastJsonEntry.setContentType(coder.getMediaType().toString());
-                        break;
-                    case MSG_PACK_BINARY:
-                        ByteArrayEntity packBinaryEntity = new ByteArrayEntity(coder.encodeWithBinary(body));
-                        ((HttpEntityEnclosingRequestBase) httpReqAction).setEntity(packBinaryEntity);
-                        packBinaryEntity.setContentType(coder.getMediaType().toString());
-                        break;
-                    case MSG_PACK_JSON:
-                        ByteArrayEntity packJsonEntity = new ByteArrayEntity(coder.encodeWithJson(body));
-                        ((HttpEntityEnclosingRequestBase) httpReqAction).setEntity(packJsonEntity);
-                        packJsonEntity.setContentType(coder.getMediaType().toString());
-                        break;
-                    case PROTOSTUFF_BINARY:
-                        ByteArrayEntity protostuffBinaryEntity = new ByteArrayEntity(coder.encodeWithBinary(body));
-                        ((HttpEntityEnclosingRequestBase) httpReqAction).setEntity(protostuffBinaryEntity);
-                        protostuffBinaryEntity.setContentType(coder.getMediaType().toString());
-                        break;
-                    case PROTOSTUFF_JSON:
-                        ByteArrayEntity protostuffJsonEntity = new ByteArrayEntity(coder.encodeWithJson(body));
-                        ((HttpEntityEnclosingRequestBase) httpReqAction).setEntity(protostuffJsonEntity);
-                        protostuffJsonEntity.setContentType(coder.getMediaType().toString());
-                        break;
-                    default:
-                        throw new SysException(SYS_ERROR_CODE, "not support " + coder);
-
-                }
-            } catch (IOException e) {
-                throw new SysException(SYS_ERROR_CODE, "encode req body error", e);
+        if (body != null && httpReqAction instanceof HttpEntityEnclosingRequestBase) {
+            switch (coder) {
+                case FAST_JSON:
+                    StringEntity fastJsonEntry = new StringEntity(JSON.toJSONString(body));
+                    ((HttpEntityEnclosingRequestBase) httpReqAction).setEntity(fastJsonEntry);
+                    fastJsonEntry.setContentType(coder.getMediaType().toString());
+                    break;
+                case MSG_PACK_BINARY:
+                    ByteArrayEntity packBinaryEntity = new ByteArrayEntity(coder.encodeWithBinary(body));
+                    ((HttpEntityEnclosingRequestBase) httpReqAction).setEntity(packBinaryEntity);
+                    packBinaryEntity.setContentType(coder.getMediaType().toString());
+                    break;
+                case MSG_PACK_JSON:
+                    ByteArrayEntity packJsonEntity = new ByteArrayEntity(coder.encodeWithJson(body));
+                    ((HttpEntityEnclosingRequestBase) httpReqAction).setEntity(packJsonEntity);
+                    packJsonEntity.setContentType(coder.getMediaType().toString());
+                    break;
+                case PROTOSTUFF_BINARY:
+                    ByteArrayEntity protostuffBinaryEntity = new ByteArrayEntity(coder.encodeWithBinary(body));
+                    ((HttpEntityEnclosingRequestBase) httpReqAction).setEntity(protostuffBinaryEntity);
+                    protostuffBinaryEntity.setContentType(coder.getMediaType().toString());
+                    break;
+                case PROTOSTUFF_JSON:
+                    ByteArrayEntity protostuffJsonEntity = new ByteArrayEntity(coder.encodeWithJson(body));
+                    ((HttpEntityEnclosingRequestBase) httpReqAction).setEntity(protostuffJsonEntity);
+                    protostuffJsonEntity.setContentType(coder.getMediaType().toString());
+                    break;
+                default:
+                    throw new SysException(SYS_ERROR_CODE, "not support " + coder);
             }
         }
         if (header != null) {
@@ -367,11 +364,11 @@ public class HttpSyncClient {
                     return JSON.parseObject(result.getHttpResponse().getEntity().getContent()
                             , type.getType());
                 case MSG_PACK_BINARY:
-                    return (R)coder.decodeWithBinary(
+                    return (R) coder.decodeWithBinary(
                             ByteStreams.toByteArray(result.getHttpResponse().getEntity().getContent())
                             , type.getTypeRef());
                 case MSG_PACK_JSON:
-                    return (R)coder.decodeWithJson(ByteStreams.toByteArray(
+                    return (R) coder.decodeWithJson(ByteStreams.toByteArray(
                             result.getHttpResponse().getEntity().getContent())
                             , type.getTypeRef());
                 case PROTOSTUFF_BINARY:
