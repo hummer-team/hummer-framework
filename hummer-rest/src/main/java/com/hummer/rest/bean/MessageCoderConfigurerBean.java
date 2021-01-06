@@ -4,6 +4,8 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.JSONPResponseBodyAdvice;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationConfig;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.base.Splitter;
@@ -75,13 +77,22 @@ public class MessageCoderConfigurerBean extends WebMvcConfigurerAdapter {
         return config;
     }
 
+    private DeserializationConfig msgPackDeCoderConfig(DeserializationConfig config, @Null String desc) {
+        config = config.without(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        LOGGER.debug("msgpack coder deserializationConfig config init done,{}", desc);
+        return config;
+    }
+
     private HttpMessageConverter getProtostuffMessageConverterCoder() {
         return new ProtostuffMessageCoder();
     }
 
     private HttpMessageConverter getMsgPackMessageCoder() {
-        return new MsgPackMessageCoder(msgPackCoderConfig(MsgPackCoder.getSerializationConfigForJson(), "for json")
-                , msgPackCoderConfig(MsgPackCoder.getSerializationConfigForBinary(), "for binary"));
+        return new MsgPackMessageCoder(msgPackCoderConfig(MsgPackCoder.getSerializationConfigForJson()
+                , "for json encoder")
+                , msgPackCoderConfig(MsgPackCoder.getSerializationConfigForBinary(), "for binary encoder")
+                , msgPackDeCoderConfig(MsgPackCoder.getDeserializationConfigForJson(), "for json decoder")
+                , msgPackDeCoderConfig(MsgPackCoder.getDeserializationConfigForBinary(), "for binary decoder"));
     }
 
     private HttpMessageConverter getFastJsonMessageConverterCoder() {
