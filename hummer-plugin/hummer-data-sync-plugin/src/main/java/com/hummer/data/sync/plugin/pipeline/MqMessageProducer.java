@@ -1,6 +1,7 @@
 package com.hummer.data.sync.plugin.pipeline;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.hummer.common.utils.CommonUtil;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.data.sync.plugin.enums.OrderSyncEnums;
@@ -58,7 +59,7 @@ public class MqMessageProducer {
         data.setTopic(message.getBusinessCode());
         message.setOperationCode(Util.composeTopicTag(PropertiesContainer.valueOfStringWithAssertNotNull("spring.application.name")
                 , data.getBusinessType(), data.getAction()));
-        message.setBodys(JSONObject.toJSONBytes(data));
+        message.setBodys(JSONObject.toJSONBytes(data, SerializerFeature.DisableCircularReferenceDetect));
         message.setSendMQTimeout(PropertiesContainer.valueOfInteger("sync.mq.consumer.send.timeout", 10000));
         message.setBusinessId(data.getBusinessId());
         return message;
