@@ -132,8 +132,8 @@ public class GoodsUtil {
      * @author chen wei
      * @date 2020/8/7
      */
-    public static Double getGoodsClientSellPrice(Double goodsSellPrice, Double goodsWxPrice, Double goodsAppPrice,
-                                                 SysEnums.ClientResourceEnum resourceEnum) {
+    public static BigDecimal getGoodsClientSellPrice(BigDecimal goodsSellPrice, BigDecimal goodsWxPrice
+            , BigDecimal goodsAppPrice, SysEnums.ClientResourceEnum resourceEnum) {
         if (resourceEnum == null) {
             return goodsSellPrice;
         }
@@ -148,13 +148,6 @@ public class GoodsUtil {
         }
     }
 
-    public static Double getGoodsClientSellPrice(BigDecimal goodsSellPrice, BigDecimal goodsWxPrice
-            , BigDecimal goodsAppPrice, SysEnums.ClientResourceEnum resourceEnum) {
-
-        return getGoodsClientSellPrice(goodsSellPrice == null ? null : goodsSellPrice.doubleValue()
-                , goodsWxPrice == null ? null : goodsWxPrice.doubleValue(), goodsAppPrice == null ? null : goodsAppPrice.doubleValue()
-                , resourceEnum);
-    }
 
     public static String createCodeByTime(String prefix, int randNum) {
         String timeStr = DateUtil.formatNowData("yyyyMMddHHmmss");
