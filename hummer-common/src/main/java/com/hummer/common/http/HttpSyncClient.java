@@ -1036,13 +1036,11 @@ public class HttpSyncClient {
 
 
     private static void setConfig(HttpRequestBase httpRequestBase, long timeout, TimeUnit timeUnit) {
-        RequestConfig config = null;
-        if (timeout != 10000L && timeout > 0L) {
+        RequestConfig config = requestConfig;
+        if (timeout > 0 && timeout != HTTP_CONN_SOCKET_TIMEOUT) {
             int timeoutInMS = Math.toIntExact(TimeUnit.MILLISECONDS.convert(timeout, timeUnit));
             config = RequestConfig.custom().setSocketTimeout(timeoutInMS).setConnectTimeout(timeoutInMS)
                     .setConnectionRequestTimeout(timeoutInMS).build();
-        } else {
-            config = requestConfig;
         }
         httpRequestBase.setConfig(config);
     }

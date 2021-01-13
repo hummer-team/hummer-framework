@@ -2,6 +2,7 @@ package com.hummer.yug.tools.plugin.model.bo;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -23,9 +24,9 @@ public class GoodsSkuInfoBo {
 
     private String propPath;
 
-    private Double goodsSellPrice;
+    private BigDecimal goodsSellPrice;
 
-    private Double activityPrice;
+    private BigDecimal activityPrice;
 
     private Integer storeNum;
 

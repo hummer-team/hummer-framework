@@ -3,6 +3,7 @@ package com.hummer.yug.tools.plugin.model.bo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,10 +31,10 @@ public class GoodsSpuInfoBo {
     private String goodsSpuImage;
 
     @ApiModelProperty("商品原售价")
-    private Double goodsSellPrice;
+    private BigDecimal goodsSellPrice;
 
     @ApiModelProperty("商品拼团价")
-    private Double activityPrice;
+    private BigDecimal activityPrice;
 
     @ApiModelProperty("库存数量")
     private Integer storeNum;
