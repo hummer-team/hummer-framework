@@ -5,6 +5,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.Days;
 import org.springframework.util.StringUtils;
 
 import java.text.ParseException;
@@ -24,27 +25,6 @@ public class DateUtil {
 
     private DateUtil() {
 
-    }
-
-    public enum DateTimeFormat {
-        F1("yyyy-MM-dd HH:mm:ss"),
-        F2("yyyy-MM-dd"),
-        F3("HH:mm:ss"),
-        F4("yyyyMMddHHmmss"),
-        F5("yyyyMMddHHmmssSS"),
-        F6("yyyyMMdd"),
-        F7("yyyyMMddHHmmssSSS"),
-        F8("yyyy-MM-dd HH:mm:ss.SSS"),
-        ;
-        private String value;
-
-        DateTimeFormat(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
     }
 
     /**
@@ -69,7 +49,7 @@ public class DateUtil {
      * @date 2019/6/20 16:28
      * @version 1.0.0
      **/
-    public static String formatNowData(final String format) {
+    public static String formatNowDate(final String format) {
         return new DateTime().toString(format, Locale.CHINESE);
     }
 
@@ -88,6 +68,32 @@ public class DateUtil {
     }
 
     /**
+     * add day to date,return format 'yyyy-MM-dd 00:00:00'
+     *
+     * @param date
+     * @param day
+     * @return
+     */
+    public static Date addDayAndFormatAsyyyyMMdd(final Date date, final int day) {
+        DateTime dateTime = new DateTime(date).plusDays(day);
+        return DateTime.parse(dateTime.toString("yyyy-MM-dd 00:00:00")
+                , org.joda.time.format.DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"))
+                .toDate();
+    }
+
+    /**
+     * add day to date,return string value format 'yyyy-MM-dd 00:00:00'
+     *
+     * @param date
+     * @param day
+     * @return
+     */
+    public static String addDayAndFormatAsyyyyMMddStr(final Date date, final int day) {
+        return new DateTime(date).plusDays(day)
+                .toString("yyyy-MM-dd 00:00:00");
+    }
+
+    /**
      * add minute to data
      *
      * @param date   date
@@ -102,7 +108,20 @@ public class DateUtil {
     }
 
     /**
-     * return now time
+     * add minute to data,return format 'yyyy-MM-dd 00:00:00'
+     *
+     * @param date
+     * @param minute
+     * @return
+     */
+    public static Date addMinuteAndFormatAsyyyyMMdd(final Date date, final int minute) {
+        String strDate = new DateTime(date).plusMinutes(minute).toString("yyyy-MM-dd 00:00:00");
+        return DateTime.parse(strDate, org.joda.time.format.DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"))
+                .toDate();
+    }
+
+    /**
+     * return now time,zoneId is :GMT+8
      *
      * @return java.util.Date
      * @author liguo
@@ -110,7 +129,11 @@ public class DateUtil {
      * @since 1.0.0
      **/
     public static Date now() {
-        TimeZone timeZone = TimeZone.getTimeZone("GMT+8");
+        return now("GMT+8");
+    }
+
+    public static Date now(String zoneId) {
+        TimeZone timeZone = TimeZone.getTimeZone(zoneId);
         TimeZone.setDefault(timeZone);
         return DateTime.now(DateTimeZone.forTimeZone(TimeZone.getDefault())).toDate();
     }
@@ -132,11 +155,19 @@ public class DateUtil {
         return (end - start);
     }
 
-    public static Date addHour(final Date date, final int increment) {
+    public static int startDateSubtractEndDateOfDay(final Date startDate
+            , final Date endDate) {
+        DateTime startDates = new DateTime(startDate);
+        DateTime endDates = new DateTime(endDate);
+        return Days.daysBetween(endDates, startDates).getDays();
+    }
+
+    public static Date addHour(final Date date, final int incrementHour) {
         if (date == null) {
             return null;
         }
-        return new DateTime(date).plusHours(increment).toDate();
+        return parsingToDate(new DateTime(date).plusHours(incrementHour).toDate().toString()
+                , DateTimeFormat.F2);
     }
 
     public static Date parsingToDate(final String dateStr, final DateTimeFormat format) {
@@ -155,5 +186,33 @@ public class DateUtil {
             return null;
         }
         return DateFormatUtils.format(d, format.value);
+    }
+
+    public static Date dateFormatAsDate(final Date d, final DateTimeFormat format) {
+        if (d == null || format == null) {
+            return null;
+        }
+        return parsingToDate(DateFormatUtils.format(d, format.value), format);
+    }
+
+    public enum DateTimeFormat {
+        F1("yyyy-MM-dd HH:mm:ss"),
+        F2("yyyy-MM-dd"),
+        F3("HH:mm:ss"),
+        F4("yyyyMMddHHmmss"),
+        F5("yyyyMMddHHmmssSS"),
+        F6("yyyyMMdd"),
+        F7("yyyyMMddHHmmssSSS"),
+        F8("yyyy-MM-dd HH:mm:ss.SSS"),
+        ;
+        private String value;
+
+        DateTimeFormat(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
     }
 }
