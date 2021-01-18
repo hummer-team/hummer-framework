@@ -150,7 +150,7 @@ public class GoodsUtil {
 
 
     public static String createCodeByTime(String prefix, int randNum) {
-        String timeStr = DateUtil.formatNowData("yyyyMMddHHmmss");
+        String timeStr = DateUtil.formatNowDate("yyyyMMddHHmmss");
         return prefix + timeStr + getRandomNumber(0, (int) Math.sqrt(randNum) - 1);
     }
 
