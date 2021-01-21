@@ -2,6 +2,8 @@ package com.hummer.request.idempotent.plugin.annotation;
 
 import com.hummer.common.SysConstant;
 import com.hummer.request.idempotent.plugin.constants.Constants;
+import com.hummer.request.idempotent.plugin.valid.DefaultValidParamsAssembler;
+import com.hummer.request.idempotent.plugin.valid.ValidParamsAssembler;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -24,7 +26,7 @@ public @interface RequestIdempotentAnnotation {
 
     String key() default SysConstant.REQUEST_ID;
 
-    int expireSeconds() default Constants.DEFAULT_EXPIRED_TIME_SECONDS;
+    int expireSeconds() default Constants.REDIS_REQUEST_IDEMPOTENT_TIME_SECONDS;
 
     /**
      * this is define key name spaces,e.g:kingkong
@@ -37,4 +39,6 @@ public @interface RequestIdempotentAnnotation {
     String businessCode();
 
     boolean enable() default true;
+
+    Class<? extends ValidParamsAssembler> validParamsAssembler() default DefaultValidParamsAssembler.class;
 }
