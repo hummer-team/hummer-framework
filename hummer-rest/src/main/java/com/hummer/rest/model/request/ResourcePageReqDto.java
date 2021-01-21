@@ -33,4 +33,20 @@ public class ResourcePageReqDto<T> {
     @ApiModelProperty("查询对象")
     @Valid
     private T queryObject;
+
+
+    public Integer getPageNumber() {
+        if (this.pageNumber == null) {
+            return null;
+        }
+        return this.pageNumber > 0 && this.pageNumber <= 4294967 ? this.pageNumber : 1;
+    }
+
+    public Integer getPageSize() {
+        if (this.pageSize == null) {
+            return null;
+        }
+
+        return this.pageSize > 0 && this.pageSize <= 500 ? this.pageSize : 10;
+    }
 }

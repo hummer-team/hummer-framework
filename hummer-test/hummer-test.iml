@@ -20,14 +20,14 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: org.ow2.asm:asm:5.2" level="project" />
+    <orderEntry type="library" name="Maven: org.ow2.asm:asm:6.0_ALPHA" level="project" />
     <orderEntry type="module" module-name="hummer-common" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpasyncclient:4.1.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.14" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore-nio:4.4.14" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.13" level="project" />
     <orderEntry type="library" name="Maven: cglib:cglib:3.2.5" level="project" />
-    <orderEntry type="library" name="Maven: org.ow2.asm:asm:6.0_ALPHA" level="project" />
+    <orderEntry type="library" name="Maven: org.ow2.asm:asm:5.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.ant:ant:1.9.6" level="project" />
     <orderEntry type="library" name="Maven: org.apache.ant:ant-launcher:1.9.6" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.71" level="project" />

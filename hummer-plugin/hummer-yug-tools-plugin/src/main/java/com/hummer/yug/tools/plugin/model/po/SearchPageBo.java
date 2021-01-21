@@ -31,7 +31,7 @@ public class SearchPageBo<T> {
         SearchPageBo<T> pageBo = new SearchPageBo<>();
         pageBo.setPageNum(reqDto.getPageNumber());
         pageBo.setPageSize(reqDto.getPageSize());
-        if (reqDto.getQueryObject() != null) {
+        if (reqDto.getQueryObject() != null && t != null) {
             t = (T) ObjectCopyUtils.copy(reqDto.getQueryObject(), t.getClass());
         }
         pageBo.setData(t);
