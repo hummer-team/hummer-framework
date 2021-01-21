@@ -3,6 +3,7 @@ package com.hummer.request.idempotent.plugin.valid;
 import com.hummer.core.SpringApplicationContext;
 import com.hummer.request.idempotent.plugin.KeyUtil;
 import com.hummer.request.idempotent.plugin.pipeline.SimpleRedisPipeLine;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -22,24 +23,26 @@ public class ParamsIdempotentValidator {
 
 
     public boolean validParamsIdempotent(String key, int expireSeconds) {
-
+        if (StringUtils.isEmpty(key)) {
+            return false;
+        }
         SimpleRedisPipeLine pipeLine = SpringApplicationContext.getBean(SimpleRedisPipeLine.class);
         String lockKey = KeyUtil.formatLockKey(key);
         if (!pipeLine.getShipCodeCreatedLock(lockKey)) {
             LOGGER.warn("request idempotent get lock fail key=={},", key);
-            return false;
+            return true;
         }
         try {
             if (pipeLine.keyExist(key)) {
                 LOGGER.warn("request idempotent valid fail ,key=={} ", key);
-                return false;
+                return true;
             }
             // 站位
             pipeLine.keyStation(key, expireSeconds);
         } finally {
             pipeLine.releaseLockAsyncRetry(lockKey);
         }
-        return true;
+        return false;
     }
 
     public void removeValidKey(String key) {

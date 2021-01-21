@@ -7,12 +7,10 @@ import com.hummer.core.SpringApplicationContext;
 import com.hummer.request.idempotent.plugin.KeyUtil;
 import com.hummer.request.idempotent.plugin.annotation.RequestIdempotentAnnotation;
 import com.hummer.request.idempotent.plugin.valid.ParamsIdempotentValidator;
-import com.hummer.rest.model.ResourceResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -40,7 +38,6 @@ public class RequestIdempotentAspect {
         }
         String key = KeyUtil.formatKey(getApplicationName(requestIdempotent.applicationName())
                 , requestIdempotent.businessCode(), point, requestIdempotent);
-
         ParamsIdempotentValidator validator = SpringApplicationContext.getBean(ParamsIdempotentValidator.class);
         if (validator.validParamsIdempotent(key, requestIdempotent.expireSeconds())) {
             throw new BusinessIdempotentException(SysConstant.BUSINESS_IDEMPOTENT_ERROR_CODE, "请求重复");
@@ -52,21 +49,6 @@ public class RequestIdempotentAspect {
             validator.removeValidKey(key);
             throw e;
         }
-    }
-
-
-    private Class getMethodReturnClass(ProceedingJoinPoint point) {
-        MethodSignature signature = (MethodSignature) point.getSignature();
-        return signature.getReturnType();
-    }
-
-
-    private ResourceResponse<Void> getDefaultReturn(ProceedingJoinPoint point, String message) {
-        Class returnClass = getMethodReturnClass(point);
-        if (ResourceResponse.class == returnClass) {
-            return ResourceResponse.ok(SysConstant.BUSINESS_IDEMPOTENT_SUB_CODE, message);
-        }
-        return null;
     }
 
     private String getApplicationName(String applicationName) {

@@ -64,7 +64,7 @@ public class KeyUtil {
         if (MapUtils.isEmpty(validParams)) {
             return null;
         }
-        String fieldKey = Md5.encryptMd5(getFieldNameTypeMap(joinPoint));
+        validParams.putAll(getFieldNameTypeMap(joinPoint));
         String validKey = formatParamsMd5(validParams);
 
         StringBuilder key = new StringBuilder();
@@ -73,7 +73,7 @@ public class KeyUtil {
                 .append(businessCode).append(":")
                 .append(PropertiesContainer.valueOfString("spring.profiles.active"))
                 .append(":")
-                .append(fieldKey)
+                .append(joinPoint.getSignature().getName())
                 .append(":")
                 .append(validKey);
         return key.toString();
