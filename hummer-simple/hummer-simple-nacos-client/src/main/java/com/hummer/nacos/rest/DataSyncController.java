@@ -1,8 +1,10 @@
 package com.hummer.nacos.rest;
 
 import com.hummer.data.sync.plugin.annotation.OrderDataSync;
+import com.hummer.nacos.assembler.OrderChangeTestAssembler;
 import com.hummer.nacos.service.OrderDataSyncService;
 import com.hummer.request.idempotent.plugin.annotation.BusinessIdempotentAnnotation;
+import com.hummer.request.idempotent.plugin.annotation.RequestIdempotentAnnotation;
 import com.hummer.rest.model.ResourceResponse;
 import com.hummer.yug.tools.plugin.enums.UserEnums;
 import com.hummer.yug.user.plugin.annotation.member.MemberNeedAuthority;
@@ -49,8 +51,11 @@ public class DataSyncController {
 
     @ApiOperation(value = "order-change", notes = "order-change")
     @PostMapping("order/change/consumer")
+    @RequestIdempotentAnnotation(businessCode = "order-change-test"
+            , validParamsAssembler = OrderChangeTestAssembler.class)
     public ResourceResponse<Void> orderChangeConsumer(
-            @RequestParam("businessCode") String businessCode
+            @RequestParam("businessCode") String businessCode,
+            @RequestParam("businessType") Integer businessType
     ) {
         orderDataSyncService.orderChange();
         return ResourceResponse.ok();

@@ -1,11 +1,12 @@
 package com.hummer.request.idempotent.plugin.aspect;
 
 import com.hummer.common.SysConstant;
+import com.hummer.common.exceptions.BusinessIdempotentException;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.core.SpringApplicationContext;
 import com.hummer.request.idempotent.plugin.KeyUtil;
 import com.hummer.request.idempotent.plugin.annotation.RequestIdempotentAnnotation;
-import com.hummer.request.idempotent.plugin.pipeline.SimpleRedisPipeLine;
+import com.hummer.request.idempotent.plugin.valid.ParamsIdempotentValidator;
 import com.hummer.rest.model.ResourceResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -14,7 +15,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
 /**
@@ -38,30 +38,22 @@ public class RequestIdempotentAspect {
                 || !PropertiesContainer.valueOf("request.idempotent.verify.enable", Boolean.class, true)) {
             return point.proceed(point.getArgs());
         }
-        String keyName = requestIdempotent.key();
-        // 判断是否重复请求
-        String keyValue = PropertiesContainer.valueOfString(keyName, MDC.get(keyName));
-        if (StringUtils.isEmpty(keyValue)) {
-            LOGGER.warn("request idempotent key not exist,signature=={} ", point.getSignature());
-            return point.proceed(point.getArgs());
+        String key = KeyUtil.formatKey(getApplicationName(requestIdempotent.applicationName())
+                , requestIdempotent.businessCode(), point, requestIdempotent);
+
+        ParamsIdempotentValidator validator = SpringApplicationContext.getBean(ParamsIdempotentValidator.class);
+        if (validator.validParamsIdempotent(key, requestIdempotent.expireSeconds())) {
+            throw new BusinessIdempotentException(SysConstant.BUSINESS_IDEMPOTENT_ERROR_CODE, "请求重复");
         }
-        SimpleRedisPipeLine pipeLine = SpringApplicationContext.getBean(SimpleRedisPipeLine.class);
-        String key = pipeLine.formatKey(requestIdempotent.applicationName()
-                , requestIdempotent.businessCode(), KeyUtil.getFieldNameValueMap(point, keyName, keyValue));
-        if (pipeLine.keyExist(key)) {
-            LOGGER.warn("requestId =={} is repeat,key=={} ", keyName, key);
-            return getDefaultReturn(point, String.format("request idempotent by key == %s", key));
-        }
-        // 站位
-        pipeLine.keyStation(key, requestIdempotent.expireSeconds());
         try {
             return point.proceed(point.getArgs());
         } catch (Exception e) {
             LOGGER.debug("method=={}, proceed fail,remove key", point.getSignature());
-            pipeLine.removeRedisKeyRetry(key);
+            validator.removeValidKey(key);
             throw e;
         }
     }
+
 
     private Class getMethodReturnClass(ProceedingJoinPoint point) {
         MethodSignature signature = (MethodSignature) point.getSignature();
@@ -75,5 +67,10 @@ public class RequestIdempotentAspect {
             return ResourceResponse.ok(SysConstant.BUSINESS_IDEMPOTENT_SUB_CODE, message);
         }
         return null;
+    }
+
+    private String getApplicationName(String applicationName) {
+        return StringUtils.isEmpty(applicationName) ? PropertiesContainer.valueOfString("spring.application.name")
+                : applicationName;
     }
 }
