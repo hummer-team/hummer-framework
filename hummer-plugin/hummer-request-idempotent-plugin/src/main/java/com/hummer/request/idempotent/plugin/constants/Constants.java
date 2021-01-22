@@ -14,5 +14,5 @@ public class Constants {
 
     public static final int REDIS_ADD_LOCK_TIME_SECONDS = 20;
 
-    public static final int REDIS_REQUEST_IDEMPOTENT_TIME_SECONDS = 60 * 30;
+    public static final int REDIS_REQUEST_IDEMPOTENT_TIME_SECONDS = 60 * 5;
 }
