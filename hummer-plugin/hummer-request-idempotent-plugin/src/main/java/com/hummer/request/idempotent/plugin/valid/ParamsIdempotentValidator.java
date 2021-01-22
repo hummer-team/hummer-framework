@@ -46,6 +46,9 @@ public class ParamsIdempotentValidator {
     }
 
     public void removeValidKey(String key) {
+        if (StringUtils.isEmpty(key)) {
+            return;
+        }
         SimpleRedisPipeLine pipeLine = SpringApplicationContext.getBean(SimpleRedisPipeLine.class);
         String lockKey = KeyUtil.formatLockKey(key);
         if (!pipeLine.getShipCodeCreatedLock(lockKey)) {
