@@ -2,7 +2,6 @@ package com.hummer.request.idempotent.plugin;
 
 import com.google.common.collect.Maps;
 import com.hummer.common.security.Md5;
-import com.hummer.common.utils.AppBusinessAssert;
 import com.hummer.common.utils.CacheKeyFormatUtil;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.core.SpringApplicationContext;
@@ -54,7 +53,6 @@ public class KeyUtil {
             throw new IllegalArgumentException("this business code or application name can't null");
         }
         ValidParamsAssembler assembler = SpringApplicationContext.getBean(requestIdempotent.validParamsAssembler());
-        AppBusinessAssert.isTrue(assembler != null, 50000, "get custom ValidParamsAssembler bean fail");
         Map<String, String> validParams;
         if (assembler instanceof DefaultValidParamsAssembler) {
             validParams = assembler.assemble(requestIdempotent.key());

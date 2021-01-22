@@ -82,7 +82,7 @@ public class SimpleRedisPipeLine {
         if (!releaseLock(key)) {
             CompletableFuture.runAsync(() -> {
                 int times = PropertiesContainer.valueOfInteger("ship.order.code.lock.release.fail.retry.times", 20);
-                while (!releaseLock(key) && times > 0) {
+                while (times > 0 && !releaseLock(key)) {
                     times--;
                 }
             });
