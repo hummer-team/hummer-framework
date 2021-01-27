@@ -26,6 +26,10 @@ public class SysConstant {
     public static final int BUSINESS_IDEMPOTENT_ERROR_CODE = 430;
     public static final int BUSINESS_IDEMPOTENT_SUB_CODE = 460;
 
+    public static class ExecutorServiceName {
+        public static final String DEFAULT_TASK_GROUP_V2 = "defaultTaskGroupV2";
+    }
+
     public static class RestConstant {
         private RestConstant() {
 

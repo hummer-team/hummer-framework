@@ -101,6 +101,7 @@ public class DataSourceInitConfiguration {
         //store session factory
         Map<String, SqlSessionFactory> sqlSessionFactoryMap = new LinkedHashMap<>();
         String defaultDataSourceKey = PropertiesContainer.valueOfString("default.data.source");
+        SqlSessionFactory defaultSqlSessionFactory = null;
         //foreach load target data source
         for (Map.Entry<String, Map<String, Object>> entry : dataSourceGroup.entrySet()) {
             long start = System.currentTimeMillis();
@@ -128,6 +129,9 @@ public class DataSourceInitConfiguration {
                 if (keyPrefix.equalsIgnoreCase(defaultDataSourceKey)
                         && defaultTargetDataSource == null) {
                     defaultTargetDataSource = dataSource;
+                    defaultSqlSessionFactory = (SqlSessionFactory) SpringApplicationContext.getBean(newKey(keyPrefix
+                            , "sqlSessionFactory"));
+                    LOGGER.info("default sqlSessionFactory key is {}", keyPrefix);
                 }
                 //
                 //MybatisDynamicBean.registerSqlSessionTemplate(newKey(keyPrefix, "sessionTemplate"), sessionFactory);
@@ -141,15 +145,18 @@ public class DataSourceInitConfiguration {
             }
         }
 
-        MybatisDynamicBean.registerSqlSessionTemplate(sqlSessionFactoryMap);
-        //MybatisDynamicBean.registerSqlSessionTemplate(SysConstant.DaoConstant.SQL_SESSION_TEMPLATE_NAME
-        //        , sqlSessionFactoryMap.entrySet().iterator().next().getValue());
         //ensure exists default data source.
         if (defaultTargetDataSource == null) {
             defaultTargetDataSource = Iterables.get(allDataSources.values(), 0);
+            defaultSqlSessionFactory = (SqlSessionFactory) SpringApplicationContext.getBean(newKey(
+                    Iterables.get(allDataSources.keySet(),0)
+                    , "sqlSessionFactory"));
             LOGGER.warn("no specific default dataSource,use first data {} as default data source"
                     , defaultTargetDataSource);
         }
+        MybatisDynamicBean.registerSqlSessionTemplate(sqlSessionFactoryMap
+                , defaultSqlSessionFactory);
+
         //MybatisDynamicBean.registerJdbcTemplate(SysConstant.DaoConstant.SQL_SESSION_TEMPLATE_NAME
         // , defaultTargetDataSource);
         //register default sql session template,will re factory

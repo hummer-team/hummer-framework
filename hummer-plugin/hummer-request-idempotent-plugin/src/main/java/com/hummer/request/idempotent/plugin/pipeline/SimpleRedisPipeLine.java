@@ -4,6 +4,7 @@ import com.hummer.common.utils.AppBusinessAssert;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.redis.plugin.RedisOp;
 import com.hummer.request.idempotent.plugin.KeyUtil;
+import com.hummer.request.idempotent.plugin.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * SimpleRedisPipeLine
@@ -67,4 +69,34 @@ public class SimpleRedisPipeLine {
         }
     }
 
+    public boolean getShipCodeCreatedLock(String key) {
+        try {
+            return redisOp.lock().lock(key, Constants.REDIS_ADD_LOCK_TIME_SECONDS);
+        } catch (Exception e) {
+            LOGGER.error("get redis lock fail key=={}", key, e);
+            return false;
+        }
+    }
+
+    public boolean releaseLockAsyncRetry(String key) {
+        if (!releaseLock(key)) {
+            CompletableFuture.runAsync(() -> {
+                int times = PropertiesContainer.valueOfInteger("ship.order.code.lock.release.fail.retry.times", 20);
+                while (times > 0 && !releaseLock(key)) {
+                    times--;
+                }
+            });
+        }
+        LOGGER.debug("redis freeLock success key=={}", key);
+        return true;
+    }
+
+    private boolean releaseLock(String key) {
+        try {
+            return redisOp.lock().freeLock(key);
+        } catch (Exception e) {
+            LOGGER.error("redis freeLock fail key=={}", key, e);
+            return false;
+        }
+    }
 }

@@ -5,6 +5,8 @@ import com.hummer.common.utils.DateUtil;
 import org.junit.Test;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * description     java类作用描述
@@ -34,6 +36,19 @@ public class CustomExceptionTest {
 
         String content = HttpSyncClient.sendHttpGet("http://localhost:20008/swagger-ui.html");
         System.out.println(content.length());
+    }
+
+    @Test
+    public void test1() {
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("key", true);
+        System.out.println(getOne(map));
+        System.out.println(map.get("key"));
+    }
+
+    private int getOne(Map<String, Boolean> flag) {
+        flag.put("key", false);
+        return 1;
     }
 
 }
