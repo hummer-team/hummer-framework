@@ -20,14 +20,11 @@ public class MultipleDataSourceMap {
     private static final CopyOnWriteArraySet<String> DATA_SOURCE_SETS = new CopyOnWriteArraySet<>();
     private static final ThreadLocal<DataSourceMetadata> HOLDER = new ThreadLocal<>();
 
-    private static DataSourceMetadata DEFAULT_METADATA = null;
-
     public static void setDataSource(final String name) {
         Validate.isTrue(!Strings.isNullOrEmpty(name), "metadata is null");
         DataSourceMetadata metadata = getMeta(name);
         HOLDER.remove();
         HOLDER.set(metadata);
-        DEFAULT_METADATA = metadata;
     }
 
     /**
@@ -48,7 +45,7 @@ public class MultipleDataSourceMap {
      */
     public static DataSourceMetadata getDataSourceWithNullDataSource() {
         DataSourceMetadata metadata = HOLDER.get();
-        return metadata == null ? DEFAULT_METADATA : metadata;
+        return metadata == null ? new DataSourceMetadata() : metadata;
     }
 
     /**
@@ -100,7 +97,7 @@ public class MultipleDataSourceMap {
         HOLDER.remove();
     }
 
-    public static void cleanAll() {
+    public static void cleanAll(){
         clean();
         DATA_SOURCE_SETS.clear();
     }

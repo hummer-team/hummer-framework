@@ -52,7 +52,7 @@ public class DataSourceInitConfiguration {
         return new NamedParameterJdbcTemplate(defaultTargetDataSource);
     }
 
-    public final ImmutableMap<String, DataSource> dataSourceMap() {
+    public final ImmutableMap<String,DataSource> dataSourceMap() {
         return ImmutableMap.copyOf(allDataSources);
     }
 
@@ -150,7 +150,6 @@ public class DataSourceInitConfiguration {
         //ensure exists default data source.
         if (defaultTargetDataSource == null) {
             defaultTargetDataSource = Iterables.get(allDataSources.values(), 0);
-            defaultDataSourceKey = Iterables.get(sqlSessionFactoryMap.keySet(), 0);
             LOGGER.warn("no specific default dataSource,use first data {} as default data source"
                     , defaultTargetDataSource);
         }
@@ -159,7 +158,7 @@ public class DataSourceInitConfiguration {
         //register default sql session template,will re factory
         //cache data source
         MultipleDataSourceMap.cacheDataSourceAll(sqlSessionFactoryMap.keySet());
-        MultipleDataSourceMap.setDataSource(defaultDataSourceKey);
+        MultipleDataSourceMap.setDataSource(Iterables.get(sqlSessionFactoryMap.keySet(), 0));
         //dynamicDataSource = new DynamicDataSource(allDataSources, defaultTargetDataSource);
     }
 
