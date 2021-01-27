@@ -145,14 +145,18 @@ public class DataSourceInitConfiguration {
             }
         }
 
-        MybatisDynamicBean.registerSqlSessionTemplate(sqlSessionFactoryMap
-                , defaultSqlSessionFactory);
         //ensure exists default data source.
         if (defaultTargetDataSource == null) {
             defaultTargetDataSource = Iterables.get(allDataSources.values(), 0);
+            defaultSqlSessionFactory = (SqlSessionFactory) SpringApplicationContext.getBean(newKey(
+                    Iterables.get(allDataSources.keySet(),0)
+                    , "sqlSessionFactory"));
             LOGGER.warn("no specific default dataSource,use first data {} as default data source"
                     , defaultTargetDataSource);
         }
+        MybatisDynamicBean.registerSqlSessionTemplate(sqlSessionFactoryMap
+                , defaultSqlSessionFactory);
+
         //MybatisDynamicBean.registerJdbcTemplate(SysConstant.DaoConstant.SQL_SESSION_TEMPLATE_NAME
         // , defaultTargetDataSource);
         //register default sql session template,will re factory
