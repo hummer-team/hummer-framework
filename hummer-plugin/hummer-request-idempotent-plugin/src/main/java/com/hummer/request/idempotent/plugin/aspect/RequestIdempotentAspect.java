@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 /**
  * RequestIdempotentAspect
  *
@@ -36,10 +38,13 @@ public class RequestIdempotentAspect {
                 || !PropertiesContainer.valueOf("request.idempotent.verify.enable", Boolean.class, true)) {
             return point.proceed(point.getArgs());
         }
-        String key = KeyUtil.formatKey(getApplicationName(requestIdempotent.applicationName())
-                , requestIdempotent.businessCode(), point, requestIdempotent);
+
         ParamsIdempotentValidator validator = SpringApplicationContext.getBean(ParamsIdempotentValidator.class);
-        if (validator.validParamsIdempotent(key, requestIdempotent.expireSeconds())) {
+        Map<String, String> validParams = validator.getValidKey(point, requestIdempotent);
+        String key = KeyUtil.formatKey(getApplicationName(requestIdempotent.applicationName())
+                , requestIdempotent.businessCode(), point, validParams);
+
+        if (validator.validParamsIdempotent(key, requestIdempotent.expireSeconds(), validParams)) {
             throw new BusinessIdempotentException(SysConstant.BUSINESS_IDEMPOTENT_ERROR_CODE, "请求重复");
         }
         try {
