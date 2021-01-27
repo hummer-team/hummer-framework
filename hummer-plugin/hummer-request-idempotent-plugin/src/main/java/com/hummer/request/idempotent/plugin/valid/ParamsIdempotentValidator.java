@@ -45,14 +45,14 @@ public class ParamsIdempotentValidator {
         }
         SimpleRedisPipeLine pipeLine = SpringApplicationContext.getBean(SimpleRedisPipeLine.class);
         String lockKey = KeyUtil.formatLockKey(key);
-        if (!pipeLine.getShipCodeCreatedLock(lockKey)) {
-            if (LOGGER.isWarnEnabled()) {
-                LOGGER.warn("request idempotent get lock fail key=={},validParams=={}", key
-                        , JSON.toJSONString(validParams));
-            }
-            return true;
-        }
         try {
+            if (!pipeLine.getShipCodeCreatedLock(lockKey)) {
+                if (LOGGER.isWarnEnabled()) {
+                    LOGGER.warn("request idempotent get lock fail key=={},validParams=={}", key
+                            , JSON.toJSONString(validParams));
+                }
+                return true;
+            }
             if (pipeLine.keyExist(key)) {
                 if (LOGGER.isWarnEnabled()) {
                     LOGGER.warn("request idempotent valid fail ,key=={},validParams=={} ", key

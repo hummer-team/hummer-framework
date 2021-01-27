@@ -74,8 +74,7 @@ public class SimpleRedisPipeLine {
         try {
             return redisOp.lock().lock(key, Constants.REDIS_ADD_LOCK_TIME_SECONDS);
         } catch (JedisConnectionException e) {
-            LOGGER.error("get redis connection fail key=={}", key, e);
-            return true;
+            throw e;
         } catch (Exception e) {
             LOGGER.error("get redis lock fail key=={}", key, e);
             return false;
