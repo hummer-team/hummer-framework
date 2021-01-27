@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -72,6 +73,9 @@ public class SimpleRedisPipeLine {
     public boolean getShipCodeCreatedLock(String key) {
         try {
             return redisOp.lock().lock(key, Constants.REDIS_ADD_LOCK_TIME_SECONDS);
+        } catch (JedisConnectionException e) {
+            LOGGER.error("get redis connection fail key=={}", key, e);
+            return true;
         } catch (Exception e) {
             LOGGER.error("get redis lock fail key=={}", key, e);
             return false;

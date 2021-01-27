@@ -4,10 +4,6 @@ import com.google.common.collect.Maps;
 import com.hummer.common.security.Md5;
 import com.hummer.common.utils.CacheKeyFormatUtil;
 import com.hummer.core.PropertiesContainer;
-import com.hummer.core.SpringApplicationContext;
-import com.hummer.request.idempotent.plugin.annotation.RequestIdempotentAnnotation;
-import com.hummer.request.idempotent.plugin.valid.DefaultValidParamsAssembler;
-import com.hummer.request.idempotent.plugin.valid.ValidParamsAssembler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -48,16 +44,9 @@ public class KeyUtil {
     }
 
     public static String formatKey(String applicationName, String businessCode, ProceedingJoinPoint joinPoint
-            , RequestIdempotentAnnotation requestIdempotent) {
+            , Map<String, String> validParams) {
         if (Strings.isEmpty(businessCode) || Strings.isEmpty(applicationName)) {
             throw new IllegalArgumentException("this business code or application name can't null");
-        }
-        ValidParamsAssembler assembler = SpringApplicationContext.getBean(requestIdempotent.validParamsAssembler());
-        Map<String, String> validParams;
-        if (assembler instanceof DefaultValidParamsAssembler) {
-            validParams = assembler.assemble(requestIdempotent.key());
-        } else {
-            validParams = assembler.assemble(joinPoint.getArgs());
         }
         if (MapUtils.isEmpty(validParams)) {
             return null;
@@ -76,6 +65,7 @@ public class KeyUtil {
                 .append(validKey);
         return key.toString();
     }
+
 
     public static String formatLockKey(String key) {
         return key + ":" + "lock";
