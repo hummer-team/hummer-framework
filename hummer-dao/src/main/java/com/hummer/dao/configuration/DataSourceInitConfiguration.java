@@ -52,7 +52,7 @@ public class DataSourceInitConfiguration {
         return new NamedParameterJdbcTemplate(defaultTargetDataSource);
     }
 
-    public final ImmutableMap<String,DataSource> dataSourceMap() {
+    public final ImmutableMap<String, DataSource> dataSourceMap() {
         return ImmutableMap.copyOf(allDataSources);
     }
 
@@ -101,6 +101,7 @@ public class DataSourceInitConfiguration {
         //store session factory
         Map<String, SqlSessionFactory> sqlSessionFactoryMap = new LinkedHashMap<>();
         String defaultDataSourceKey = PropertiesContainer.valueOfString("default.data.source");
+        SqlSessionFactory defaultSqlSessionFactory = null;
         //foreach load target data source
         for (Map.Entry<String, Map<String, Object>> entry : dataSourceGroup.entrySet()) {
             long start = System.currentTimeMillis();
@@ -128,6 +129,9 @@ public class DataSourceInitConfiguration {
                 if (keyPrefix.equalsIgnoreCase(defaultDataSourceKey)
                         && defaultTargetDataSource == null) {
                     defaultTargetDataSource = dataSource;
+                    defaultSqlSessionFactory = (SqlSessionFactory) SpringApplicationContext.getBean(newKey(keyPrefix
+                            , "sqlSessionFactory"));
+                    LOGGER.info("default sqlSessionFactory key is {}", keyPrefix);
                 }
                 //
                 //MybatisDynamicBean.registerSqlSessionTemplate(newKey(keyPrefix, "sessionTemplate"), sessionFactory);
@@ -141,9 +145,8 @@ public class DataSourceInitConfiguration {
             }
         }
 
-        MybatisDynamicBean.registerSqlSessionTemplate(sqlSessionFactoryMap);
-        //MybatisDynamicBean.registerSqlSessionTemplate(SysConstant.DaoConstant.SQL_SESSION_TEMPLATE_NAME
-        //        , sqlSessionFactoryMap.entrySet().iterator().next().getValue());
+        MybatisDynamicBean.registerSqlSessionTemplate(sqlSessionFactoryMap
+                , defaultSqlSessionFactory);
         //ensure exists default data source.
         if (defaultTargetDataSource == null) {
             defaultTargetDataSource = Iterables.get(allDataSources.values(), 0);

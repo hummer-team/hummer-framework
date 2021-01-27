@@ -155,12 +155,15 @@ public class MybatisDynamicBean {
      *
      * @param sqlSessionTemplateMap sql session
      */
-    public static void registerSqlSessionTemplate(final Map<String, SqlSessionFactory> sqlSessionTemplateMap) {
+    public static void registerSqlSessionTemplate(final Map<String, SqlSessionFactory> sqlSessionTemplateMap
+            , final SqlSessionFactory defaultSqlSessionTemplate) {
         //new custom sql session template ben
         BeanDefinitionBuilder beanDefinitionBuilder =
                 BeanDefinitionBuilder.genericBeanDefinition(CustomSqlSessionTemplate.class);
         //call `CustomSqlSessionTemplate` constructor args,first session instance as default session instance.
-        beanDefinitionBuilder.addConstructorArgValue(sqlSessionTemplateMap.entrySet().iterator().next().getValue());
+        beanDefinitionBuilder.addConstructorArgValue(defaultSqlSessionTemplate == null
+                ? sqlSessionTemplateMap.entrySet().iterator().next().getValue()
+                : defaultSqlSessionTemplate);
         beanDefinitionBuilder.addPropertyValue("targetSqlSessionFactoryMap", sqlSessionTemplateMap);
         beanDefinitionBuilder.setLazyInit(true);
 
