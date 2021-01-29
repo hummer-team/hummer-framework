@@ -34,5 +34,6 @@
         <module>hummer-request-idempotent-plugin</module>
         <module>hummer-yug-user-plugin</module>
         <module>hummer-yug-tools-plugin</module>
+        <module>hummer-model-generator-plugin</module>
     </modules>
 </project>

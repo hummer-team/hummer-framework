@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="copy.dao.ShopOrderExPoMapper">
+  <resultMap id="BaseResultMap" type="copy.po.ShopOrderExPo">
+    <id column="ygf_order_id" jdbcType="BIGINT" property="ygfOrderId" />
+    <result column="shop_id" jdbcType="INTEGER" property="shopId" />
+    <result column="client_code" jdbcType="VARCHAR" property="clientCode" />
+    <result column="pay_cash_amount" jdbcType="DECIMAL" property="payCashAmount" />
+    <result column="return_cash_amount" jdbcType="DECIMAL" property="returnCashAmount" />
+    <result column="manager_memo" jdbcType="VARCHAR" property="managerMemo" />
+    <result column="manage_user_id" jdbcType="BIGINT" property="manageUserId" />
+    <result column="created_date_time" jdbcType="TIMESTAMP" property="createdDateTime" />
+    <result column="created_user_id" jdbcType="BIGINT" property="createdUserId" />
+    <result column="last_modified_date_time" jdbcType="TIMESTAMP" property="lastModifiedDateTime" />
+    <result column="last_modified_user_id" jdbcType="BIGINT" property="lastModifiedUserId" />
+    <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ygf_order_id, shop_id, client_code, pay_cash_amount, return_cash_amount, manager_memo, 
+    manage_user_id, created_date_time, created_user_id, last_modified_date_time, last_modified_user_id, 
+    is_deleted
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from shop_order_ex
+    where ygf_order_id = #{ygfOrderId,jdbcType=BIGINT}
+  </select>
+</mapper>

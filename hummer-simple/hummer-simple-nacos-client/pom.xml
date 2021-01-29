@@ -70,6 +70,7 @@
             <artifactId>hummer-yug-user-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+
     </dependencies>
 
     <build>
@@ -82,6 +83,12 @@
 
         <!--<finalName>${project.artifact.name}-${project.version}-${build.number}</finalName>-->
         <plugins>
+
+            <plugin>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-model-generator-plugin</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </plugin>
 
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
