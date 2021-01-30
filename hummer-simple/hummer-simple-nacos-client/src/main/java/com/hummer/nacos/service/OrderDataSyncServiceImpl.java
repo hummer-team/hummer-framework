@@ -48,6 +48,5 @@ public class OrderDataSyncServiceImpl implements OrderDataSyncService {
     @Override
     public void orderChange() {
         log.debug("data sync context == {}", JSONObject.toJSONString(OrderSyncContextHolder.get()));
-        int a = 1 / 0;
     }
 }
