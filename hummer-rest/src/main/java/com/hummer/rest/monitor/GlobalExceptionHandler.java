@@ -128,11 +128,23 @@ public class GlobalExceptionHandler {
             rep.setSubCode(SysConstant.BUSINESS_IDEMPOTENT_SUB_CODE);
             rep.setMessage(e.getMessage());
             rep.setData(((AppException) e).getReturnObj());
+
         } else {
             //output
             rep.setCode(((AppException) e).getCode());
             rep.setMessage(e.getMessage());
             rep.setData(((AppException) e).getReturnObj());
+            sb.append("current request app exception failed :")
+                    .append(StringUtils.LF)
+                    .append("url:")
+                    .append(requestUrl(request))
+                    .append(StringUtils.LF)
+                    .append("request body:")
+                    .append(bodyString)
+                    .append(StringUtils.LF)
+                    .append(String.format("response code:%s > msg: %s", rep.getCode(), rep.getMessage()));
+
+            LOGGER.warn(sb.toString());
         }
 
         //if exists customer exception handle

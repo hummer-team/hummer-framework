@@ -41,5 +41,10 @@ public class CustomFastJsonConfigs implements MessageSerialConfig {
             fastJsonConfig.getSerializeConfig().setPropertyNamingStrategy(PropertyNamingStrategy.valueOf(fieldNameStyle));
         }
         fastJsonConfig.setSerializerFeatures(SerializerFeature.DisableCircularReferenceDetect);
+
+        if (PropertiesContainer.valueOf("fastJson.deserializer.null.enable", Boolean.class, false)) {
+            fastJsonConfig.setSerializerFeatures(SerializerFeature.WriteMapNullValue);
+        }
+
     }
 }

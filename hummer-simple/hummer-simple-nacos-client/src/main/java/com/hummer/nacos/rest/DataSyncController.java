@@ -1,9 +1,9 @@
 package com.hummer.nacos.rest;
 
 import com.hummer.data.sync.plugin.annotation.OrderDataSync;
+import com.hummer.nacos.model.CustomItemBo;
 import com.hummer.nacos.service.OrderDataSyncService;
 import com.hummer.request.idempotent.plugin.annotation.BusinessIdempotentAnnotation;
-import com.hummer.request.idempotent.plugin.annotation.RequestIdempotentAnnotation;
 import com.hummer.rest.model.ResourceResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,12 +47,12 @@ public class DataSyncController {
 
     @ApiOperation(value = "order-change", notes = "order-change")
     @PostMapping("order/change/consumer")
-    @RequestIdempotentAnnotation(businessCode = "order-change-test")
-    public ResourceResponse<Void> orderChangeConsumer(
+//    @RequestIdempotentAnnotation(businessCode = "order-change-test")
+    public ResourceResponse<CustomItemBo> orderChangeConsumer(
             @RequestParam("businessCode") String businessCode,
             @RequestParam("businessType") Integer businessType
     ) {
         orderDataSyncService.orderChange();
-        return ResourceResponse.ok();
+        return ResourceResponse.ok(new CustomItemBo());
     }
 }
