@@ -91,7 +91,8 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             throw new AppException(41001, "this request ticket invalid.");
         }
         MemberUserContext userContext = AuthorityServiceAgent.queryUserNameByMemberId(userId);
-        AppBusinessAssert.isTrue(userContext != null, 41001, "user not exist");
+        AppBusinessAssert.isTrue(userContext != null && userContext.getUserName() != null, 41001
+                , String.format("user not exist,userId==%s", userId));
         userContext.setUserId(userId);
         UserHolder.setMember(userContext);
         log.info("method {} by userInfo userId=={}", handler.getMethod().getName(), userContext.getUserId());
