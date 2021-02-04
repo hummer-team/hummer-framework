@@ -6,13 +6,18 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.hummer.config.NaCosConfig;
+import com.hummer.config.bo.ConfigListenerKey;
 import com.hummer.core.PropertiesContainer;
+import com.hummer.rest.listener.FastJsonSerializerFeatureListener;
 import com.hummer.rest.message.handle.MessageSerialConfig;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Collections;
 import java.util.List;
 
 import static com.hummer.common.SysConstant.RestConstant.MVC_SERIALIZERFEATURE;
@@ -30,6 +35,9 @@ import static com.hummer.common.SysConstant.RestConstant.MVC_SERIALIZER_FEATURE_
  */
 @Configuration
 public class CustomFastJsonConfigs implements MessageSerialConfig {
+
+    @Autowired
+    private NaCosConfig naCosConfig;
 
     @Override
     public void register(SerializeConfig serializeConfig) {
@@ -50,6 +58,13 @@ public class CustomFastJsonConfigs implements MessageSerialConfig {
         }
 
         fastJsonConfig.setSerializerFeatures(getSerializerFeature().toArray(new SerializerFeature[0]));
+        if (naCosConfig != null) {
+            naCosConfig.addListener(ConfigListenerKey.builder()
+                            .dataId("application.properties").groupId("DEFAULT_GROUP")
+                            .propertiesKey(Collections.singletonList(MVC_SERIALIZERFEATURE)).build()
+                    , new FastJsonSerializerFeatureListener(fastJsonConfig));
+        }
+
     }
 
     public static List<SerializerFeature> getSerializerFeature() {

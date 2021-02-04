@@ -2,7 +2,6 @@ package com.hummer.rest.message.coder;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeConfig;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.google.common.base.Splitter;
@@ -11,7 +10,6 @@ import com.google.common.io.CharStreams;
 import com.hummer.common.exceptions.ErrorRequestException;
 import com.hummer.common.exceptions.SysException;
 import com.hummer.common.utils.ZipUtil;
-import com.hummer.rest.bean.CustomFastJsonConfigs;
 import com.hummer.rest.message.CompressHandler;
 import com.hummer.rest.message.handle.RequestBodyHandle;
 import com.hummer.rest.message.handle.ResponseBodyHandle;
@@ -121,8 +119,6 @@ public class FastJsonMessageCoder extends FastJsonHttpMessageConverter {
                 FastJsonConfig jsonConfig = getFastJsonConfig();
                 SerializeConfig serializeConfig = jsonConfig.getSerializeConfig();
 
-                jsonConfig.setSerializerFeatures(CustomFastJsonConfigs
-                        .getSerializerFeature().toArray(new SerializerFeature[0]));
                 //check serial configuration
                 if (serializeConfig == null) {
                     LOGGER.debug("no settings serial configuration,use default serial configuration");
