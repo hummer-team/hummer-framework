@@ -11,7 +11,7 @@ import com.google.common.io.CharStreams;
 import com.hummer.common.exceptions.ErrorRequestException;
 import com.hummer.common.exceptions.SysException;
 import com.hummer.common.utils.ZipUtil;
-import com.hummer.core.PropertiesContainer;
+import com.hummer.rest.bean.CustomFastJsonConfigs;
 import com.hummer.rest.message.CompressHandler;
 import com.hummer.rest.message.handle.RequestBodyHandle;
 import com.hummer.rest.message.handle.ResponseBodyHandle;
@@ -121,9 +121,8 @@ public class FastJsonMessageCoder extends FastJsonHttpMessageConverter {
                 FastJsonConfig jsonConfig = getFastJsonConfig();
                 SerializeConfig serializeConfig = jsonConfig.getSerializeConfig();
 
-                if (PropertiesContainer.valueOf("fastJson.deserializer.null.enable", Boolean.class, false)) {
-                    jsonConfig.setSerializerFeatures(SerializerFeature.WriteMapNullValue);
-                }
+                jsonConfig.setSerializerFeatures(CustomFastJsonConfigs
+                        .getSerializerFeature().toArray(new SerializerFeature[0]));
                 //check serial configuration
                 if (serializeConfig == null) {
                     LOGGER.debug("no settings serial configuration,use default serial configuration");
