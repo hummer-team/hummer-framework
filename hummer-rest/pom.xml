@@ -22,6 +22,10 @@
             <artifactId>hummer-common</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.hummer</groupId>
+            <artifactId>hummer-config</artifactId>
+        </dependency>
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
         </dependency>

@@ -1,6 +1,5 @@
 package com.hummer.rest.bean;
 
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.JSONPResponseBodyAdvice;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -8,8 +7,6 @@ import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 import com.hummer.common.coder.MsgPackCoder;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.rest.message.coder.FastJsonMessageCoder;
@@ -18,7 +15,6 @@ import com.hummer.rest.message.coder.ProtostuffMessageCoder;
 import com.hummer.rest.message.handle.MessageSerialConfig;
 import com.hummer.rest.message.handle.RequestBodyHandle;
 import com.hummer.rest.message.handle.ResponseBodyHandle;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
-
-import static com.hummer.common.SysConstant.RestConstant.MVC_SERIALIZERFEATURE;
 
 
 /**
@@ -116,16 +110,6 @@ public class MessageCoderConfigurerBean extends WebMvcConfigurerAdapter {
         mediaTypeList.add(MediaType.TEXT_PLAIN);
         coder.setSupportedMediaTypes(mediaTypeList);
 
-
-        List<SerializerFeature> listFeature = Lists.newArrayList();
-        String serializerFeatureStr = PropertiesContainer.get(MVC_SERIALIZERFEATURE, String.class);
-        if (StringUtils.isNotEmpty(serializerFeatureStr)) {
-            Iterable<String> features = Splitter.on(",").split(serializerFeatureStr);
-            for (String feature : features) {
-                listFeature.add(SerializerFeature.valueOf(feature));
-            }
-            fastJsonConfig.setSerializerFeatures(listFeature.toArray(new SerializerFeature[0]));
-        }
         //flush config
         coder.setFastJsonConfig(fastJsonConfig);
 
