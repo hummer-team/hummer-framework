@@ -1,4 +1,4 @@
-package com.hummer.config.api;
+package com.hummer.rest.controller;
 
 import com.hummer.config.NaCosConfig;
 import com.hummer.core.PropertiesContainer;

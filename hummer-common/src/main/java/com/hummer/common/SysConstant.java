@@ -46,6 +46,8 @@ public class SysConstant {
         public static final String MVC_SERIALIZERFEATURE = "mvc.serializerFeature";
         public static final String SYSTEM_REMOTE_IP_SPLIT_CHAR = "system.remote.ip.split.char";
         public static final String REST_REQUESTILTER_IINCLUDE_URL = "rest.requestfilter.include.url";
+
+        public static final String MVC_SERIALIZER_FEATURE_DEFAULT = "DisableCircularReferenceDetect";
     }
 
 

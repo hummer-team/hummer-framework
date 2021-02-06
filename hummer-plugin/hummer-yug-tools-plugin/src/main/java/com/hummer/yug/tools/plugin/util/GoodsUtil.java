@@ -10,8 +10,8 @@ import com.hummer.yug.tools.plugin.model.bo.GoodsSpecValueBo;
 import com.hummer.yug.tools.plugin.model.bo.GoodsSpuInfoBo;
 import com.hummer.yug.tools.plugin.model.po.GoodsSkuPo;
 import com.hummer.yug.tools.plugin.model.po.GoodsSpuPo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  */
 public class GoodsUtil {
 
-    public static List<GoodsSpuInfoBo> composeGroupGoodsInfoBo(List<? extends GoodsSpuPo> goodsPos
+    public static <T> List<T> composeGroupGoodsInfoBo(List<? extends GoodsSpuPo> goodsPos
             , List<? extends GoodsSkuPo> skuPos, SysEnums.ClientResourceEnum resourceEnum
             , Class<? extends GoodsSkuInfoBo> skuInfoClass, Class<? extends GoodsSpuInfoBo> spuInfoClass) {
         if (CollectionUtils.isEmpty(skuPos) || CollectionUtils.isEmpty(goodsPos)) {
@@ -51,16 +51,16 @@ public class GoodsUtil {
             // 商品SKU
             goods.setSkuList(ObjectCopyUtils.copyByList(skuInfoBos, GoodsSkuInfoBo.class));
         });
-        return goodsBos.stream().filter(item -> !CollectionUtils.isEmpty(item.getSkuList()))
+        return (List<T>) goodsBos.stream().filter(item -> !CollectionUtils.isEmpty(item.getSkuList()))
                 .collect(Collectors.toList());
     }
 
-    public static List<GoodsSkuInfoBo> composeGoodsSkuInfoBos(List<? extends GoodsSkuPo> skuPos
+    public static <T> List<T> composeGoodsSkuInfoBos(List<? extends GoodsSkuPo> skuPos
             , SysEnums.ClientResourceEnum resourceEnum, Class<? extends GoodsSkuInfoBo> cla) {
         if (CollectionUtils.isEmpty(skuPos)) {
             return Collections.emptyList();
         }
-        return skuPos.stream().map(item -> composeGoodsSkuInfoBo(item, resourceEnum, cla))
+        return (List<T>) skuPos.stream().map(item -> composeGoodsSkuInfoBo(item, resourceEnum, cla))
                 .collect(Collectors.toList());
     }
 

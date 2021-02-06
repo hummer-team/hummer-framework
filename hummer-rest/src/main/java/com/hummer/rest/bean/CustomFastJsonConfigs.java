@@ -4,11 +4,24 @@ import com.alibaba.fastjson.PropertyNamingStrategy;
 import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
+import com.hummer.config.NaCosConfig;
+import com.hummer.config.bo.ConfigListenerKey;
 import com.hummer.core.PropertiesContainer;
+import com.hummer.rest.listener.FastJsonSerializerFeatureListener;
 import com.hummer.rest.message.handle.MessageSerialConfig;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Collections;
+import java.util.List;
+
+import static com.hummer.common.SysConstant.RestConstant.MVC_SERIALIZERFEATURE;
+import static com.hummer.common.SysConstant.RestConstant.MVC_SERIALIZER_FEATURE_DEFAULT;
 
 /**
  * CustomFastJsonConfigs
@@ -22,6 +35,9 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class CustomFastJsonConfigs implements MessageSerialConfig {
+
+    @Autowired
+    private NaCosConfig naCosConfig;
 
     @Override
     public void register(SerializeConfig serializeConfig) {
@@ -40,11 +56,51 @@ public class CustomFastJsonConfigs implements MessageSerialConfig {
         if (Strings.isNotEmpty(fieldNameStyle)) {
             fastJsonConfig.getSerializeConfig().setPropertyNamingStrategy(PropertyNamingStrategy.valueOf(fieldNameStyle));
         }
-        fastJsonConfig.setSerializerFeatures(SerializerFeature.DisableCircularReferenceDetect);
 
-        if (PropertiesContainer.valueOf("fastJson.deserializer.null.enable", Boolean.class, false)) {
-            fastJsonConfig.setSerializerFeatures(SerializerFeature.WriteMapNullValue);
+        fastJsonConfig.setSerializerFeatures(getSerializerFeature().toArray(new SerializerFeature[0]));
+        if (naCosConfig != null) {
+            naCosConfig.addListener(ConfigListenerKey.builder()
+                            .dataId("application.properties").groupId("DEFAULT_GROUP")
+                            .propertiesKey(Collections.singletonList(MVC_SERIALIZERFEATURE)).build()
+                    , new FastJsonSerializerFeatureListener(fastJsonConfig));
         }
 
+    }
+
+    public static List<SerializerFeature> getSerializerFeature() {
+
+        List<SerializerFeature> listFeature = Lists.newArrayList();
+        String serializerFeatureStr = PropertiesContainer.get(MVC_SERIALIZERFEATURE, String.class
+                , MVC_SERIALIZER_FEATURE_DEFAULT);
+        if (StringUtils.isNotEmpty(serializerFeatureStr)) {
+            Iterable<String> features = Splitter.on(",").split(serializerFeatureStr);
+            for (String feature : features) {
+                listFeature.add(SerializerFeature.valueOf(feature));
+            }
+        }
+        return listFeature;
+    }
+
+    public static void removeSerialize(FastJsonConfig fastJsonConfig, SerializerFeature serializerFeature) {
+        if (fastJsonConfig == null || serializerFeature == null
+                || ArrayUtils.isEmpty(fastJsonConfig.getSerializerFeatures())) {
+            return;
+        }
+        SerializerFeature[] arr = fastJsonConfig.getSerializerFeatures();
+        arr = ArrayUtils.removeElement(arr, serializerFeature);
+        fastJsonConfig.setSerializerFeatures(arr);
+    }
+
+    public static void addSerialize(FastJsonConfig fastJsonConfig, SerializerFeature serializerFeature) {
+        if (fastJsonConfig == null || serializerFeature == null) {
+            return;
+        }
+        SerializerFeature[] arr = fastJsonConfig.getSerializerFeatures();
+        if (arr == null) {
+            arr = new SerializerFeature[]{serializerFeature};
+        } else {
+            arr = ArrayUtils.add(arr, serializerFeature);
+        }
+        fastJsonConfig.setSerializerFeatures(arr);
     }
 }
