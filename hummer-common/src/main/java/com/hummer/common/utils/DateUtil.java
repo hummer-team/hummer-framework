@@ -166,8 +166,7 @@ public class DateUtil {
         if (date == null) {
             return null;
         }
-        return parsingToDate(new DateTime(date).plusHours(incrementHour).toDate().toString()
-                , DateTimeFormat.F2);
+        return new DateTime(date).plusHours(incrementHour).toDate();
     }
 
     public static Date parsingToDate(final String dateStr, final DateTimeFormat format) {
