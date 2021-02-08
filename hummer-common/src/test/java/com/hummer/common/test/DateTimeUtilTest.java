@@ -13,5 +13,9 @@ public class DateTimeUtilTest {
 
         System.out.println(DateUtil.addDayAndFormatAsyyyyMMddStr(DateUtil.now(),1));
 
+        System.out.println(DateUtil.addMinuteAndFormatAsyyyyMMdd(DateUtil.now(),1));
+
+        System.out.println(DateUtil.addHour(DateUtil.now(),1));
+        System.out.println(DateUtil.addHourAndFormatAsYYYYMMddHHmmss(DateUtil.now(),1));
     }
 }
