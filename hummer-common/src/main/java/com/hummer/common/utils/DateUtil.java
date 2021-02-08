@@ -132,6 +132,10 @@ public class DateUtil {
         return now("GMT+8");
     }
 
+    public static Date nowOfZoneId8() {
+        return now("GMT+8");
+    }
+
     public static Date now(String zoneId) {
         TimeZone timeZone = TimeZone.getTimeZone(zoneId);
         TimeZone.setDefault(timeZone);
@@ -167,6 +171,11 @@ public class DateUtil {
             return null;
         }
         return new DateTime(date).plusHours(incrementHour).toDate();
+    }
+
+    public static Date addHourAndFormatAsYYYYMMddHHmmss(final Date date, final int incrementHour) {
+        String dateStr = new DateTime(date).plusHours(incrementHour).toString("yyyy-MM-dd HH:mm:ss");
+        return DateTime.parse(dateStr, org.joda.time.format.DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
     }
 
     public static Date parsingToDate(final String dateStr, final DateTimeFormat format) {
