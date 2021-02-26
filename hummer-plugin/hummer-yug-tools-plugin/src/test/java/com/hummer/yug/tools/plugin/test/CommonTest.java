@@ -1,6 +1,7 @@
 package com.hummer.yug.tools.plugin.test;
 
 import com.hummer.common.utils.DateUtil;
+import com.hummer.yug.tools.plugin.util.GeneratorUtil;
 import com.hummer.yug.tools.plugin.util.GoodsUtil;
 import org.junit.Test;
 
@@ -20,5 +21,10 @@ public class CommonTest {
                 , false, DateUtil.now()));
         System.out.println(DateUtil.startDateSubtractEndDateOfDay(DateUtil
                 .parsingToDate("2021-01-24", DateUtil.DateTimeFormat.F2), DateUtil.now()));
+    }
+
+    @Test
+    public void test2() {
+        System.out.println(GeneratorUtil.generateCode(GeneratorUtil.GeneratorCodePre.YGF_TH_CODE_PREFIX_SHOP));
     }
 }
