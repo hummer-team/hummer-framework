@@ -44,4 +44,11 @@ public class MemberUtil {
         }
         return String.valueOf(chars);
     }
+
+    private static final String MEMBER_AVATAR_URL_DEFAULT
+            = "https://pic.yugyg.com/uploadFiles/appImgs/header/defaultUImg.png";
+
+    public static String getMemberAvatarUrlDefault() {
+        return MEMBER_AVATAR_URL_DEFAULT;
+    }
 }
