@@ -92,12 +92,8 @@ public class NumberUtil {
      * @return 四舍五入后的结果
      */
     public static double doubleRound(double v, int scale) {
-        if (scale < 0) {
-            throw new IllegalArgumentException("The scale must be a positive integer or zero");
-        }
-        BigDecimal b = BigDecimal.valueOf(v);
-        BigDecimal one = new BigDecimal("1");
-        return b.divide(one, scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+
+        return doubleRound(v, scale, BigDecimal.ROUND_HALF_UP);
     }
 
     /**
@@ -109,5 +105,19 @@ public class NumberUtil {
     public static double doubleRound(double v) {
 
         return doubleRound(v, DEFAULT_ROUND_SCALE);
+    }
+
+    public static double doubleRoundByType(double v, int roundType) {
+
+        return doubleRound(v, DEFAULT_ROUND_SCALE, roundType);
+    }
+
+    public static double doubleRound(double v, int scale, int roundType) {
+        if (scale < 0) {
+            throw new IllegalArgumentException("The scale must be a positive integer or zero");
+        }
+        BigDecimal b = BigDecimal.valueOf(v);
+        BigDecimal one = new BigDecimal("1");
+        return b.divide(one, scale, roundType).doubleValue();
     }
 }
