@@ -41,4 +41,8 @@ public class GoodsSkuInfoBo {
     private Boolean isDefault;
 
     private String skuSpecValue;
+
+    private Integer goodsType;
+
+    private String goodsUnit;
 }
