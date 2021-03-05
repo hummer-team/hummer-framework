@@ -5,6 +5,7 @@ import com.hummer.nacos.model.CustomItemBo;
 import com.hummer.nacos.service.OrderDataSyncService;
 import com.hummer.request.idempotent.plugin.annotation.BusinessIdempotentAnnotation;
 import com.hummer.rest.model.ResourceResponse;
+import com.hummer.yug.user.plugin.annotation.member.MemberNeedAuthority;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,5 +55,18 @@ public class DataSyncController {
     ) {
         orderDataSyncService.orderChange();
         return ResourceResponse.ok(new CustomItemBo());
+    }
+
+    public ResourceResponse<Void> userLogin(
+            @RequestParam("userName") String userName,
+            @RequestParam("password") String password
+    ) {
+        return ResourceResponse.ok();
+    }
+
+    @MemberNeedAuthority
+    public ResourceResponse<Void> doSomething() {
+
+        return ResourceResponse.ok();
     }
 }
