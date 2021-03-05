@@ -21,6 +21,7 @@
     </modules>
     <properties>
         <spring-boot.version>2.4.1</spring-boot.version>
+        <hummer-simple-common-module.version>1.0.0-SNAPSHOT</hummer-simple-common-module.version>
     </properties>
 
     <dependencyManagement>
@@ -39,7 +40,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-simple-common-module</artifactId>
+                <version>${hummer-simple-common-module.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

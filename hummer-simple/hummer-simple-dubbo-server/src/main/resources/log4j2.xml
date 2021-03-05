@@ -94,6 +94,7 @@
         <Logger name="io.undertow" level="error"/>
         <Logger name="springfox.documentation" level="error" />
         <Logger name="com.alibaba.nacos" level="error"/>
+        <Logger name="com.alibaba.dubbo" level="trace"/>
         <Root level="debug">
             <appender-ref ref="Console" />
             <appender-ref ref="LogstashFile" />
