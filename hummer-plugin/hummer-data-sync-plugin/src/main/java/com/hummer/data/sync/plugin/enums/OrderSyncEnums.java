@@ -65,6 +65,7 @@ public class OrderSyncEnums {
         MANAGER_STATUS_MODIFIED("manager-status-modified", "状态修改"),
         MANAGER_CHECK_IN("manager-checkIn", "商品登记"),
         MANAGER_PRODUCT_MODIFIED("manager-product-modified", "商品信息修改"),
+        PANLI_PRODUCT_MODIFIED("panli-product-modified","panli自营商品修改")
         ;
         private String value;
         private String remark;
