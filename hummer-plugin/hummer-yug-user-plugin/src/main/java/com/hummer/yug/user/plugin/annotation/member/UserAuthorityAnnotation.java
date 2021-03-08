@@ -31,5 +31,4 @@ public @interface UserAuthorityAnnotation {
 
     AuthorityConditionEnum authorityCondition() default AuthorityConditionEnum.ALL_OF;
 
-    class authority
 }
