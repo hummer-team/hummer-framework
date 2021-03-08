@@ -88,10 +88,12 @@
         <Logger name="com.google" level="error" />
         <Logger name="net.rubyeye" level="error" />
         <Logger name="org.hibernate" level="error" />
+        <Logger name="com.alibaba.dubbo" level="error" />
         <Logger name="org.mybatis" level="debug" />
+        <Logger name="org.apache" level="error" />
         <Logger name="io.undertow" level="error"/>
-        <Logger name="com.alibaba.nacos"/>
-        <Logger name="com.alibaba.dubbo"/>
+        <Logger name="springfox.documentation" level="error" />
+        <Logger name="com.alibaba.nacos" level="error"/>
         <Root level="debug">
             <appender-ref ref="Console" />
             <appender-ref ref="LogstashFile" />

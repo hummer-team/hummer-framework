@@ -12,9 +12,14 @@ import java.util.Map;
 public class DubboConsumer {
     @Autowired
     private HelloService helloService;
+
     public String hello() {
-        Map<String,Object> map= Maps.newConcurrentMap();
-        map.put("AA",System.currentTimeMillis());
+        Map<String, Object> map = Maps.newConcurrentMap();
+        map.put("AA", System.currentTimeMillis());
         return helloService.save(map);
+    }
+
+    public Integer add(int a,int b) {
+        return helloService.add(a, b);
     }
 }

@@ -8,8 +8,13 @@
        http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
 
     <dubbo:application name="dubbo-consumer"/>
-    <dubbo:registry address="${dubbo.registry.address}"/>
+    <!--<dubbo:monitor protocol="registry" interval="3000"/>-->
+    <dubbo:protocol name="dubbo" port="20891"/>
+    <dubbo:registry address="nacos://config-center.service.panli.com:80?namespace=dubbo_config"/>
+    <dubbo:config-center address="nacos://config-center.service.panli.com:80?namespace=dubbo_config"/>
+    <dubbo:metadata-report address="nacos://config-center.service.panli.com:80?namespace=dubbo_config"/>
+
     <dubbo:monitor address="http://localhost:8080" username="root" password="root"/>
 
-    <dubbo:reference id="helloService" version="1.0.0" interface="comm.hummer.simple.common.facade.HelloService"/>
+    <dubbo:reference id="helloService" group="g1" version="1.0.0" interface="comm.hummer.simple.common.facade.HelloService"/>
 </beans>

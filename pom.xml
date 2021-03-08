@@ -146,6 +146,7 @@
         <protostuff.version>1.7.2</protostuff.version>
         <h2.version>1.4.192</h2.version>
         <commons-collections.version>3.2.2</commons-collections.version>
+        <alibaba.metrics>2.0.6</alibaba.metrics>
     </properties>
 
     <dependencyManagement>
@@ -795,6 +796,16 @@
                 <groupId>io.protostuff</groupId>
                 <artifactId>protostuff-json</artifactId>
                 <version>${protostuff.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.middleware</groupId>
+                <artifactId>metrics-core-api</artifactId>
+                <version>${alibaba.metrics}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.middleware</groupId>
+                <artifactId>metrics-core-impl</artifactId>
+                <version>${alibaba.metrics}</version>
             </dependency>
             <!--           Specify spring cloud version -->
             <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-server -->

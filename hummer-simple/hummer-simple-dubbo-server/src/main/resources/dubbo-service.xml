@@ -8,13 +8,16 @@
     <dubbo:application name="dubbo-provider" metadata-type="remote">
         <dubbo:parameter key="mapping-type" value="metadata"/>
     </dubbo:application>
-    <dubbo:registry address="nacos://config-center.service.panli.com:80?namespace=dubbo-test&amp;dataId=dubbo-test"/>
+
     <dubbo:protocol name="dubbo" port="20890"/>
-    <dubbo:monitor protocol="registry"/>
-    <dubbo:config-center address="nacos://config-center.service.panli.com:80?namespace=dubbo-test&amp;dataId=dubbo-test"/>
-    <dubbo:metadata-report address="nacos://config-center.service.panli.com:80?namespace=dubbo-test&amp;dataId=dubbo-test"/>
+    <dubbo:registry address="nacos://config-center.service.panli.com:80?namespace=dubbo_config"/>
+    <!--<dubbo:monitor protocol="registry"/>-->
+    <!--<dubbo:monitor protocol="registry" interval="3000"/>-->
+    <dubbo:config-center address="nacos://config-center.service.panli.com:80?namespace=dubbo_config"/>
+    <dubbo:metadata-report address="nacos://config-center.service.panli.com:80?namespace=dubbo_config"/>
+    <!--<dubbo:metrics port="8006" protocol="dubbo"/>-->
 
+    <!--business service config-->
     <bean id="helloService" class="com.hummer.simple.dubbo.server.HelloServiceImpl"/>
-    <dubbo:service version="1.0.0" interface="comm.hummer.simple.common.facade.HelloService" ref="helloService"/>
-
+    <dubbo:service version="1.0.0" group="g1" interface="comm.hummer.simple.common.facade.HelloService" ref="helloService"/>
 </beans>
