@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>com.hummer</groupId>
-            <artifactId>hummer-rest</artifactId>
+            <artifactId>hummer-common</artifactId>
         </dependency>
     </dependencies>
 </project>
