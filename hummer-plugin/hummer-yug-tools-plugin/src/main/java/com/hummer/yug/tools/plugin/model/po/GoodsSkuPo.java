@@ -101,4 +101,9 @@ public class GoodsSkuPo {
     @ApiModelProperty("sku规格值（JSONArray格式 [{'specId':ygfSpecId,'specName':specName,'specValueId',specValueId,'specValueName',specValueName},{}]）。ygfSpecId：规格ID。 specName：规格名称。specValueId：规格值ID。 specValueName：规格值名称。")
     private String skuSpecValue;
 
+    @ApiModelProperty("商品类型(1、计件，2、计重)")
+    private Integer goodsType;
+
+    @ApiModelProperty("商品类型单位)")
+    private String goodsUnit;
 }
