@@ -192,8 +192,7 @@ public class GoodsUtil {
     public static boolean confirmGoodsCanReturn(Boolean isGift, Boolean itemApplyReturn, Boolean itemApplyExchange
             , Boolean isClose, Date createTime) {
 
-        return !Boolean.TRUE.equals(itemApplyReturn) && !Boolean.TRUE.equals(itemApplyExchange)
-                && !Boolean.TRUE.equals(isClose) && !Boolean.TRUE.equals(isGift) && !confirmTimeExpire(createTime);
+        return !Boolean.TRUE.equals(isClose) && !Boolean.TRUE.equals(isGift) && !confirmTimeExpire(createTime);
     }
 
     private static boolean confirmTimeExpire(Date createTime) {
