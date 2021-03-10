@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>hummer-partner-pay-plugin</artifactId>
+    <artifactId>hummer-pay-gateway-plugin</artifactId>
 
     <dependencies>
         <dependency>
