@@ -41,6 +41,7 @@ public class SysConstant {
         public static final String SERVER_IP = "serverIp";
         public static final String CLIENT_IP = "clientIp";
         public static final String PARENT_SPAN_ID = "pSpanId";
+        public static final String CLIENT_TIME ="ctimeMs";
         public static final String SPAN_ID = "spanId";
         public static final String REQUEST_COST_TIME = "costTime";
         public static final String MVC_SERIALIZERFEATURE = "mvc.serializerFeature";
