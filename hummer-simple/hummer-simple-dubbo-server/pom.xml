@@ -62,6 +62,10 @@
             <groupId>com.hummer</groupId>
             <artifactId>hummer-rest</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.hummer</groupId>
+            <artifactId>hummer-dubbo-extend-plugin</artifactId>
+        </dependency>
 
 <!--        <dependency>-->
 <!--            <groupId>com.alibaba.middleware</groupId>-->

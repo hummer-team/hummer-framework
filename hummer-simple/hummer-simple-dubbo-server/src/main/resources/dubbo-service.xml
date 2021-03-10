@@ -19,5 +19,6 @@
 
     <!--business service config-->
     <bean id="helloService" class="com.hummer.simple.dubbo.server.HelloServiceImpl"/>
-    <dubbo:service version="1.0.0" group="g1" interface="comm.hummer.simple.common.facade.HelloService" ref="helloService"/>
+    <dubbo:service version="1.0.0" group="g1" interface="comm.hummer.simple.common.facade.HelloService"
+                   ref="helloService" validation="true"/>
 </beans>
