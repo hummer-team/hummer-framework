@@ -1,5 +1,7 @@
 package com.hummer.common.utils;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
@@ -23,6 +25,7 @@ import java.util.jar.JarFile;
 /**
  * @author edz
  */
+@Slf4j
 public class ResourceUtil {
     private static final String CLASSPATH_PREFIX = "classpath:";
 
@@ -244,13 +247,13 @@ public class ResourceUtil {
                             }
                         }
                     } catch (IOException e) {
-                        System.err.println(e);
+                        log.error(e);
                         System.exit(-1);
                     }
                 }
             }
         } catch (IOException e) {
-            System.err.println(e);
+            log.error(e);
             System.exit(-1);
         }
 

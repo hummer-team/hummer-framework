@@ -14,6 +14,7 @@
           init-method="registerDto">
         <property name="packageName" value="comm.hummer.simple.common.module"/>
     </bean>
+    <!-- serialization=fastjson or kryo-->
     <dubbo:protocol name="dubbo" port="20890" serialization="kryo"
                     optimizer="com.hummer.dubbo.extend.plugin.SerializationOptimizerImpl"/>
 
