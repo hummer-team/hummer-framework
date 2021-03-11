@@ -239,7 +239,7 @@ public class ResourceUtil {
                                         try {
                                             classes.add(Class.forName(packageName + '.' + className));
                                         } catch (ClassNotFoundException e) {
-                                            System.err.println(e);
+                                            log.error("getClassesByPackageName fail",e);
                                             System.exit(-1);
                                         }
                                     }
@@ -247,13 +247,13 @@ public class ResourceUtil {
                             }
                         }
                     } catch (IOException e) {
-                        log.error(e);
+                        log.error("getClassesByPackageName fail",e);
                         System.exit(-1);
                     }
                 }
             }
         } catch (IOException e) {
-            log.error(e);
+            log.error("getClassesByPackageName fail",e);
             System.exit(-1);
         }
 
@@ -285,7 +285,7 @@ public class ResourceUtil {
                 try {
                     classes.add(Class.forName(packageName + '.' + className));
                 } catch (ClassNotFoundException e) {
-                    System.err.println(e);
+                    log.error("getClassesByPackageName fail",e);
                 }
             }
         }
