@@ -16,6 +16,7 @@ glue spring boot,mybatis,kafka,rabbitmq,redis,mongodb...framework,Make business 
 - redis
 - rocksDB
 - multiple thread 
+- dubbo
 
 ## model describe
 

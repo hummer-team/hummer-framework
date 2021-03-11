@@ -7,9 +7,17 @@
 
     <dubbo:application name="dubbo-provider" metadata-type="remote">
         <dubbo:parameter key="mapping-type" value="metadata"/>
+        <dubbo:parameter key="qos.enable" value="false"/>
     </dubbo:application>
 
-    <dubbo:protocol name="dubbo" port="20890"/>
+    <bean id="serializationOptimizerImpl" class="com.hummer.dubbo.extend.plugin.SerializationOptimizerImpl"
+          init-method="registerDto">
+        <property name="packageName" value="comm.hummer.simple.common.module"/>
+    </bean>
+    <!-- serialization=fastjson or kryo-->
+    <dubbo:protocol name="dubbo" port="20890" serialization="kryo"
+                    optimizer="com.hummer.dubbo.extend.plugin.SerializationOptimizerImpl"/>
+
     <dubbo:registry address="nacos://config-center.service.panli.com:80?namespace=dubbo_config"/>
     <!--<dubbo:monitor protocol="registry"/>-->
     <!--<dubbo:monitor protocol="registry" interval="3000"/>-->

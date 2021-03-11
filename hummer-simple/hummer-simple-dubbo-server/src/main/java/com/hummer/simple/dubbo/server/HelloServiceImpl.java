@@ -1,8 +1,9 @@
 package com.hummer.simple.dubbo.server;
 
 import comm.hummer.simple.common.facade.HelloService;
-import org.springframework.stereotype.Component;
+import comm.hummer.simple.common.module.SimpleDubboDto;
 
+import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 //@Component
@@ -15,5 +16,10 @@ public class HelloServiceImpl implements HelloService {
     @Override
     public Integer add(Integer a, Integer b) {
         return a + b;
+    }
+
+    @Override
+    public Integer add2(@NotNull(message = "dto not null") SimpleDubboDto dto) {
+        return dto.getA() + dto.getB();
     }
 }
