@@ -127,7 +127,7 @@ public class HttpSyncClient {
         if (!HTTP_CLIENT_MAP.containsKey(tempCertName)) {
             synchronized (HTTP_CLIENT_MAP) {
                 if (!HTTP_CLIENT_MAP.containsKey(tempCertName)) {
-                    return HTTP_CLIENT_MAP.put(tempCertName, "NULL".equals(certName)
+                    return HTTP_CLIENT_MAP.put(tempCertName, "NULL".equals(tempCertName)
                             ? createHttpClientInstance()
                             : createHttpClientInstance(createSSLSocket(tempCertName)));
                 }
