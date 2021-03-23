@@ -978,7 +978,7 @@ public class HttpSyncClient {
                 result = new HttpResult(response);
             } else {
                 HttpEntity entity = response.getEntity();
-                responseContent = EntityUtils.toString(entity);
+                responseContent = EntityUtils.toString(entity, "UTF-8");
                 int statusCode = response.getStatusLine().getStatusCode();
                 result = new HttpResult(statusCode, responseContent);
             }
