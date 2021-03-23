@@ -454,12 +454,6 @@ public class HttpSyncClient {
             String msg = String.format("read %s resp body stream error ", httpUrl);
             log.warn(msg, e);
             throw new SysException(SYS_ERROR_CODE, msg, e);
-        } finally {
-            try {
-                result.getHttpResponse().getEntity().getContent().close();
-            } catch (IOException e) {
-                //ignore
-            }
         }
     }
 
@@ -1128,7 +1122,6 @@ public class HttpSyncClient {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-
     }
 
     private static void addGlobalHeader(HttpMessage httpMessage) {
