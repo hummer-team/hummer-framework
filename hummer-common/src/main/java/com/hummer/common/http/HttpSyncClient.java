@@ -910,9 +910,10 @@ public class HttpSyncClient {
             try {
                 return execute2Result(certName, httpRequestBase, timeout, timeUnit, isReturnHttpResponse);
             } catch (Throwable e) {
-                log.warn("HttpClient retry count:{},target url {}", i, httpRequestBase.getURI());
-                if (i == retryCount) {
-                    log.error("Still failed after retrying, retry count {} error {}: url :{}, "
+                log.warn("HttpClient retry:{} - {} - {}"
+                        , i, retryCount, httpRequestBase.getURI());
+                if (i == retryCount || retryCount == 0) {
+                    log.error("Still failed after retrying, retry count: {} error: {} url :{}, "
                             , retryCount
                             , e.getMessage()
                             , httpRequestBase.getURI().toString()
