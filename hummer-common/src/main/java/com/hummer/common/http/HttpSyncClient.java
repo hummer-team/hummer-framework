@@ -15,9 +15,9 @@ import com.hummer.common.http.context.ResponseContextWrapper;
 import com.hummer.core.PropertiesContainer;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpMessage;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -98,7 +98,7 @@ import static com.hummer.common.http.HttpConstant.HTTP_CONN_TIMEOUT;
  */
 @Slf4j
 public class HttpSyncClient {
-    private static final String USER_AGENT = "user_agent";
+    private static final String USER_AGENT = "User-Agent";
     private static final String PANLI_IBJ = "panli";
     private static final Map<String, CloseableHttpClient> HTTP_CLIENT_MAP = new ConcurrentHashMap<>();
     private static final List<HttpClientHandler> httpClientHandlers = new ArrayList<>();
@@ -1124,11 +1124,15 @@ public class HttpSyncClient {
         }
     }
 
-    private static void addGlobalHeader(HttpMessage httpMessage) {
-        httpMessage.addHeader(REQUEST_ID, Strings.isNullOrEmpty(MDC.get(REQUEST_ID))
-                ? UUID.randomUUID().toString().replaceAll("-", "").toLowerCase()
-                : MDC.get(REQUEST_ID));
-        httpMessage.addHeader(USER_AGENT, PANLI_IBJ);
-        httpMessage.addHeader(HEADER_REQ_TIME, String.valueOf(System.currentTimeMillis()));
+    private static void addGlobalHeader(HttpRequestBase httpMessage) {
+        String host = httpMessage.getURI().getHost();
+        if (StringUtils.endsWithIgnoreCase(host, "panli.com")
+                || StringUtils.endsWithIgnoreCase(host, "yugyg.com")) {
+            httpMessage.addHeader(REQUEST_ID, Strings.isNullOrEmpty(MDC.get(REQUEST_ID))
+                    ? UUID.randomUUID().toString().replaceAll("-", "").toLowerCase()
+                    : MDC.get(REQUEST_ID));
+            httpMessage.addHeader(USER_AGENT, PANLI_IBJ);
+            httpMessage.addHeader(HEADER_REQ_TIME, String.valueOf(System.currentTimeMillis()));
+        }
     }
 }
