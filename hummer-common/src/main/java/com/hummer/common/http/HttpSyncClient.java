@@ -125,12 +125,14 @@ public class HttpSyncClient {
 
     public static CloseableHttpClient getHttpClient(String certName) {
         String tempCertName = Strings.isNullOrEmpty(certName) ? "NULL" : certName;
-        if (!HTTP_CLIENT_MAP.containsKey(tempCertName)) {
+        if (HTTP_CLIENT_MAP.get(tempCertName) == null) {
             synchronized (HTTP_CLIENT_MAP) {
-                if (!HTTP_CLIENT_MAP.containsKey(tempCertName)) {
-                    return HTTP_CLIENT_MAP.put(tempCertName, "NULL".equals(tempCertName)
+                if (HTTP_CLIENT_MAP.get(tempCertName) == null) {
+                    CloseableHttpClient client = "NULL".equals(tempCertName)
                             ? createHttpClientInstance()
-                            : createHttpClientInstance(createSSLSocket(tempCertName)));
+                            : createHttpClientInstance(createSSLSocket(tempCertName));
+                    Assert.notNull(client == null, "http client instance create failed");
+                    HTTP_CLIENT_MAP.put(tempCertName, client);
                 }
             }
         }
