@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.ByteStreams;
 import com.hummer.common.coder.CoderEnum;
+import com.hummer.common.exceptions.AppException;
 import com.hummer.common.exceptions.SysException;
 import com.hummer.common.http.context.MessageTypeContext;
 import com.hummer.common.http.context.RequestContext;
@@ -908,9 +909,9 @@ public class HttpSyncClient {
         while (i++ <= retryCount) {
             try {
                 return execute2Result(certName, httpRequestBase, timeout, timeUnit, isReturnHttpResponse);
-            } catch (Exception e) {
+            } catch (Throwable e) {
+                log.warn("HttpClient retry count:{},target url {}", i, httpRequestBase.getURI());
                 if (i == retryCount) {
-                    log.warn("HttpClient retry count:{},target url {}", i, httpRequestBase.getURI());
                     log.error("Still failed after retrying, retry count {} error {}: url :{}, "
                             , retryCount
                             , e.getMessage()
@@ -921,7 +922,7 @@ public class HttpSyncClient {
                 }
             }
         }
-        return null;
+        throw new AppException(50001, String.format("call %s failed", httpRequestBase.getURI()));
     }
 
     public static String execute(HttpRequestBase httpRequestBase, long timeout, TimeUnit timeUnit) throws Exception {
