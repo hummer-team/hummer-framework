@@ -1,4 +1,6 @@
-package com.hummer.yug.user.plugin.annotation.member;
+package annotation;
+
+import validator.AuthManager;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -31,5 +33,6 @@ public @interface UserAuthorityAnnotation {
 
     AuthorityConditionEnum authorityCondition() default AuthorityConditionEnum.ALL_OF;
 
-    class authority
+    Class<? extends AuthManager> authManager() default AuthManager.class;
+
 }

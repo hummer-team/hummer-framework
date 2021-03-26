@@ -36,5 +36,6 @@
         <module>hummer-yug-tools-plugin</module>
         <module>hummer-model-generator-plugin</module>
         <module>hummer-partner-pay-plugin</module>
+        <module>hummer-user-auth-plugin</module>
     </modules>
 </project>

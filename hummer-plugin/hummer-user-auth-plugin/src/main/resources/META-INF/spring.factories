@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.hummer.user.plugin.UserAuthInterceptorConfiguration
+configuration.UserAuthInterceptorConfiguration
