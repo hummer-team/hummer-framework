@@ -180,7 +180,7 @@ public class HttpSyncClient {
                 | NoSuchAlgorithmException
                 | UnrecoverableKeyException
                 | KeyManagementException e) {
-            throw new SysException(50000, String.format("cert invalid %s", certPath));
+            throw new SysException(50000, String.format("cert invalid %s", certPath), e);
         }
     }
 
