@@ -996,9 +996,11 @@ public class HttpSyncClient {
             afterThrowingLog(httpRequest, e);
             throwException(e);
             throw new SysException(SYS_ERROR_CODE
-                    , String.format("%s -> %s"
+                    , String.format("%s -> %s -> %s -> %s"
                     , e.getMessage()
-                    , httpRequestBase.getURI())
+                    , httpRequestBase.getURI()
+                    , response == null ? 500 : response.getStatusLine().getStatusCode()
+                    , result)
                     , e);
         } finally {
             if (!isReturnHttpResponse) {
@@ -1016,9 +1018,9 @@ public class HttpSyncClient {
         final List<Integer> okCode = ImmutableList.of(200, 201, 204);
         if (!okCode.contains(statusCode)) {
 
-            throw new SysException(SYS_ERROR_CODE, String.format("call %s failed.code %s"
-                    , httpRequestBase.getURI().toString()
-                    , statusCode)
+            throw new SysException(SYS_ERROR_CODE, String.format("call %s failed - %s - %s"
+                    , httpRequestBase.getURI()
+                    , statusCode, result)
                     , result);
         }
     }
