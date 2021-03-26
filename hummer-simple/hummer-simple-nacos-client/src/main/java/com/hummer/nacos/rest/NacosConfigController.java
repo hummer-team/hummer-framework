@@ -5,7 +5,6 @@ import com.hummer.config.bo.ConfigListenerKey;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.nacos.model.CustomListener;
 import com.hummer.rest.model.ResourceResponse;
-import com.hummer.yug.user.plugin.annotation.member.MemberNeedAuthority;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +38,6 @@ public class NacosConfigController {
 
     @ApiOperation("获取所有配置")
     @GetMapping("/all")
-    @MemberNeedAuthority
     public ResourceResponse<Map<String, Object>> getAll(
             @RequestHeader(value = "token") String userToken
     ) {
