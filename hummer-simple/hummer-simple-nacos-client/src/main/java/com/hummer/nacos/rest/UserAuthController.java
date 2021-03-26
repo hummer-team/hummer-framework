@@ -2,8 +2,10 @@ package com.hummer.nacos.rest;
 
 import annotation.UserAuthorityAnnotation;
 import com.alibaba.fastjson.JSONObject;
+import com.hummer.common.utils.AppBusinessAssert;
 import com.hummer.common.utils.CommonUtil;
 import com.hummer.nacos.model.CustomItemBo;
+import com.hummer.nacos.model.RestErrorCode;
 import com.hummer.rest.model.ResourceResponse;
 import context.UserContext;
 import holder.UserHolder;
@@ -37,7 +39,7 @@ public class UserAuthController {
 
     @ApiOperation("获取所有配置")
     @PostMapping("/valid")
-    public ResourceResponse<UserContext> validUserAuth(@RequestBody @Valid Map<String,Object> params) {
+    public ResourceResponse<UserContext> validUserAuth(@RequestBody @Valid Map<String, Object> params) {
         LOGGER.debug("params == {},", JSONObject.toJSONString(params));
 
         UserContext context = new UserContext();
@@ -57,6 +59,7 @@ public class UserAuthController {
     public ResourceResponse<UserContext> queryUserContext(
     ) {
 
+        AppBusinessAssert.isTrue(false, RestErrorCode.PARAM_ERROR_SHOP_SHARE_CODE);
         return ResourceResponse.ok(UserHolder.get());
     }
 }
