@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -95,5 +96,12 @@ public class CommonUtil {
             return s;
         }
         return s.substring(0, len);
+    }
+
+    private <T> T getFirstIfSingleElseNull(List<T> list) {
+        if (list != null && list.size() == 1) {
+            return list.get(0);
+        }
+        return null;
     }
 }
