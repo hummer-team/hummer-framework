@@ -98,7 +98,7 @@ public class CommonUtil {
         return s.substring(0, len);
     }
 
-    private <T> T getFirstIfSingleElseNull(List<T> list) {
+    public static <T> T getFirstIfSingleElseNull(List<T> list) {
         if (list != null && list.size() == 1) {
             return list.get(0);
         }
