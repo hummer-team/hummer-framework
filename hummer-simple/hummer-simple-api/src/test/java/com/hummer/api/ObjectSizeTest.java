@@ -1,7 +1,6 @@
 package com.hummer.api;
 
 import lombok.Data;
-import org.apache.lucene.util.RamUsageEstimator;
 import org.junit.Test;
 import org.openjdk.jol.info.ClassLayout;
 

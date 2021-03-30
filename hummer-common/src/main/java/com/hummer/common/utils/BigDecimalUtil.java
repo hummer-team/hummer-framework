@@ -94,4 +94,69 @@ public class BigDecimalUtil {
     public static boolean equal(double left, double right) {
         return BigDecimal.valueOf(left).compareTo(BigDecimal.valueOf(right)) == 0;
     }
+
+
+    public static BigDecimal addOf3HalfUp(BigDecimal left, BigDecimal... rights) {
+
+        return handleBigDecimal(left, BigDecimalFunction.ADD, 3, RoundingMode.HALF_UP, rights);
+    }
+
+    public static BigDecimal mulOf3HalfUp(BigDecimal left, BigDecimal... rights) {
+        return handleBigDecimal(left, BigDecimalFunction.MUL, 3, RoundingMode.HALF_UP, rights);
+    }
+
+    public static BigDecimal divideOf3HalfUp(BigDecimal left, BigDecimal... rights) {
+
+        return handleBigDecimal(left, BigDecimalFunction.DIV, 3, RoundingMode.HALF_UP, rights);
+    }
+
+
+    public static BigDecimal subOf3HalfUp(BigDecimal left, BigDecimal... rights) {
+
+        return handleBigDecimal(left, BigDecimalFunction.SUB, 3, RoundingMode.HALF_UP, rights);
+    }
+
+
+    public static BigDecimal handleBigDecimal(BigDecimal left, BigDecimalFunction function, int scale
+            , RoundingMode roundingMode, BigDecimal... rights) {
+        if (rights == null || rights.length == 0) {
+            return left.setScale(scale, roundingMode);
+        }
+        BigDecimal result = left;
+
+        switch (function) {
+            case ADD:
+                for (BigDecimal right : rights) {
+                    result = result.add(right);
+                }
+                break;
+            case SUB:
+                for (BigDecimal right : rights) {
+                    result = result.subtract(right);
+                }
+                break;
+            case MUL:
+                for (BigDecimal right : rights) {
+                    result = result.multiply(right);
+                }
+                break;
+            case DIV:
+                for (BigDecimal right : rights) {
+                    result = result.divide(right);
+                }
+                break;
+            default:
+                break;
+
+        }
+        return result.setScale(scale, roundingMode);
+    }
+
+    enum BigDecimalFunction {
+        ADD,
+        SUB,
+        MUL,
+        DIV;
+    }
+
 }
