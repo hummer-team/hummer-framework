@@ -3,6 +3,7 @@ package com.hummer.common.http;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 
@@ -16,11 +17,13 @@ public class HttpResult {
     private int status;
     private String result;
     private HttpResponse httpResponse;
+    private Header[] allHeader;
 
 
-    public HttpResult(int status, String result) {
+    public HttpResult(int status, String result, Header[] allHeader) {
         this.status = status;
         this.result = result;
+        this.allHeader = allHeader;
     }
 
     public HttpResult(HttpResponse httpResponse) {
