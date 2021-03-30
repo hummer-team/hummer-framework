@@ -2,10 +2,7 @@ package com.hummer.nacos.rest;
 
 import annotation.UserAuthorityAnnotation;
 import com.alibaba.fastjson.JSONObject;
-import com.hummer.common.utils.AppBusinessAssert;
 import com.hummer.common.utils.CommonUtil;
-import com.hummer.nacos.model.CustomItemBo;
-import com.hummer.nacos.model.RestErrorCode;
 import com.hummer.rest.model.ResourceResponse;
 import context.UserContext;
 import holder.UserHolder;
@@ -20,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -43,12 +41,12 @@ public class UserAuthController {
         LOGGER.debug("params == {},", JSONObject.toJSONString(params));
 
         UserContext context = new UserContext();
-        CustomItemBo bo = new CustomItemBo();
-        bo.setB(1);
-        bo.setC(2);
+        Map<String, Object> map = new HashMap<>();
+        map.put("a", "1");
+        map.put("b", "2");
         context.setUserId(CommonUtil.getUuid());
         context.setUserName(context.getUserId() + "_name");
-        context.setData(bo);
+        context.setData(map);
         return ResourceResponse.ok(context);
 
     }
@@ -59,7 +57,6 @@ public class UserAuthController {
     public ResourceResponse<UserContext> queryUserContext(
     ) {
 
-        AppBusinessAssert.isTrue(false, RestErrorCode.PARAM_ERROR_SHOP_SHARE_CODE);
         return ResourceResponse.ok(UserHolder.get());
     }
 }

@@ -2,6 +2,8 @@ package context;
 
 import lombok.Data;
 
+import java.util.Map;
+
 /**
  * @author chenwei
  */
@@ -12,5 +14,5 @@ public class UserContext {
 
     private String userName;
 
-    private Object data;
+    private Map<String, Object> data;
 }

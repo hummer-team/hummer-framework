@@ -83,7 +83,7 @@ public class DefaultAuthValidator implements AuthValidator {
         }
         Map<String, String> map = Maps.newHashMapWithExpectedSize(tokenKeys.length);
         for (String key : tokenKeys) {
-            map.put(key, PropertiesContainer.valueOfString(key));
+            map.put(key, RequestContextHolder.get(key));
         }
         return map;
     }
