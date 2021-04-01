@@ -63,4 +63,6 @@ public class ShopInfoRespDto {
 
     @ApiModelProperty("最新修改人")
     private Long lastModifiedUserId;
+
+    private String warehouseCode;
 }
