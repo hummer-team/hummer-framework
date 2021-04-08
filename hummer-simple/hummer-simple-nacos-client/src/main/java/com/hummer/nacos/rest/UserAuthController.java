@@ -59,4 +59,5 @@ public class UserAuthController {
 
         return ResourceResponse.ok(UserHolder.get());
     }
+
 }
