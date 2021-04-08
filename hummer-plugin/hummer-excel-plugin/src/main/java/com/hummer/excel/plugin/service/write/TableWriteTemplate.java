@@ -56,7 +56,7 @@ public class TableWriteTemplate implements ExcelWriter {
                 try {
                     excelWriter.finish();
                 } catch (Exception e) {
-                    LOGGER.debug("excelWriter finish fail,", e);
+                    LOGGER.debug("excelWriter finish fail,{}", e.getMessage());
                 }
 
             }

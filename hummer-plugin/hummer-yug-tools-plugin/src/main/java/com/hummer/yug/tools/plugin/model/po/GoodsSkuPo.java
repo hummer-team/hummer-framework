@@ -32,6 +32,9 @@ public class GoodsSkuPo {
     @ApiModelProperty("商品条形码")
     private String goodsCode;
 
+    @ApiModelProperty("存货编码")
+    private String inventoryCode;
+
     @ApiModelProperty("商品主图地址")
     private String goodsSkuImage;
 
