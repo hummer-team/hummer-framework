@@ -5,7 +5,6 @@ import com.alibaba.excel.support.ExcelTypeEnum;
 import com.hummer.common.exceptions.AppException;
 import com.hummer.excel.plugin.handle.data.ExcelDataHandler;
 import com.hummer.excel.plugin.handle.read.ExcelReader;
-import com.hummer.excel.plugin.handle.write.ExcelWriter;
 import com.hummer.excel.plugin.listener.DataEasyListener;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -27,7 +26,7 @@ import java.util.List;
  * <p>Copyright: Copyright (c) 2020</p>
  * @date 2020/6/28 14:34
  */
-public class ExcelTemplate<T> implements ExcelReader<T>, ExcelWriter<T> {
+public class ExcelTemplate<T> implements ExcelReader<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExcelTemplate.class);
 
@@ -98,10 +97,6 @@ public class ExcelTemplate<T> implements ExcelReader<T>, ExcelWriter<T> {
         LOGGER.info("readTopSheet fileName=={},fileLen=={} cost time =={}", file.getName(), file.length(), end - start);
     }
 
-    @Override
-    public void write(List<T> list) {
-
-    }
 
     private static final List<String> SUFFIX_ARR = Arrays.asList(".xls", ".XLS", ".xlsx", ".XLSX");
 
@@ -128,4 +123,5 @@ public class ExcelTemplate<T> implements ExcelReader<T>, ExcelWriter<T> {
             throw new AppException(40001, "传入文件格式不符");
         }
     }
+
 }
