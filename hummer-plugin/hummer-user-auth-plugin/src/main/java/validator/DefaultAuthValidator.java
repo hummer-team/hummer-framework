@@ -45,6 +45,8 @@ public class DefaultAuthValidator implements AuthValidator {
     }
 
     public UserContext validAuth(ValidParams params) {
+        AppBusinessAssert.isTrue(!StringUtils.isEmpty(params.getApiUrl())
+                , 40000, "user.auth.valid.api.url not exists");
         String response
                 = HttpSyncClient.sendHttpPostByRetry(params.getApiUrl(), JSONObject.toJSONString(params), 1);
 
@@ -100,7 +102,7 @@ public class DefaultAuthValidator implements AuthValidator {
     }
 
     private ValidParams parsingAnnotation(UserAuthorityAnnotation annotation) {
-        return ValidParams.builder().apiUrl(getValidApiUrlNotNull(annotation.validApi()))
+        return ValidParams.builder().apiUrl(getValidApiUrl(annotation.validApi()))
                 .authCodes(Arrays.asList(annotation.authorityCodes()))
                 .authCondition(annotation.authorityCondition())
                 .tokenMap(composeTokens(annotation.userTokens()))
@@ -108,11 +110,10 @@ public class DefaultAuthValidator implements AuthValidator {
 
     }
 
-    public String getValidApiUrlNotNull(String apiUrl) {
+    public String getValidApiUrl(String apiUrl) {
         if (StringUtils.isEmpty(apiUrl)) {
             apiUrl = PropertiesContainer.valueOfString("user.auth.valid.api.url");
         }
-        AppBusinessAssert.isTrue(!StringUtils.isEmpty(apiUrl), 40000, "user.auth.valid.api.url not exists");
         return apiUrl;
     }
 }
