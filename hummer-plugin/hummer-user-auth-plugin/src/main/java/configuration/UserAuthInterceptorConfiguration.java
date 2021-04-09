@@ -58,6 +58,6 @@ public class UserAuthInterceptorConfiguration implements WebMvcConfigurer {
     @Bean
     public AuthManager defaultAuthManager() {
 
-        return new DefaultAuthManager();
+        return new DefaultAuthManager(null);
     }
 }

@@ -17,11 +17,12 @@ public class DefaultAuthManager implements AuthManager {
 
     private AuthValidator authValidator;
 
-    public DefaultAuthManager() {
+    public DefaultAuthManager(AuthValidator authValidator) {
+        this.authValidator = authValidator;
         init();
     }
 
-    public void init() {
+    private void init() {
         if (this.authValidator == null) {
             authValidator = new DefaultAuthValidator();
         }
