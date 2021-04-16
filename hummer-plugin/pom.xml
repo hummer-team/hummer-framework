@@ -33,7 +33,6 @@
         <module>hummer-data-sync-plugin</module>
         <module>hummer-request-idempotent-plugin</module>
         <module>hummer-dubbo-extend-plugin</module>
-        <module>hummer-yug-user-plugin</module>
         <module>hummer-yug-tools-plugin</module>
         <module>hummer-model-generator-plugin</module>
         <module>hummer-pay-gateway-plugin</module>
