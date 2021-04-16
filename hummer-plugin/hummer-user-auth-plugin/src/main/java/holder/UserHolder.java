@@ -33,13 +33,25 @@ public class UserHolder {
         return context == null ? null : context.getUserId();
     }
 
-
     public static String getUserIdNotNull() {
         String userId = getUserId();
         if (StringUtils.isEmpty(userId)) {
             throw new AppException(40101, "this current user id is null,please login");
         }
         return userId;
+    }
+
+    public static String getUserName() {
+        UserContext context = get();
+        return context == null ? null : context.getUserName();
+    }
+
+    public static String getUserNameNotNull() {
+        String userName = getUserName();
+        if (StringUtils.isEmpty(userName)) {
+            throw new AppException(40101, "this current user id is null,please login");
+        }
+        return userName;
     }
 
     public static void set(@NotNull UserContext userContext) {
