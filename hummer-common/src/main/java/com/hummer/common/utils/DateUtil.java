@@ -227,4 +227,24 @@ public class DateUtil {
             return value;
         }
     }
+
+    public static Date addMonths(final Date date, final int diff) {
+        return new DateTime(date).plusMonths(diff).toDate();
+    }
+
+    public static Date addYears(final Date date, final int diff) {
+        return new DateTime(date).plusYears(diff).toDate();
+    }
+
+    public static Date addSeconds(final Date date, final int diff) {
+        return new DateTime(date).plusSeconds(diff).toDate();
+    }
+
+    public static Date addMillis(final Date date, final int diff) {
+        return new DateTime(date).plusMillis(diff).toDate();
+    }
+
+    public static Date addWeeks(final Date date, final int diff) {
+        return new DateTime(date).plusWeeks(diff).toDate();
+    }
 }
