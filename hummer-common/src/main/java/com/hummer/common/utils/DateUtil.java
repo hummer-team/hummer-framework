@@ -212,6 +212,10 @@ public class DateUtil {
         F6("yyyyMMdd"),
         F7("yyyyMMddHHmmssSSS"),
         F8("yyyy-MM-dd HH:mm:ss.SSS"),
+        F9("yyyy-MM"),
+        F10("yyyy"),
+        F11("dd HH:mm:ss"),
+        F12("MM-dd HH:mm:ss"),
         ;
         private String value;
 
