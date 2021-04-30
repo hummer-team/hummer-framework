@@ -96,6 +96,24 @@ public class BigDecimalUtil {
     }
 
 
+    public static BigDecimal mulOf2HalfUp(BigDecimal left, BigDecimal... rights) {
+        return handleBigDecimal(left, BigDecimalFunction.MUL, 2, RoundingMode.HALF_UP, rights);
+    }
+
+    public static BigDecimal divideOf2HalfUp(BigDecimal left, BigDecimal... rights) {
+
+        return handleBigDecimal(left, BigDecimalFunction.DIV, 2, RoundingMode.HALF_UP, rights);
+    }
+
+    public static BigDecimal mulOf2HalfDown(BigDecimal left, BigDecimal... rights) {
+        return handleBigDecimal(left, BigDecimalFunction.MUL, 2, RoundingMode.HALF_DOWN, rights);
+    }
+
+    public static BigDecimal divideOf2HalfDown(BigDecimal left, BigDecimal... rights) {
+
+        return handleBigDecimal(left, BigDecimalFunction.DIV, 2, RoundingMode.HALF_DOWN, rights);
+    }
+
     public static BigDecimal addOf3HalfUp(BigDecimal left, BigDecimal... rights) {
 
         return handleBigDecimal(left, BigDecimalFunction.ADD, 3, RoundingMode.HALF_UP, rights);
@@ -152,7 +170,7 @@ public class BigDecimalUtil {
         return result.setScale(scale, roundingMode);
     }
 
-    enum BigDecimalFunction {
+    public static enum BigDecimalFunction {
         ADD,
         SUB,
         MUL,
