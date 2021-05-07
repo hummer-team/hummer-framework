@@ -114,7 +114,7 @@
         <mybatis-spring.version>2.0.6</mybatis-spring.version>
         <hibernate-validator.version>6.0.13.Final</hibernate-validator.version>
         <joda-time.version>2.9.9</joda-time.version>
-        <guava.version>29.0-jre</guava.version>
+        <guava.version>[30.0-jre,)</guava.version>
         <swagger-annotations.version>1.5.13</swagger-annotations.version>
         <mybatis.version>3.5.6</mybatis.version>
         <mysql-connector-java.version>8.0.21</mysql-connector-java.version>
@@ -125,7 +125,7 @@
         <aspectjweaver.version>1.9.2</aspectjweaver.version>
         <druid-spring-boot-starter.version>1.1.18</druid-spring-boot-starter.version>
         <kafka.version>2.7.0</kafka.version>
-        <libthrift.version>0.12.0</libthrift.version>
+        <libthrift.version>[0.14.0,)</libthrift.version>
         <kafka-avro-serializer.version>5.3.0</kafka-avro-serializer.version>
         <rocksdbjni.version>6.2.2</rocksdbjni.version>
         <nacos-spring.version>0.2.7</nacos-spring.version>
