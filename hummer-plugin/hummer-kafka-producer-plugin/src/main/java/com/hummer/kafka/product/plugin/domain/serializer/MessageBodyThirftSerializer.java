@@ -47,8 +47,8 @@ public class MessageBodyThirftSerializer<T extends TBase> implements Serializer<
             return new byte[0];
         }
         long start = System.currentTimeMillis();
-        TSerializer serializer = new TSerializer(new TCompactProtocol.Factory());
         try {
+            TSerializer serializer = new TSerializer(new TCompactProtocol.Factory());
             byte[] bytes = serializer.serialize(data);
             LOGGER.info("message topic {}, body thrift json serializer data size {} byte,cost time {} millis"
                     , bytes.length
