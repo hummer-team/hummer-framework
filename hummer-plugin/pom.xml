@@ -38,5 +38,6 @@
         <module>hummer-model-generator-plugin</module>
         <module>hummer-pay-gateway-plugin</module>
         <module>hummer-user-auth-plugin</module>
+        <module>hummer-proxy-plugin</module>
     </modules>
 </project>

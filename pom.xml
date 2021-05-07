@@ -147,11 +147,17 @@
         <h2.version>1.4.192</h2.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <alibaba.metrics>2.0.6</alibaba.metrics>
+        <javassist.version>3.20.0-GA</javassist.version>
     </properties>
 
     <dependencyManagement>
 
         <dependencies>
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-proxy-plugin</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.hummer</groupId>
                 <artifactId>hummer-dubbo-extend-plugin</artifactId>
@@ -268,6 +274,11 @@
                 <version>${hummer.version}</version>
             </dependency>
             <!--framework plugin-->
+            <dependency>
+                <groupId>org.javassist</groupId>
+                <artifactId>javassist</artifactId>
+                <version>${javassist.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.zaxxer</groupId>
                 <artifactId>HikariCP</artifactId>
