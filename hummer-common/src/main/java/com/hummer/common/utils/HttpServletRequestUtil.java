@@ -1,6 +1,7 @@
 package com.hummer.common.utils;
 
 import com.google.common.base.Strings;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 
@@ -61,5 +62,28 @@ public class HttpServletRequestUtil {
             , String defaultVal) {
         String val = getHeaderFirstByKey(request, key);
         return Strings.isNullOrEmpty(val) ? defaultVal : val;
+    }
+
+    public static String getHeaderFirstByKey(HttpServletRequest request, String key) {
+        if (request == null) {
+            return null;
+        }
+
+        return request.getHeader(key);
+    }
+
+    public static String getHeaderFirstByKey(HttpServletRequest request, String key, String defVal) {
+        String val = getHeaderFirstByKey(request, key);
+        return StringUtils.isEmpty(val) ? defVal : val;
+    }
+
+    public static <T extends Number> T getHeaderFirstByKey(HttpServletRequest request
+            , String key, T defVal, Class<T> tClass) {
+        String val = getHeaderFirstByKey(request, key);
+
+        if (StringUtils.isEmpty(val)) {
+            return defVal;
+        }
+       return NumberUtil.to(val,defVal,tClass);
     }
 }

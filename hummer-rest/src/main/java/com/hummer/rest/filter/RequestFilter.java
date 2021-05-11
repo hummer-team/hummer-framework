@@ -98,6 +98,8 @@ public class RequestFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         buildRequestId(httpRequest);
         long start = System.currentTimeMillis();
+        long ctime = HttpServletRequestUtil.getHeaderFirstByKey(httpRequest, "ctime", 0L, Long.class);
+        long networkCostTime = ctime > 0L ? start - ctime : 0;
         try {
             // response
             composeResponse(httpResponse);
@@ -111,7 +113,7 @@ public class RequestFilter implements Filter {
                     , ExceptionUtils.getStackTrace(throwable));
         } finally {
             long costTime = System.currentTimeMillis() - start;
-            outputLog(httpResponse, httpRequest, costTime);
+            outputLog(httpResponse, httpRequest, costTime, networkCostTime);
             MDC.clear();
         }
     }
@@ -141,16 +143,21 @@ public class RequestFilter implements Filter {
 
     private void outputLog(final HttpServletResponse response
             , final HttpServletRequest httpRequest
-            , final long costTime) {
-        final int successCode = 200;
-        final int defaultSlowCostTimeMills = 10;
+            , final long businessCostTime
+            , final long networkCostTime) {
+        int successCode = 200;
+        int defaultSlowCostTimeMills = PropertiesContainer.valueOf("request.cost.time.slow.value"
+                , Integer.class, 10);
+        int defaultSlowNetworkTimeMills = PropertiesContainer.valueOf("request.network.cost.time.slow.value"
+                , Integer.class, 10);
         if (response.getStatus() != successCode
-                || costTime >= PropertiesContainer.valueOf("request.cost.time.slow.value"
-                , Integer.class, defaultSlowCostTimeMills)) {
-            LOGGER.warn(">> {} - {} - {} ms - {} bytes - ua: {}"
+                || businessCostTime >= defaultSlowCostTimeMills
+                || networkCostTime >= defaultSlowNetworkTimeMills) {
+            LOGGER.warn(">> {} - {} - {} ms - {} ms - {} bytes - ua: {}"
                     , HttpServletRequestUtil.getCurrentUrl(httpRequest)
                     , response.getStatus()
-                    , costTime
+                    , businessCostTime
+                    , defaultSlowNetworkTimeMills
                     , response.getHeader("Content-Length")
                     , HttpServletRequestUtil.getUserAgent(httpRequest)
             );
