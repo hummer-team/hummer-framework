@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
 
+import static com.hummer.common.SysConstant.HEADER_REQ_TIME;
 import static com.hummer.common.SysConstant.RestConstant.SYSTEM_REMOTE_IP_SPLIT_CHAR;
 
 /**
@@ -98,7 +99,7 @@ public class RequestFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         buildRequestId(httpRequest);
         long start = System.currentTimeMillis();
-        long ctime = HttpServletRequestUtil.getHeaderFirstByKey(httpRequest, "ctime", 0L, Long.class);
+        long ctime = HttpServletRequestUtil.getHeaderFirstByKey(httpRequest, HEADER_REQ_TIME, 0L, Long.class);
         long networkCostTime = ctime > 0L ? start - ctime : 0;
         try {
             // response
