@@ -1135,6 +1135,7 @@ public class HttpSyncClient {
                     : MDC.get(REQUEST_ID));
             httpMessage.addHeader(USER_AGENT, PANLI_IBJ);
             httpMessage.addHeader(HEADER_REQ_TIME, String.valueOf(System.currentTimeMillis()));
+
         }
     }
 }
