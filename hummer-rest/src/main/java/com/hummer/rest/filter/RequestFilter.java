@@ -158,7 +158,7 @@ public class RequestFilter implements Filter {
                     , HttpServletRequestUtil.getCurrentUrl(httpRequest)
                     , response.getStatus()
                     , businessCostTime
-                    , defaultSlowNetworkTimeMills
+                    , networkCostTime
                     , response.getHeader("Content-Length")
                     , HttpServletRequestUtil.getUserAgent(httpRequest)
             );
