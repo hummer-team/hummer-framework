@@ -167,7 +167,6 @@ public class RequestFilter implements Filter {
                     , HttpServletRequestUtil.getHeaderFirstByKey(httpRequest,headKey,"")
             );
         }
-
     }
 
     /**
