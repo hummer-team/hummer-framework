@@ -7,7 +7,6 @@ import com.hummer.user.plugin.agent.AuthorityServiceAgent;
 import com.hummer.user.plugin.annotation.AuthorityConditionEnum;
 import com.hummer.user.plugin.annotation.NeedAuthority;
 import com.hummer.user.plugin.annotation.member.MemberNeedAuthority;
-import com.hummer.common.holder.HummerContextMapHolder;
 import com.hummer.user.plugin.holder.ReqContextHolderProxy;
 import com.hummer.user.plugin.holder.UserHolder;
 import com.hummer.user.plugin.user.UserContext;
