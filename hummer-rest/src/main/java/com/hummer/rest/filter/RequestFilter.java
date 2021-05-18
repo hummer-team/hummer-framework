@@ -151,20 +151,19 @@ public class RequestFilter implements Filter {
                 , Integer.class, 10);
         int defaultSlowNetworkTimeMills = PropertiesContainer.valueOf("request.network.cost.time.slow.value"
                 , Integer.class, 10);
-        String headKey = PropertiesContainer.valueOfString("request.head.key.log","shopCode");
+        String headKey = PropertiesContainer.valueOfString("request.head.key.log","");
 
         if (response.getStatus() != successCode
                 || businessCostTime >= defaultSlowCostTimeMills
                 || networkCostTime >= defaultSlowNetworkTimeMills) {
-            LOGGER.warn(">> {} - {} - {} ms - {} ms - {} bytes - ua: {} - uh: {} -> {}"
+            LOGGER.warn(">> {} - {} - {} ms - {} ms - {} bytes - ua: {} - {}"
                     , HttpServletRequestUtil.getCurrentUrl(httpRequest)
                     , response.getStatus()
                     , businessCostTime
                     , networkCostTime
                     , response.getHeader("Content-Length")
                     , HttpServletRequestUtil.getUserAgent(httpRequest)
-                    , headKey
-                    , HttpServletRequestUtil.getHeaderFirstByKey(httpRequest,headKey,"")
+                    , HttpServletRequestUtil.getHeaderByKeys(httpRequest,headKey)
             );
         }
     }

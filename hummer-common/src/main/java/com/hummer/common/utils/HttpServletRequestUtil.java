@@ -72,6 +72,28 @@ public class HttpServletRequestUtil {
         return request.getHeader(key);
     }
 
+    /**
+     * get http head value,if keys is empty then return null,notice keys not support * chart
+     *
+     * @param request request
+     * @param keys    key
+     * @return {@link java.lang.String}
+     */
+    public static String getHeaderByKeys(HttpServletRequest request, String keys) {
+        if (StringUtils.isEmpty(keys)) {
+            return "";
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        String[] key = keys.split(",");
+        for (String k : key) {
+            stringBuilder.append(String.format("%s : %s", k, request.getHeader(k)))
+                    .append(" ");
+        }
+
+        return stringBuilder.toString();
+    }
+
     public static String getHeaderFirstByKey(HttpServletRequest request, String key, String defVal) {
         String val = getHeaderFirstByKey(request, key);
         return StringUtils.isEmpty(val) ? defVal : val;
@@ -84,6 +106,6 @@ public class HttpServletRequestUtil {
         if (StringUtils.isEmpty(val)) {
             return defVal;
         }
-       return NumberUtil.to(val,defVal,tClass);
+        return NumberUtil.to(val, defVal, tClass);
     }
 }

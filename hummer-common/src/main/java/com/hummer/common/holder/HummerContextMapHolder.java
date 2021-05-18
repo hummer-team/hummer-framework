@@ -1,9 +1,12 @@
-package com.hummer.user.plugin.holder;
+package com.hummer.common.holder;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-public class RequestContextHolder {
-    private static final ThreadLocal<ConcurrentHashMap<String, String>> REQUEST_CONTEXT_MAP
+/**
+ * @author edz
+ */
+public class HummerContextMapHolder {
+    private final ThreadLocal<ConcurrentHashMap<String, String>> REQUEST_CONTEXT_MAP
             = new ThreadLocal<ConcurrentHashMap<String, String>>() {
         /**
          * Returns the current thread's "initial value" for this
@@ -29,11 +32,11 @@ public class RequestContextHolder {
         }
     };
 
-    private RequestContextHolder() {
+    public HummerContextMapHolder() {
 
     }
 
-    public static void clearHolder() {
+    public void clearHolder() {
         try {
             REQUEST_CONTEXT_MAP.get().clear();
             REQUEST_CONTEXT_MAP.remove();
@@ -42,15 +45,15 @@ public class RequestContextHolder {
         }
     }
 
-    public static String get(String key) {
+    public String get(String key) {
         return REQUEST_CONTEXT_MAP.get().get(key);
     }
 
-    public static void set(String key, String value) {
+    public void set(String key, String value) {
         REQUEST_CONTEXT_MAP.get().put(key, value);
     }
 
-    public static int size() {
+    public int size() {
         return REQUEST_CONTEXT_MAP.get().size();
     }
 }

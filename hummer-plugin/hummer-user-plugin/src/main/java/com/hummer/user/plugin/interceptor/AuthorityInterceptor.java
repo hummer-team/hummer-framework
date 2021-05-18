@@ -7,7 +7,7 @@ import com.hummer.user.plugin.agent.AuthorityServiceAgent;
 import com.hummer.user.plugin.annotation.AuthorityConditionEnum;
 import com.hummer.user.plugin.annotation.NeedAuthority;
 import com.hummer.user.plugin.annotation.member.MemberNeedAuthority;
-import com.hummer.user.plugin.holder.RequestContextHolder;
+import com.hummer.common.holder.HummerContextMapHolder;
 import com.hummer.user.plugin.holder.UserHolder;
 import com.hummer.user.plugin.user.UserContext;
 import com.hummer.user.plugin.user.member.MemberUserContext;
@@ -73,12 +73,12 @@ public class AuthorityInterceptor implements HandlerInterceptor {
                 return;
             }
         }
-        String userId = RequestContextHolder.get(
+        String userId = HummerContextMapHolder.get(
                 PropertiesContainer.valueOfString("member.id.request.key", "memberId"));
         if (StringUtils.isEmpty(userId)) {
 
             String tokenKey = PropertiesContainer.valueOfString("ticket.request.key", "token");
-            String token = RequestContextHolder.get(tokenKey);
+            String token = HummerContextMapHolder.get(tokenKey);
             if (StringUtils.isEmpty(token)) {
                 throw new AppException(41001, "this request ticket not exists.");
             }
@@ -110,7 +110,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         }
 
         String tokenKey = PropertiesContainer.valueOfString("ticket.request.key", "token");
-        String token = RequestContextHolder.get(tokenKey);
+        String token = HummerContextMapHolder.get(tokenKey);
         if (StringUtils.isEmpty(token)) {
             throw new AppException(41001, "this request ticket not exists.");
         }
