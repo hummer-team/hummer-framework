@@ -3,6 +3,7 @@ package com.hummer.user.plugin.filter;
 import com.google.common.base.Splitter;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.common.holder.HummerContextMapHolder;
+import com.hummer.user.plugin.holder.ReqContextHolderProxy;
 import com.hummer.user.plugin.holder.UserHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
@@ -22,20 +23,20 @@ import java.util.Enumeration;
 @Slf4j
 public class RequestContextFilter implements Filter {
 
-    private static final HummerContextMapHolder MAP_HOLDER = new HummerContextMapHolder();
+
 
     private void readRequestContextHolder(HttpServletRequest request) {
         String keyCfg = PropertiesContainer.valueOfString("read.request.key", "*");
         if ("*".equalsIgnoreCase(keyCfg)) {
             if (ArrayUtils.isNotEmpty(request.getCookies())) {
                 for (Cookie cookie : request.getCookies()) {
-                    MAP_HOLDER.set(cookie.getName(), cookie.getValue());
+                    ReqContextHolderProxy.MAP_HOLDER.set(cookie.getName(), cookie.getValue());
                 }
             }
             Enumeration<String> headerKeys = request.getHeaderNames();
             while (headerKeys.hasMoreElements()) {
                 String headKey = headerKeys.nextElement();
-                MAP_HOLDER.set(headKey, request.getHeader(headKey));
+                ReqContextHolderProxy.MAP_HOLDER.set(headKey, request.getHeader(headKey));
             }
         } else {
             Iterable<String> tokenKeys = Splitter
@@ -54,7 +55,7 @@ public class RequestContextFilter implements Filter {
                 if (StringUtils.isEmpty(value)) {
                     continue;
                 }
-                MAP_HOLDER.set(readKey, value);
+                ReqContextHolderProxy.MAP_HOLDER.set(readKey, value);
             }
         }
     }
@@ -78,7 +79,7 @@ public class RequestContextFilter implements Filter {
 
     @Override
     public void destroy() {
-        MAP_HOLDER.clearHolder();
+        ReqContextHolderProxy.MAP_HOLDER.clearHolder();
         UserHolder.clean();
     }
 }
