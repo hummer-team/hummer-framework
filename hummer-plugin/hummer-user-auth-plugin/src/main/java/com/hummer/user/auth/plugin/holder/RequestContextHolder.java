@@ -1,4 +1,4 @@
-package holder;
+package com.hummer.user.auth.plugin.holder;
 
 import com.hummer.common.holder.HummerContextMapHolder;
 

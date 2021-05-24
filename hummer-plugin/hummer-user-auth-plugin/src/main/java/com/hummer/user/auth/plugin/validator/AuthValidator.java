@@ -1,7 +1,7 @@
-package validator;
+package com.hummer.user.auth.plugin.validator;
 
-import annotation.UserAuthorityAnnotation;
-import context.UserContext;
+import com.hummer.user.auth.plugin.annotation.UserAuthorityAnnotation;
+import com.hummer.user.auth.plugin.context.UserContext;
 
 /**
  * description     java类作用描述

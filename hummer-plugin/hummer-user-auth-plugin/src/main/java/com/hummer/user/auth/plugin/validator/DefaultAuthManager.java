@@ -1,9 +1,9 @@
-package validator;
+package com.hummer.user.auth.plugin.validator;
 
-import annotation.UserAuthorityAnnotation;
+import com.hummer.user.auth.plugin.annotation.UserAuthorityAnnotation;
 import com.hummer.common.utils.AppBusinessAssert;
-import context.UserContext;
-import holder.UserHolder;
+import com.hummer.user.auth.plugin.context.UserContext;
+import com.hummer.user.auth.plugin.holder.UserHolder;
 
 /**
  * DefaultAuthManager

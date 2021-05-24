@@ -1,4 +1,4 @@
-package context;
+package com.hummer.user.auth.plugin.context;
 
 import lombok.Data;
 

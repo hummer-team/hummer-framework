@@ -1,12 +1,12 @@
-package interceptor;
+package com.hummer.user.auth.plugin.interceptor;
 
-import annotation.UserAuthorityAnnotation;
+import com.hummer.user.auth.plugin.annotation.UserAuthorityAnnotation;
 import com.hummer.core.SpringApplicationContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import validator.AuthManager;
-import validator.DefaultAuthManager;
+import com.hummer.user.auth.plugin.validator.AuthManager;
+import com.hummer.user.auth.plugin.validator.DefaultAuthManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

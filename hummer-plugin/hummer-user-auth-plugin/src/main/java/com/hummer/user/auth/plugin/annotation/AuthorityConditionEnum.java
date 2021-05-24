@@ -1,4 +1,4 @@
-package annotation;
+package com.hummer.user.auth.plugin.annotation;
 
 public enum AuthorityConditionEnum {
     ANY_OF(1),

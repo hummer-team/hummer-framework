@@ -1,6 +1,6 @@
-package validator;
+package com.hummer.user.auth.plugin.validator;
 
-import annotation.AuthorityConditionEnum;
+import com.hummer.user.auth.plugin.annotation.AuthorityConditionEnum;
 import lombok.Builder;
 import lombok.Data;
 

@@ -1,6 +1,6 @@
-package annotation;
+package com.hummer.user.auth.plugin.annotation;
 
-import validator.AuthManager;
+import com.hummer.user.auth.plugin.validator.AuthManager;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

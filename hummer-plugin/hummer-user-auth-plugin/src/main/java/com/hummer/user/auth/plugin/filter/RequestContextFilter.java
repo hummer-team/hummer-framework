@@ -1,9 +1,9 @@
-package filter;
+package com.hummer.user.auth.plugin.filter;
 
 import com.google.common.base.Splitter;
 import com.hummer.core.PropertiesContainer;
-import holder.RequestContextHolder;
-import holder.UserHolder;
+import com.hummer.user.auth.plugin.holder.RequestContextHolder;
+import com.hummer.user.auth.plugin.holder.UserHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;

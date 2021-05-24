@@ -1,7 +1,7 @@
-package configuration;
+package com.hummer.user.auth.plugin.configuration;
 
-import filter.RequestContextFilter;
-import interceptor.AuthorityInterceptor;
+import com.hummer.user.auth.plugin.filter.RequestContextFilter;
+import com.hummer.user.auth.plugin.interceptor.AuthorityInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -11,8 +11,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.handler.MappedInterceptor;
-import validator.AuthManager;
-import validator.DefaultAuthManager;
+import com.hummer.user.auth.plugin.validator.AuthManager;
+import com.hummer.user.auth.plugin.validator.DefaultAuthManager;
 
 /**
  * @author edz

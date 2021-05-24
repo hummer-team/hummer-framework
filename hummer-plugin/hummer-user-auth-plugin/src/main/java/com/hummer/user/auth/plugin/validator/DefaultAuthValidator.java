@@ -1,6 +1,5 @@
-package validator;
+package com.hummer.user.auth.plugin.validator;
 
-import annotation.UserAuthorityAnnotation;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Maps;
@@ -9,8 +8,9 @@ import com.hummer.common.utils.AppBusinessAssert;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.rest.model.ResourceResponse;
 import com.hummer.rest.utils.ResponseUtil;
-import context.UserContext;
-import holder.RequestContextHolder;
+import com.hummer.user.auth.plugin.annotation.UserAuthorityAnnotation;
+import com.hummer.user.auth.plugin.context.UserContext;
+import com.hummer.user.auth.plugin.holder.RequestContextHolder;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -103,7 +103,7 @@ public class DefaultAuthValidator implements AuthValidator {
 
     private ValidParams parsingAnnotation(UserAuthorityAnnotation annotation) {
         String group = composeGroup(annotation.group());
-        return ValidParams.builder().apiUrl(getValidApiUrl(annotation.validApi()))
+        return ValidParams.builder().apiUrl(getValidApiUrl(annotation.validApi(), group))
                 .authCodes(Arrays.asList(annotation.authorityCodes()))
                 .authCondition(annotation.authorityCondition())
                 .group(group)
@@ -121,9 +121,9 @@ public class DefaultAuthValidator implements AuthValidator {
         return group;
     }
 
-    public String getValidApiUrl(String apiUrl) {
+    public String getValidApiUrl(String apiUrl, String group) {
         if (StringUtils.isEmpty(apiUrl)) {
-            apiUrl = PropertiesContainer.valueOfString("user.auth.valid.api.url");
+            apiUrl = PropertiesContainer.valueOfString(String.format("user.auth.%svalid.api.url", group));
         }
         return apiUrl;
     }

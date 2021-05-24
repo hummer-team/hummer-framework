@@ -1,8 +1,8 @@
-package holder;
+package com.hummer.user.auth.plugin.holder;
 
 import com.alibaba.fastjson.JSON;
 import com.hummer.common.exceptions.AppException;
-import context.UserContext;
+import com.hummer.user.auth.plugin.context.UserContext;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 

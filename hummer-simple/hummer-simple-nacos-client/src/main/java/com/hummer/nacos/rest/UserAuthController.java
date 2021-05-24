@@ -1,11 +1,11 @@
 package com.hummer.nacos.rest;
 
-import annotation.UserAuthorityAnnotation;
+import com.hummer.user.auth.plugin.annotation.UserAuthorityAnnotation;
 import com.alibaba.fastjson.JSONObject;
 import com.hummer.common.utils.CommonUtil;
 import com.hummer.rest.model.ResourceResponse;
-import context.UserContext;
-import holder.UserHolder;
+import com.hummer.user.auth.plugin.context.UserContext;
+import com.hummer.user.auth.plugin.holder.UserHolder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
