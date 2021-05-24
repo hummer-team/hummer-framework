@@ -2,7 +2,6 @@ package com.hummer.user.plugin.filter;
 
 import com.google.common.base.Splitter;
 import com.hummer.core.PropertiesContainer;
-import com.hummer.common.holder.HummerContextMapHolder;
 import com.hummer.user.plugin.holder.ReqContextHolderProxy;
 import com.hummer.user.plugin.holder.UserHolder;
 import lombok.extern.slf4j.Slf4j;

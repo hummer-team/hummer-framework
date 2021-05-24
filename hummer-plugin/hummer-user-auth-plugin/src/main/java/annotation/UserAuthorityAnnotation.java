@@ -35,4 +35,6 @@ public @interface UserAuthorityAnnotation {
 
     Class<? extends AuthManager> authManager() default AuthManager.class;
 
+    String group() default "";
+
 }

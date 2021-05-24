@@ -41,7 +41,7 @@ public class DefaultAuthValidator implements AuthValidator {
 
     public void validParams(ValidParams params) {
 
-        verifyTicketsNotNull(params.getTokenMap());
+        verifyTicketsNotNull(params.getTokenMap(), params.getGroup());
     }
 
     public UserContext validAuth(ValidParams params) {
@@ -59,8 +59,8 @@ public class DefaultAuthValidator implements AuthValidator {
         return null;
     }
 
-    private void verifyTicketsNotNull(Map<String, String> headers) {
-        String headerKeys = PropertiesContainer.valueOfString("ticket.request.notnull.keys");
+    private void verifyTicketsNotNull(Map<String, String> headers, String group) {
+        String headerKeys = PropertiesContainer.valueOfString(String.format("%sticket.request.notnull.keys", group));
         if (StringUtils.isEmpty(headerKeys)) {
             return;
         }
@@ -74,9 +74,9 @@ public class DefaultAuthValidator implements AuthValidator {
         }
     }
 
-    private Map<String, String> composeTokens(String[] tokenKeys) {
+    private Map<String, String> composeTokens(String[] tokenKeys, String group) {
 
-        return parsingTokenKeys(getTokensIfNull(tokenKeys));
+        return parsingTokenKeys(getTokensIfNull(tokenKeys, group));
     }
 
     private Map<String, String> parsingTokenKeys(String[] tokenKeys) {
@@ -90,11 +90,11 @@ public class DefaultAuthValidator implements AuthValidator {
         return map;
     }
 
-    private String[] getTokensIfNull(String[] tokenKeys) {
+    private String[] getTokensIfNull(String[] tokenKeys, String group) {
         if (!ArrayUtils.isEmpty(tokenKeys)) {
             return tokenKeys;
         }
-        String tokenKeyStr = PropertiesContainer.valueOfString("user.auth.token.keys");
+        String tokenKeyStr = PropertiesContainer.valueOfString(String.format("user.auth.%stoken.keys", group));
         if (StringUtils.isEmpty(tokenKeyStr)) {
             return null;
         }
@@ -102,12 +102,23 @@ public class DefaultAuthValidator implements AuthValidator {
     }
 
     private ValidParams parsingAnnotation(UserAuthorityAnnotation annotation) {
+        String group = composeGroup(annotation.group());
         return ValidParams.builder().apiUrl(getValidApiUrl(annotation.validApi()))
                 .authCodes(Arrays.asList(annotation.authorityCodes()))
                 .authCondition(annotation.authorityCondition())
-                .tokenMap(composeTokens(annotation.userTokens()))
+                .group(group)
+                .tokenMap(composeTokens(annotation.userTokens(), group))
                 .build();
 
+    }
+
+    private String composeGroup(String group) {
+        if (StringUtils.isNotEmpty(group)) {
+            group = group + ".";
+        } else {
+            group = "";
+        }
+        return group;
     }
 
     public String getValidApiUrl(String apiUrl) {

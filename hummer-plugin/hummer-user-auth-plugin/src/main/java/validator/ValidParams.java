@@ -21,6 +21,8 @@ public class ValidParams {
 
     private String apiUrl;
 
+    private String group;
+
     private Map<String, String> tokenMap;
 
     private List<String> authCodes;
