@@ -1,12 +1,12 @@
 package com.hummer.user.auth.plugin.interceptor;
 
-import com.hummer.user.auth.plugin.annotation.UserAuthorityAnnotation;
 import com.hummer.core.SpringApplicationContext;
+import com.hummer.user.auth.plugin.annotation.UserAuthorityAnnotation;
+import com.hummer.user.auth.plugin.validator.AuthManager;
+import com.hummer.user.auth.plugin.validator.DefaultAuthManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import com.hummer.user.auth.plugin.validator.AuthManager;
-import com.hummer.user.auth.plugin.validator.DefaultAuthManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -78,6 +78,6 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         } catch (Exception e) {
             log.debug("not fund target class=={}, AuthManager bean ", managerClass, e);
         }
-        return SpringApplicationContext.getBean(DefaultAuthManager.class);
+        return SpringApplicationContext.getBean("defaultAuthManager", DefaultAuthManager.class);
     }
 }
