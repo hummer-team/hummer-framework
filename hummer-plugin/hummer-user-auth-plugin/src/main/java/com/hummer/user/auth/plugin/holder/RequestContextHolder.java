@@ -14,10 +14,12 @@ public class RequestContextHolder {
     }
 
     public static String get(String key) {
+        key = key == null ? null : key.toLowerCase();
         return MAP_HOLDER.get(key);
     }
 
     public static void set(String key, String value) {
+        key = key == null ? null : key.toLowerCase();
         MAP_HOLDER.set(key, value);
     }
 
