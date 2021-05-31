@@ -76,7 +76,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         try {
             return SpringApplicationContext.getBean(managerClass);
         } catch (Exception e) {
-            log.debug("not fund target class=={}, AuthManager bean ", managerClass, e);
+            // ignore
         }
         return SpringApplicationContext.getBean("defaultAuthManager", DefaultAuthManager.class);
     }
