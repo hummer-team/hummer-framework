@@ -100,7 +100,7 @@
     <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:2.2" level="project" />
     <orderEntry type="library" name="Maven: org.hamcrest:hamcrest:2.2" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-test:2.4.1" level="project" />
-    <orderEntry type="module" module-name="hummer-user-plugin" />
+    <orderEntry type="library" name="Maven: com.hummer:hummer-user-plugin:1.0.0-SNAPSHOT" level="project" />
     <orderEntry type="module" module-name="hummer-rest" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-autoconfigure:2.4.1" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-undertow:2.4.1" level="project" />
