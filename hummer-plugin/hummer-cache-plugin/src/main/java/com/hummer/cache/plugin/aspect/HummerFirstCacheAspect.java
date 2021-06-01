@@ -51,7 +51,7 @@ public class HummerFirstCacheAspect {
                     , KeyUtil.getFieldNameValueMap(point))
                     , cache.timeoutSeconds()
                     , () -> point.proceed(point.getArgs())
-                    , ((MethodSignature) point.getSignature()).getReturnType());
+                    , ((MethodSignature) point.getSignature()).getMethod().getGenericReturnType());
         }
 
 

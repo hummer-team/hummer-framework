@@ -11,6 +11,10 @@
 
     <artifactId>hummer-simple-nacos-client</artifactId>
 
+    <properties>
+        <hummer.verion>1.0.0-SNAPSHOT</hummer.verion>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.hummer</groupId>
@@ -57,23 +61,30 @@
         <dependency>
             <groupId>com.hummer</groupId>
             <artifactId>hummer-data-sync-plugin</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${hummer.verion}</version>
         </dependency>
         <dependency>
             <groupId>com.hummer</groupId>
             <artifactId>hummer-request-idempotent-plugin</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${hummer.verion}</version>
         </dependency>
 
         <dependency>
             <groupId>com.hummer</groupId>
             <artifactId>hummer-user-auth-plugin</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${hummer.verion}</version>
         </dependency>
         <dependency>
             <groupId>com.hummer</groupId>
             <artifactId>hummer-excel-plugin</artifactId>
+            <version>${hummer.verion}</version>
         </dependency>
+        <dependency>
+            <groupId>com.hummer</groupId>
+            <artifactId>hummer-cache-plugin</artifactId>
+            <version>${hummer.verion}</version>
+        </dependency>
+
 
     </dependencies>
 

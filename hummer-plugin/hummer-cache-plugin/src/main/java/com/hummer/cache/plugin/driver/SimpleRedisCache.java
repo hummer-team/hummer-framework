@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -26,7 +27,7 @@ public class SimpleRedisCache {
             final String key
             , final int timeoutSeconds
             , final SupplierEx noExistsAction
-            , final Class<?> returnCls
+            , final Type genericReturnType
     ) throws Throwable {
         String result = null;
         long start = System.currentTimeMillis();
@@ -49,7 +50,7 @@ public class SimpleRedisCache {
             }
             return o;
         }
-        return JSON.parseObject(result, returnCls);
+        return JSON.parseObject(result, genericReturnType);
     }
 
     public void set(final String key, final int timeoutSeconds, final Object o) {
@@ -67,7 +68,7 @@ public class SimpleRedisCache {
     }
 
     public void set(final String key, final String value, final int timeoutSeconds) {
-        
+
         redisOp.set().set(key, value, timeoutSeconds);
     }
 
