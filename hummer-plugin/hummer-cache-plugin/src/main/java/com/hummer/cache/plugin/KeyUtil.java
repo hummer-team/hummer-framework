@@ -39,6 +39,9 @@ public class KeyUtil {
         }
 
         for (Object arg : args) {
+            if (arg == null) {
+                continue;
+            }
             Class<?> cls = arg.getClass();
             //class type
             if (!cls.isPrimitive()) {

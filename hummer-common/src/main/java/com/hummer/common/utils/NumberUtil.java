@@ -12,10 +12,9 @@ import java.math.BigDecimal;
  */
 public class NumberUtil {
 
+    public static final int DEFAULT_ROUND_SCALE = 2;
     // 默认除法运算精度
     private static final int DEF_DIV_SCALE = 10;
-
-    public static final int DEFAULT_ROUND_SCALE = 2;
 
     /**
      * 提供精确的加法运算。
@@ -92,12 +91,8 @@ public class NumberUtil {
      * @return 四舍五入后的结果
      */
     public static double doubleRound(double v, int scale) {
-        if (scale < 0) {
-            throw new IllegalArgumentException("The scale must be a positive integer or zero");
-        }
-        BigDecimal b = BigDecimal.valueOf(v);
-        BigDecimal one = new BigDecimal("1");
-        return b.divide(one, scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+
+        return doubleRound(v, scale, BigDecimal.ROUND_HALF_UP);
     }
 
     /**
@@ -109,5 +104,28 @@ public class NumberUtil {
     public static double doubleRound(double v) {
 
         return doubleRound(v, DEFAULT_ROUND_SCALE);
+    }
+
+    public static double doubleRoundByType(double v, int roundType) {
+
+        return doubleRound(v, DEFAULT_ROUND_SCALE, roundType);
+    }
+
+    public static double doubleRound(double v, int scale, int roundType) {
+        if (scale < 0) {
+            throw new IllegalArgumentException("The scale must be a positive integer or zero");
+        }
+        BigDecimal b = BigDecimal.valueOf(v);
+        BigDecimal one = new BigDecimal("1");
+        return b.divide(one, scale, roundType).doubleValue();
+    }
+
+    @SuppressWarnings("unckecked")
+    public static <T extends Number> T to(String val, T defVal, Class<T> tClass) {
+        try {
+            return (T) tClass.getDeclaredMethod("valueOf",String.class).invoke(tClass, val);
+        } catch (Throwable e) {
+            return defVal;
+        }
     }
 }

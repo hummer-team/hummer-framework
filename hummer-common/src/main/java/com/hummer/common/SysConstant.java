@@ -9,53 +9,47 @@ import java.nio.charset.StandardCharsets;
  * @Date: 2019/6/20 14:39
  **/
 public class SysConstant {
-    private SysConstant() {
-
-    }
-
     public static final Integer SYS_ERROR_CODE = 50000;
     public static final String REQUEST_ID = "requestId";
     public static final String HEADER_REQ_TIME = "X-Request-Time";
-
+    public static final String GATEWAY_REQ_TIME = "X-G-Request-Time";
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     public static final String DEFAULT_CHARSET_NAME = "UTF-8";
-
     /**
      * 业务幂等错误码，对应java.sql.SQLIntegrityConstraintViolationException
      */
     public static final int BUSINESS_IDEMPOTENT_ERROR_CODE = 430;
     public static final int BUSINESS_IDEMPOTENT_SUB_CODE = 460;
+    private SysConstant() {
+
+    }
 
     public static class ExecutorServiceName {
         public static final String DEFAULT_TASK_GROUP_V2 = "defaultTaskGroupV2";
     }
 
     public static class RestConstant {
-        private RestConstant() {
-
-        }
-
         public static final String INCLUDE_URL_PATTEER = "/*";
         public static final String REST_REQUESTILTER_EXCLUSIONS_URL = "rest.requestfilter.exclusions.url";
         public static final String EXCLUSIONS_URL_PATTEER = "/do_not_delete/*,/warmup*,*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*";
         public static final String SERVER_IP = "serverIp";
         public static final String CLIENT_IP = "clientIp";
         public static final String PARENT_SPAN_ID = "pSpanId";
+        public static final String CLIENT_TIME = "ctimeMs";
         public static final String SPAN_ID = "spanId";
         public static final String REQUEST_COST_TIME = "costTime";
         public static final String MVC_SERIALIZERFEATURE = "mvc.serializerFeature";
         public static final String SYSTEM_REMOTE_IP_SPLIT_CHAR = "system.remote.ip.split.char";
         public static final String REST_REQUESTILTER_IINCLUDE_URL = "rest.requestfilter.include.url";
-
         public static final String MVC_SERIALIZER_FEATURE_DEFAULT = "DisableCircularReferenceDetect";
+
+        private RestConstant() {
+
+        }
     }
 
 
     public static class DaoConstant {
-        private DaoConstant() {
-
-        }
-
         public static final String SHOW_SQL = "sql.slow.show.sql";
         public static final String SHOW_TIMEOUT = "sql.slow.time.millis";
         public static final String SQL_SESSION_TEMPLATE_NAME = "jdbcTemplate";
@@ -86,5 +80,8 @@ public class SysConstant {
         public static final String DRUID_MERGE_SQL = "druid.merge.sql";
         public static final String JDBC_CHECK_SQL = "jdbc.check.sql";
         public static final String DRUID_SELECT_UNION_CHECK = "druid.select.union.check";
+        private DaoConstant() {
+
+        }
     }
 }

@@ -114,7 +114,7 @@
         <mybatis-spring.version>2.0.6</mybatis-spring.version>
         <hibernate-validator.version>6.0.13.Final</hibernate-validator.version>
         <joda-time.version>2.9.9</joda-time.version>
-        <guava.version>29.0-jre</guava.version>
+        <guava.version>[30.0-jre,)</guava.version>
         <swagger-annotations.version>1.5.13</swagger-annotations.version>
         <mybatis.version>3.5.6</mybatis.version>
         <mysql-connector-java.version>8.0.21</mysql-connector-java.version>
@@ -125,7 +125,7 @@
         <aspectjweaver.version>1.9.2</aspectjweaver.version>
         <druid-spring-boot-starter.version>1.1.18</druid-spring-boot-starter.version>
         <kafka.version>2.7.0</kafka.version>
-        <libthrift.version>0.12.0</libthrift.version>
+        <libthrift.version>[0.14.0,)</libthrift.version>
         <kafka-avro-serializer.version>5.3.0</kafka-avro-serializer.version>
         <rocksdbjni.version>6.2.2</rocksdbjni.version>
         <nacos-spring.version>0.2.7</nacos-spring.version>
@@ -137,8 +137,8 @@
         <msgpack-version>0.8.22</msgpack-version>
 
         <LatencyUtils.version>2.0.3</LatencyUtils.version>
-        <dubbo.version>2.7.4.1</dubbo.version>
-        <dubbo-spring-boot-starter.version>2.0.0</dubbo-spring-boot-starter.version>
+        <dubbo.version>2.7.9</dubbo.version>
+        <dubbo-spring-boot-starter.version>2.7.9</dubbo-spring-boot-starter.version>
         <spring-cloud-sleuth-stream.version>1.3.6.RELEASE</spring-cloud-sleuth-stream.version>
         <sentinel.version>1.8.0</sentinel.version>
         <micrometer.version>1.5.4</micrometer.version>
@@ -146,11 +146,23 @@
         <protostuff.version>1.7.2</protostuff.version>
         <h2.version>1.4.192</h2.version>
         <commons-collections.version>3.2.2</commons-collections.version>
+        <alibaba.metrics>2.0.6</alibaba.metrics>
+        <javassist.version>3.20.0-GA</javassist.version>
     </properties>
 
     <dependencyManagement>
 
         <dependencies>
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-proxy-plugin</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-dubbo-extend-plugin</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.hummer</groupId>
                 <artifactId>hummer-boot-starter</artifactId>
@@ -262,6 +274,11 @@
                 <version>${hummer.version}</version>
             </dependency>
             <!--framework plugin-->
+            <dependency>
+                <groupId>org.javassist</groupId>
+                <artifactId>javassist</artifactId>
+                <version>${javassist.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.zaxxer</groupId>
                 <artifactId>HikariCP</artifactId>
@@ -737,16 +754,29 @@
                 <groupId>org.apache.dubbo</groupId>
                 <artifactId>dubbo</artifactId>
                 <version>${dubbo.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>javax.servlet</groupId>
+                        <artifactId>servlet-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.dubbo</groupId>
-                <artifactId>dubbo-dependencies-zookeeper</artifactId>
+                <artifactId>dubbo-serialization-kryo</artifactId>
                 <version>${dubbo.version}</version>
-                <type>pom</type>
             </dependency>
             <!-- https://mvnrepository.com/artifact/com.alibaba.spring.boot/dubbo-spring-boot-starter -->
             <dependency>
-                <groupId>com.alibaba.spring.boot</groupId>
+                <groupId>org.apache.dubbo</groupId>
                 <artifactId>dubbo-spring-boot-starter</artifactId>
                 <version>${dubbo-spring-boot-starter.version}</version>
             </dependency>
@@ -801,6 +831,16 @@
                 <groupId>io.protostuff</groupId>
                 <artifactId>protostuff-json</artifactId>
                 <version>${protostuff.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.middleware</groupId>
+                <artifactId>metrics-core-api</artifactId>
+                <version>${alibaba.metrics}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.middleware</groupId>
+                <artifactId>metrics-core-impl</artifactId>
+                <version>${alibaba.metrics}</version>
             </dependency>
             <!--           Specify spring cloud version -->
             <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-server -->

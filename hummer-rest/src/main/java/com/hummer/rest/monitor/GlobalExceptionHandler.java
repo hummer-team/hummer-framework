@@ -176,6 +176,9 @@ public class GlobalExceptionHandler {
         BufferedReader reader = null;
         try {
             HttpServletRequestWrapper requestWrapper = new HttpServletRequestWrapper(request);
+            if (requestWrapper.getInputStream() == null || requestWrapper.getInputStream().isFinished()) {
+                return null;
+            }
             inputStream = new InputStreamReader(requestWrapper.getInputStream());
             reader = new BufferedReader(inputStream);
             String line;

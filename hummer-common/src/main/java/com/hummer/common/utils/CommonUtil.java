@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -95,5 +96,23 @@ public class CommonUtil {
             return s;
         }
         return s.substring(0, len);
+    }
+
+    public static <T> T getFirstIfSingleElseNull(List<T> list) {
+        if (list != null && list.size() == 1) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    private static char[] NUMBER_TO_ARR = {'零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'};
+
+    private static char[] NUMBER_UNIT_TO_ARR = {'百', '千', '万', '亿'};
+
+    public static char convertNumberTo(int number) {
+        if (number < 0 || number > 10) {
+            throw new IllegalArgumentException("convert just support 0-10");
+        }
+        return NUMBER_TO_ARR[number];
     }
 }

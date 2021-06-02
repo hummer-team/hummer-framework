@@ -250,4 +250,10 @@ public class GoodsSpuPo {
 
     @ApiModelProperty("商品分享描述")
     private String shareDesc;
+
+    @ApiModelProperty("商品类型(1、计件，2、计重)")
+    private Integer goodsType;
+
+    @ApiModelProperty("商品类型单位)")
+    private String goodsUnit;
 }

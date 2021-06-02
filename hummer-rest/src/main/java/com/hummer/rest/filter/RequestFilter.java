@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
 
+import static com.hummer.common.SysConstant.GATEWAY_REQ_TIME;
+import static com.hummer.common.SysConstant.HEADER_REQ_TIME;
 import static com.hummer.common.SysConstant.RestConstant.SYSTEM_REMOTE_IP_SPLIT_CHAR;
 
 /**
@@ -98,6 +100,10 @@ public class RequestFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         buildRequestId(httpRequest);
         long start = System.currentTimeMillis();
+        long ctime = HttpServletRequestUtil.getHeaderFirstByKey(httpRequest, HEADER_REQ_TIME, 0L, Long.class);
+        long gtime = HttpServletRequestUtil.getHeaderFirstByKey(httpRequest, GATEWAY_REQ_TIME, 0L, Long.class);
+        long networkCostTime = ctime > 0L ? start - ctime : 0;
+        long gatewayCostTime = gtime > 0L ? start - gtime : 0;
         try {
             // response
             composeResponse(httpResponse);
@@ -110,8 +116,8 @@ public class RequestFilter implements Filter {
                     , HttpServletRequestUtil.getUserAgent(httpRequest)
                     , ExceptionUtils.getStackTrace(throwable));
         } finally {
-            long costTime = System.currentTimeMillis() - start;
-            outputLog(httpResponse, httpRequest, costTime);
+            long businessCostTime = System.currentTimeMillis() - start;
+            outputLog(httpResponse, httpRequest, businessCostTime, networkCostTime, gatewayCostTime);
             MDC.clear();
         }
     }
@@ -141,21 +147,30 @@ public class RequestFilter implements Filter {
 
     private void outputLog(final HttpServletResponse response
             , final HttpServletRequest httpRequest
-            , final long costTime) {
-        final int successCode = 200;
-        final int defaultSlowCostTimeMills = 10;
+            , final long businessCostTime
+            , final long networkCostTime
+            , final long gatewayCostTime) {
+        int successCode = 200;
+        int defaultSlowCostTimeMills = PropertiesContainer.valueOf("request.cost.time.slow.value"
+                , Integer.class, 10);
+        int defaultSlowNetworkTimeMills = PropertiesContainer.valueOf("request.network.cost.time.slow.value"
+                , Integer.class, 10);
+        String headKey = PropertiesContainer.valueOfString("request.head.key.log", "");
+
         if (response.getStatus() != successCode
-                || costTime >= PropertiesContainer.valueOf("request.cost.time.slow.value"
-                , Integer.class, defaultSlowCostTimeMills)) {
-            LOGGER.warn(">> {} - {} - {} ms - {} bytes - ua: {}"
+                || businessCostTime >= defaultSlowCostTimeMills
+                || networkCostTime >= defaultSlowNetworkTimeMills) {
+            LOGGER.warn(">> {} - {} - {} ms - {} ms - {} ms - {} bytes - ua: {} - {}"
                     , HttpServletRequestUtil.getCurrentUrl(httpRequest)
                     , response.getStatus()
-                    , costTime
+                    , businessCostTime
+                    , networkCostTime
+                    , gatewayCostTime
                     , response.getHeader("Content-Length")
                     , HttpServletRequestUtil.getUserAgent(httpRequest)
+                    , HttpServletRequestUtil.getHeaderByKeys(httpRequest, headKey)
             );
         }
-
     }
 
     /**

@@ -29,11 +29,14 @@ public class SearchPageBo<T> {
 
     public static <R, T> SearchPageBo<T> builder(ResourcePageReqDto<R> reqDto, T t) {
         SearchPageBo<T> pageBo = new SearchPageBo<>();
-        pageBo.setPageNum(reqDto.getPageNumber());
-        pageBo.setPageSize(reqDto.getPageSize());
-        if (reqDto.getQueryObject() != null && t != null) {
-            t = (T) ObjectCopyUtils.copy(reqDto.getQueryObject(), t.getClass());
+        if (reqDto != null) {
+            pageBo.setPageNum(reqDto.getPageNumber());
+            pageBo.setPageSize(reqDto.getPageSize());
+            if (reqDto.getQueryObject() != null && t != null) {
+                t = (T) ObjectCopyUtils.copy(reqDto.getQueryObject(), t.getClass());
+            }
         }
+
         pageBo.setData(t);
         return pageBo;
 

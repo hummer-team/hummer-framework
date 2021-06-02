@@ -15,11 +15,10 @@ import com.hummer.common.http.context.ResponseContextWrapper;
 import com.hummer.core.PropertiesContainer;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpMessage;
 import org.apache.http.NameValuePair;
-import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -37,6 +36,7 @@ import org.apache.http.conn.ManagedHttpClientConnection;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.DefaultHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
@@ -56,15 +56,29 @@ import org.slf4j.MDC;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.Assert;
 
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
 import javax.validation.constraints.NotNull;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -79,16 +93,16 @@ import static com.hummer.common.http.HttpConstant.HTTP_CONN_TIMEOUT;
 
 /**
  * http client sync wrapper
+ *
+ * @lee
  */
 @Slf4j
 public class HttpSyncClient {
-    private static final String USER_AGENT = "user_agent";
+    private static final String USER_AGENT = "User-Agent";
     private static final String PANLI_IBJ = "panli";
-
-    private static volatile CloseableHttpClient httpClient;
-
-    private static List<HttpClientHandler> httpClientHandlers = new ArrayList<>();
-    private static List<HttpClientInterceptor> HttpClientInterceptors = new ArrayList<>();
+    private static final Map<String, CloseableHttpClient> HTTP_CLIENT_MAP = new ConcurrentHashMap<>();
+    private static final List<HttpClientHandler> httpClientHandlers = new ArrayList<>();
+    private static final List<HttpClientInterceptor> HttpClientInterceptors = new ArrayList<>();
     private static RequestConfig requestConfig = null;
 
     static {
@@ -109,79 +123,133 @@ public class HttpSyncClient {
     private HttpSyncClient() {
     }
 
+    public static CloseableHttpClient getHttpClient(String certName) {
+        String tempCertName = Strings.isNullOrEmpty(certName) ? "NULL" : certName;
+        if (HTTP_CLIENT_MAP.get(tempCertName) == null) {
+            synchronized (HTTP_CLIENT_MAP) {
+                if (HTTP_CLIENT_MAP.get(tempCertName) == null) {
+                    CloseableHttpClient client = "NULL".equals(tempCertName)
+                            ? createHttpClientInstance()
+                            : createHttpClientInstance(createSSLSocket(tempCertName));
+                    Assert.notNull(client == null, "http client instance create failed");
+                    HTTP_CLIENT_MAP.put(tempCertName, client);
+                }
+            }
+        }
+        return HTTP_CLIENT_MAP.get(tempCertName);
+    }
+
     /**
      * this is single instance and setting properties
      *
      * @return
      */
     public static CloseableHttpClient getHttpClient() {
-        if (httpClient == null) {
-            synchronized (CloseableHttpClient.class) {
-                if (httpClient == null) {
-                    ConnectionSocketFactory plainsf = PlainConnectionSocketFactory.getSocketFactory();
-                    Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder
-                            .<ConnectionSocketFactory>create()
-                            .register("http", plainsf)
-                            .register("https", SSLConnectionSocketFactory.getSystemSocketFactory())
-                            .build();
-                    HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory
-                            = new ManagedHttpClientConnectionFactory(
-                            DefaultHttpRequestWriterFactory.INSTANCE, DefaultHttpResponseParserFactory.INSTANCE);
-                    DnsResolver dnsResolver = SystemDefaultDnsResolver.INSTANCE;
-                    PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(
-                            socketFactoryRegistry, connFactory, dnsResolver);
+        return getHttpClient(null);
+    }
 
-                    SocketConfig defaultSocketConfig = SocketConfig.custom().setTcpNoDelay(true).build();
-                    connManager.setDefaultSocketConfig(defaultSocketConfig);
+    private static SSLConnectionSocketFactory createSSLSocket(String certName) {
+        String certPath = PropertiesContainer.valueOfStringWithAssertNotNull(String.format("%s.path", certName));
+        String certPassword = PropertiesContainer.valueOfStringWithAssertNotNull(String.format("%s.password"
+                , certName));
+        String keyStoreType = PropertiesContainer.valueOfString(String.format("%s.story.type", certName)
+                , "PKCS12");
+        try (InputStream certStream = new FileInputStream(new File(certPath))) {
+            KeyStore ks = KeyStore.getInstance(keyStoreType);
+            ks.load(certStream, certPassword.toCharArray());
 
-                    connManager
-                            .setMaxTotal(PropertiesContainer.valueOf("httpclient.conn.maxTotal"
-                                    , Integer.class, 1000));
-                    connManager.setDefaultMaxPerRoute(
-                            PropertiesContainer.valueOf("httpclient.conn.maxPerRoute"
-                                    , Integer.class, 500));
-                    connManager.setValidateAfterInactivity(1000);
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            kmf.init(ks, certPassword.toCharArray());
 
-                    requestConfig = RequestConfig.custom()
-                            .setSocketTimeout(PropertiesContainer.valueOf("httpclient.socketTimeout"
-                                    , Integer.class
-                                    , HTTP_CONN_SOCKET_TIMEOUT))
-                            .setConnectTimeout(
-                                    PropertiesContainer.valueOf("httpclient.connectTimeout"
-                                            , Integer.class
-                                            , HTTP_CONN_TIMEOUT))
-                            .setConnectionRequestTimeout(PropertiesContainer.valueOf("httpclient.connectionRequestTimeout"
-                                    , Integer.class
-                                    , HTTP_CONN_TIMEOUT))
-                            .build();
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(kmf.getKeyManagers(), null, new SecureRandom());
 
-                    ExceptionRetryHandler retryHandler = new ExceptionRetryHandler(10,
-                            PropertiesContainer.valueOf(HTTPCLIENT_CONNRESETRETRY_ENABLE,
-                                    Boolean.class, true),
-                            PropertiesContainer.valueOf(HTTPCLIENT_CONNTIMEOUTRETRY_ENABLE,
-                                    Boolean.class, false));
+            SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(
+                    sslContext,
+                    new String[]{"TLSv1"},
+                    null,
+                    new DefaultHostnameVerifier());
 
-                    HttpClientBuilder httpClientBuilder = HttpClients
-                            .custom()
-                            .setConnectionManager(connManager)
-                            .setConnectionManagerShared(false)
-                            .evictExpiredConnections()
-                            .evictIdleConnections(10, TimeUnit.SECONDS)
-                            .setDefaultRequestConfig(requestConfig)
-                            .setConnectionReuseStrategy(DefaultConnectionReuseStrategy.INSTANCE)
-                            .setKeepAliveStrategy(new CustomConnectionKeepAliveStrategy())
-                            .setRetryHandler(retryHandler);
+            log.debug("{} ssl connection socket create success", certName);
 
-                    httpClient = httpClientBuilder.build();
+            return sslConnectionSocketFactory;
 
-                    Thread closeThread = new IdleConnectionMonitorThread(connManager);
-                    closeThread.setDaemon(true);
-                    closeThread.start();
-                }
-            }
+        } catch (IOException
+                | KeyStoreException
+                | CertificateException
+                | NoSuchAlgorithmException
+                | UnrecoverableKeyException
+                | KeyManagementException e) {
+            throw new SysException(50000, String.format("cert invalid %s", certPath), e);
         }
+    }
+
+    private static CloseableHttpClient createHttpClientInstance(SSLConnectionSocketFactory sslFactory) {
+        ConnectionSocketFactory plainsf = PlainConnectionSocketFactory.getSocketFactory();
+        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder
+                .<ConnectionSocketFactory>create()
+                .register("http", plainsf)
+                .register("https", sslFactory)
+                .build();
+        HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory
+                = new ManagedHttpClientConnectionFactory(
+                DefaultHttpRequestWriterFactory.INSTANCE, DefaultHttpResponseParserFactory.INSTANCE);
+        DnsResolver dnsResolver = SystemDefaultDnsResolver.INSTANCE;
+        PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(
+                socketFactoryRegistry, connFactory, dnsResolver);
+
+        SocketConfig defaultSocketConfig = SocketConfig.custom().setTcpNoDelay(true).build();
+        connManager.setDefaultSocketConfig(defaultSocketConfig);
+
+        connManager
+                .setMaxTotal(PropertiesContainer.valueOf("httpclient.conn.maxTotal"
+                        , Integer.class, 1000));
+        connManager.setDefaultMaxPerRoute(
+                PropertiesContainer.valueOf("httpclient.conn.maxPerRoute"
+                        , Integer.class, 500));
+        connManager.setValidateAfterInactivity(1000);
+
+        requestConfig = RequestConfig.custom()
+                .setSocketTimeout(PropertiesContainer.valueOf("httpclient.socketTimeout"
+                        , Integer.class
+                        , HTTP_CONN_SOCKET_TIMEOUT))
+                .setConnectTimeout(
+                        PropertiesContainer.valueOf("httpclient.connectTimeout"
+                                , Integer.class
+                                , HTTP_CONN_TIMEOUT))
+                .setConnectionRequestTimeout(PropertiesContainer.valueOf("httpclient.connectionRequestTimeout"
+                        , Integer.class
+                        , HTTP_CONN_TIMEOUT))
+                .build();
+
+        ExceptionRetryHandler retryHandler = new ExceptionRetryHandler(10,
+                PropertiesContainer.valueOf(HTTPCLIENT_CONNRESETRETRY_ENABLE,
+                        Boolean.class, true),
+                PropertiesContainer.valueOf(HTTPCLIENT_CONNTIMEOUTRETRY_ENABLE,
+                        Boolean.class, false));
+
+        HttpClientBuilder httpClientBuilder = HttpClients
+                .custom()
+                .setConnectionManager(connManager)
+                .setConnectionManagerShared(false)
+                .evictExpiredConnections()
+                .evictIdleConnections(10, TimeUnit.SECONDS)
+                .setDefaultRequestConfig(requestConfig)
+                .setConnectionReuseStrategy(DefaultConnectionReuseStrategy.INSTANCE)
+                .setKeepAliveStrategy(new CustomConnectionKeepAliveStrategy())
+                .setRetryHandler(retryHandler);
+
+        CloseableHttpClient httpClient = httpClientBuilder.build();
+
+        Thread closeThread = new IdleConnectionMonitorThread(connManager);
+        closeThread.setDaemon(true);
+        closeThread.start();
 
         return httpClient;
+    }
+
+    private static CloseableHttpClient createHttpClientInstance() {
+        return createHttpClientInstance(SSLConnectionSocketFactory.getSystemSocketFactory());
     }
 
     /**
@@ -386,12 +454,6 @@ public class HttpSyncClient {
             String msg = String.format("read %s resp body stream error ", httpUrl);
             log.warn(msg, e);
             throw new SysException(SYS_ERROR_CODE, msg, e);
-        } finally {
-            try {
-                result.getHttpResponse().getEntity().getContent().close();
-            } catch (IOException e) {
-                //ignore
-            }
         }
     }
 
@@ -816,15 +878,13 @@ public class HttpSyncClient {
 
     public static String sendHttpRequestByRetry(HttpRequestBase httpRequestBase, long timeout, TimeUnit timeUnit,
                                                 final int retryCount) {
-        HttpResult result = execute2ResultByRetry(httpRequestBase
+        return Optional.ofNullable(execute2ResultByRetry(httpRequestBase
                 , timeout
                 , timeUnit
                 , retryCount
-                , false);
-        if (result != null) {
-            return result.getResult();
-        }
-        return null;
+                , false))
+                .orElse(new HttpResult())
+                .getResult();
     }
 
     public static HttpResult execute2ResultByRetry(HttpRequestBase httpRequestBase
@@ -832,52 +892,45 @@ public class HttpSyncClient {
             , TimeUnit timeUnit
             , int retryCount
             , boolean isReturnHttpResponse) {
+        return execute2ResultByRetry(null, httpRequestBase, timeout, timeUnit, retryCount, isReturnHttpResponse);
+    }
+
+    public static HttpResult execute2ResultByRetry(String certName
+            , HttpRequestBase httpRequestBase
+            , long timeout
+            , TimeUnit timeUnit
+            , int retryCount
+            , boolean isReturnHttpResponse) {
         int i = 0;
-        if (httpRequestBase == null) {
-            throw new SysException(SYS_ERROR_CODE, "HttpRequestBase is null!");
-        }
-        while (i <= retryCount) {
+        while (i++ <= retryCount) {
             try {
-                return execute2Result(httpRequestBase, timeout, timeUnit, isReturnHttpResponse);
-            } catch (NoHttpResponseException e) {
-                if (i == retryCount) {
-                    throw new SysException(SYS_ERROR_CODE, e.getMessage(), e);
-                }
-            } catch (Exception e) {
-                if (i == retryCount) {
-                    log.error("Still failed after retrying, retry count {} error {}: url :{}, "
+                return execute2Result(certName, httpRequestBase, timeout, timeUnit, isReturnHttpResponse);
+            } catch (Throwable e) {
+                log.warn("HttpClient retry:{} - {} - {}"
+                        , i, retryCount, httpRequestBase.getURI());
+                if (i == retryCount || retryCount == 0) {
+                    log.error("Still failed after retrying, retry count: {} error: {} url :{}, "
                             , retryCount
                             , e.getMessage()
                             , httpRequestBase.getURI().toString()
                             , e);
-                }
-                if (e instanceof AppException) {
-                    throw (AppException) e;
-                } else if (e instanceof SysException) {
-                    throw (SysException) e;
-                } else {
+                    //if the last retry failed then throw exception out
                     throw new SysException(SYS_ERROR_CODE, e.getMessage(), e);
                 }
             }
-            i++;
-            log.warn("HttpClient retry count:{},target url {}", i, httpRequestBase.getURI());
         }
-        return null;
+        throw new AppException(50001, String.format("call %s failed", httpRequestBase.getURI()));
     }
 
     public static String execute(HttpRequestBase httpRequestBase, long timeout, TimeUnit timeUnit) throws Exception {
         HttpResult result = execute2Result(httpRequestBase, timeout, timeUnit, false);
 
-        if (result != null) {
-            if (result.getStatus() >= 400) {
-                throw new SysException(SYS_ERROR_CODE, "httpUrl:" + httpRequestBase.getURI().toString()
-                        + " httpStatus:" + result.getStatus() + ", result:" + result.getResult());
-            } else {
-                return result.getResult();
-            }
+        if (result.getStatus() >= 400) {
+            throw new SysException(SYS_ERROR_CODE, "httpUrl:" + httpRequestBase.getURI().toString()
+                    + " httpStatus:" + result.getStatus() + ", result:" + result.getResult());
         }
 
-        return null;
+        return result.getResult();
     }
 
     public static void execute(HttpRequestBase httpRequestBase, long timeout, TimeUnit timeUnit,
@@ -886,11 +939,18 @@ public class HttpSyncClient {
         consumer.accept(hr.getHttpResponse().getEntity());
     }
 
-
     public static HttpResult execute2Result(HttpRequestBase httpRequestBase
             , long timeout
             , TimeUnit timeUnit
-            , boolean isReturnHttpResponse) throws Exception {
+            , boolean isReturnHttpResponse) {
+        return execute2Result(null, httpRequestBase, timeout, timeUnit, isReturnHttpResponse);
+    }
+
+    public static HttpResult execute2Result(String certName
+            , HttpRequestBase httpRequestBase
+            , long timeout
+            , TimeUnit timeUnit
+            , boolean isReturnHttpResponse) {
         if (httpRequestBase == null) {
             throw new SysException(SYS_ERROR_CODE, "HttpRequestBase is null!");
         }
@@ -907,7 +967,7 @@ public class HttpSyncClient {
             httpRequest = beforeLog(httpRequestBase);
 
             long startTime = System.currentTimeMillis();
-            response = getHttpClient().execute(httpRequestBase);
+            response = getHttpClient(certName).execute(httpRequestBase);
             log.info(">>request {}, cost {} ms {} bytes"
                     , httpRequestBase.getURI()
                     , System.currentTimeMillis() - startTime
@@ -918,9 +978,9 @@ public class HttpSyncClient {
                 result = new HttpResult(response);
             } else {
                 HttpEntity entity = response.getEntity();
-                responseContent = EntityUtils.toString(entity);
+                responseContent = EntityUtils.toString(entity, "UTF-8");
                 int statusCode = response.getStatusLine().getStatusCode();
-                result = new HttpResult(statusCode, responseContent);
+                result = new HttpResult(statusCode, responseContent, response.getAllHeaders());
             }
 
             afterCompletion(response.getAllHeaders());
@@ -936,9 +996,11 @@ public class HttpSyncClient {
             afterThrowingLog(httpRequest, e);
             throwException(e);
             throw new SysException(SYS_ERROR_CODE
-                    , String.format("%s -> %s"
+                    , String.format("%s -> %s -> %s -> %s"
                     , e.getMessage()
-                    , httpRequestBase.getURI())
+                    , httpRequestBase.getURI()
+                    , response == null ? 500 : response.getStatusLine().getStatusCode()
+                    , result)
                     , e);
         } finally {
             if (!isReturnHttpResponse) {
@@ -956,9 +1018,9 @@ public class HttpSyncClient {
         final List<Integer> okCode = ImmutableList.of(200, 201, 204);
         if (!okCode.contains(statusCode)) {
 
-            throw new SysException(SYS_ERROR_CODE, String.format("call %s failed.code %s"
-                    , httpRequestBase.getURI().toString()
-                    , statusCode)
+            throw new SysException(SYS_ERROR_CODE, String.format("call %s failed - %s - %s"
+                    , httpRequestBase.getURI()
+                    , statusCode, result)
                     , result);
         }
     }
@@ -1042,6 +1104,7 @@ public class HttpSyncClient {
             config = RequestConfig.custom().setSocketTimeout(timeoutInMS).setConnectTimeout(timeoutInMS)
                     .setConnectionRequestTimeout(timeoutInMS).build();
         }
+
         httpRequestBase.setConfig(config);
     }
 
@@ -1061,14 +1124,18 @@ public class HttpSyncClient {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-
     }
 
-    private static void addGlobalHeader(HttpMessage httpMessage) {
-        httpMessage.addHeader(REQUEST_ID, Strings.isNullOrEmpty(MDC.get(REQUEST_ID))
-                ? UUID.randomUUID().toString().replaceAll("-", "").toLowerCase()
-                : MDC.get(REQUEST_ID));
-        httpMessage.addHeader(USER_AGENT, PANLI_IBJ);
-        httpMessage.addHeader(HEADER_REQ_TIME, String.valueOf(System.currentTimeMillis()));
+    private static void addGlobalHeader(HttpRequestBase httpMessage) {
+        String host = httpMessage.getURI().getHost();
+        if (StringUtils.endsWithIgnoreCase(host, "panli.com")
+                || StringUtils.endsWithIgnoreCase(host, "yugyg.com")) {
+            httpMessage.addHeader(REQUEST_ID, Strings.isNullOrEmpty(MDC.get(REQUEST_ID))
+                    ? UUID.randomUUID().toString().replaceAll("-", "").toLowerCase()
+                    : MDC.get(REQUEST_ID));
+            httpMessage.addHeader(USER_AGENT, PANLI_IBJ);
+            httpMessage.addHeader(HEADER_REQ_TIME, String.valueOf(System.currentTimeMillis()));
+
+        }
     }
 }

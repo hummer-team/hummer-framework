@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+       http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+    <dubbo:application name="dubbo-provider" metadata-type="remote">
+        <dubbo:parameter key="mapping-type" value="metadata"/>
+        <dubbo:parameter key="qos.enable" value="false"/>
+    </dubbo:application>
+
+    <bean id="serializationOptimizerImpl" class="com.hummer.dubbo.extend.plugin.SerializationOptimizerImpl"
+          init-method="registerDto">
+        <property name="packageName" value="comm.hummer.simple.common.module"/>
+    </bean>
+    <!-- serialization=fastjson or kryo-->
+    <dubbo:protocol name="dubbo" port="20890" serialization="kryo"
+                    optimizer="com.hummer.dubbo.extend.plugin.SerializationOptimizerImpl"/>
+
+    <dubbo:registry address="nacos://config-center.service.panli.com:80?namespace=dubbo_config"/>
+    <!--<dubbo:monitor protocol="registry"/>-->
+    <!--<dubbo:monitor protocol="registry" interval="3000"/>-->
+    <dubbo:config-center address="nacos://config-center.service.panli.com:80?namespace=dubbo_config"/>
+    <dubbo:metadata-report address="nacos://config-center.service.panli.com:80?namespace=dubbo_config"/>
+    <!--<dubbo:metrics port="8006" protocol="dubbo"/>-->
+
+    <!--business service config-->
+    <bean id="helloService" class="com.hummer.simple.dubbo.server.HelloServiceImpl"/>
+    <dubbo:service version="1.0.0" group="g1" interface="comm.hummer.simple.common.facade.HelloService"
+                   ref="helloService" validation="true"/>
+</beans>

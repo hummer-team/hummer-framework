@@ -13,22 +13,60 @@
 
 
     <dependencies>
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.boot</groupId>-->
-        <!--<artifactId>spring-boot-starter</artifactId>-->
-        <!--</dependency>-->
 
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.hummer</groupId>
+            <artifactId>hummer-core</artifactId>
+        </dependency>
 
+        <dependency>
+            <groupId>com.hummer</groupId>
+            <artifactId>hummer-simple-common-module</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.hummer</groupId>
+            <artifactId>hummer-rest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.hummer</groupId>
+            <artifactId>hummer-dubbo-extend-plugin</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>log4j</artifactId>
+                    <groupId>log4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.middleware</groupId>-->
+<!--            <artifactId>metrics-core-api</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.middleware</groupId>-->
+<!--            <artifactId>metrics-core-impl</artifactId>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>

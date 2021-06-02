@@ -16,6 +16,7 @@ import org.springframework.util.CollectionUtils;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -188,5 +189,16 @@ public class GoodsUtil {
         return goodsStatus == 1 && goodsIsPass == 2;
     }
 
+    public static boolean confirmGoodsCanReturn(Boolean isGift, Boolean isClose, Date createTime) {
+
+        return !Boolean.TRUE.equals(isClose) && !Boolean.TRUE.equals(isGift) && !confirmTimeExpire(createTime);
+    }
+
+    private static boolean confirmTimeExpire(Date createTime) {
+        if (createTime == null) {
+            return false;
+        }
+        return DateUtil.startDateSubtractEndDateOfDay(DateUtil.now(), createTime) > 30;
+    }
 
 }

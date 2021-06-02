@@ -55,4 +55,16 @@ public class DataSyncController {
         orderDataSyncService.orderChange();
         return ResourceResponse.ok(new CustomItemBo());
     }
+
+    public ResourceResponse<Void> userLogin(
+            @RequestParam("userName") String userName,
+            @RequestParam("password") String password
+    ) {
+        return ResourceResponse.ok();
+    }
+
+    public ResourceResponse<Void> doSomething() {
+
+        return ResourceResponse.ok();
+    }
 }

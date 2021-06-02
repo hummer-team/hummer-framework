@@ -2,6 +2,8 @@ package com.hummer.redis.plugin.test;
 
 import com.hummer.common.http.HttpSyncClient;
 import com.hummer.common.utils.DateUtil;
+import com.hummer.common.utils.NumberUtil;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Date;
@@ -51,4 +53,11 @@ public class CustomExceptionTest {
         return 1;
     }
 
+    @Test
+    public void number() {
+        String v = "10";
+        Long l = NumberUtil.to(v, 0L, Long.class);
+        Long a = 10L;
+        Assert.assertEquals(a, l);
+    }
 }

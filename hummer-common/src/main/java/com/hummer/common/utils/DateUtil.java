@@ -212,6 +212,10 @@ public class DateUtil {
         F6("yyyyMMdd"),
         F7("yyyyMMddHHmmssSSS"),
         F8("yyyy-MM-dd HH:mm:ss.SSS"),
+        F9("yyyy-MM"),
+        F10("yyyy"),
+        F11("dd HH:mm:ss"),
+        F12("MM-dd HH:mm:ss"),
         ;
         private String value;
 
@@ -222,5 +226,25 @@ public class DateUtil {
         public String getValue() {
             return value;
         }
+    }
+
+    public static Date addMonths(final Date date, final int diff) {
+        return new DateTime(date).plusMonths(diff).toDate();
+    }
+
+    public static Date addYears(final Date date, final int diff) {
+        return new DateTime(date).plusYears(diff).toDate();
+    }
+
+    public static Date addSeconds(final Date date, final int diff) {
+        return new DateTime(date).plusSeconds(diff).toDate();
+    }
+
+    public static Date addMillis(final Date date, final int diff) {
+        return new DateTime(date).plusMillis(diff).toDate();
+    }
+
+    public static Date addWeeks(final Date date, final int diff) {
+        return new DateTime(date).plusWeeks(diff).toDate();
     }
 }

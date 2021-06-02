@@ -1,6 +1,8 @@
 package com.hummer.nacos.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * description     java类作用描述
@@ -11,6 +13,8 @@ import lombok.Data;
  * @date 2020/9/1 13:02
  */
 @Data
+@SuperBuilder
+@NoArgsConstructor
 public class CustomItemBo {
     private Integer b;
 

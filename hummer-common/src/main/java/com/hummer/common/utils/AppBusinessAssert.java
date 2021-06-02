@@ -1,5 +1,6 @@
 package com.hummer.common.utils;
 
+import com.hummer.common.ErrorCode;
 import com.hummer.common.exceptions.AppException;
 
 /**
@@ -16,5 +17,10 @@ public class AppBusinessAssert {
         if (!expression) {
             throw new AppException(code, msg);
         }
+    }
+
+    public static void isTrue(boolean expression, ErrorCode errorCode) {
+
+        isTrue(expression, errorCode.getCode(), errorCode.getMsg());
     }
 }

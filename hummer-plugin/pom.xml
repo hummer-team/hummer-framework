@@ -25,16 +25,17 @@
         <module>hummer-redis-plugin</module>
         <module>hummer-trace-client-plugin</module>
         <module>hummer-swagger-plugin</module>
-        <module>hummer-user-plugin</module>
         <module>hummer-excel-plugin</module>
         <module>hummer-cache-plugin</module>
         <module>hummer-warmup-plugin</module>
-        <module>hummer-soa-plugin</module>
+        <module>hummer-method-stack-plugin</module>
         <module>hummer-data-sync-plugin</module>
         <module>hummer-request-idempotent-plugin</module>
-        <module>hummer-yug-user-plugin</module>
+        <module>hummer-dubbo-extend-plugin</module>
         <module>hummer-yug-tools-plugin</module>
         <module>hummer-model-generator-plugin</module>
-        <module>hummer-partner-pay-plugin</module>
+        <module>hummer-pay-gateway-plugin</module>
+        <module>hummer-user-auth-plugin</module>
+        <module>hummer-proxy-plugin</module>
     </modules>
 </project>

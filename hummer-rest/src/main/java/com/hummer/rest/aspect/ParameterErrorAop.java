@@ -24,11 +24,7 @@ public class ParameterErrorAop {
 
     }
 
-    @Pointcut("restMethod()")
-    private void restMethodHandle() {
-    }
-
-    @Before("restMethodHandle()")
+    @Before("restMethod()")
     public void doBeforeMethod(JoinPoint jp) {
         if (!PropertiesContainer.valueOf(ASPECT_ENABLE, Boolean.class, false)) {
             return;
