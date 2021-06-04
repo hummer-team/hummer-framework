@@ -6,6 +6,7 @@ import com.hummer.cache.plugin.SupplierEx;
 import com.hummer.common.SysConstant;
 import com.hummer.redis.plugin.RedisOp;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -85,4 +87,30 @@ public class SimpleRedisCache {
         }
         return KeyUtil.formatKey(nameSpace, businessCode, parameterMap);
     }
+
+    public Long removeCacheByKeys(List<String> keys) {
+        if (CollectionUtils.isEmpty(keys)) {
+            return 0L;
+        }
+        log.info("clear redis cache by keys size {}", keys.size());
+
+        return redisOp.set().del(keys);
+    }
+
+    /**
+     * max remove size 10000
+     *
+     * @param pattern
+     * @return java.lang.Long
+     * @author chen wei
+     * @date 2021/6/3
+     */
+    public Long removeCacheByPattern(String pattern) {
+        log.info("clear redis cache by pattern {}", pattern);
+        List<String> keys = redisOp.set().scan(0, pattern, null);
+
+        return removeCacheByKeys(keys);
+    }
+
+
 }

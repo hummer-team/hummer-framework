@@ -3,10 +3,14 @@ package com.hummer.redis.plugin.ops;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.hummer.redis.plugin.pool.InternalRedisPool;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.ScanParams;
+import redis.clients.jedis.ScanResult;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -95,4 +99,30 @@ public abstract class BaseOp<T extends BaseOp<T>> {
         }
         LOGGER.debug("class redis client pool close all done , key is {}", REDIS_CLIENT_INSTANCE_MAP.keySet());
     }
+
+    public List<String> scan(int index, String pattern, Integer count) {
+
+        int max = count == null ? -1 : count / 1000;
+        max = Math.min(max, 10);
+        String cursor = String.valueOf(index);
+        List<String> result = new ArrayList<>();
+        for (int i = 0; max == -1 || i < max; i++) {
+            String finalCursor = cursor;
+            ScanResult<String> itemResult = redis(REDIS_DB_GROUP_NAME).doExecute(jedis -> {
+                ScanParams params = new ScanParams();
+                params.match(pattern);
+                params.count(1000);
+                return jedis.scan(finalCursor, params);
+            });
+            if (CollectionUtils.isNotEmpty(itemResult.getResult())) {
+                result.addAll(itemResult.getResult());
+            }
+            if ("0".equals(cursor) || CollectionUtils.isEmpty(itemResult.getResult())) {
+                break;
+            }
+            cursor = itemResult.getCursor();
+        }
+        return result;
+    }
+
 }
