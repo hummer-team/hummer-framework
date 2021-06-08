@@ -25,7 +25,7 @@ public class CglibDynamicProxy {
     }
 
     @SuppressWarnings("unchecked")
-    public Object newProxyInstance() {
+    public Object newProxyInstance(boolean invoke) {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(aClass);
         enhancer.setCallbacks(new Callback[]{new MethodInterceptor() {
@@ -33,7 +33,10 @@ public class CglibDynamicProxy {
             public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
                 Object o = interceptHandler.before(obj, args);
                 try {
-                    Object result = proxy.invokeSuper(obj, args);
+                    Object result = null;
+                    if (invoke) {
+                        result = proxy.invokeSuper(obj, args);
+                    }
                     interceptHandler.after(o, result);
                     return result;
                 } catch (Throwable e) {

@@ -24,7 +24,7 @@ public class ApplicationFailedListener implements ApplicationListener<Applicatio
      */
     @Override
     public void onApplicationEvent(ApplicationFailedEvent event) {
-        LOGGER.error("application start failed,reason ",event.getException());
+        LOGGER.error("application start failed,reason ", event.getException());
         handle();
     }
 
@@ -35,7 +35,7 @@ public class ApplicationFailedListener implements ApplicationListener<Applicatio
             public void run() {
                 try {
                     TimeUnit.SECONDS.sleep(3);
-                    LOGGER.error("application started failed , System after 1s exists!");
+                    LOGGER.error("application started failed , System after 3s exists!");
                     System.exit(0);
                 } catch (InterruptedException e) {
                     LOGGER.warn(e.getMessage(), e);

@@ -127,9 +127,9 @@ public class SpringApplicationContext implements ApplicationContextAware {
             if (Boolean.FALSE.equals(isRegisterShutdownHook)) {
                 synchronized (obj) {
                     if (Boolean.FALSE.equals(isRegisterShutdownHook)) {
+                        isRegisterShutdownHook = true;
                         ((GenericApplicationContext) SpringApplicationContext.applicationContext)
                                 .registerShutdownHook();
-                        isRegisterShutdownHook = true;
                     }
                 }
             }

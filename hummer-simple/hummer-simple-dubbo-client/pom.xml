@@ -26,6 +26,10 @@
     <dependencies>
         <dependency>
             <groupId>com.hummer</groupId>
+            <artifactId>hummer-dubbo-extend-plugin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.hummer</groupId>
             <artifactId>hummer-simple-common-module</artifactId>
         </dependency>
         <dependency>

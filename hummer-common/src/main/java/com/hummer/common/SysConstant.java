@@ -15,11 +15,13 @@ public class SysConstant {
     public static final String GATEWAY_REQ_TIME = "X-G-Request-Time";
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     public static final String DEFAULT_CHARSET_NAME = "UTF-8";
+    public static final String APPLICATION_BOOT_CLASS = "ApplicationBootClass";
     /**
      * 业务幂等错误码，对应java.sql.SQLIntegrityConstraintViolationException
      */
     public static final int BUSINESS_IDEMPOTENT_ERROR_CODE = 430;
     public static final int BUSINESS_IDEMPOTENT_SUB_CODE = 460;
+
     private SysConstant() {
 
     }
@@ -80,6 +82,7 @@ public class SysConstant {
         public static final String DRUID_MERGE_SQL = "druid.merge.sql";
         public static final String JDBC_CHECK_SQL = "jdbc.check.sql";
         public static final String DRUID_SELECT_UNION_CHECK = "druid.select.union.check";
+
         private DaoConstant() {
 
         }

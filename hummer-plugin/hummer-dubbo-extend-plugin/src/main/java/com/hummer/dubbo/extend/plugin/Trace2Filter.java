@@ -48,7 +48,7 @@ public class Trace2Filter implements Filter {
         int slowCostTime = PropertiesContainer.valueOf("request.cost.time.slow.value"
                 , Integer.class, 100);
         if (costTime >= slowCostTime) {
-            logger.warn("{} -{} - {} cost ms", invocation.getServiceName(), invocation.getMethodName(), costTime);
+            logger.warn("{} - {} - {} cost ms", invocation.getServiceName(), invocation.getMethodName(), costTime);
         }
         if (r.hasException()) {
             logger.error("{} - {} - {} cost ms,method args {},has exception: "

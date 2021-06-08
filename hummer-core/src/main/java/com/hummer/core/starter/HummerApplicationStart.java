@@ -1,5 +1,6 @@
 package com.hummer.core.starter;
 
+import com.hummer.core.PropertiesContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ResourceBanner;
@@ -43,6 +44,7 @@ public class HummerApplicationStart {
                 .forEach(listener -> builder.application().addListeners(listener));
         LOGGER.debug("register application listener list {}"
                 , builder.application().getListeners());
+        PropertiesContainer.put("ApplicationBootClass", startClass);
         builder.sources(startClass).banner(rb).run(args);
     }
 }

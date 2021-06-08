@@ -21,7 +21,7 @@ import java.util.Arrays;
  **/
 public class HttpInternalUtil {
 
-    private HttpInternalUtil(){
+    private HttpInternalUtil() {
 
     }
 
@@ -38,7 +38,7 @@ public class HttpInternalUtil {
      * @version
      * @Param response
      **/
-    static HttpEntity getHttpEntity(HttpResponse response)
+    public static HttpEntity getHttpEntity(HttpResponse response)
             throws ClientProtocolException
             , HttpResponseException {
 
@@ -59,7 +59,7 @@ public class HttpInternalUtil {
      * @version
      * @Param response http response 实体
      **/
-    static HttpEntity getHttpEntity(HttpResponse response, Integer... matchStatusCode)
+    public static HttpEntity getHttpEntity(HttpResponse response, Integer... matchStatusCode)
             throws ClientProtocolException, HttpResponseException {
 
         if (response == null) {
@@ -89,7 +89,7 @@ public class HttpInternalUtil {
      * @version
      * @Param [url, requestMethod]
      **/
-    static HttpRequestBase getHttpRequestV2(final String url, final RequestMethod requestMethod) {
+    public static HttpRequestBase getHttpRequestV2(final String url, final RequestMethod requestMethod) {
         HttpRequestBase httpRequest;
         switch (requestMethod) {
             case POST:
@@ -119,7 +119,7 @@ public class HttpInternalUtil {
      * @author lee
      * @Date 2018/11/5 17:52
      **/
-    static HttpEntityEnclosingRequestBase getHttpRequest(String url, RequestMethod requestMethod) {
+    public static HttpEntityEnclosingRequestBase getHttpRequest(String url, RequestMethod requestMethod) {
         HttpEntityEnclosingRequestBase httpRequest;
         switch (requestMethod) {
             case POST:

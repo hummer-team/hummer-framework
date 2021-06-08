@@ -33,7 +33,7 @@ public class DataSourceController {
     private EvaluationTasksDao tasksDao;
     @Autowired(required = false)
     private CoursewareDaoMapper coursewareDaoMapper;
-    @Autowired
+    @Autowired(required = false)
     private UserBasicDao userBasicDao;
 
     @GetMapping("/user-info/{userId}")
