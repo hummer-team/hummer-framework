@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.hummer.core.PropertiesContainer;
+import com.hummer.pipeline.plugin.constant.Constants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -38,7 +39,7 @@ public class TaskThreadPoolBean {
      * @date 2018/12/11 13:31
      * @version 1.0.0
      **/
-    @Bean(name = "defaultTaskGroup")
+    @Bean(name = Constants.POOL_DEFAULT_TASK_GROUP)
     @Lazy
     public ListeningExecutorService initTaskGroupV1ThreadPool() {
         int size = PropertiesContainer.valueOfInteger("hummer.task.memory.queue.max.size", 1000);
@@ -77,7 +78,7 @@ public class TaskThreadPoolBean {
      * @date 2018/12/11 13:31
      * @version 1.0.0
      **/
-    @Bean(name = "defaultTaskGroupV2")
+    @Bean(name = Constants.POOL_DEFAULT_TASK_GROUP_V2)
     @Lazy
     public ExecutorService initTaskGroupV2ThreadPool() {
 
@@ -123,7 +124,7 @@ public class TaskThreadPoolBean {
      * @date 2018/12/17 11:01
      * @version 1.0.0
      **/
-    @Bean(name = "defaultTaskOenThreadGroupV2")
+    @Bean(name = Constants.POOL_DEFAULT_TASK_OEN_THREAD_GROUP_V2)
     @Lazy
     public ExecutorService initTaskOenThreadGroupV2ThreadPool() {
         int size = PropertiesContainer.valueOfInteger("hummer.task.memory.queue.max.size", 1000);
@@ -166,7 +167,7 @@ public class TaskThreadPoolBean {
      * @date 2018/12/11 13:31
      * @version 1.0.0
      **/
-    @Bean(name = "defaultTaskGroupV3")
+    @Bean(name = Constants.POOL_DEFAULT_TASK_GROUP_V3)
     @Lazy
     public ThreadPoolTaskExecutor initTaskGroupV3ThreadPool() {
         int size = PropertiesContainer.valueOfInteger("hummer.task.memory.queue.max.size", 1000);

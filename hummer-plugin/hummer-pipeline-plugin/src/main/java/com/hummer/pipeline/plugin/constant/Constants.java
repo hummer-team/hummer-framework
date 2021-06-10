@@ -1,4 +1,4 @@
-package com.hummer.pGipeline.plugin.constant;
+package com.hummer.pipeline.plugin.constant;
 
 /**
  * Constants
