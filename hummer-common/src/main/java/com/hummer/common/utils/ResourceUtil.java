@@ -30,35 +30,6 @@ public class ResourceUtil {
     private static final String CLASSPATH_PREFIX = "classpath:";
 
     /**
-     * get class loader
-     *
-     * @param clazz
-     * @return class loader
-     */
-    public static ClassLoader getClassLoader(Class<?> clazz) {
-        ClassLoader cl = null;
-        try {
-            cl = Thread.currentThread().getContextClassLoader();
-        } catch (Throwable ex) {
-            // Cannot access thread context ClassLoader - falling back to system class loader...
-        }
-        if (cl == null) {
-            // No thread context class loader -> use class loader of this class.
-            cl = clazz.getClassLoader();
-            if (cl == null) {
-                // getClassLoader() returning null indicates the bootstrap ClassLoader
-                try {
-                    cl = ClassLoader.getSystemClassLoader();
-                } catch (Throwable ex) {
-                    // Cannot access system ClassLoader - oh well, maybe the caller can live with null...
-                }
-            }
-        }
-
-        return cl;
-    }
-
-    /**
      * Returns the URL of the resource on the classpath.
      *
      * @param resource The resource to find
@@ -268,7 +239,7 @@ public class ResourceUtil {
                                         try {
                                             classes.add(Class.forName(packageName + '.' + className));
                                         } catch (ClassNotFoundException e) {
-                                            log.error("getClassesByPackageName fail",e);
+                                            log.error("getClassesByPackageName fail", e);
                                             System.exit(-1);
                                         }
                                     }
@@ -276,13 +247,13 @@ public class ResourceUtil {
                             }
                         }
                     } catch (IOException e) {
-                        log.error("getClassesByPackageName fail",e);
+                        log.error("getClassesByPackageName fail", e);
                         System.exit(-1);
                     }
                 }
             }
         } catch (IOException e) {
-            log.error("getClassesByPackageName fail",e);
+            log.error("getClassesByPackageName fail", e);
             System.exit(-1);
         }
 
@@ -314,7 +285,7 @@ public class ResourceUtil {
                 try {
                     classes.add(Class.forName(packageName + '.' + className));
                 } catch (ClassNotFoundException e) {
-                    log.error("getClassesByPackageName fail",e);
+                    log.error("getClassesByPackageName fail", e);
                 }
             }
         }
@@ -328,6 +299,10 @@ public class ResourceUtil {
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static <T> T tryInstance(Class<?> cl, Class<?> target, Object... args) {
+        return (T) tryInstance(cl, args);
     }
 
     public static <S> ServiceLoader<S> getServiceLoader(Class<S> clazz) {

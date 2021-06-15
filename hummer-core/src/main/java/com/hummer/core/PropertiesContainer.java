@@ -138,6 +138,21 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
     }
 
     /**
+     * get properties as  target class type.
+     *
+     * @param classs key class
+     * @param <T>    target T
+     * @return direct convert to target type.
+     */
+    public static <T> T valueOfInstanceDirect(Class<?> classs) {
+        Object val = PROPERTY_MAP.get(classs.getName());
+        if (val == null) {
+            return null;
+        }
+        return (T) val;
+    }
+
+    /**
      * get properties as string
      *
      * @param key key

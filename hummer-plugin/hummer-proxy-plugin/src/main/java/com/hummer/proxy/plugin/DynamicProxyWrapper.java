@@ -35,6 +35,11 @@ public class DynamicProxyWrapper {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static <T> T cglibIntercept(Class<?> tClass, InterceptHandler interceptHandler, String... methods) {
-        return (T) new CglibDynamicProxy(tClass, interceptHandler, Arrays.asList(methods)).newProxyInstance();
+        return (T) new CglibDynamicProxy(tClass, interceptHandler, Arrays.asList(methods)).newProxyInstance(true);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static <T> T cglibIntercept(Class<?> tClass, InterceptHandler interceptHandler,boolean invoke, String... methods) {
+        return (T) new CglibDynamicProxy(tClass, interceptHandler, Arrays.asList(methods)).newProxyInstance(invoke);
     }
 }

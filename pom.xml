@@ -155,6 +155,11 @@
         <dependencies>
             <dependency>
                 <groupId>com.hummer</groupId>
+                <artifactId>hummer-first-restfull-plugin</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hummer</groupId>
                 <artifactId>hummer-proxy-plugin</artifactId>
                 <version>${hummer.version}</version>
             </dependency>

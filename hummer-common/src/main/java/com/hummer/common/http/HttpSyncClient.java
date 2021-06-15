@@ -63,6 +63,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -554,14 +555,15 @@ public class HttpSyncClient {
         for (Map.Entry<String, String> entry : parameters.entrySet()) {
             nameValuePairs.add(new BasicNameValuePair(entry.getKey(), parameters.get(entry.getKey())));
         }
+        if (header != null) {
+            httpPost.setHeaders(header);
+        }
         try {
-            if (header != null) {
-                httpPost.setHeaders(header);
-            }
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
-        } catch (Exception e) {
+        } catch (UnsupportedEncodingException e) {
             throw new SysException(SYS_ERROR_CODE, e.getMessage(), e);
         }
+
         return sendHttpPostByRetry(httpPost, timeout, timeUnit, retryCount);
     }
 
@@ -968,8 +970,9 @@ public class HttpSyncClient {
 
             long startTime = System.currentTimeMillis();
             response = getHttpClient(certName).execute(httpRequestBase);
-            log.info(">>request {}, cost {} ms {} bytes"
+            log.info(">>{} {} cost {} ms {} bytes"
                     , httpRequestBase.getURI()
+                    , httpRequestBase.getMethod()
                     , System.currentTimeMillis() - startTime
                     , response.getFirstHeader("Content-Length"));
 
@@ -996,8 +999,10 @@ public class HttpSyncClient {
             afterThrowingLog(httpRequest, e);
             throwException(e);
             throw new SysException(SYS_ERROR_CODE
-                    , String.format("%s -> %s -> %s -> %s"
+                    , String.format("%s -> %s%s -> %s -> %s -> %s"
                     , e.getMessage()
+                    , timeout
+                    , timeUnit.name()
                     , httpRequestBase.getURI()
                     , response == null ? 500 : response.getStatusLine().getStatusCode()
                     , result)
