@@ -3,6 +3,7 @@ package com.hummer.common.utils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -357,5 +358,18 @@ public class CollectionUtil {
         } else {
             return values.iterator().next();
         }
+    }
+
+    public static Map<String, Object> toMap2(Object obj) throws Exception{
+        if (obj == null) {
+            return null;
+        }
+        Field[] declaredFields = obj.getClass().getDeclaredFields();
+        Map<String, Object> map = new HashMap<>(declaredFields.length);
+        for (Field field : declaredFields) {
+            field.setAccessible(true);
+            map.put(field.getName(), field.get(obj));
+        }
+        return map;
     }
 }

@@ -35,7 +35,7 @@ public abstract class Proxy {
     private static final String PACKAGE_NAME = Proxy.class.getPackage().getName();
     private static final Map<ClassLoader, Map<String, Object>> PROXY_CACHE_MAP = new WeakHashMap<ClassLoader, Map<String, Object>>();
     private static final Object PENDING_GENERATION_MARKER = new Object();
-    private static int MAX_PROXY_COUNT = 65535;
+    private static final int MAX_PROXY_COUNT = 65535;
 
     protected Proxy() {
     }

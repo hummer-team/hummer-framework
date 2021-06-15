@@ -1,4 +1,4 @@
-package com.hummer.first.restfull.plugin;
+package com.hummer.first.restfull.plugin.bean;
 
 
 import lombok.extern.slf4j.Slf4j;

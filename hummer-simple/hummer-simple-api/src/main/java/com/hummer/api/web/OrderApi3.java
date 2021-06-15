@@ -1,12 +1,12 @@
 package com.hummer.api.web;
 
 import com.hummer.api.dto.NoProcessOrderInfoRespDto;
-import com.hummer.first.restfull.plugin.HummerRestByConfig;
-import com.hummer.first.restfull.plugin.HummerSimpleRest;
+import com.hummer.first.restfull.plugin.annotation.HummerRestApiDeclare;
+import com.hummer.first.restfull.plugin.annotation.HummerFirstRest;
 import com.hummer.rest.model.ResourceResponse;
 
-@HummerSimpleRest(businessName = "订单查询")
+@HummerFirstRest
 public interface OrderApi3 {
-    @HummerRestByConfig(apiName = "orderQuery")
+    @HummerRestApiDeclare(apiName = "orderNotProcess", apiPath = "", host = "")
     ResourceResponse<NoProcessOrderInfoRespDto> noProcessOrder();
 }

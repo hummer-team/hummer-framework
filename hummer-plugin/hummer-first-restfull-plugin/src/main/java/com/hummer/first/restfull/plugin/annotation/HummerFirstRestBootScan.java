@@ -1,4 +1,7 @@
-package com.hummer.first.restfull.plugin;
+package com.hummer.first.restfull.plugin.annotation;
+
+import com.hummer.first.restfull.plugin.bean.RegisterDynamicProxyBean;
+import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,7 +13,8 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface HummerSimpleRestBootScan {
+@Import({RegisterDynamicProxyBean.class})
+public @interface HummerFirstRestBootScan {
     /**
      * target package
      */

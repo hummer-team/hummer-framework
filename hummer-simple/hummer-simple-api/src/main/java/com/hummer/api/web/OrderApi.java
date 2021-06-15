@@ -1,15 +1,32 @@
 package com.hummer.api.web;
 
 import com.hummer.api.dto.NoProcessOrderInfoRespDto;
-import com.hummer.first.restfull.plugin.HummerRestByDeclare;
-import com.hummer.first.restfull.plugin.HummerSimpleRest;
+import com.hummer.first.restfull.plugin.annotation.HummerFirstRest;
+import com.hummer.first.restfull.plugin.annotation.HummerRestApiDeclare;
 import com.hummer.rest.model.ResourceResponse;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@HummerSimpleRest(businessName = "订单查询")
+import java.util.Map;
+
+@HummerFirstRest
 public interface OrderApi {
-    @HummerRestByDeclare(apiPath = "v1/purchase/order/not-process/order-count/{id}/{name}"
-        , host = "kingkong.service.panli.com"
-        , timeOutMills = 20
+    @HummerRestApiDeclare(
+        apiPath = "/v1/purchase/order/not-process/order-count"
+        , host = "http://kingkong.service.panli.com"
+        , timeOutMills = 2000
         , retryCount = 1)
-    ResourceResponse<NoProcessOrderInfoRespDto> noProcessOrder(int id, String name);
+    ResourceResponse<NoProcessOrderInfoRespDto> noProcessOrder(@RequestParam(name = "id") int id
+        , @RequestParam(name = "name") String name, @RequestHeader(name = "cookieValue") String h1);
+
+    @HummerRestApiDeclare(
+        apiPath = "/v1/purchase/order/not-process/order-count/{id}/{name}"
+        , host = "http://kingkong.service.panli.com"
+        , timeOutMills = 20
+        , httpMethod = "POST"
+        , retryCount = 1)
+    ResourceResponse<NoProcessOrderInfoRespDto> noProcessOrder2(@PathVariable(name = "id") int id
+        , @PathVariable(name = "name") String name, @RequestBody Map<String, Object> body);
 }
