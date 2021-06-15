@@ -24,6 +24,7 @@ public class ApiMetadata {
     private List<Header> headerList;
     private String businessDescribe;
     private CustomParseRespProvider parse;
+    private AfterHandlerProvider afterHandler;
     private String apiName;
     private Boolean enable;
     private Integer cacheTimeOutMills;

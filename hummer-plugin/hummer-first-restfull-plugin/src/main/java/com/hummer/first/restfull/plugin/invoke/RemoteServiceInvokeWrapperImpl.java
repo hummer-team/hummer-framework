@@ -51,6 +51,7 @@ public class RemoteServiceInvokeWrapperImpl implements RemoteServiceInvokeWrappe
      * @return
      */
     @Override
+    @SuppressWarnings({"unchecked", "raw"})
     public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
         HummerRestApiDeclare declare = method.getAnnotation(HummerRestApiDeclare.class);
         if (declare == null) {
@@ -66,7 +67,12 @@ public class RemoteServiceInvokeWrapperImpl implements RemoteServiceInvokeWrappe
         //todo cache
 
         //call remote api
-        return apiMetadata.getAsync() ? invokeOfAsync(apiMetadata) : invokeOfSync(apiMetadata);
+        Object o = apiMetadata.getAsync() ? invokeOfAsync(apiMetadata) : invokeOfSync(apiMetadata);
+        //after handler
+        if (apiMetadata.getAfterHandler() != null) {
+            apiMetadata.getAfterHandler().handler(o);
+        }
+        return o;
     }
 
     private Object invokeOfSync(ApiMetadata apiMetadata) {
@@ -111,6 +117,9 @@ public class RemoteServiceInvokeWrapperImpl implements RemoteServiceInvokeWrappe
         metadata.setMethod(method);
         if (!declare.parse().isInterface()) {
             metadata.setParse(declare.parse().newInstance());
+        }
+        if (!declare.afterHandler().isInterface()) {
+            metadata.setAfterHandler(declare.afterHandler().newInstance());
         }
         metadata.setBusinessDescribe(declare.businessDescribe());
         metadata.setReturnType(method.getGenericReturnType());

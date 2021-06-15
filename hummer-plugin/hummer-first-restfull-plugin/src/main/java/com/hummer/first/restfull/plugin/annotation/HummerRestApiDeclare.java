@@ -1,5 +1,6 @@
 package com.hummer.first.restfull.plugin.annotation;
 
+import com.hummer.first.restfull.plugin.AfterHandlerProvider;
 import com.hummer.first.restfull.plugin.CustomParseRespProvider;
 
 import java.lang.annotation.ElementType;
@@ -49,6 +50,11 @@ public @interface HummerRestApiDeclare {
     Class<? extends CustomParseRespProvider> parse() default CustomParseRespProvider.class;
 
     /**
+     * business handler e.g: verify
+     */
+    Class<? extends AfterHandlerProvider> afterHandler() default AfterHandlerProvider.class;
+
+    /**
      * is enable api call
      */
     boolean enable() default true;
@@ -67,4 +73,6 @@ public @interface HummerRestApiDeclare {
      * if value is 0 then disable cache
      */
     int cacheTimeOutMills() default 0;
+
+
 }
