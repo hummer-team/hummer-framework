@@ -2,6 +2,7 @@ package com.hummer.common.utils;
 
 import com.hummer.common.ErrorCode;
 import com.hummer.common.exceptions.AppException;
+import com.hummer.common.exceptions.BusinessIdempotentException;
 
 /**
  * AppBusinessAssert
@@ -23,4 +24,18 @@ public class AppBusinessAssert {
 
         isTrue(expression, errorCode.getCode(), errorCode.getMsg());
     }
+
+    public static void isTrueOrIdempotentException(boolean expression, int code, String msg) {
+
+        if (!expression) {
+            throw new BusinessIdempotentException(code, msg);
+        }
+    }
+
+    public static void isTrueOrIdempotentException(boolean expression, ErrorCode errorCode) {
+
+        isTrueOrIdempotentException(expression, errorCode.getCode(), errorCode.getMsg());
+    }
+
+
 }
