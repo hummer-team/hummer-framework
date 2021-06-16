@@ -1,4 +1,4 @@
-package com.hummer.redis.plugin.test.proxy;
+package com.hummer.test.proxy;
 
 public class UserManagerImpl implements UserManager {
     @Override

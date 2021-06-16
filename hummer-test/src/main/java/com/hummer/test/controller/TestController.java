@@ -1,21 +1,13 @@
-package com.hummer.redis.plugin.test.controller;
+package com.hummer.test.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
-import com.hummer.common.http.HttpSyncClient;
 import com.hummer.common.utils.ObjectCopyUtils;
-import com.hummer.core.PropertiesContainer;
-import com.hummer.redis.plugin.test.model.DemoReqDto;
-import com.hummer.redis.plugin.test.model.DemoRespDto;
-import com.hummer.redis.plugin.test.model.ExceptionReqDto;
+import com.hummer.test.model.DemoReqDto;
+import com.hummer.test.model.DemoRespDto;
+import com.hummer.test.model.ExceptionReqDto;
 import com.hummer.rest.model.ResourceResponse;
 import com.hummer.rest.model.request.ResourcePageReqDto;
 import com.hummer.rest.model.response.ResourcePageRespDto;
 import com.hummer.rest.utils.ParameterAssertUtil;
-import com.hummer.rest.utils.ResponseUtil;
-import com.hummer.user.plugin.constants.Constants;
-import com.hummer.user.plugin.dto.request.UserBasicInfoPluginReqDto;
-import com.hummer.user.plugin.dto.response.UserBasicInfoPluginRespDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.Errors;
@@ -26,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * description     java类作用描述
@@ -64,26 +54,4 @@ public class TestController {
         dto.setTotalCount(10);
         return ResourceResponse.ok(dto);
     }
-
-    @ApiOperation("http请求异常通知")
-    @PostMapping("/http/warn/notify")
-    public ResourceResponse<List<UserBasicInfoPluginRespDto>> httpSendingNotify(@RequestBody @Valid UserBasicInfoPluginReqDto reqDto) {
-        if (reqDto == null) {
-            reqDto = new UserBasicInfoPluginReqDto();
-        }
-        String url = String.format("%s/v1/user/query/department/basic/info/list"
-                , PropertiesContainer.valueOfString("authority.service.host", Constants.ServiceRouteHost.AUTHORITY_SERVICE_HOST));
-        String response = HttpSyncClient.sendHttpPostByRetry(url
-                , JSON.toJSONString(reqDto)
-                , PropertiesContainer.valueOf("authority.service.call.timeout.millis", Long.class, 5000L)
-                , TimeUnit.MILLISECONDS
-                , 1);
-
-        return ResourceResponse.ok(ResponseUtil.parseResponseV2WithStatus(response
-                , new TypeReference<ResourceResponse<List<UserBasicInfoPluginRespDto>>>() {
-                }));
-
-    }
-
-
 }

@@ -52,7 +52,7 @@ public class DataSourceInitConfiguration {
         return new NamedParameterJdbcTemplate(defaultTargetDataSource);
     }
 
-    public final ImmutableMap<String,DataSource> dataSourceMap() {
+    public final ImmutableMap<String, DataSource> dataSourceMap() {
         return ImmutableMap.copyOf(allDataSources);
     }
 
@@ -141,7 +141,7 @@ public class DataSourceInitConfiguration {
             } catch (Throwable throwable) {
                 LOGGER.error("data source `{}` initDataSource failed break flow" +
                         ",throwable", entry, throwable);
-                throw new SysException(50000, "data source initDataSource failed");
+                throw new SysException(50000, "data source initDataSource failed", throwable);
             }
         }
 
@@ -149,7 +149,7 @@ public class DataSourceInitConfiguration {
         if (defaultTargetDataSource == null) {
             defaultTargetDataSource = Iterables.get(allDataSources.values(), 0);
             defaultSqlSessionFactory = (SqlSessionFactory) SpringApplicationContext.getBean(newKey(
-                    Iterables.get(allDataSources.keySet(),0)
+                    Iterables.get(allDataSources.keySet(), 0)
                     , "sqlSessionFactory"));
             LOGGER.warn("no specific default dataSource,use first data {} as default data source"
                     , defaultTargetDataSource);

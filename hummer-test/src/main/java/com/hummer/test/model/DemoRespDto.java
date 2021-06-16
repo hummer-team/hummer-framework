@@ -1,4 +1,4 @@
-package com.hummer.redis.plugin.test.model;
+package com.hummer.test.model;
 
 /**
  * description     java类作用描述

@@ -1,16 +1,15 @@
-package com.hummer.redis.plugin.test.main;
+package com.hummer.test.main;
 
 import com.hummer.core.starter.HummerApplicationStart;
-import com.hummer.rest.webserver.UndertowServer;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 /**
  * application enter
  *
  * @author liguo
  **/
-@SpringBootApplication(scanBasePackages = "com.hummer.redis.plugin.test")
-@UndertowServer
+@SpringBootApplication(scanBasePackages = "com.hummer.test", exclude = {DataSourceAutoConfiguration.class})
 public class ApplicationStart {
 
     public static void main(String[] args) {

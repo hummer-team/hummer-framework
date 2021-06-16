@@ -1,4 +1,4 @@
-package com.hummer.redis.plugin.test;
+package com.hummer.test;
 
 import com.hummer.core.init.HummerApplicationContextInit;
 import com.hummer.core.starter.BootStarterBean;
@@ -22,7 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @Import(value = {BootStarterBean.class})
 @ContextConfiguration(initializers = {ConfigFileApplicationContextInitializer.class,
         HummerApplicationContextInit.class})
-@ComponentScan(basePackages = "com.hummer")
+@ComponentScan(basePackages = "com.hummer.test")
 public class BaseTest {
 
 

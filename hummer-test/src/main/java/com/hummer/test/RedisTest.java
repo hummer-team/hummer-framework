@@ -1,4 +1,4 @@
-package com.hummer.redis.plugin.test;
+package com.hummer.test;
 
 import com.hummer.core.config.PropertiesConfig;
 import com.hummer.core.init.HummerApplicationContextInit;
