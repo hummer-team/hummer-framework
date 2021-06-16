@@ -1,4 +1,4 @@
-package com.hummer.redis.plugin.test.proxy;
+package com.hummer.test.proxy;
 
 public class UserManager2 {
     public void showName(String name) {

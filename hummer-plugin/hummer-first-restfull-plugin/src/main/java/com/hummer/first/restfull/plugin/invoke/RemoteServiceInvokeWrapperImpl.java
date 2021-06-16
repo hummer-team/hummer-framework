@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 public class RemoteServiceInvokeWrapperImpl implements RemoteServiceInvokeWrapper {
 
     public static final RemoteServiceInvokeWrapper INSTANCE = new RemoteServiceInvokeWrapperImpl();
-    private static final ParameterNameDiscoverer discoverer = new DefaultParameterNameDiscoverer();
+    private static final ParameterNameDiscoverer DISCOVERER = new DefaultParameterNameDiscoverer();
 
     /**
      * call service by declare parameter
@@ -133,7 +133,7 @@ public class RemoteServiceInvokeWrapperImpl implements RemoteServiceInvokeWrappe
         List<Header> headerList = new ArrayList<>();
         for (int i = 0; i < args.length; i++) {
             MethodParameter param2 = new SynthesizingMethodParameter(method, i);
-            param2.initParameterNameDiscovery(discoverer);
+            param2.initParameterNameDiscovery(DISCOVERER);
             PathVariable pathVariable = param2.getParameterAnnotation(PathVariable.class);
             if (pathVariable != null) {
                 metadata.setUrl(metadata.getUrl().replaceAll(String.format("\\{%s\\}", pathVariable.name()), args[i].toString()));

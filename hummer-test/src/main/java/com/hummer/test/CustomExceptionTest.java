@@ -1,4 +1,4 @@
-package com.hummer.redis.plugin.test;
+package com.hummer.test;
 
 import com.hummer.common.http.HttpSyncClient;
 import com.hummer.common.utils.DateUtil;

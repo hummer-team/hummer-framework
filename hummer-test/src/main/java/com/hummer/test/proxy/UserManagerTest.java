@@ -1,4 +1,4 @@
-package com.hummer.redis.plugin.test.proxy;
+package com.hummer.test.proxy;
 
 import com.hummer.proxy.plugin.DynamicProxyWrapper;
 import com.hummer.proxy.plugin.InterceptHandler;

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hummer.test.dao.UserCouponDao">
+
+    <resultMap id="BaseResultMap"
+               type="com.hummer.test.po.UserCouponPo">
+        <id column="Id" property="id"/>
+        <result column="CouponCode" property="couponCode"/>
+        <result column="UserId" property="userId"/>
+        <result column="UsedMoney" property="usedMoney"/>
+        <result column="UsedTime" property="usedTime"/>
+        <result column="BeginTime" property="beginTime"/>
+        <result column="EndTime" property="endTime"/>
+        <result column="IsEnable" property="isEnable"/>
+        <result column="IsUsed" property="isUsed"/>
+        <result column="DeleteFlag" property="deleteFlag"/>
+        <result column="UserCouponCode" property="userCouponCode"/>
+        <result column="dAddtime" property="dAddtime"/>
+    </resultMap>
+
+
+    <resultMap id="top10UserIdMap" type="java.util.List">
+        <result column="u" typeHandler="com.hummer.dao.mybatis.json.JsonClickHouseJdbcArrayHandle"
+                javaType="java.lang.String"/>
+    </resultMap>
+
+    <select id="queryBuIds" resultMap="BaseResultMap">
+        select Id,UserId,CouponCode,UsedMoney,UsedTime,BeginTime,EndTime,IsEnable
+        ,IsUsed,DeleteFlag,UserCouponCode,dAddtime from UserCoupon_local where Id in
+        <foreach collection="ids" item="item" index="index" separator="," close=")" open="(">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="maxUsedMoney" resultType="java.lang.Double">
+        select max(UsedMoney) from UserCoupon_local
+    </select>
+
+    <select id="top10UserId" resultType="java.lang.String">
+        select topK(10)(UserId) as u from UserCoupon_local
+    </select>
+</mapper>
+

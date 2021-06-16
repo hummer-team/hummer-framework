@@ -1,4 +1,4 @@
-package com.hummer.redis.plugin.test;
+package com.hummer.test;
 
 import org.junit.Test;
 

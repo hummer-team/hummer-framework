@@ -17,6 +17,7 @@ glue spring boot,mybatis,kafka,rabbitmq,redis,mongodb...framework,Make business 
 - rocksDB
 - multiple thread 
 - dubbo
+- clickhouse jdbc driver
 
 ## model describe
 

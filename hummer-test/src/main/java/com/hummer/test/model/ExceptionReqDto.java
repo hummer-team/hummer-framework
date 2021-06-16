@@ -1,4 +1,4 @@
-package com.hummer.redis.plugin.test.model;
+package com.hummer.test.model;
 
 import lombok.Data;
 

@@ -148,6 +148,7 @@
         <commons-collections.version>3.2.2</commons-collections.version>
         <alibaba.metrics>2.0.6</alibaba.metrics>
         <javassist.version>3.20.0-GA</javassist.version>
+        <clickhouse-jdbc.version>0.3.1</clickhouse-jdbc.version>
     </properties>
 
     <dependencyManagement>
@@ -279,6 +280,11 @@
                 <version>${hummer.version}</version>
             </dependency>
             <!--framework plugin-->
+            <dependency>
+                <groupId>ru.yandex.clickhouse</groupId>
+                <artifactId>clickhouse-jdbc</artifactId>
+                <version>${clickhouse-jdbc.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.javassist</groupId>
                 <artifactId>javassist</artifactId>

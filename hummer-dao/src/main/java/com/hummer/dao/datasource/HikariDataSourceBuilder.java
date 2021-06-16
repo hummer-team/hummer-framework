@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.Properties;
 
 /**
- * wrapper HikariDataSource.
+ * builder HikariDataSource config.
  *
  * @author lee
  * @link {https://github.com/brettwooldridge/HikariCP}
@@ -63,8 +63,8 @@ public class HikariDataSourceBuilder {
             config.addDataSourceProperty("user", map.get("username"));
             config.addDataSourceProperty("password", map.get("password"));
             config.addDataSourceProperty("databaseName", map.get("databaseName"));
-            config.addDataSourceProperty("serverName",map.get("serverName"));
-            config.addDataSourceProperty("portNumber",map.get("portNumber"));
+            config.addDataSourceProperty("serverName", map.get("serverName"));
+            config.addDataSourceProperty("portNumber", map.get("portNumber"));
         }
         config.setMinimumIdle(Integer.parseInt((String) map.get("initialSize")));
         config.setMaximumPoolSize(Integer.parseInt(Optional.ofNullable((String) map.get("maxActive"))
