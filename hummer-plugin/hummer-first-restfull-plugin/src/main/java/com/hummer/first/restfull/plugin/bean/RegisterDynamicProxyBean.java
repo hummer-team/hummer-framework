@@ -4,8 +4,8 @@ import com.hummer.common.exceptions.SysException;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.first.restfull.plugin.invoke.RemoteServiceInvokeWrapper;
 import com.hummer.first.restfull.plugin.invoke.RemoteServiceInvokeWrapperImpl;
-import com.hummer.first.restfull.plugin.annotation.HummerFirstRest;
-import com.hummer.first.restfull.plugin.annotation.HummerFirstRestBootScan;
+import com.hummer.first.restfull.plugin.annotation.HummerRestApiClient;
+import com.hummer.first.restfull.plugin.annotation.HummerRestApiClientBootScan;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanClassLoaderAware;
@@ -122,14 +122,14 @@ public class RegisterDynamicProxyBean implements ImportBeanDefinitionRegistrar,
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
         Class<?> bootClass = PropertiesContainer.valueOf(APPLICATION_BOOT_CLASS, Class.class);
-        HummerFirstRestBootScan restBootScan = bootClass.getAnnotation(HummerFirstRestBootScan.class);
+        HummerRestApiClientBootScan restBootScan = bootClass.getAnnotation(HummerRestApiClientBootScan.class);
         if (restBootScan == null) {
             return;
         }
 
         ClassPathScanningCandidateComponentProvider classScanner = getClassScannerProvider();
         classScanner.setResourceLoader(this.resourceLoader);
-        AnnotationTypeFilter annotationTypeFilter = new AnnotationTypeFilter(HummerFirstRest.class);
+        AnnotationTypeFilter annotationTypeFilter = new AnnotationTypeFilter(HummerRestApiClient.class);
         classScanner.addIncludeFilter(annotationTypeFilter);
 
         //scan package
@@ -151,7 +151,7 @@ public class RegisterDynamicProxyBean implements ImportBeanDefinitionRegistrar,
         try {
             Class<?> target = Class.forName(annotationMetadata.getClassName());
             InvocationHandler invocationHandler = createInvocationHandler();
-            return Proxy.newProxyInstance(HummerFirstRest.class.getClassLoader(), new Class[]{target}, invocationHandler);
+            return Proxy.newProxyInstance(HummerRestApiClient.class.getClassLoader(), new Class[]{target}, invocationHandler);
         } catch (ClassNotFoundException e) {
             throw new SysException(50000, String.format("create proxy %s failed", annotationMetadata.getClassName()), e);
         }
