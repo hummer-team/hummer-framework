@@ -3,9 +3,8 @@ package com.hummer.first.restfull.plugin.bean;
 import com.hummer.common.utils.ResourceUtil;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.core.spi.CustomizeContextInit;
-import com.hummer.first.restfull.plugin.annotation.HummerFirstRest;
-import com.hummer.first.restfull.plugin.annotation.HummerFirstRestBootScan;
-import com.hummer.first.restfull.plugin.bean.RegisterDynamicProxyBean;
+import com.hummer.first.restfull.plugin.annotation.HummerRestApiClient;
+import com.hummer.first.restfull.plugin.annotation.HummerRestApiClientBootScan;
 import com.hummer.proxy.plugin.Proxy;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
@@ -39,7 +38,7 @@ public class RegisterDynamicProxy implements CustomizeContextInit {
         }
 
         Class<?> bootClass = PropertiesContainer.valueOf(APPLICATION_BOOT_CLASS, Class.class);
-        HummerFirstRestBootScan restBootScan = bootClass.getAnnotation(HummerFirstRestBootScan.class);
+        HummerRestApiClientBootScan restBootScan = bootClass.getAnnotation(HummerRestApiClientBootScan.class);
         if (restBootScan == null) {
             return;
         }
@@ -50,7 +49,7 @@ public class RegisterDynamicProxy implements CustomizeContextInit {
         }
 
         classes = classes.stream()
-                .filter(p -> p.isInterface() && p.getAnnotation(HummerFirstRest.class) != null)
+                .filter(p -> p.isInterface() && p.getAnnotation(HummerRestApiClient.class) != null)
                 .collect(Collectors.toSet());
         log.debug("use hummer simple rest feature class count {}", classes.size());
 

@@ -1,6 +1,7 @@
 package com.hummer.first.restfull.plugin.annotation;
 
 import com.hummer.first.restfull.plugin.AfterHandlerProvider;
+import com.hummer.first.restfull.plugin.ContentTypeEnum;
 import com.hummer.first.restfull.plugin.CustomParseRespProvider;
 
 import java.lang.annotation.ElementType;
@@ -74,5 +75,8 @@ public @interface HummerRestApiDeclare {
      */
     int cacheTimeOutMills() default 0;
 
-
+    /**
+     * body data type {@link ContentTypeEnum},default is {@link ContentTypeEnum#JSON}
+     */
+    ContentTypeEnum contentType() default ContentTypeEnum.JSON;
 }

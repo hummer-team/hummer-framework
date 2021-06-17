@@ -2,7 +2,7 @@ package com.hummer.api.web;
 
 import com.hummer.api.dto.NoProcessOrderInfoRespDto;
 import com.hummer.api.service.AfterHandlerProviderImpl;
-import com.hummer.first.restfull.plugin.annotation.HummerFirstRest;
+import com.hummer.first.restfull.plugin.annotation.HummerRestApiClient;
 import com.hummer.first.restfull.plugin.annotation.HummerRestApiDeclare;
 import com.hummer.rest.model.ResourceResponse;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
 
-@HummerFirstRest
+@HummerRestApiClient
 public interface OrderApi {
     @HummerRestApiDeclare(
         apiPath = "/v1/purchase/order/not-process/order-count"

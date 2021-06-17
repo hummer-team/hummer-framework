@@ -1,7 +1,7 @@
 package com.hummer.api;
 
 import com.hummer.core.starter.HummerApplicationStart;
-import com.hummer.first.restfull.plugin.annotation.HummerFirstRestBootScan;
+import com.hummer.first.restfull.plugin.annotation.HummerRestApiClientBootScan;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  */
 @SpringBootApplication(scanBasePackages = "com.hummer.api", exclude = {DataSourceAutoConfiguration.class})
 @EnableAspectJAutoProxy(proxyTargetClass = true)
-@HummerFirstRestBootScan(scanBasePackages = "com.hummer.api.web")
+@HummerRestApiClientBootScan(scanBasePackages = "com.hummer.api.web")
 public class Application2 {
 
     public static void main(String[] args) {
