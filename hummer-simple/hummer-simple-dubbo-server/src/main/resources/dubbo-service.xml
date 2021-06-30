@@ -10,19 +10,23 @@
         <dubbo:parameter key="qos.enable" value="false"/>
     </dubbo:application>
 
+    <!--
     <bean id="serializationOptimizerImpl" class="com.hummer.dubbo.extend.plugin.SerializationOptimizerImpl"
           init-method="registerDto">
         <property name="packageName" value="comm.hummer.simple.common.module"/>
     </bean>
+    -->
     <!-- serialization=fastjson or kryo-->
-    <dubbo:protocol name="dubbo" port="20890" serialization="kryo"
-                    optimizer="com.hummer.dubbo.extend.plugin.SerializationOptimizerImpl"/>
+    <!--<dubbo:protocol name="dubbo" port="20890" serialization="kryo"
+                    optimizer="com.hummer.dubbo.extend.plugin.SerializationOptimizerImpl"/>-->
 
-    <dubbo:registry address="nacos://config-center.service.panli.com:80?namespace=dubbo_config"/>
+    <dubbo:protocol name="dubbo" port="20890"/>
+
+    <dubbo:registry address="nacos://10.17.164.100:8848?namespace=dubbo_config"/>
     <!--<dubbo:monitor protocol="registry"/>-->
     <!--<dubbo:monitor protocol="registry" interval="3000"/>-->
-    <dubbo:config-center address="nacos://config-center.service.panli.com:80?namespace=dubbo_config"/>
-    <dubbo:metadata-report address="nacos://config-center.service.panli.com:80?namespace=dubbo_config"/>
+    <dubbo:config-center address="nacos://10.17.164.100:8848?namespace=dubbo_config"/>
+    <dubbo:metadata-report address="nacos://10.17.164.100:8848?namespace=dubbo_config"/>
     <!--<dubbo:metrics port="8006" protocol="dubbo"/>-->
 
     <!--business service config-->

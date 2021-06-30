@@ -1,4 +1,4 @@
-package com.hummer.dao.mybatis.json;
+package com.hummer.dao.mybatis.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
@@ -17,11 +17,11 @@ import java.util.Map;
  * @since:1.0.0
  * @Date: 2019/7/12 15:38
  **/
-public class JsonReferenceHandle<T> extends BaseTypeHandler<Collection<Map<String,Object>>> {
+public class ReferenceHandler<T> extends BaseTypeHandler<Collection<Map<String,Object>>> {
 
     private Class<T> aClass;
 
-    public JsonReferenceHandle(Class<T> tClass) {
+    public ReferenceHandler(Class<T> tClass) {
         this.aClass = tClass;
     }
 
