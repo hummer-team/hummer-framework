@@ -4,12 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.hummer.core.config.PropertiesConfig;
 import com.hummer.core.init.HummerApplicationContextInit;
+import com.hummer.core.listener.SpringStarterListener;
 import com.hummer.core.starter.BootStarterBean;
 import com.hummer.dao.starter.ExportDaoInitBean;
 import com.hummer.test.dao.UserCouponDao;
 import com.hummer.test.main.ApplicationStart;
 import com.hummer.test.po.UserCouponPo;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,7 @@ import java.util.List;
  */
 @RunWith(value = SpringRunner.class)
 @ContextConfiguration(classes = {ConfigFileApplicationContextInitializer.class, HummerApplicationContextInit.class})
-@Import(value = {PropertiesConfig.class, BootStarterBean.class, ExportDaoInitBean.class})
+@Import(value = {PropertiesConfig.class, BootStarterBean.class, ExportDaoInitBean.class, SpringStarterListener.class})
 @PropertySource(value = {"classpath:application.properties"})
 @SpringBootTest(classes = ApplicationStart.class)
 public class ClickhouseTest {

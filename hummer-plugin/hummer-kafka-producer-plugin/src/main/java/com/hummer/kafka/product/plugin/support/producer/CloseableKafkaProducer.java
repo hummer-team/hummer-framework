@@ -29,10 +29,9 @@ import java.util.concurrent.TimeUnit;
  **/
 public class CloseableKafkaProducer<K, V> implements DisposableBean, InitializingBean, Lifecycle {
     private static final Logger LOGGER = LoggerFactory.getLogger(CloseableKafkaProducer.class);
+    private final KafkaProducer<K, V> producer;
+    private final SendMessageMetadata messageMetadata;
     private volatile boolean running;
-
-    private KafkaProducer<K, V> producer;
-    private SendMessageMetadata messageMetadata;
 
     public CloseableKafkaProducer(final KafkaProducer<K, V> producer
             , final SendMessageMetadata messageMetadata) {
@@ -43,8 +42,9 @@ public class CloseableKafkaProducer<K, V> implements DisposableBean, Initializin
     /**
      * send message to server for sync
      *
-     * @param messageRecord   message
-     * @param messageMetadata metadata
+     * @param messageRecord    message
+     * @param sendTimeOutMills sendTimeOutMills
+     * @param callback         callback
      * @return void
      * @author liguo
      * @date 2019/8/8 17:19
@@ -53,18 +53,13 @@ public class CloseableKafkaProducer<K, V> implements DisposableBean, Initializin
     public void send(final ProducerRecord<K, V> messageRecord, final long sendTimeOutMills, final Callback callback) {
         Future<RecordMetadata> future = null;
         try {
-            future = producer
-                    .send(messageRecord, callback);
-            future.get(sendTimeOutMills, TimeUnit.MILLISECONDS);
+            future = producer.send(messageRecord, callback);
+            long timeOut = sendTimeOutMills > 0L ? sendTimeOutMills : messageMetadata.getSendMessageTimeOutMills();
+            future.get(timeOut, TimeUnit.MILLISECONDS);
         } catch (Exception e) {
-            if (e instanceof InterruptedException || e.getCause() instanceof InterruptedException) {
-                Thread.currentThread().interrupt();
-                if (future != null) {
-                    future.cancel(true);
-                }
-            }
-            callback.onCompletion(null, e);
             LOGGER.error("send message to kafka server exception ", e);
+            handlerException(future, e);
+            callback.onCompletion(null, e);
         }
     }
 
@@ -201,5 +196,15 @@ public class CloseableKafkaProducer<K, V> implements DisposableBean, Initializin
     @Override
     public boolean isRunning() {
         return running;
+    }
+
+
+    private void handlerException(Future<RecordMetadata> future, Throwable e) {
+        if (e instanceof InterruptedException || e.getCause() instanceof InterruptedException) {
+            Thread.currentThread().interrupt();
+            if (future != null) {
+                future.cancel(true);
+            }
+        }
     }
 }

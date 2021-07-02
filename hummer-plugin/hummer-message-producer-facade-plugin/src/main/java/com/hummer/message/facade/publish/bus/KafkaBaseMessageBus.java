@@ -1,7 +1,6 @@
 package com.hummer.message.facade.publish.bus;
 
 import com.hummer.common.exceptions.SysException;
-import com.hummer.core.PropertiesContainer;
 import com.hummer.kafka.product.plugin.domain.product.Product;
 import com.hummer.message.facade.metadata.MessagePublishMetadataKey;
 import com.hummer.message.facade.publish.BaseMessageBusTemplate;
@@ -9,6 +8,7 @@ import com.hummer.message.facade.publish.MessageBus;
 import joptsimple.internal.Strings;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.header.Header;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ public class KafkaBaseMessageBus extends BaseMessageBusTemplate {
     /**
      * verified message , if verified failed then throw exception
      *
-     * @param messageBus
+     * @param messageBus messageBus
      * @return void
      * @author liguo
      * @date 2019/9/12 13:51
@@ -62,15 +62,11 @@ public class KafkaBaseMessageBus extends BaseMessageBusTemplate {
     @Override
     protected void doSend(final MessageBus messageBus) {
         ProducerRecord<String, Object> record = builderProducerRecord(messageBus);
-        long sendMessageTimeOut = messageBus.getSyncSendMessageTimeOutMills() == null ||
-                messageBus.getSyncSendMessageTimeOutMills() <= 0
-                ? PropertiesContainer.valueOfInteger("hummer.message.kafka.producer.sync.send.timeout"
-                , 5000)
-                : messageBus.getSyncSendMessageTimeOutMills();
-        final long start = System.currentTimeMillis();
+        long sendMessageTimeOut = getSendMessageTimeOut(messageBus);
+        long start = System.currentTimeMillis();
         product.doSendBySync(record, sendMessageTimeOut, ((metadata, exception) -> {
-            callback(messageBus, exception, start);
-        }));
+            callback(metadata, messageBus, exception, start);
+        }), messageBus.getAppId());
     }
 
     /**
@@ -85,27 +81,9 @@ public class KafkaBaseMessageBus extends BaseMessageBusTemplate {
     @Override
     protected void doSendAsync(final MessageBus messageBus) {
         ProducerRecord<String, Object> record = builderProducerRecord(messageBus);
-        final long start = System.currentTimeMillis();
-        product.doSendByAsync(record, ((metadata, exception) -> callback(messageBus, exception, start)));
-    }
-
-    private void callback(final MessageBus messageBus
-            , final Exception exception
-            , final long startTime) {
-        if (messageBus.getCallback() != null) {
-            if (exception != null) {
-                LOGGER.error("send message to kafka broker failed,cost {} millis,{}"
-                        , System.currentTimeMillis() - startTime
-                        , exception);
-                messageBus.getCallback().callBack(messageBus.getBody(), exception);
-            } else {
-                LOGGER.info("send message to kafka broker success cost {} millis"
-                        , System.currentTimeMillis() - startTime);
-                messageBus.getCallback().callBack(messageBus.getBody(), null);
-            }
-        } else {
-            throw new SysException(50000, "send message failed", exception);
-        }
+        long start = System.currentTimeMillis();
+        product.doSendByAsync(record, ((metadata, exception) -> callback(metadata, messageBus, exception, start))
+                , messageBus.getAppId());
     }
 
     private ProducerRecord<String, Object> builderProducerRecord(final MessageBus messageBus) {
@@ -139,5 +117,12 @@ public class KafkaBaseMessageBus extends BaseMessageBusTemplate {
                     , messageBus.getBody());
         }
         return record;
+    }
+
+
+    private long getSendMessageTimeOut(MessageBus messageBus) {
+        return messageBus.getSyncSendMessageTimeOutMills() <= 0
+                ? 0
+                : messageBus.getSyncSendMessageTimeOutMills();
     }
 }

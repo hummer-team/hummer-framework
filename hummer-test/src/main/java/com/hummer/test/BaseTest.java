@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -23,8 +24,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ContextConfiguration(initializers = {ConfigFileApplicationContextInitializer.class,
         HummerApplicationContextInit.class})
 @ComponentScan(basePackages = "com.hummer.test")
+@PropertySource("classpath:application.properties")
 public class BaseTest {
-
 
 
 }

@@ -11,7 +11,7 @@ import com.hummer.common.http.RequestCustomConfig;
 import com.hummer.common.utils.ObjectCopyUtils;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.core.SpringApplicationContext;
-import com.hummer.local.persistence.plugin.RocksDBLocalPersistence;
+import com.hummer.local.persistence.plugin.LocalPersistence;
 import com.hummer.message.facade.publish.MessageBus;
 import com.hummer.rest.annotations.BindRestParameterSimpleModel;
 import com.hummer.rest.model.ResourceResponse;
@@ -54,7 +54,7 @@ public class ApplicationController {
 
     private static final Logger log = LoggerFactory.getLogger(ApplicationController.class);
     @Autowired
-    private RocksDBLocalPersistence persistence;
+    private LocalPersistence persistence;
 
     //    @Value("${test.A}")
     private int value;
@@ -128,7 +128,7 @@ public class ApplicationController {
     public ResourceResponse sendMessage(@RequestBody KafkaMessageReq req) {
         MessageBus
             .builder()
-            .namespaceId("test")
+            .appId("test")
             .body(req)
             .callback((o, e) -> log.info("send message done"))
             .kafka(MessageBus.Kafka.builder().topicId("log-type-group-out2").build())

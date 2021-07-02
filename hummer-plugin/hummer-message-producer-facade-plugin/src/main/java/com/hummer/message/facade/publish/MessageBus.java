@@ -2,7 +2,6 @@ package com.hummer.message.facade.publish;
 
 import com.alibaba.fastjson.JSON;
 import com.hummer.common.exceptions.SysException;
-import com.hummer.message.facade.metadata.MessagePublishMetadataKey;
 import com.hummer.core.PropertiesContainer;
 import com.hummer.core.SpringApplicationContext;
 import lombok.Builder;
@@ -35,7 +34,7 @@ public class MessageBus {
     /**
      * business unique id
      */
-    private String namespaceId;
+    private String appId;
     /**
      * Kafka message configuration
      */
@@ -55,7 +54,7 @@ public class MessageBus {
     /**
      * send message timeout millisecond
      */
-    private Long syncSendMessageTimeOutMills;
+    private long syncSendMessageTimeOutMills;
     /**
      * if true then async send message else sync send message
      */
@@ -92,12 +91,12 @@ public class MessageBus {
         private String exchange;
     }
 
-    private static Map<String, BaseMessageBusTemplate> messageMap = new HashMap<>(2);
+    private static final Map<String, BaseMessageBusTemplate> MESSAGE_MAP = new HashMap<>(2);
 
     static {
-        messageMap.put(KAFKA_MESSAGE_DRIVER_NAME,
+        MESSAGE_MAP.put(KAFKA_MESSAGE_DRIVER_NAME,
                 SpringApplicationContext.getBean(KAFKA_MESSAGE_DRIVER_NAME, BaseMessageBusTemplate.class));
-        messageMap.put(RABBITMQ_MESSAGE_DRIVER_NAME,
+        MESSAGE_MAP.put(RABBITMQ_MESSAGE_DRIVER_NAME,
                 SpringApplicationContext.getBean(RABBITMQ_MESSAGE_DRIVER_NAME, BaseMessageBusTemplate.class));
     }
 
@@ -107,15 +106,18 @@ public class MessageBus {
      * @throws SysException if message driver invalid
      */
     public void publish() {
+        //do send
+        MESSAGE_MAP.get(getMessageBusTypeAndAssert()).send(this);
+    }
+
+    private String getMessageBusTypeAndAssert() {
         String messageDriver = PropertiesContainer.valueOfString(HUMMER_MESSAGE_DRIVER_TYPE_KEY
                 , HUMMER_MESSAGE_DRIVER_TYPE_KAFKA_KEY);
-        if (!messageMap.containsKey(messageDriver)) {
+        if (!MESSAGE_MAP.containsKey(messageDriver)) {
             throw new SysException(50000
                     , String.format("message driver %s invalid,please setting `kafka` or `rabbitmq`", messageDriver));
         }
-        messageMap
-                .get(messageDriver)
-                .send(this);
+        return messageDriver;
     }
 
     @Override

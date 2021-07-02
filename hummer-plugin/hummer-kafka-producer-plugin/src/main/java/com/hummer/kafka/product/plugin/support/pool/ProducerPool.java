@@ -2,12 +2,12 @@ package com.hummer.kafka.product.plugin.support.pool;
 
 import com.hummer.common.exceptions.SysException;
 import com.hummer.common.utils.FunctionUtil;
+import com.hummer.core.PropertiesContainer;
 import com.hummer.core.SpringApplicationContext;
 import com.hummer.kafka.product.plugin.domain.serializer.MessageBodyJsonSerializer;
 import com.hummer.kafka.product.plugin.domain.serializer.MessageBodyThirftSerializer;
 import com.hummer.kafka.product.plugin.support.producer.CloseableKafkaProducer;
 import com.hummer.kafka.product.plugin.support.producer.SendMessageMetadata;
-import com.hummer.core.PropertiesContainer;
 import joptsimple.internal.Strings;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Partitioner;
@@ -17,7 +17,6 @@ import org.apache.kafka.common.serialization.BytesSerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
 
 import java.util.Map;
 import java.util.Properties;
@@ -44,85 +43,30 @@ public class ProducerPool {
      * @date 2019/8/12 14:14
      * @since 1.0.0
      **/
-    public static CloseableKafkaProducer<String, Object> get(final String topicId) {
-        String type = PropertiesContainer.valueOfString(formatKey(String.format("%s.instance.scope.type", topicId)
+    public static CloseableKafkaProducer<String, Object> get(final String appId) {
+        String singleType = "single";
+        String type = PropertiesContainer.valueOfString(formatKey(String.format("%s.instance.scope.type", appId)
                 , null)
-                , "single");
+                , singleType);
 
-        LOGGER.info("kafka producer instance scope type is {}", type);
+        LOGGER.debug("kafka producer instance scope type is {}", type);
 
-        final String singleType = "single";
         if (type == null || singleType.equalsIgnoreCase(type)) {
             return SingleProducer.get();
         }
 
-        final String preThreadType = "preThread";
-        if (type.equals(preThreadType)) {
+        String preThreadType = "preThread";
+        if (type.equalsIgnoreCase(preThreadType)) {
             return ThreadLocalProducer.get();
         }
 
-        return KeySharedProducer.get(topicId);
+        return KeySharedProducer.get(appId);
     }
 
-    /**
-     * single producer instance
-     */
-    public static class SingleProducer {
-        private SingleProducer() {
-
-        }
-
-        private static AtomicReference<CloseableKafkaProducer<String, Object>> producer =
-                new AtomicReference<>();
-
-        public static CloseableKafkaProducer<String, Object> get() {
-            producer.compareAndSet(null, producer());
-            return producer.get();
-        }
-    }
-
-    /**
-     * per thread own producer instance
-     */
-    public static class ThreadLocalProducer {
-        private ThreadLocalProducer() {
-
-        }
-
-        private static ThreadLocal<CloseableKafkaProducer<String, Object>> threadLocal
-                = ThreadLocal.withInitial(ProducerPool::producer);
-
-        public static CloseableKafkaProducer<String, Object> get() {
-            return threadLocal.get();
-        }
-
-        public static void remove() {
-            threadLocal.remove();
-        }
-    }
-
-    /**
-     * the same key shard producer instance,recommend key for app id or topic id
-     */
-    public static class KeySharedProducer {
-        private KeySharedProducer() {
-
-        }
-
-        private static final Map<String, CloseableKafkaProducer<String, Object>>
-                map = new ConcurrentHashMap<>(16);
-
-        public static CloseableKafkaProducer<String, Object> get(final String key) {
-            if (Strings.isNullOrEmpty(key)) {
-                throw new SysException(50000, "key is null,can not get producer instance");
-            }
-
-            return map.putIfAbsent(key, producer(key));
-        }
-
-        public static void remove() {
-            map.clear();
-        }
+    public static void refresh() {
+        SingleProducer.refresh();
+        ThreadLocalProducer.refresh();
+        KeySharedProducer.refresh();
     }
 
     private static <K, V> CloseableKafkaProducer<K, V> producer() {
@@ -135,7 +79,7 @@ public class ProducerPool {
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG
                 , PropertiesContainer
                         .valueOfStringWithAssertNotNull(formatKey(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG
-                                , null)));
+                                , key)));
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, bodySerializer());
 
@@ -197,7 +141,6 @@ public class ProducerPool {
         return new CloseableKafkaProducer<K, V>(kafkaProducer, sendMessageMetadata);
     }
 
-
     private static String formatKey(final String key, final String prefix) {
         final String messageBusKeyPrefix = "hummer.message.kafka.producer";
         return
@@ -232,5 +175,96 @@ public class ProducerPool {
         }
 
         return MessageBodyJsonSerializer.class;
+    }
+
+    /**
+     * single producer instance
+     */
+    public static class SingleProducer {
+        private static final AtomicReference<CloseableKafkaProducer<String, Object>> producer =
+                new AtomicReference<>(producer());
+
+        private SingleProducer() {
+
+        }
+
+        public static CloseableKafkaProducer<String, Object> get() {
+            CloseableKafkaProducer<String, Object> producerInstance = producer.get();
+            if (producerInstance != null) {
+                return producerInstance;
+            }
+            producer.compareAndSet(null, producer());
+            return producer.get();
+        }
+
+        public static void refresh() {
+            if (producer.get() == null) {
+                return;
+            }
+            get();
+        }
+    }
+
+    /**
+     * per thread own producer instance
+     */
+    public static class ThreadLocalProducer {
+        private static final ThreadLocal<CloseableKafkaProducer<String, Object>> threadLocal
+                = ThreadLocal.withInitial(ProducerPool::producer);
+
+        private ThreadLocalProducer() {
+
+        }
+
+        public static CloseableKafkaProducer<String, Object> get() {
+            return threadLocal.get();
+        }
+
+        public static void remove() {
+            threadLocal.remove();
+        }
+
+        public static void refresh() {
+            remove();
+        }
+    }
+
+    /**
+     * the same key shard producer instance,recommend key for app id or topic id
+     */
+    public static class KeySharedProducer {
+        private static final Map<String, CloseableKafkaProducer<String, Object>>
+                MAP = new ConcurrentHashMap<>(16);
+
+        private KeySharedProducer() {
+
+        }
+
+        public static CloseableKafkaProducer<String, Object> get(final String key) {
+            if (Strings.isNullOrEmpty(key)) {
+                throw new SysException(50000, "key is null,can not get producer instance");
+            }
+
+            return MAP.putIfAbsent(key, producer(key));
+        }
+
+        public static void remove() {
+            MAP.clear();
+        }
+
+        public static void refresh() {
+            if (MAP.isEmpty()) {
+                return;
+            }
+            Map<String, CloseableKafkaProducer<String, Object>>
+                    newMap = new ConcurrentHashMap<>(16);
+            for (Map.Entry<String, CloseableKafkaProducer<String, Object>> entry : MAP.entrySet()) {
+                entry.getValue().flush();
+                newMap.put(entry.getKey(), producer(entry.getKey()));
+            }
+
+            MAP.clear();
+            MAP.putAll(newMap);
+        }
     }
 }

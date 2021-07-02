@@ -150,6 +150,7 @@
         <alibaba.metrics>2.0.6</alibaba.metrics>
         <javassist.version>3.20.0-GA</javassist.version>
         <clickhouse-jdbc.version>0.3.1</clickhouse-jdbc.version>
+        <mapdb.version>3.0.8</mapdb.version>
     </properties>
 
     <dependencyManagement>
@@ -281,6 +282,12 @@
                 <version>${hummer.version}</version>
             </dependency>
             <!--framework plugin-->
+            <!-- https://mvnrepository.com/artifact/org.mapdb/mapdb -->
+            <dependency>
+                <groupId>org.mapdb</groupId>
+                <artifactId>mapdb</artifactId>
+                <version>${mapdb.version}</version>
+            </dependency>
             <dependency>
                 <groupId>ru.yandex.clickhouse</groupId>
                 <artifactId>clickhouse-jdbc</artifactId>

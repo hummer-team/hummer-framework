@@ -30,12 +30,14 @@ import java.util.function.BiFunction;
  * @link https://github.com/facebook/rocksdb/wiki/RocksJava-Basics
  */
 @Service
-public class RocksDbPersistence implements RocksDBLocalPersistence {
+public class RocksDbPersistence implements LocalPersistence {
     private static final Logger LOGGER = LoggerFactory.getLogger(RocksDbPersistence.class);
 
     @PostConstruct
     private void init() {
-        RocksDB.loadLibrary();
+        if (enable()) {
+            RocksDB.loadLibrary();
+        }
     }
 
 
@@ -68,6 +70,16 @@ public class RocksDbPersistence implements RocksDBLocalPersistence {
                         , e);
             }
         }, "GET");
+    }
+
+    /**
+     * if return true then enable local store,else disable
+     *
+     * @return
+     */
+    @Override
+    public boolean enable() {
+        return PropertiesContainer.valueOf("hummer.rocksdb.enable", Boolean.class, false);
     }
 
     @Override
@@ -107,7 +119,7 @@ public class RocksDbPersistence implements RocksDBLocalPersistence {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(key), "key not null");
         try (final Options options = new Options()) {
             options.setCreateIfMissing(true);
-            try (final RocksDB db = RocksDB.open(getDbPath())) {
+            try (final RocksDB db = RocksDB.open(options, getDbPath())) {
                 return db.get(convertKeyToBytes(key));
             }
         } catch (RocksDBException e) {

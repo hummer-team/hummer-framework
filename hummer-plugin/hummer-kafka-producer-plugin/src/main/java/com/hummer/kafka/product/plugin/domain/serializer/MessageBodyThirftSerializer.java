@@ -4,11 +4,10 @@ import com.hummer.common.exceptions.SysException;
 import org.apache.kafka.common.serialization.Serializer;
 import org.apache.thrift.TBase;
 import org.apache.thrift.TException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TCompactProtocol;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -51,6 +50,7 @@ public class MessageBodyThirftSerializer<T extends TBase> implements Serializer<
             TSerializer serializer = new TSerializer(new TCompactProtocol.Factory());
             byte[] bytes = serializer.serialize(data);
             LOGGER.info("message topic {}, body thrift json serializer data size {} byte,cost time {} millis"
+                    , topic
                     , bytes.length
                     , System.currentTimeMillis() - start);
             return bytes;

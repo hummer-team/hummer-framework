@@ -3,7 +3,7 @@ package com.hummer.local.persistence.plugin;
 /**
  * @author bingy
  */
-public interface RocksDBLocalPersistence {
+public interface LocalPersistence {
     /**
      * deleted data by key
      *
@@ -31,8 +31,8 @@ public interface RocksDBLocalPersistence {
      * with column family key
      *
      * @param columnFamilyName column family name
-     * @param key          key
-     * @param value        value
+     * @param key              key
+     * @param value            value
      */
     void put(final String columnFamilyName, final String key, final byte[] value);
 
@@ -40,8 +40,15 @@ public interface RocksDBLocalPersistence {
      * get key name space in data
      *
      * @param columnFamilyName column family name
-     * @param key          key
+     * @param key              key
      * @return
      */
     byte[] get(final String columnFamilyName, final String key);
+
+    /**
+     * if return true then enable local store,else disable
+     *
+     * @return
+     */
+    boolean enable();
 }

@@ -1,5 +1,6 @@
 package com.hummer.core.init;
 
+import com.hummer.core.PropertiesContainer;
 import com.hummer.core.SpringApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ public class HummerApplicationContextInit implements ApplicationContextInitializ
         //set application context
         SpringApplicationContext context = new SpringApplicationContext();
         context.setApplicationContext(applicationContext);
+        PropertiesContainer.loadPropertyData(applicationContext.getEnvironment());
         LOGGER.info("......hummer init spring context container done,cost {} ms....."
                 , System.currentTimeMillis() - start);
     }
