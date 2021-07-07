@@ -6,11 +6,13 @@ import com.hummer.core.PropertiesContainer;
 import com.hummer.core.SpringApplicationContext;
 import lombok.Builder;
 import lombok.Getter;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.http.Header;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.hummer.common.constant.MessageConfigurationKey.HUMMER_MESSAGE_DRIVER_TYPE_KAFKA_KEY;
 import static com.hummer.common.constant.MessageConfigurationKey.HUMMER_MESSAGE_DRIVER_TYPE_KEY;
@@ -27,70 +29,8 @@ import static com.hummer.message.facade.metadata.MessagePublishMetadataKey.RABBI
 @Builder
 @Getter
 public class MessageBus {
-    /**
-     * message body
-     */
-    private Object body;
-    /**
-     * business unique id
-     */
-    private String appId;
-    /**
-     * Kafka message configuration
-     */
-    private Kafka kafka;
-    /**
-     * rabbit mq message configuration
-     */
-    private RabbitMq rabbitMq;
-    /**
-     * message key
-     */
-    private Object messageKey;
-    /**
-     * send message done callback , if parameter throwable is null then represent send message success else send message failed
-     */
-    private PublishMessageExceptionCallback callback;
-    /**
-     * send message timeout millisecond
-     */
-    private long syncSendMessageTimeOutMills;
-    /**
-     * if true then async send message else sync send message
-     */
-    private boolean async;
-
-    @Builder
-    @Getter
-    public static class Kafka {
-        /**
-         * topic id
-         */
-        private String topicId;
-
-        /**
-         * message partition,please be careful use this properties
-         */
-        private Integer partition;
-        /**
-         * head parameter
-         */
-        private Collection<Header> header;
-    }
-
-    @Builder
-    @Getter
-    public static class RabbitMq {
-        /**
-         * rabbit mq message route key
-         */
-        private String routeKey;
-        /**
-         * rabbit mq exchange
-         */
-        private String exchange;
-    }
-
+    public static final String KAFKA_BOCKER = "kafka";
+    public static final String ROCKETMQ_BOCKER = "rocketMQ";
     private static final Map<String, BaseMessageBusTemplate> MESSAGE_MAP = new HashMap<>(2);
 
     static {
@@ -101,11 +41,51 @@ public class MessageBus {
     }
 
     /**
+     * message body
+     */
+    private final Object body;
+    /**
+     * Kafka message configuration
+     */
+    private final Kafka kafka;
+    /**
+     * rocket mq message configuration
+     */
+    private final RocketMq rocketMq;
+    /**
+     * message key
+     */
+    private final Object messageKey;
+    /**
+     * send message done callback , if parameter throwable is null then represent send message success else send message failed
+     */
+    private final PublishMessageCallback callback;
+    /**
+     * send message timeout millisecond
+     */
+    private final long syncSendMessageTimeOutMills;
+    /**
+     * if true then async send message else sync send message
+     */
+    private final boolean async;
+    /**
+     * true is retry
+     */
+    @Builder.Default
+    private final boolean retry = false;
+    /**
+     * business group id
+     */
+    private String topicId;
+
+    /**
      * publish message to bus server
      *
      * @throws SysException if message driver invalid
      */
     public void publish() {
+        checkMessageDriver();
+        this.topicId = this.kafka != null ? this.kafka.topicId : "";
         //do send
         MESSAGE_MAP.get(getMessageBusTypeAndAssert()).send(this);
     }
@@ -123,5 +103,70 @@ public class MessageBus {
     @Override
     public String toString() {
         return String.format("[message bus entity: %s]", JSON.toJSONString(this));
+    }
+
+    public Map<String, Object> toMetadata() {
+        checkMessageDriver();
+
+        if (this.kafka != null) {
+            return kafka.toMetadata();
+        }
+
+        if (this.rocketMq != null) {
+            // TODO: 2021/7/5
+        }
+
+        throw new IllegalArgumentException("kafka or rocketMQ  must choose one.");
+    }
+
+    private void checkMessageDriver() {
+        if (this.kafka != null && this.rocketMq != null) {
+            throw new IllegalArgumentException("kafka or rocketMq must choose one");
+        }
+    }
+
+    @Builder
+    @Getter
+    public static class Kafka {
+        /**
+         * topic id
+         */
+        private final String topicId;
+
+        /**
+         * message partition,please be careful use this properties
+         */
+        private final Integer partition;
+        /**
+         * head parameter
+         */
+        private final Collection<Header> header;
+
+        public Map<String, Object> toMetadata() {
+            Map<String, Object> map = new ConcurrentHashMap<>(3);
+            map.put("topicId", topicId);
+            if (partition != null) {
+                map.put("partition", partition);
+            }
+            if (CollectionUtils.isNotEmpty(header)) {
+                map.put("header", header);
+            }
+            return map;
+        }
+
+        public Kafka fromMetadata(Map<String, Object> map) {
+            return new Kafka((String) map.get("topicId"), (Integer) map.get("partition")
+                    , (Collection<Header>) map.get("header"));
+        }
+    }
+
+    @Builder
+    @Getter
+    public static class RocketMq {
+        /**
+         * rocket mq message route key
+         */
+        private final String topicId;
+        private final int partition;
     }
 }

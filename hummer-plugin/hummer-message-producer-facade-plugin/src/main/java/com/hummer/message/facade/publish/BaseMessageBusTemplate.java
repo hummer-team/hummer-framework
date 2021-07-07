@@ -1,18 +1,10 @@
 package com.hummer.message.facade.publish;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.hummer.core.PropertiesContainer;
-import com.hummer.local.persistence.plugin.bean.MapLocalPersistence;
+import com.hummer.message.facade.event.ProducerEvent;
 import com.hummer.message.facade.metadata.KafkaMessageMetadata;
 import org.apache.kafka.clients.producer.RecordMetadata;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import static com.hummer.common.constant.MessageConfigurationKey.HUMMER_MESSAGE_DRIVER_TYPE_KAFKA_KEY;
-import static com.hummer.common.constant.MessageConfigurationKey.HUMMER_MESSAGE_DRIVER_TYPE_KEY;
 
 /**
  * @Author: lee
@@ -20,10 +12,6 @@ import static com.hummer.common.constant.MessageConfigurationKey.HUMMER_MESSAGE_
  * @Date: 2019/8/2 15:48
  **/
 public abstract class BaseMessageBusTemplate {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BaseMessageBusTemplate.class);
-    @Autowired
-    private MapLocalPersistence mapLocalPersistence;
-
     /**
      * send one message
      *
@@ -34,10 +22,10 @@ public abstract class BaseMessageBusTemplate {
      * @since 1.0.0
      **/
     public void send(final MessageBus messageBus) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(messageBus.getAppId())
-                , "app id can't null");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(messageBus.getTopicId())
+                , "topic id can't null");
         //get metadata
-        KafkaMessageMetadata metadata = KafkaMessageMetadata.getKafkaMessageMetadata(messageBus.getAppId());
+        KafkaMessageMetadata metadata = KafkaMessageMetadata.getKafkaMessageMetadata(messageBus.getTopicId());
         //if disabled send message
         if (!metadata.isEnable()) {
             return;
@@ -56,33 +44,26 @@ public abstract class BaseMessageBusTemplate {
             , final MessageBus messageBus
             , final Exception exception
             , final long startTime) {
-        if (exception != null) {
-            LOGGER.error("send message to kafka broker failed,cost {} millis,topic {} app id {}"
-                    , System.currentTimeMillis() - startTime
-                    , messageBus.getKafka().getTopicId()
-                    , messageBus.getAppId()
-                    , exception);
-        } else {
-            LOGGER.info("send message to kafka broker success cost {} millis,topic {} app id {},partition@offset {}"
-                    , System.currentTimeMillis() - startTime
-                    , messageBus.getKafka().getTopicId()
-                    , messageBus.getAppId()
-                    , metadata.toString());
-        }
-        //todo refactory
-        String driverType = PropertiesContainer.valueOfString(HUMMER_MESSAGE_DRIVER_TYPE_KEY
-                , HUMMER_MESSAGE_DRIVER_TYPE_KAFKA_KEY);
-        String storeFailedKey = String.format("hummer.message.%s.%s.local.store.failed.message.second"
-                , driverType, messageBus.getAppId());
-        long storeTimeout = PropertiesContainer.valueOf(storeFailedKey, Long.class, 0L);
-        if (storeTimeout > 0) {
-            mapLocalPersistence.put(messageBus.getAppId()
-                    , messageBus.getMessageKey().toString()
-                    , JSON.toJSONBytes(messageBus));
-        }
-        
+
+        //send event to local messageBus
+        ProducerEvent event = new ProducerEvent();
+        event.setException(exception);
+        event.setMessageBus(messageBus);
+        event.setMetadata(metadata);
+        event.setStartTime(startTime);
+        event.setRetry(messageBus.isRetry());
+        EventWrapper.post(event);
+        //callback business
+        callbackBusiness(metadata, messageBus, exception);
+    }
+
+    private void callbackBusiness(RecordMetadata metadata, MessageBus messageBus, Exception exception) {
         if (messageBus.getCallback() != null) {
-            messageBus.getCallback().callBack(metadata.partition(), metadata.offset(), messageBus.getBody(), exception);
+            if (metadata != null) {
+                messageBus.getCallback().callBack(metadata.partition(), metadata.offset(), messageBus.getBody(), exception);
+            } else {
+                messageBus.getCallback().callBack(-1, -1, messageBus.getBody(), exception);
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package com.hummer.common.eventbus;
 
+import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import org.springframework.beans.BeansException;
@@ -23,6 +24,8 @@ import java.lang.reflect.Method;
 public class EventBusRegister implements BeanPostProcessor {
     @Autowired
     private EventBus eventBus;
+    @Autowired(required = false)
+    private AsyncEventBus asyncEventBus;
 
     /**
      * register all event subscribe .
@@ -41,6 +44,9 @@ public class EventBusRegister implements BeanPostProcessor {
             Subscribe subscribe = method.getAnnotation(Subscribe.class);
             if (subscribe != null) {
                 eventBus.register(bean);
+                if (asyncEventBus != null) {
+                    asyncEventBus.register(bean);
+                }
             }
         }
         return bean;

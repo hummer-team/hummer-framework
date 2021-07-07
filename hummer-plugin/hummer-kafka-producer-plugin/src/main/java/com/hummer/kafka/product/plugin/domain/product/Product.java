@@ -22,7 +22,7 @@ public interface Product {
     void doSendBySync(final ProducerRecord<String, Object> messageRecord
             , final long sendTimeOutMills
             , final Callback callback
-            , final String appId);
+            , final String topicId);
 
     /**
      * send message to kafka server by async
@@ -34,5 +34,5 @@ public interface Product {
      * @since 1.0.0
      **/
     void doSendByAsync(final ProducerRecord<String, Object> messageRecord
-        ,final Callback callback,final String appId);
+        ,final Callback callback,final String topicId);
 }

@@ -19,7 +19,7 @@ public class MessagePublishMetadata {
     private static final ConcurrentHashMap<String, Object> CACHE = new ConcurrentHashMap<>(2);
     private static final String MESSAGE_PREFIX_KEY = "hummer.message";
 
-    private String appId;
+    private String topicId;
     private int perSecondSemaphore;
     private boolean enable;
     private int retryCount;
@@ -30,20 +30,20 @@ public class MessagePublishMetadata {
     }
 
     @SuppressWarnings("unchecked")
-    protected static <T extends MessagePublishMetadata> T get(final String appId
+    protected static <T extends MessagePublishMetadata> T get(final String topicId
             , final Supplier<T> supplier) {
-        T metadata = (T) CACHE.putIfAbsent(appId, supplier.get());
+        T metadata = (T) CACHE.putIfAbsent(topicId, supplier.get());
         if (metadata == null) {
-            return (T) CACHE.get(appId);
+            return (T) CACHE.get(topicId);
         }
 
         return metadata;
     }
 
-    protected static String formatKey(final String appId
+    protected static String formatKey(final String topicId
             , final String key
             , final String messageDriverType) {
-        return String.format("%s.%s.%s.%s", MESSAGE_PREFIX_KEY, messageDriverType, appId, key);
+        return String.format("%s.%s.%s.%s", MESSAGE_PREFIX_KEY, messageDriverType, topicId, key);
     }
 
     protected static String formatKeyByDefault(final String key
@@ -51,14 +51,14 @@ public class MessagePublishMetadata {
         return String.format("%s.%s.default.%s", MESSAGE_PREFIX_KEY, messageDriverType, key);
     }
 
-    protected void builder(final String appId) {
-        this.appId = appId;
+    protected void builder(final String topicId) {
+        this.topicId = topicId;
 
         final String driverType = PropertiesContainer.valueOfString("hummer.message.driver.type"
                 , "kafka");
 
         this.enable = FunctionUtil.with(
-                () -> PropertiesContainer.valueOf(formatKey(this.appId, "enable", driverType), Boolean.class)
+                () -> PropertiesContainer.valueOf(formatKey(this.topicId, "enable", driverType), Boolean.class)
                 , Objects::nonNull
                 , () -> PropertiesContainer.valueOf(formatKeyByDefault("enable", driverType), Boolean.class
                         , Boolean.TRUE));
@@ -69,21 +69,21 @@ public class MessagePublishMetadata {
         }
 
         this.perSecondSemaphore = FunctionUtil.with(
-                () -> PropertiesContainer.valueOfInteger(formatKey(this.appId
+                () -> PropertiesContainer.valueOfInteger(formatKey(this.topicId
                         , "perSecondSemaphore"
                         , driverType))
                 , r -> r > 0
                 , () -> PropertiesContainer.valueOfInteger(formatKeyByDefault("perSecondSemaphore", driverType)));
 
         this.sendMessageTimeOutMills = FunctionUtil.with(
-                () -> PropertiesContainer.valueOfInteger(formatKey(this.appId
+                () -> PropertiesContainer.valueOfInteger(formatKey(this.topicId
                         , "sendMessageTimeOutMills", driverType))
                 , r -> r > 0
                 , () -> PropertiesContainer.valueOfInteger(formatKeyByDefault("sendMessageTimeOutMills"
                         , driverType)));
 
         this.retryCount = FunctionUtil.with(
-                () -> PropertiesContainer.valueOfInteger(formatKey(this.appId, "retryCount"
+                () -> PropertiesContainer.valueOfInteger(formatKey(this.topicId, "retryCount"
                         , driverType))
                 , r -> r > 0
                 , () -> PropertiesContainer.valueOfInteger(formatKeyByDefault("retryCount"

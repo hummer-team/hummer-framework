@@ -23,10 +23,6 @@
             <artifactId>hummer-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka-clients</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.hummer</groupId>
             <artifactId>hummer-kafka-producer-plugin</artifactId>
         </dependency>

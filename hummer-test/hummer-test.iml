@@ -170,9 +170,6 @@
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.module:jackson-module-parameter-names:2.11.3" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-webmvc:5.3.2" level="project" />
     <orderEntry type="module" module-name="hummer-message-producer-facade-plugin" />
-    <orderEntry type="library" name="Maven: org.apache.kafka:kafka-clients:2.7.0" level="project" />
-    <orderEntry type="library" name="Maven: com.github.luben:zstd-jni:1.4.5-6" level="project" />
-    <orderEntry type="library" name="Maven: org.xerial.snappy:snappy-java:1.1.7.7" level="project" />
     <orderEntry type="module" module-name="hummer-kafka-producer-plugin" />
     <orderEntry type="library" name="Maven: org.apache.kafka:kafka_2.12:2.7.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.kafka:kafka-raft:2.7.0" level="project" />
@@ -199,6 +196,9 @@
     <orderEntry type="library" name="Maven: io.netty:netty-transport-native-epoll:4.1.55.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-transport-native-unix-common:4.1.55.Final" level="project" />
     <orderEntry type="library" name="Maven: commons-cli:commons-cli:1.4" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.kafka:kafka-clients:2.7.0" level="project" />
+    <orderEntry type="library" name="Maven: com.github.luben:zstd-jni:1.4.5-6" level="project" />
+    <orderEntry type="library" name="Maven: org.xerial.snappy:snappy-java:1.1.7.7" level="project" />
     <orderEntry type="library" name="Maven: org.apache.thrift:libthrift:0.14.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tomcat.embed:tomcat-embed-core:9.0.41" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-annotations-api:9.0.41" level="project" />

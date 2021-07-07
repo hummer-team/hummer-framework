@@ -237,7 +237,6 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
     public static <T> T valueOf(final String key, final Class<T> classType, final T defVal) {
         return get(key, classType, defVal);
     }
-
     /**
      * get this key property value.
      *

@@ -5,7 +5,7 @@ package com.hummer.message.facade.publish;
  * @since:1.0.0
  * @Date: 2019/8/5 15:30
  **/
-public interface PublishMessageExceptionCallback {
+public interface PublishMessageCallback {
     /**
      * send message call back，throwable if null then send ok else failed
      *

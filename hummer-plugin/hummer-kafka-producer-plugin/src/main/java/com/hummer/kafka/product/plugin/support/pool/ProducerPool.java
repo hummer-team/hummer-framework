@@ -43,9 +43,9 @@ public class ProducerPool {
      * @date 2019/8/12 14:14
      * @since 1.0.0
      **/
-    public static CloseableKafkaProducer<String, Object> get(final String appId) {
+    public static CloseableKafkaProducer<String, Object> get(final String topicId) {
         String singleType = "single";
-        String type = PropertiesContainer.valueOfString(formatKey(String.format("%s.instance.scope.type", appId)
+        String type = PropertiesContainer.valueOfString(formatKey(String.format("%s.instance.scope.type", topicId)
                 , null)
                 , singleType);
 
@@ -60,7 +60,7 @@ public class ProducerPool {
             return ThreadLocalProducer.get();
         }
 
-        return KeySharedProducer.get(appId);
+        return KeySharedProducer.get(topicId);
     }
 
     public static void refresh() {
@@ -76,10 +76,11 @@ public class ProducerPool {
     private static <K, V> CloseableKafkaProducer<K, V> producer(final String key) {
         // producer core configuration
         Properties properties = new Properties();
+        //BOOTSTRAP_SERVERS_CONFIG use default bocker address
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG
                 , PropertiesContainer
                         .valueOfStringWithAssertNotNull(formatKey(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG
-                                , key)));
+                                , null)));
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, bodySerializer());
 

@@ -27,8 +27,8 @@ public class ProductService implements Product {
     public void doSendBySync(final ProducerRecord<String, Object> messageRecord
             , final long waitCompleteTimeOutMills
             , final Callback callback
-            , final String appId) {
-        ProducerPool.get(appId).send(messageRecord, waitCompleteTimeOutMills, callback);
+            , final String topicId) {
+        ProducerPool.get(topicId).send(messageRecord, waitCompleteTimeOutMills, callback);
     }
 
     /**
@@ -43,7 +43,7 @@ public class ProductService implements Product {
     @Override
     public void doSendByAsync(final ProducerRecord<String, Object> messageRecord
             , final Callback callback
-            , final String appId) {
-        ProducerPool.get(appId).sendAsync(messageRecord, callback);
+            , final String topicId) {
+        ProducerPool.get(topicId).sendAsync(messageRecord, callback);
     }
 }

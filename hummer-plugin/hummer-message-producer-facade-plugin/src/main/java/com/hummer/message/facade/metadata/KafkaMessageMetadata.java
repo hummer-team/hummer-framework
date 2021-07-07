@@ -16,20 +16,20 @@ public class KafkaMessageMetadata<T> extends MessagePublishMetadata {
     /**
      * get kafka publish message metadata
      *
-     * @param appId app id
+     * @param groupId app id
      * @return {@link com.hummer.message.facade.metadata.KafkaMessageMetadata}
      * @author liguo
      * @date 2019/8/6 18:26
      * @since 1.0.0
      **/
-    public static KafkaMessageMetadata getKafkaMessageMetadata(final String appId) {
-        return get(appId, () -> builderKafkaMetadata(appId));
+    public static KafkaMessageMetadata getKafkaMessageMetadata(final String topicId) {
+        return get(topicId, () -> builderKafkaMetadata(topicId));
     }
 
     @SuppressWarnings("unchecked")
-    private static KafkaMessageMetadata builderKafkaMetadata(final String appId) {
+    private static KafkaMessageMetadata builderKafkaMetadata(final String topicId) {
         KafkaMessageMetadata metadata = new KafkaMessageMetadata();
-        metadata.builder(appId);
+        metadata.builder(topicId);
         return metadata;
     }
 }

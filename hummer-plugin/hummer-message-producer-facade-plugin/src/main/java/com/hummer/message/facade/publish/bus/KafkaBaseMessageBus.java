@@ -8,7 +8,6 @@ import com.hummer.message.facade.publish.MessageBus;
 import joptsimple.internal.Strings;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.header.Header;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +65,7 @@ public class KafkaBaseMessageBus extends BaseMessageBusTemplate {
         long start = System.currentTimeMillis();
         product.doSendBySync(record, sendMessageTimeOut, ((metadata, exception) -> {
             callback(metadata, messageBus, exception, start);
-        }), messageBus.getAppId());
+        }), messageBus.getTopicId());
     }
 
     /**
@@ -83,7 +82,7 @@ public class KafkaBaseMessageBus extends BaseMessageBusTemplate {
         ProducerRecord<String, Object> record = builderProducerRecord(messageBus);
         long start = System.currentTimeMillis();
         product.doSendByAsync(record, ((metadata, exception) -> callback(metadata, messageBus, exception, start))
-                , messageBus.getAppId());
+                , messageBus.getTopicId());
     }
 
     private ProducerRecord<String, Object> builderProducerRecord(final MessageBus messageBus) {
@@ -107,12 +106,13 @@ public class KafkaBaseMessageBus extends BaseMessageBusTemplate {
                 }
             }));
             record = new ProducerRecord<>(messageBus.getKafka().getTopicId()
-                    , null
+                    , messageBus.getKafka().getPartition()
                     , String.valueOf(messageBus.getMessageKey())
                     , messageBus.getBody()
                     , headers);
         } else {
             record = new ProducerRecord<>(messageBus.getKafka().getTopicId()
+                    , messageBus.getKafka().getPartition()
                     , String.valueOf(messageBus.getMessageKey())
                     , messageBus.getBody());
         }
