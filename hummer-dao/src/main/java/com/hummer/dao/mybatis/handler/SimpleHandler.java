@@ -1,4 +1,4 @@
-package com.hummer.dao.mybatis.json;
+package com.hummer.dao.mybatis.handler;
 
 import com.alibaba.fastjson.JSON;
 import org.apache.ibatis.type.BaseTypeHandler;
@@ -16,10 +16,10 @@ import java.sql.SQLException;
  * @since:1.0.0
  * @Date: 2019/7/9 15:15
  **/
-public class JsonSimpleHandle<T> extends BaseTypeHandler<T> {
+public class SimpleHandler<T> extends BaseTypeHandler<T> {
     private Class<T> aClass;
 
-    public JsonSimpleHandle(Class<T> tClass) {
+    public SimpleHandler(Class<T> tClass) {
         this.aClass = tClass;
     }
 

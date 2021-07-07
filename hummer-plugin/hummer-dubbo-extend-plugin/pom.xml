@@ -25,5 +25,13 @@
             <groupId>org.apache.dubbo</groupId>
             <artifactId>dubbo-serialization-kryo</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-serialization-api</artifactId>
+        </dependency>
     </dependencies>
 </project>

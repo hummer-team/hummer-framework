@@ -21,7 +21,7 @@
 
 
     <resultMap id="top10UserIdMap" type="java.util.List">
-        <result column="u" typeHandler="com.hummer.dao.mybatis.json.JsonClickHouseJdbcArrayHandle"
+        <result column="u" typeHandler="com.hummer.dao.mybatis.handler.ClickHouseJdbcListHandler"
                 javaType="java.lang.String"/>
     </resultMap>
 

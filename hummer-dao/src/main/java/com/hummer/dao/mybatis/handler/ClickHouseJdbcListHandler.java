@@ -1,4 +1,4 @@
-package com.hummer.dao.mybatis.json;
+package com.hummer.dao.mybatis.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class JsonClickHouseJdbcArrayHandle extends BaseTypeHandler<List<String>> {
+public class ClickHouseJdbcListHandler extends BaseTypeHandler<List<String>> {
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, List<String> parameter, JdbcType jdbcType) throws SQLException {
         ps.setString(i, JSON.toJSONString(parameter));
