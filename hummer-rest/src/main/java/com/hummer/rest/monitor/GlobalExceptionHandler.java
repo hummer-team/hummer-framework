@@ -125,6 +125,7 @@ public class GlobalExceptionHandler {
 
         } else if (e instanceof BusinessIdempotentException) {
             // ignore business idempotent exception
+            rep.setCode(SysConstant.BUSINESS_IDEMPOTENT_ERROR_CODE);
             rep.setSubCode(SysConstant.BUSINESS_IDEMPOTENT_SUB_CODE);
             rep.setMessage(e.getMessage());
             rep.setData(((AppException) e).getReturnObj());

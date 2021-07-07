@@ -38,6 +38,8 @@ public class HttpServletRequestUtil {
             return null;
         }
         return request.getHeader(HttpHeaders.USER_AGENT);
+//        Enumeration<String> enumeration = request.getHeaders(HttpHeaders.USER_AGENT);
+//        return Joiner.on(";").join(EnumerationUtils.toList(enumeration));
     }
 
     public static String getHeaderFirstByKey(ServerHttpRequest request, String key) {
