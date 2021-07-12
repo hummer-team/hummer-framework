@@ -44,4 +44,9 @@ public class AppBusinessAssert {
         isTrue(current.equals(env), 40000, String.format("current env %s ,need env %s", current, env));
     }
 
+    public static void notEnvironment(String env) {
+        String current = PropertiesContainer.valueOfString("spring.profiles.active", "");
+        isTrue(!current.equals(env), 40000, String.format("current env %s ,not permit env %s", current, env));
+    }
+
 }
