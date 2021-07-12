@@ -3,6 +3,7 @@ package com.hummer.common.utils;
 import com.hummer.common.ErrorCode;
 import com.hummer.common.exceptions.AppException;
 import com.hummer.common.exceptions.BusinessIdempotentException;
+import com.hummer.core.PropertiesContainer;
 
 /**
  * AppBusinessAssert
@@ -37,5 +38,10 @@ public class AppBusinessAssert {
         isTrueOrIdempotentException(expression, errorCode.getCode(), errorCode.getMsg());
     }
 
+
+    public static void environment(String env) {
+        String current = PropertiesContainer.valueOfString("spring.profiles.active", "");
+        isTrue(current.equals(env), 40000, String.format("current env %s ,need env %s", current, env));
+    }
 
 }
