@@ -13,6 +13,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -192,5 +194,23 @@ public class TaskThreadPoolBean {
         taskExecutor.setThreadFactory(tf);
 
         return taskExecutor;
+    }
+
+    @Bean(name = Constants.SCHEDULE_POOL_DEFAULT_TASK_GROUP)
+    @Lazy
+    public ScheduledExecutorService initScheduledExecutorServicePool() {
+        String threadName = PropertiesContainer.valueOfString("hummer.task.thread.name", "hummer-thread");
+        int coreThread = PropertiesContainer.valueOfInteger("hummer.task.thread.core.limit"
+                , Runtime.getRuntime().availableProcessors());
+        int size = PropertiesContainer.valueOfInteger("hummer.task.schedule.queue.max.size", coreThread);
+        ThreadFactory tf =
+                new ThreadFactoryBuilder()
+                        .setNameFormat(threadName + "-%d")
+                        .setDaemon(true)
+                        .build();
+
+        ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(coreThread, tf);
+        executor.setMaximumPoolSize(size);
+        return executor;
     }
 }

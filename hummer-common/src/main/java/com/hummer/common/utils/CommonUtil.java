@@ -1,5 +1,6 @@
 package com.hummer.common.utils;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,13 @@ public class CommonUtil {
      */
     public static <T> T ifNullDefault(T resource, T deft) {
         if (resource == null) {
+            return deft;
+        }
+        return resource;
+    }
+
+    public static <T> T ifEmptyDefault(T resource, T deft) {
+        if (ObjectUtils.isEmpty(resource)) {
             return deft;
         }
         return resource;

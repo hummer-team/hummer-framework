@@ -17,4 +17,6 @@ public class Constants {
     public static final String POOL_DEFAULT_TASK_OEN_THREAD_GROUP_V2 = "defaultTaskOenThreadGroupV2";
 
     public static final String POOL_DEFAULT_TASK_GROUP_V3 = "defaultTaskGroupV3";
+
+    public static final String SCHEDULE_POOL_DEFAULT_TASK_GROUP = "defaultScheduleTaskGroup";
 }

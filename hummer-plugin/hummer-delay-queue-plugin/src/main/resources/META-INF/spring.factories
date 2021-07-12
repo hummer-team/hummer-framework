@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.hummer.delay.queue.plugin.conf.DelayQueueConfig
