@@ -14,7 +14,7 @@ public class MessageBusTest {
     public void sendMessage() {
         MessageBus
                 .builder()
-                .kafka(MessageBus.Kafka.builder().topicId("test").build())
+                .kafka(MessageBus.Kafka.builder().build())
                 .topicId("test")
                 .body("test")
                 .build()

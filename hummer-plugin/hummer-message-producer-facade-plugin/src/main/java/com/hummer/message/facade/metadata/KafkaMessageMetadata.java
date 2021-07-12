@@ -8,7 +8,7 @@ import lombok.Getter;
  * @Date: 2019/8/5 14:28
  **/
 @Getter
-public class KafkaMessageMetadata<T> extends MessagePublishMetadata {
+public class KafkaMessageMetadata extends MessagePublishMetadata {
     public KafkaMessageMetadata() {
 
     }
@@ -22,12 +22,11 @@ public class KafkaMessageMetadata<T> extends MessagePublishMetadata {
      * @date 2019/8/6 18:26
      * @since 1.0.0
      **/
-    public static KafkaMessageMetadata getKafkaMessageMetadata(final String topicId) {
-        return get(topicId, () -> builderKafkaMetadata(topicId));
+    public static KafkaMessageMetadata get(final String topicId) {
+        return get(topicId, () -> builderMetadata(topicId));
     }
 
-    @SuppressWarnings("unchecked")
-    private static KafkaMessageMetadata builderKafkaMetadata(final String topicId) {
+    private static KafkaMessageMetadata builderMetadata(final String topicId) {
         KafkaMessageMetadata metadata = new KafkaMessageMetadata();
         metadata.builder(topicId);
         return metadata;

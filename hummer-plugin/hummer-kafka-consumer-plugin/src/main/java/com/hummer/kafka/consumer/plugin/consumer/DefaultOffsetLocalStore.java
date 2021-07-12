@@ -3,6 +3,7 @@ package com.hummer.kafka.consumer.plugin.consumer;
 import com.hummer.common.utils.LongUtil;
 import com.hummer.local.persistence.plugin.LocalPersistence;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -17,6 +18,7 @@ import static com.hummer.kafka.consumer.plugin.KafkaConsumerConstant.OFFSET_STOR
 @Service(value = OFFSET_STORE_DEFAULT)
 public class DefaultOffsetLocalStore implements OffsetStore {
     @Autowired
+    @Qualifier("RocksDbPersistence")
     private LocalPersistence persistence;
 
     /**

@@ -1,12 +1,9 @@
 package com.hummer.message.facade.publish;
 
-import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
 import com.hummer.message.facade.event.ProducerEvent;
 import com.hummer.message.facade.event.handler.SendFailedHandler;
-import com.hummer.message.facade.event.handler.SendMessageAfterLoggerHandler;
-
-import java.util.concurrent.Executors;
+import com.hummer.message.facade.event.handler.SendAfterLoggerHandler;
 
 public class EventWrapper {
     private static volatile EventBus asyncEventBus;
@@ -22,7 +19,7 @@ public class EventWrapper {
     private static void registerSubscribe() {
         ensure();
         asyncEventBus.register(new SendFailedHandler());
-        asyncEventBus.register(new SendMessageAfterLoggerHandler());
+        asyncEventBus.register(new SendAfterLoggerHandler());
     }
 
     public static <T extends ProducerEvent> void post(T event) {

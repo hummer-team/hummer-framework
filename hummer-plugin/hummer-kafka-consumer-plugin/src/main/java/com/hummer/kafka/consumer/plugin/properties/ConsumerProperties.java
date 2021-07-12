@@ -9,6 +9,8 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.ByteBufferDeserializer;
 import org.apache.kafka.common.serialization.BytesDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
@@ -20,6 +22,8 @@ import java.util.Properties;
  * @Date: 2019/8/12 16:56
  **/
 public class ConsumerProperties {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConsumerProperties.class);
+
     private ConsumerProperties() {
 
     }
@@ -69,6 +73,7 @@ public class ConsumerProperties {
                 formatKey(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG))
                 , v -> v > 0
                 , v -> properties.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, v));
+        LOGGER.debug("kafka consumer properties is \n {}", properties);
         return properties;
     }
 

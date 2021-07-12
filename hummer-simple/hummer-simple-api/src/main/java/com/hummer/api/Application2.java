@@ -16,8 +16,6 @@ public class Application2 {
 
     public static void main(String[] args) {
         HummerApplicationStart.start(Application2.class, args);
-        //KafkaConsumerWrapper.start(Collections.singleton("log-type-group-out2"), "log-type-group-01"
-        //    , SpringApplicationContext.getBean(ConsumerHandle.class));
     }
 
 }

@@ -27,11 +27,11 @@ public class MessageEvent {
     /**
      * message driver data
      */
-    private Map<String, Object> messageDriverMetadata;
+    private Map<String, String> messageAffiliateData;
     /**
      * message key
      */
-    private Object messageKey;
+    private String messageKey;
     /**
      * send to message bocker timeout
      */
@@ -60,6 +60,13 @@ public class MessageEvent {
      * max retry limit
      */
     private int maxRetry;
+    /**
+     * message bocker type
+     */
+    private String busDriverType;
+    private String tag;
+    private boolean ack;
+    private int delayLevel;
 
     public static MessageEvent parseBytes(byte[] body) {
         return JSON.parseObject(body, MessageEvent.class);

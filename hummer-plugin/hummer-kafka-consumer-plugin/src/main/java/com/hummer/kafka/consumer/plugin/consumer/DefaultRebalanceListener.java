@@ -46,7 +46,7 @@ public final class DefaultRebalanceListener<K, V> implements ConsumerRebalanceLi
      * invocation of {@link KafkaConsumer#poll(Duration)} in which this callback is being executed. This means it is not
      * necessary to catch these exceptions and re-attempt to wakeup or interrupt the consumer thread.
      *
-     * @param partitions The list of partitions that were assigned to the consumer on the last rebalance
+     * @param partitions The list of com.hummer.kafka.product.plugin.domain.partitions that were assigned to the consumer on the last rebalance
      * @throws WakeupException    If raised from a nested call to {@link KafkaConsumer}
      * @throws InterruptException If raised from a nested call to {@link KafkaConsumer}
      */
@@ -57,7 +57,7 @@ public final class DefaultRebalanceListener<K, V> implements ConsumerRebalanceLi
             partitions.forEach(consumer::committed);
         }
 
-        LOGGER.info("Lost partitions in rebalance,offsetSeek type {}. Committing current offsets:{}"
+        LOGGER.info("Lost com.hummer.kafka.product.plugin.domain.partitions in rebalance,offsetSeek type {}. Committing current offsets:{}"
                 , consumerMetadata.getOffsetSeekEnum()
                 , partitions);
     }
@@ -77,7 +77,7 @@ public final class DefaultRebalanceListener<K, V> implements ConsumerRebalanceLi
      * invocation of {@link KafkaConsumer#poll(Duration)} in which this callback is being executed. This means it is not
      * necessary to catch these exceptions and re-attempt to wakeup or interrupt the consumer thread.
      *
-     * @param partitions The list of partitions that are now assigned to the consumer (may include partitions previously
+     * @param partitions The list of com.hummer.kafka.product.plugin.domain.partitions that are now assigned to the consumer (may include com.hummer.kafka.product.plugin.domain.partitions previously
      *                   assigned to the consumer)
      * @throws WakeupException    If raised from a nested call to {@link KafkaConsumer}
      * @throws InterruptException If raised from a nested call to {@link KafkaConsumer}
@@ -92,7 +92,7 @@ public final class DefaultRebalanceListener<K, V> implements ConsumerRebalanceLi
                 consumer.seekToEnd(partitions);
                 break;
             default:
-                //read out of store partitions
+                //read out of store com.hummer.kafka.product.plugin.domain.partitions
                 for (TopicPartition partition : partitions) {
                     consumer.seek(partition
                             , offsetStore.getOffset(partition.topic(), partition.hashCode()));

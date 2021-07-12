@@ -36,7 +36,7 @@ public class SendFailedHandler {
         int expire = PropertiesContainer.valueOfInteger(expireKey, 0);
 
         LOGGER.info("send message to {} failed,need retry {} topic Id {}", driverType
-                , maxRetry, event.getMessageBus().getKafka().getTopicId());
+                , maxRetry, event.getMessageBus().getTopicId());
         if (maxRetry <= 0 || expire <= 0) {
             return;
         }
@@ -45,20 +45,24 @@ public class SendFailedHandler {
         event1.setTopicId(event.getMessageBus().getTopicId());
         event1.setBody(event.getMessageBus().getBody());
         event1.setMessageKey(event.getMessageBus().getMessageKey());
-        event1.setSyncSendMessageTimeOutMills(event.getMessageBus().getSyncSendMessageTimeOutMills());
-        event1.setMessageDriverMetadata(event.getMessageBus().toMetadata());
+        event1.setSyncSendMessageTimeOutMills(event.getMessageBus().getSendTimeOutMills());
+        event1.setMessageAffiliateData(event.getMessageBus().getAffiliated());
         event1.setCreatedTime(DateUtil.now());
         event1.setAsync(event.isAsync());
         event1.setMaxRetry(maxRetry);
         event1.setExpireDateTime(DateUtil.addSeconds(DateUtil.now(), expire));
-        event1.setPartition(event.getMessageBus().getKafka().getPartition());
+        event1.setPartition(event.getPartition());
+        event1.setBusDriverType(event.getBusDriverType());
+        event1.setTag(event.getTag());
+        event1.setDelayLevel(event.getDelayLevel());
+        event1.setAck(event.isAck());
 
         long start = System.currentTimeMillis();
         SpringApplicationContext.getBean(MapLocalPersistence.class)
                 .addToSetAndListWithTraction(event.getMessageBus().getTopicId(), event1.toBytes());
 
         LOGGER.info("send message to {} failed,need retry {},app id {} topic Id {},message store local ok,cost {} ms"
-                , driverType, maxRetry, event.getMessageBus().getTopicId(), event.getMessageBus().getKafka().getTopicId()
+                , driverType, maxRetry, event.getMessageBus().getTopicId(), event.getMessageBus().getTopicId()
                 , System.currentTimeMillis() - start);
     }
 }

@@ -44,23 +44,7 @@ public class ProducerPool {
      * @since 1.0.0
      **/
     public static CloseableKafkaProducer<String, Object> get(final String topicId) {
-        String singleType = "single";
-        String type = PropertiesContainer.valueOfString(formatKey(String.format("%s.instance.scope.type", topicId)
-                , null)
-                , singleType);
-
-        LOGGER.debug("kafka producer instance scope type is {}", type);
-
-        if (type == null || singleType.equalsIgnoreCase(type)) {
-            return SingleProducer.get();
-        }
-
-        String preThreadType = "preThread";
-        if (type.equalsIgnoreCase(preThreadType)) {
-            return ThreadLocalProducer.get();
-        }
-
-        return KeySharedProducer.get(topicId);
+        return SingleProducer.get();
     }
 
     public static void refresh() {
@@ -208,7 +192,10 @@ public class ProducerPool {
 
     /**
      * per thread own producer instance
+     *
+     * @deprecated
      */
+    @Deprecated
     public static class ThreadLocalProducer {
         private static final ThreadLocal<CloseableKafkaProducer<String, Object>> threadLocal
                 = ThreadLocal.withInitial(ProducerPool::producer);
@@ -232,7 +219,10 @@ public class ProducerPool {
 
     /**
      * the same key shard producer instance,recommend key for app id or topic id
+     *
+     * @deprecated
      */
+    @Deprecated
     public static class KeySharedProducer {
         private static final Map<String, CloseableKafkaProducer<String, Object>>
                 MAP = new ConcurrentHashMap<>(16);

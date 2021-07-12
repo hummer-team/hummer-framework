@@ -3,8 +3,8 @@ package com.hummer.message.facade.publish;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.hummer.message.facade.event.ProducerEvent;
-import com.hummer.message.facade.metadata.KafkaMessageMetadata;
 import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.rocketmq.client.producer.SendResult;
 
 /**
  * @Author: lee
@@ -22,12 +22,8 @@ public abstract class BaseMessageBusTemplate {
      * @since 1.0.0
      **/
     public void send(final MessageBus messageBus) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(messageBus.getTopicId())
-                , "topic id can't null");
-        //get metadata
-        KafkaMessageMetadata metadata = KafkaMessageMetadata.getKafkaMessageMetadata(messageBus.getTopicId());
-        //if disabled send message
-        if (!metadata.isEnable()) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(messageBus.getTopicId()), "topic id can't null");
+        if (!enable(messageBus.getTopicId())) {
             return;
         }
         //verify
@@ -40,7 +36,36 @@ public abstract class BaseMessageBusTemplate {
         }
     }
 
-    protected void callback(final RecordMetadata metadata
+    protected void callbackOfRocketMq(final SendResult metadata
+            , final MessageBus messageBus
+            , final Throwable exception
+            , final long startTime) {
+        //send event to local messageBus
+        ProducerEvent event = new ProducerEvent();
+        event.setException(exception);
+        event.setMessageBus(messageBus);
+        if (metadata != null) {
+            event.setOffset(metadata.getQueueOffset());
+            event.setPartition(metadata.getMessageQueue().getQueueId());
+        }
+        event.setStartTime(startTime);
+        event.setRetry(messageBus.isRetry());
+        event.setBusDriverType(MessageBus.ROCKETMQ_BOCKER);
+        event.setAsync(messageBus.isAsync());
+        if (messageBus.getRocketMq() != null) {
+            event.setTag(messageBus.getRocketMq().getTag());
+            event.setAck(messageBus.getRocketMq().isAck());
+            event.setDelayLevel(messageBus.getRocketMq().getDelayLevel());
+        }
+
+        EventWrapper.post(event);
+
+        callbackBusiness(metadata == null ? -1 : metadata.getMessageQueue().getQueueId()
+                , metadata == null ? -1 : metadata.getQueueOffset()
+                , messageBus, exception);
+    }
+
+    protected void callbackOfKafka(final RecordMetadata metadata
             , final MessageBus messageBus
             , final Exception exception
             , final long startTime) {
@@ -49,21 +74,24 @@ public abstract class BaseMessageBusTemplate {
         ProducerEvent event = new ProducerEvent();
         event.setException(exception);
         event.setMessageBus(messageBus);
-        event.setMetadata(metadata);
+        if (metadata != null) {
+            event.setOffset(metadata.offset());
+            event.setPartition(metadata.partition());
+        }
         event.setStartTime(startTime);
         event.setRetry(messageBus.isRetry());
+        event.setPartition(messageBus.getKafka().getPartition());
+        event.setBusDriverType(MessageBus.KAFKA_BOCKER);
         EventWrapper.post(event);
         //callback business
-        callbackBusiness(metadata, messageBus, exception);
+        callbackBusiness(metadata == null ? -1 : metadata.partition()
+                , metadata == null ? -1 : metadata.offset()
+                , messageBus, exception);
     }
 
-    private void callbackBusiness(RecordMetadata metadata, MessageBus messageBus, Exception exception) {
+    private void callbackBusiness(int partition, long offset, MessageBus messageBus, Throwable exception) {
         if (messageBus.getCallback() != null) {
-            if (metadata != null) {
-                messageBus.getCallback().callBack(metadata.partition(), metadata.offset(), messageBus.getBody(), exception);
-            } else {
-                messageBus.getCallback().callBack(-1, -1, messageBus.getBody(), exception);
-            }
+            messageBus.getCallback().callBack(partition, offset, messageBus.getBody(), exception);
         }
     }
 
@@ -99,4 +127,12 @@ public abstract class BaseMessageBusTemplate {
      * @since 1.0.0
      **/
     protected abstract void doSendAsync(final MessageBus messageBus);
+
+    /**
+     * if disabled then don't send message
+     *
+     * @param topicId topic id
+     * @return if disabled then don't send message
+     */
+    protected abstract boolean enable(String topicId);
 }

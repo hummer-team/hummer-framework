@@ -21,6 +21,7 @@ a.txt
 */db.mv.db
 hummer-test.iml
 hummer-test/hummer-test.iml
-hummer-test/hummer-test.iml
 hummer-plugin/hummer-local-persistence-plugin/hummer.db
 hummer-test/hummer.db
+hummer.db
+hummer.db.*

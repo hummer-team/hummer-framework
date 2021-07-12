@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class KafkaMessageReq {
     private String body;
-    private int id;
+    private String id;
     private String type;
     private long count;
 }

@@ -31,6 +31,10 @@
             <artifactId>hummer-local-persistence-plugin</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.hummer</groupId>
+            <artifactId>hummer-rocketmq-producer-plugin</artifactId>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>

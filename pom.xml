@@ -28,8 +28,8 @@
         <version>2.4.1</version>
     </parent>
 
-
-    <!-- <distributionManagement>
+    <!--local repository-->
+    <!--<distributionManagement>
         <repository>
             <id>releases-local</id>
             <url>http://localhost:8081/nexus/content/repositories/releases</url>
@@ -38,8 +38,9 @@
             <id>snapshots-local</id>
             <url>http://localhost:8081/nexus/content/repositories/snapshots</url>
         </snapshotRepository>
-    </distributionManagement> -->
+    </distributionManagement>-->
 
+    <!--internal repository-->
     <distributionManagement>
         <repository>
             <id>maven-releases</id>
@@ -53,7 +54,6 @@
 
     <!-- Properties -->
     <properties>
-
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -151,6 +151,7 @@
         <javassist.version>3.20.0-GA</javassist.version>
         <clickhouse-jdbc.version>0.3.1</clickhouse-jdbc.version>
         <mapdb.version>3.0.8</mapdb.version>
+        <rocketmq-client.version>4.9.0</rocketmq-client.version>
     </properties>
 
     <dependencyManagement>
@@ -281,8 +282,18 @@
                 <artifactId>hummer-cache-plugin</artifactId>
                 <version>${hummer.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.hummer</groupId>
+                <artifactId>hummer-rocketmq-producer-plugin</artifactId>
+                <version>${hummer.version}</version>
+            </dependency>
             <!--framework plugin-->
             <!-- https://mvnrepository.com/artifact/org.mapdb/mapdb -->
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-client</artifactId>
+                <version>${rocketmq-client.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.mapdb</groupId>
                 <artifactId>mapdb</artifactId>

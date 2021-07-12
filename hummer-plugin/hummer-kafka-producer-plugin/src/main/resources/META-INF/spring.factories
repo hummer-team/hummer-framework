@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.hummer.kafka.product.plugin.bean.ProductImportBean
+com.hummer.kafka.product.plugin.bean.KafkaProductImportBean

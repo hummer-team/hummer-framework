@@ -23,7 +23,6 @@
         <module>hummer-scheduling-plugin</module>
         <module>hummer-seata-spring-boot-plugin</module>
         <module>hummer-redis-plugin</module>
-        <module>hummer-trace-client-plugin</module>
         <module>hummer-swagger-plugin</module>
         <module>hummer-excel-plugin</module>
         <module>hummer-cache-plugin</module>
@@ -34,9 +33,9 @@
         <module>hummer-dubbo-extend-plugin</module>
         <module>hummer-yug-tools-plugin</module>
         <module>hummer-model-generator-plugin</module>
-        <module>hummer-pay-gateway-plugin</module>
         <module>hummer-user-auth-plugin</module>
         <module>hummer-proxy-plugin</module>
         <module>hummer-first-restfull-plugin</module>
+        <module>hummer-rocketmq-producer-plugin</module>
     </modules>
 </project>

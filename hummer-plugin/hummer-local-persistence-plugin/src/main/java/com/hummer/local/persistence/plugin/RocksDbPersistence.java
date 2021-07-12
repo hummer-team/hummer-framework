@@ -29,7 +29,7 @@ import java.util.function.BiFunction;
  * @author bingy
  * @link https://github.com/facebook/rocksdb/wiki/RocksJava-Basics
  */
-@Service
+@Service("RocksDbPersistence")
 public class RocksDbPersistence implements LocalPersistence {
     private static final Logger LOGGER = LoggerFactory.getLogger(RocksDbPersistence.class);
 

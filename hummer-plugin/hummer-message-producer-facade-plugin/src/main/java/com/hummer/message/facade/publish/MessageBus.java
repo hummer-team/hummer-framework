@@ -6,18 +6,15 @@ import com.hummer.core.PropertiesContainer;
 import com.hummer.core.SpringApplicationContext;
 import lombok.Builder;
 import lombok.Getter;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.http.Header;
 
-import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static com.hummer.common.constant.MessageConfigurationKey.HUMMER_MESSAGE_DRIVER_TYPE_KAFKA_KEY;
 import static com.hummer.common.constant.MessageConfigurationKey.HUMMER_MESSAGE_DRIVER_TYPE_KEY;
 import static com.hummer.message.facade.metadata.MessagePublishMetadataKey.KAFKA_MESSAGE_DRIVER_NAME;
-import static com.hummer.message.facade.metadata.MessagePublishMetadataKey.RABBITMQ_MESSAGE_DRIVER_NAME;
+import static com.hummer.message.facade.metadata.MessagePublishMetadataKey.ROCKETMQ_MESSAGE_DRIVER_NAME;
 
 /**
  * message bus static proxy
@@ -36,8 +33,8 @@ public class MessageBus {
     static {
         MESSAGE_MAP.put(KAFKA_MESSAGE_DRIVER_NAME,
                 SpringApplicationContext.getBean(KAFKA_MESSAGE_DRIVER_NAME, BaseMessageBusTemplate.class));
-        MESSAGE_MAP.put(RABBITMQ_MESSAGE_DRIVER_NAME,
-                SpringApplicationContext.getBean(RABBITMQ_MESSAGE_DRIVER_NAME, BaseMessageBusTemplate.class));
+        MESSAGE_MAP.put(ROCKETMQ_MESSAGE_DRIVER_NAME,
+                SpringApplicationContext.getBean(ROCKETMQ_MESSAGE_DRIVER_NAME, BaseMessageBusTemplate.class));
     }
 
     /**
@@ -55,15 +52,15 @@ public class MessageBus {
     /**
      * message key
      */
-    private final Object messageKey;
+    private final String messageKey;
     /**
      * send message done callback , if parameter throwable is null then represent send message success else send message failed
      */
-    private final PublishMessageCallback callback;
+    private final PublishCallback callback;
     /**
      * send message timeout millisecond
      */
-    private final long syncSendMessageTimeOutMills;
+    private final long sendTimeOutMills;
     /**
      * if true then async send message else sync send message
      */
@@ -76,7 +73,12 @@ public class MessageBus {
     /**
      * business group id
      */
-    private String topicId;
+    private final String topicId;
+    /**
+     * message affiliated data
+     */
+    @Builder.Default
+    private final Map<String, String> affiliated = Collections.emptyMap();
 
     /**
      * publish message to bus server
@@ -85,8 +87,6 @@ public class MessageBus {
      */
     public void publish() {
         checkMessageDriver();
-        this.topicId = this.kafka != null ? this.kafka.topicId : "";
-        //do send
         MESSAGE_MAP.get(getMessageBusTypeAndAssert()).send(this);
     }
 
@@ -105,20 +105,6 @@ public class MessageBus {
         return String.format("[message bus entity: %s]", JSON.toJSONString(this));
     }
 
-    public Map<String, Object> toMetadata() {
-        checkMessageDriver();
-
-        if (this.kafka != null) {
-            return kafka.toMetadata();
-        }
-
-        if (this.rocketMq != null) {
-            // TODO: 2021/7/5
-        }
-
-        throw new IllegalArgumentException("kafka or rocketMQ  must choose one.");
-    }
-
     private void checkMessageDriver() {
         if (this.kafka != null && this.rocketMq != null) {
             throw new IllegalArgumentException("kafka or rocketMq must choose one");
@@ -129,44 +115,27 @@ public class MessageBus {
     @Getter
     public static class Kafka {
         /**
-         * topic id
-         */
-        private final String topicId;
-
-        /**
          * message partition,please be careful use this properties
          */
         private final Integer partition;
-        /**
-         * head parameter
-         */
-        private final Collection<Header> header;
-
-        public Map<String, Object> toMetadata() {
-            Map<String, Object> map = new ConcurrentHashMap<>(3);
-            map.put("topicId", topicId);
-            if (partition != null) {
-                map.put("partition", partition);
-            }
-            if (CollectionUtils.isNotEmpty(header)) {
-                map.put("header", header);
-            }
-            return map;
-        }
-
-        public Kafka fromMetadata(Map<String, Object> map) {
-            return new Kafka((String) map.get("topicId"), (Integer) map.get("partition")
-                    , (Collection<Header>) map.get("header"));
-        }
     }
 
     @Builder
     @Getter
     public static class RocketMq {
         /**
-         * rocket mq message route key
+         * message tag flag
          */
-        private final String topicId;
-        private final int partition;
+        private final String tag;
+        /**
+         * if true then wait bocker response
+         */
+        @Builder.Default
+        private final boolean ack = false;
+        /**
+         * 1s、 5s、 10s、 30s、 1m、 2m、 3m、 4m、 5m、 6m、 7m、 8m、 9m、 10m、 20m、 30m、 1h、 2h
+         */
+        @Builder.Default
+        private final int delayLevel = -1;
     }
 }

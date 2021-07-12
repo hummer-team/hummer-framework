@@ -9,6 +9,8 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
+import static com.hummer.message.facade.metadata.MessagePublishMetadataKey.MESSAGE_PREFIX_KEY;
+
 /**
  * @Author: lee
  * @since:1.0.0
@@ -17,13 +19,15 @@ import java.util.function.Supplier;
 @Getter
 public class MessagePublishMetadata {
     private static final ConcurrentHashMap<String, Object> CACHE = new ConcurrentHashMap<>(2);
-    private static final String MESSAGE_PREFIX_KEY = "hummer.message";
+
 
     private String topicId;
     private int perSecondSemaphore;
     private boolean enable;
     private int retryCount;
     private int sendMessageTimeOutMills;
+    private String serializerType;
+    private String driverType;
 
     public MessagePublishMetadata() {
 
@@ -43,12 +47,12 @@ public class MessagePublishMetadata {
     protected static String formatKey(final String topicId
             , final String key
             , final String messageDriverType) {
-        return String.format("%s.%s.%s.%s", MESSAGE_PREFIX_KEY, messageDriverType, topicId, key);
+        return String.format("%s.%s.%s.producer.%s", MESSAGE_PREFIX_KEY, messageDriverType, topicId, key);
     }
 
     protected static String formatKeyByDefault(final String key
             , final String messageDriverType) {
-        return String.format("%s.%s.default.%s", MESSAGE_PREFIX_KEY, messageDriverType, key);
+        return String.format("%s.%s.producer.%s", MESSAGE_PREFIX_KEY, messageDriverType, key);
     }
 
     protected void builder(final String topicId) {
@@ -56,7 +60,7 @@ public class MessagePublishMetadata {
 
         final String driverType = PropertiesContainer.valueOfString("hummer.message.driver.type"
                 , "kafka");
-
+        this.driverType = driverType;
         this.enable = FunctionUtil.with(
                 () -> PropertiesContainer.valueOf(formatKey(this.topicId, "enable", driverType), Boolean.class)
                 , Objects::nonNull
@@ -88,5 +92,11 @@ public class MessagePublishMetadata {
                 , r -> r > 0
                 , () -> PropertiesContainer.valueOfInteger(formatKeyByDefault("retryCount"
                         , driverType)));
+
+        this.serializerType = PropertiesContainer.valueOfString(formatKeyByDefault("producer.value.serializer"
+                , driverType)
+                , "fastjson");
+
+
     }
 }

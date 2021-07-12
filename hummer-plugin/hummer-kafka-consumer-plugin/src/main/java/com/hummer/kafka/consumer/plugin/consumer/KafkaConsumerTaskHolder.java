@@ -3,8 +3,8 @@ package com.hummer.kafka.consumer.plugin.consumer;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.hummer.kafka.consumer.plugin.properties.ConsumerProperties;
 import com.hummer.kafka.consumer.plugin.callback.MessageBodyMetadata;
+import com.hummer.kafka.consumer.plugin.properties.ConsumerProperties;
 import joptsimple.internal.Strings;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
@@ -21,7 +21,6 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -33,12 +32,13 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since:1.0.0
  * @Date: 2019/8/12 16:31
  **/
-public final class KafkaConsumerTaskHolder implements Runnable {
+public final class KafkaConsumerTaskHolder extends Thread implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerTaskHolder.class);
     private final AtomicBoolean closed = new AtomicBoolean(false);
     private final KafkaConsumer<String, Object> consumer;
     private final ConsumerMetadata metadata;
     private final ConsumerRebalanceListener rebalanceListener;
+    private final AtomicInteger threadIndex = new AtomicInteger(1);
 
     public KafkaConsumerTaskHolder(final ConsumerMetadata metadata) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(metadata.getGroupName())
@@ -47,12 +47,12 @@ public final class KafkaConsumerTaskHolder implements Runnable {
                 , "topic id can not empty,please settings");
         Preconditions.checkArgument(metadata.getConsumerHandle() != null
                 , "please implement interface HandleBusiness");
-
+        this.setName(String.format("hummer-message-consumer-%s", threadIndex.getAndIncrement()));
+        this.setDaemon(true);
         this.metadata = metadata;
         this.consumer = new KafkaConsumer<>(ConsumerProperties.builderProperties(metadata.getGroupName()));
         this.rebalanceListener = new DefaultRebalanceListener<>(consumer, metadata.getOffsetStore(), metadata);
-        this.consumer.subscribe(metadata.getTopicIds()
-                , rebalanceListener);
+        this.consumer.subscribe(metadata.getTopicIds(), rebalanceListener);
     }
 
     /**
@@ -83,12 +83,11 @@ public final class KafkaConsumerTaskHolder implements Runnable {
                 long start = System.currentTimeMillis();
                 //foreach item
                 fillMessage(records, consumerMessageList, recordList);
-                //consumer message
-                consumerMessage(consumerMessageList);
+                //consumer message if business execute ok then commit offset
+                consumerMessage(consumerMessageList, () -> commitOffset(counter, recordList, offsetsMap));
                 //commit offset
-                commitOffset(counter, recordList, offsetsMap);
-                LOGGER.debug("business handle done cost {} millis"
-                        , System.currentTimeMillis() - start);
+                //commitOffset(counter, recordList, offsetsMap);
+                LOGGER.debug("business handle done cost {} millis", System.currentTimeMillis() - start);
             }
         } catch (WakeupException e) {
             //ignore
@@ -163,7 +162,8 @@ public final class KafkaConsumerTaskHolder implements Runnable {
         }
     }
 
-    private void consumerMessage(final List<MessageBodyMetadata> consumerMessageList) {
+    private void consumerMessage(final List<MessageBodyMetadata> consumerMessageList
+            , final Runnable commitOffset) {
         if (CollectionUtils.isEmpty(consumerMessageList)) {
             return;
         }
@@ -174,10 +174,13 @@ public final class KafkaConsumerTaskHolder implements Runnable {
         try {
             if (metadata.getExecutorService() != null) {
                 metadata.getExecutorService()
-                        .submit(() -> metadata.getConsumerHandle()
-                                .handle(ImmutableList.copyOf(consumerMessageList)));
+                        .submit(() -> {
+                            metadata.getConsumerHandle().handle(ImmutableList.copyOf(consumerMessageList));
+                            commitOffset.run();
+                        });
             } else {
                 metadata.getConsumerHandle().handle(ImmutableList.copyOf(consumerMessageList));
+                commitOffset.run();
             }
         } catch (Throwable throwable) {
             LOGGER.error("business handle failed ", throwable);

@@ -6,6 +6,7 @@ import com.hummer.core.PropertiesContainer;
 import com.hummer.local.persistence.plugin.bean.MapLocalPersistence;
 import com.hummer.message.facade.event.MessageEvent;
 import com.hummer.message.facade.publish.MessageBus;
+import com.hummer.message.facade.publish.PublishCallback;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +22,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-import static com.hummer.common.constant.MessageConfigurationKey.HUMMER_MESSAGE_DRIVER_TYPE_KAFKA_KEY;
-import static com.hummer.common.constant.MessageConfigurationKey.HUMMER_MESSAGE_DRIVER_TYPE_KEY;
 import static com.hummer.message.facade.publish.MessageBus.KAFKA_BOCKER;
 
 /**
@@ -101,23 +100,30 @@ public class MessageRetrySchedule {
     }
 
     private void retrySend(MessageEvent event) {
-        if (KAFKA_BOCKER.equalsIgnoreCase(PropertiesContainer.valueOfString(HUMMER_MESSAGE_DRIVER_TYPE_KEY
-                , HUMMER_MESSAGE_DRIVER_TYPE_KAFKA_KEY))) {
+        if (KAFKA_BOCKER.equalsIgnoreCase(event.getBusDriverType())) {
             MessageBus.builder()
                     .messageKey(event.getMessageKey())
                     .topicId(event.getTopicId())
                     .async(event.isAsync())
                     .retry(true)
-                    .callback((partition, offset, messageBody, throwable) -> {
-                        if (throwable != null) {
+                    .callback(new PublishCallback() {
+                        @Override
+                        public void success(int partition, long offset) {
+                            LOGGER.info("message id {} to kafka of retry,send success partition@offset {}@{}"
+                                    , event.getMessageKey(), partition, offset);
+                        }
+
+                        @Override
+                        public void exception(Object messageBody, Throwable throwable) {
                             event.updateRetry();
                             mapLocalPersistence.addToList(event.getTopicId(), event.toBytes());
                             LOGGER.warn("message id {} to kafka retry {} failed,topic id {} add to local queue ok"
                                     , event.getMessageKey(), event.getRetryCount(), event.getTopicId());
                         }
                     })
-                    .syncSendMessageTimeOutMills(event.getSyncSendMessageTimeOutMills())
-                    .kafka(MessageBus.Kafka.builder().topicId(event.getTopicId()).partition(event.getPartition())
+                    .affiliated(event.getMessageAffiliateData())
+                    .sendTimeOutMills(event.getSyncSendMessageTimeOutMills())
+                    .kafka(MessageBus.Kafka.builder().partition(event.getPartition())
                             .build())
                     .build()
                     .publish();
@@ -127,17 +133,28 @@ public class MessageRetrySchedule {
                     .topicId(event.getTopicId())
                     .async(event.isAsync())
                     .retry(true)
-                    .callback((partition, offset, messageBody, throwable) -> {
-                        if (throwable != null) {
+                    .callback(new PublishCallback() {
+                        @Override
+                        public void success(int partition, long offset) {
+                            LOGGER.info("message id {} to rocketMq of retry,send success partition@offset {}@{}"
+                                    , event.getMessageKey(), partition, offset);
+                        }
+
+                        @Override
+                        public void exception(Object messageBody, Throwable throwable) {
                             event.updateRetry();
                             mapLocalPersistence.addToList(event.getTopicId(), event.toBytes());
                             LOGGER.warn("message {} to rocketMQ retry {} failed,topic id {}", event.getMessageKey()
                                     , event.getRetryCount(), event.getTopicId());
                         }
                     })
-                    .syncSendMessageTimeOutMills(event.getSyncSendMessageTimeOutMills())
-                    .rocketMq(MessageBus.RocketMq.builder().topicId(event.getTopicId()).partition(event.getPartition())
+                    .affiliated(event.getMessageAffiliateData())
+                    .sendTimeOutMills(event.getSyncSendMessageTimeOutMills())
+                    .rocketMq(MessageBus.RocketMq.builder().ack(event.isAck())
+                            .tag(event.getTag())
+                            .delayLevel(event.getDelayLevel())
                             .build())
+                    .topicId(event.getTopicId())
                     .build()
                     .publish();
         }

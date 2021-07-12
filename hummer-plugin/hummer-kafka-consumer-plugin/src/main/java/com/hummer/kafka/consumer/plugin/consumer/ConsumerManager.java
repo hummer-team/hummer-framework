@@ -18,8 +18,8 @@ import static com.hummer.kafka.consumer.plugin.KafkaConsumerConstant.OFFSET_STOR
  **/
 @Component
 public class ConsumerManager {
-    private KafkaConsumerTaskHolder consumerTask;
     private static final Logger LOGGER = LoggerFactory.getLogger(ConsumerManager.class);
+    private KafkaConsumerTaskHolder consumerTask;
 
     /**
      * start this consumer service
@@ -32,34 +32,33 @@ public class ConsumerManager {
      **/
     public void start(ConsumerMetadata metadata) {
         //
-        checkAndSet(metadata);
+        if (!PropertiesContainer.valueOf("hummer.message.kafka.consumer.enable", Boolean.class, false)) {
+            LOGGER.debug("kafka consumer disabled");
+            return;
+        }
         LOGGER.info("starting kafka consumer this metadata info {}", metadata);
-        consumerTask = new KafkaConsumerTaskHolder(metadata);
+        checkAndSet(metadata);
         //register thread shutdown
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                consumerTask.shutdown();
-            }
-        });
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> this.shutdown()));
+
+        consumerTask = new KafkaConsumerTaskHolder(metadata);
         //start consumer task
-        consumerTask.run();
+        consumerTask.start();
     }
 
 
     /**
      * stop consumer task
      *
-     * @param []
      * @return void
      * @author liguo
      * @date 2019/9/11 17:03
      * @since 1.0.0
      **/
-    public void stop() {
+    public void shutdown() {
         if (consumerTask != null) {
             consumerTask.shutdown();
-            LOGGER.info("starting kafka consumer stop success ");
+            LOGGER.info("kafka consumer stop success");
         }
     }
 

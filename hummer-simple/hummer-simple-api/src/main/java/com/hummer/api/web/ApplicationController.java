@@ -13,6 +13,7 @@ import com.hummer.core.PropertiesContainer;
 import com.hummer.core.SpringApplicationContext;
 import com.hummer.local.persistence.plugin.LocalPersistence;
 import com.hummer.message.facade.publish.MessageBus;
+import com.hummer.message.facade.publish.PublishCallback;
 import com.hummer.rest.annotations.BindRestParameterSimpleModel;
 import com.hummer.rest.model.ResourceResponse;
 import com.hummer.rest.utils.ParameterAssertUtil;
@@ -23,6 +24,7 @@ import org.apache.logging.log4j.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,6 +56,7 @@ public class ApplicationController {
 
     private static final Logger log = LoggerFactory.getLogger(ApplicationController.class);
     @Autowired
+    @Qualifier("RocksDbPersistence")
     private LocalPersistence persistence;
 
     //    @Value("${test.A}")
@@ -130,7 +133,12 @@ public class ApplicationController {
             .builder()
             .topicId("test")
             .body(req)
-            .callback((p, f, o, e) -> log.info("send message done"))
+            .callback(new PublishCallback() {
+                @Override
+                public void success(int partition, long offset) {
+                   log.info("send message done");
+                }
+            })
             .kafka(MessageBus.Kafka.builder().topicId("log-type-group-out2").build())
             .messageKey(req.getId())
             .build()
