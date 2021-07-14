@@ -37,5 +37,6 @@
         <module>hummer-proxy-plugin</module>
         <module>hummer-first-restfull-plugin</module>
         <module>hummer-rocketmq-producer-plugin</module>
+        <module>hummer-rocketmq-consumer-plugin</module>
     </modules>
 </project>

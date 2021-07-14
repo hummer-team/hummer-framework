@@ -25,18 +25,28 @@ public class SendFailedHandler {
         if (event.isRetry()) {
             return;
         }
-        
+
+        if (event.getException() == null) {
+            return;
+        }
+
         String driverType = PropertiesContainer.valueOfString(HUMMER_MESSAGE_DRIVER_TYPE_KEY
                 , HUMMER_MESSAGE_DRIVER_TYPE_KAFKA_KEY);
-        String retryKey = String.format("hummer.message.%s.producer.%s.send.failed.retry.max"
-                , driverType, event.getMessageBus().getTopicId());
-        int maxRetry = PropertiesContainer.valueOfInteger(retryKey, 0);
-        String expireKey = String.format("hummer.message.%s.producer.%s.failed.message.local.store.second"
-                , driverType, event.getMessageBus().getTopicId());
-        int expire = PropertiesContainer.valueOfInteger(expireKey, 0);
 
-        LOGGER.info("send message to {} failed,need retry {} topic Id {}", driverType
-                , maxRetry, event.getMessageBus().getTopicId());
+        String retryKeyByTopic = String.format("hummer.message.%s.producer.%s.send.failed.retry.max"
+                , driverType, event.getMessageBus().getTopicId());
+        String retryKeyByDef = String.format("hummer.message.%s.producer.send.failed.retry.max", driverType);
+        int maxRetry = PropertiesContainer.valueOfInteger(retryKeyByTopic
+                , () -> PropertiesContainer.valueOfInteger(retryKeyByDef, 0));
+
+        String expireKeyByTopic = String.format("hummer.message.%s.producer.%s.failed.message.local.store.second"
+                , driverType, event.getMessageBus().getTopicId());
+        String expireKeyByDef = String.format("hummer.message.%s.producer.failed.message.local.store.second", driverType);
+        int expire = PropertiesContainer.valueOfInteger(expireKeyByTopic
+                , () -> PropertiesContainer.valueOfInteger(expireKeyByDef, 0));
+
+        LOGGER.info("send message to {} failed,need retry {} topic Id {} message key {}", driverType
+                , maxRetry, event.getMessageBus().getTopicId(), event.getMessageBus().getMessageKey());
         if (maxRetry <= 0 || expire <= 0) {
             return;
         }

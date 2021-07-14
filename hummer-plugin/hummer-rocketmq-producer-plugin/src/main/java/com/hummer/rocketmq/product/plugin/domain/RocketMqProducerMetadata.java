@@ -18,4 +18,5 @@ public class RocketMqProducerMetadata {
     private String selectQueue;
     private SendCallback sendCallback;
     private Map<String, String> affiliated;
+    private boolean oneway;
 }

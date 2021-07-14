@@ -95,6 +95,7 @@
         <Logger name="springfox.documentation" level="error" />
         <Logger name="com.alibaba.nacos" level="error"/>
         <Logger name="org.apache.kafka" level="debug"/>
+        <Logger name="org.apache.rocketmq" level="debug"/>
         <Root level="debug">
             <appender-ref ref="Console" />
             <appender-ref ref="LogstashFile" />

@@ -26,6 +26,9 @@ public class RocketMqProducerPool {
                 , RPCHookImpl.INSTANCE, mqMetadata.isTrace(), null);
 
         mqProducer.setNamesrvAddr(mqMetadata.getNameServer());
+        mqProducer.setSendLatencyFaultEnable(true);
+        mqProducer.setVipChannelEnabled(false);
+        mqProducer.setSendMessageWithVIPChannel(false);
 
         LOGGER.info("rocketMq metadata {}", mqMetadata);
 
@@ -92,7 +95,7 @@ public class RocketMqProducerPool {
                     "\n defTopicQueueCount=" + defTopicQueueCount +
                     "\n compressMsgBodyOverLimit=" + compressMsgBodyOverLimit +
                     "\n maxMessageSize=" + maxMessageSize +
-                    "\n nameServer='" + nameServer +
+                    "\n nameServer=" + nameServer +
                     "\n}";
         }
     }

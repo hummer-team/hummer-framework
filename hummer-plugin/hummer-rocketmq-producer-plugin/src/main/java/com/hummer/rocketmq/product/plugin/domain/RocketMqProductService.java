@@ -18,22 +18,35 @@ public class RocketMqProductService implements RocketMqProduct {
     @Override
     public void doSendBySync(RocketMqProducerMetadata metadata) throws Exception {
         Message message = builderMessage(metadata);
-
-        RocketMqProducerPool
-                .get()
-                .setProperties(RocketMqProducerPool.getMetadata(metadata.getTopicId()))
-                .send(message, QueueSelectorFactory.selector(metadata.getSelectQueue()), metadata.getTimeoutMills());
+        RocketMqProducerPool.RocketMqMetadata metadata1 = RocketMqProducerPool.getMetadata(metadata.getTopicId());
+        if (metadata.isOneway()) {
+            RocketMqProducerPool
+                    .get()
+                    .setProperties(metadata1, true)
+                    .sendOneway(message, QueueSelectorFactory.selector(metadata.getSelectQueue()));
+        } else {
+            RocketMqProducerPool
+                    .get()
+                    .setProperties(metadata1, true)
+                    .send(message, QueueSelectorFactory.selector(metadata.getSelectQueue())
+                            , timeoutMills(metadata.getTimeoutMills(), metadata1.getSentMsgTimeoutMills()));
+        }
     }
 
     @Override
     public void doSendByAsync(RocketMqProducerMetadata metadata) throws Exception {
         Message message = builderMessage(metadata);
-
+        RocketMqProducerPool.RocketMqMetadata metadata1 = RocketMqProducerPool.getMetadata(metadata.getTopicId());
         RocketMqProducerPool
                 .get()
-                .setProperties(RocketMqProducerPool.getMetadata(metadata.getTopicId()))
+                .setProperties(metadata1, false)
                 .sendAsync(message, QueueSelectorFactory.selector(metadata.getSelectQueue())
-                        , metadata.getSendCallback(), metadata.getTimeoutMills());
+                        , metadata.getSendCallback()
+                        , timeoutMills(metadata.getTimeoutMills(), metadata1.getSentMsgTimeoutMills()));
+    }
+
+    private long timeoutMills(long msgTimeout, long defTimeout) {
+        return msgTimeout > 0 ? msgTimeout : defTimeout;
     }
 
     private Message builderMessage(final RocketMqProducerMetadata metadata) {

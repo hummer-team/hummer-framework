@@ -137,5 +137,10 @@ public class MessageBus {
          */
         @Builder.Default
         private final int delayLevel = -1;
+        /**
+         * true is oneway , else not
+         */
+        @Builder.Default
+        private final boolean oneway = false;
     }
 }

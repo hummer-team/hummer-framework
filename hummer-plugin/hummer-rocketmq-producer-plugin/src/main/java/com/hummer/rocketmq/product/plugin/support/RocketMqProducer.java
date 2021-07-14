@@ -28,8 +28,8 @@ public class RocketMqProducer implements DisposableBean, InitializingBean, Lifec
         this.conn();
     }
 
-    public RocketMqProducer setProperties(final RocketMqProducerPool.RocketMqMetadata mqMetadata) {
-        this.producer.setRetryTimesWhenSendFailed(mqMetadata.getSendFailRetryCount());
+    public RocketMqProducer setProperties(final RocketMqProducerPool.RocketMqMetadata mqMetadata, boolean sync) {
+        this.producer.setRetryTimesWhenSendFailed(sync ? 0 : mqMetadata.getSendFailRetryCount());
         this.producer.setRetryTimesWhenSendAsyncFailed(mqMetadata.getSendFailRetryCount());
         this.producer.setSendMsgTimeout(mqMetadata.getSentMsgTimeoutMills());
         this.producer.setDefaultTopicQueueNums(mqMetadata.getDefTopicQueueCount());
@@ -88,7 +88,11 @@ public class RocketMqProducer implements DisposableBean, InitializingBean, Lifec
     private void conn() {
         //conn name server
         try {
+            LOGGER.info("begin name server  {}", this.producer.getNamesrvAddr());
+            long start = System.currentTimeMillis();
             this.producer.start();
+            LOGGER.info("conn name server {} success cost {} mills", this.producer.getNamesrvAddr()
+                    , System.currentTimeMillis() - start);
         } catch (MQClientException e) {
             LOGGER.error("rocketMq conn to name server exception so abort this producer instance,cause exception is:", e);
             throw new RuntimeException(e);

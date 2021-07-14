@@ -17,13 +17,16 @@ import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertySource;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
 /**
  * wrapper property .
@@ -213,6 +216,44 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
     }
 
     /**
+     * get value convert to int,if exists then return defaultVal.
+     *
+     * @param key
+     * @return
+     */
+    public static int valueOfInteger(final String key, final Supplier<Integer> defaultVal) {
+        Integer val = valueOf(key, Integer.class);
+        if (val != null) {
+            return val;
+        }
+        Integer[] def = new Integer[1];
+        Optional.ofNullable(defaultVal).ifPresent(c -> def[0] = c.get());
+        return def[0];
+    }
+
+    /**
+     * get value convert to long,if exists then return defaultVal.
+     *
+     * @param key        key
+     * @param defaultVal defaultVal
+     * @return {@link java.lang.Long}
+     */
+    public static long valueOfLong(final String key, final Supplier<Long> defaultVal) {
+        return valueOf(key, Long.class, defaultVal);
+    }
+
+    /**
+     * get value convert to boolean,if exists then return defaultVal.
+     *
+     * @param key        key
+     * @param defaultVal defaultVal
+     * @return {@link java.lang.Boolean}
+     */
+    public static boolean valueBoolean(final String key, final Supplier<Boolean> defaultVal) {
+        return valueOf(key, Boolean.class, defaultVal);
+    }
+
+    /**
      * get properties as string
      *
      * @param key        key
@@ -224,12 +265,29 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
     }
 
     /**
+     * get properties as string
+     *
+     * @param key        key
+     * @param defaultVal if key not exists then return default value
+     * @return
+     */
+    public static String valueOfString(final String key, final Supplier<String> defaultVal) {
+        String val = valueOf(key, String.class);
+        if (val != null) {
+            return val;
+        }
+        String[] def = new String[1];
+        Optional.ofNullable(defaultVal).ifPresent(c -> def[0] = c.get());
+        return def[0];
+    }
+
+    /**
      * get properties as  target class type.
      *
      * @param key       key
      * @param classType target class type
      * @param defVal    if key not exists then return default value
-     * @return T target class type
+     * @return T target class type,must is basic type
      * @author liguo
      * @date 2019/6/25 17:25
      * @version 1.0.0
@@ -237,13 +295,35 @@ public final class PropertiesContainer extends PropertyPlaceholderConfigurer {
     public static <T> T valueOf(final String key, final Class<T> classType, final T defVal) {
         return get(key, classType, defVal);
     }
+
+    /**
+     * get properties as  target class type.
+     *
+     * @param key       key
+     * @param classType target class type
+     * @param defVal    if key not exists then return default value
+     * @return T target class type,must is basic type
+     * @author liguo
+     * @date 2019/6/25 17:25
+     * @version 1.0.0
+     **/
+    public static <T> T valueOf(final String key, final Class<T> classType, final Supplier<T> defVal) {
+        T val = get(key, classType);
+        if (val != null) {
+            return val;
+        }
+        List<T> list = new ArrayList<>(1);
+        Optional.ofNullable(defVal).ifPresent(c -> list.add(c.get()));
+        return list.get(0);
+    }
+
     /**
      * get this key property value.
      *
      * @param key       key
      * @param classType target type
      * @param defVal    if not exists key,return default value.
-     * @return T
+     * @return T  target class type,must is basic type
      * @author liguo
      * @date 2019/6/19 16:56
      * @version 1.0.0

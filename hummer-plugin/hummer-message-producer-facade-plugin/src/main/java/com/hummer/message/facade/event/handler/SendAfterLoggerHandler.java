@@ -14,18 +14,20 @@ public class SendAfterLoggerHandler {
     @Subscribe
     public void handler(ProducerEvent event) {
         if (event.getException() != null) {
-            LOGGER.error("send message to {} broker failed,cost {} millis,topic {}"
+            LOGGER.error("send message to {} broker failed,cost {} millis,topic {} message key {}"
                     , event.getBusDriverType()
                     , System.currentTimeMillis() - event.getStartTime()
                     , event.getMessageBus().getTopicId()
+                    , event.getMessageBus().getMessageKey()
                     , event.getException());
         } else {
-            LOGGER.info("send message to {} broker success cost {} millis,topic {},partition@offset {}@{}"
+            LOGGER.info("send message to {} broker success cost {} millis,topic {},partition@offset {}@{} message key {}"
                     , event.getBusDriverType()
                     , System.currentTimeMillis() - event.getStartTime()
                     , event.getMessageBus().getTopicId()
                     , event.getPartition()
-                    , event.getOffset());
+                    , event.getOffset()
+                    , event.getMessageBus().getMessageKey());
         }
     }
 }

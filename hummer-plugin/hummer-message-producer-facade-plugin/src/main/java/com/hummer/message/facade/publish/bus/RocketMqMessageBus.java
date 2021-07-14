@@ -77,8 +77,11 @@ public class RocketMqMessageBus extends BaseMessageBusTemplate {
         metadata.setDelayTimeLevel(messageBus.getRocketMq().getDelayLevel());
         metadata.setTopicId(messageBus.getTopicId());
         metadata.setTimeoutMills(messageBus.getSendTimeOutMills());
+        metadata.setMessageKey(messageBus.getMessageKey());
         metadata.setSerializerType(RocketMqMessageMetadata.get(messageBus.getTopicId()).getSerializerType());
         metadata.setSelectQueue(RocketMqMessageMetadata.get(messageBus.getTopicId()).getSelectorQueue());
+        metadata.setOneway(messageBus.getRocketMq().isOneway());
+
         metadata.setSendCallback(new SendCallback() {
             @Override
             public void onSuccess(SendResult sendResult) {
