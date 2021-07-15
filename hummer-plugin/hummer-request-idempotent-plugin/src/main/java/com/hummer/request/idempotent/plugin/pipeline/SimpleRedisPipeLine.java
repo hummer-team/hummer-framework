@@ -76,7 +76,7 @@ public class SimpleRedisPipeLine {
     public boolean releaseLockAsyncRetry(String key) {
         if (!releaseLock(key)) {
             CompletableFuture.runAsync(() -> {
-                int times = PropertiesContainer.valueOfInteger("ship.order.code.lock.release.fail.retry.times", 10);
+                int times = PropertiesContainer.valueOfInteger("ship.order.code.lock.release.fail.retry.times", 3);
                 while (times > 0 && !releaseLock(key)) {
                     times--;
                 }

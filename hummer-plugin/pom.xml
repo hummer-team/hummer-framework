@@ -39,5 +39,6 @@
         <module>hummer-proxy-plugin</module>
         <module>hummer-first-restfull-plugin</module>
         <module>hummer-delay-queue-plugin</module>
+        <module>hummer-notification-channel-plugin</module>
     </modules>
 </project>

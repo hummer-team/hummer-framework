@@ -1,5 +1,6 @@
 package com.hummer.common.utils;
 
+import com.google.common.base.Joiner;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -122,5 +124,10 @@ public class CommonUtil {
             throw new IllegalArgumentException("convert just support 0-10");
         }
         return NUMBER_TO_ARR[number];
+    }
+
+    public static String composeUrlByUriParams(String uri, Map<String, Object> params) {
+
+        return String.format("%s?%s", uri, Joiner.on("&").useForNull("").withKeyValueSeparator("=").join(params));
     }
 }
